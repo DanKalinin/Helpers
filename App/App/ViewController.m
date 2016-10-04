@@ -23,6 +23,20 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor colorWithHexString:@"ff0000"];
+    
+    NSDate *date = [NSDate date];
+    
+    NSDateFormatter *df = [NSDateFormatter fixedDateFormatterWithDateFormat:DateFormatRFC1123];
+    NSString *dateString = [df stringFromDate:date];
+    NSLog(@"RFC 1123 - %@", dateString);
+    
+    df = [NSDateFormatter fixedDateFormatterWithDateFormat:DateFormatRFC850];
+    dateString = [df stringFromDate:date];
+    NSLog(@"RFC 850 - %@", dateString);
+    
+    df = [NSDateFormatter fixedDateFormatterWithDateFormat:DateFormatAsctime];
+    dateString = [df stringFromDate:date];
+    NSLog(@"asctime() - %@", dateString);
 }
 
 

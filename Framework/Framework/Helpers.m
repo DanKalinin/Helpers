@@ -9,6 +9,11 @@
 #import "Helpers.h"
 #import <objc/runtime.h>
 
+NSString *const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
+NSString *const DateFormatRFC850 = @"EEEE, dd-MMM-yy HH:mm:ss 'GMT'";
+NSString *const DateFormatAsctime = @"E MMM dd HH:mm:ss yyyy";
+
+static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
@@ -18,38 +23,8 @@
 
 
 
-@implementation UIColor (Helpers)
 
-+ (id)colorWithHexString:(NSString *)hexString {
-    unsigned int n, r, g, b;
-    CGFloat k, red, green, blue;
-    
-    NSScanner *scanner = [NSScanner scannerWithString:hexString];
-    [scanner scanHexInt:&n];
-    
-    r = (n & 0xffffff) >> 16;
-    g = (n & 0x00ffff) >> 8;
-    b = n & 0x0000ff;
-    
-    k = 1.0 / 255.0;
-    red = k * r;
-    green = k * g;
-    blue = k * b;
-    
-    UIColor *color = [UIColor colorWithRed:red green:green blue:blue alpha:1.0];
-    return color;
-}
-
-@end
-
-
-
-
-
-
-
-
-
+#pragma mark - Classes
 
 @implementation ImageView
 
@@ -184,56 +159,6 @@
 
 
 
-@implementation NSObject (Helpers)
-
-+ (void)swizzleClassMethod:(SEL)swizzling with:(SEL)original {
-    Method swizzlingMethod = class_getClassMethod(self, swizzling);
-    Method originalMethod = class_getClassMethod(self, original);
-    method_exchangeImplementations(originalMethod, swizzlingMethod);
-}
-
-+ (void)swizzleInstanceMethod:(SEL)swizzling with:(SEL)original {
-    Method swizzlingMethod = class_getInstanceMethod(self, swizzling);
-    Method originalMethod = class_getInstanceMethod(self, original);
-    method_exchangeImplementations(originalMethod, swizzlingMethod);
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@implementation NSDictionary (Helpers)
-
-+ (void)load {
-    [self swizzleInstanceMethod:@selector(swizzledObjectForKeyedSubscript:) with:@selector(objectForKeyedSubscript:)];
-}
-
-- (id)swizzledObjectForKeyedSubscript:(id)key {
-    id object = [self swizzledObjectForKeyedSubscript:key];
-    if ([object isKindOfClass:[NSNull class]]) {
-        object = nil;
-    }
-    return object;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface SurrogateContainer ()
 
 @property NSPointerArray *pointers;
@@ -287,6 +212,112 @@
         }
     }
     return signature;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+#pragma mark - Categories
+
+@implementation UIColor (Helpers)
+
++ (id)colorWithHexString:(NSString *)hexString {
+    unsigned int n, r, g, b;
+    CGFloat k, red, green, blue;
+    
+    NSScanner *scanner = [NSScanner scannerWithString:hexString];
+    [scanner scanHexInt:&n];
+    
+    r = (n & 0xffffff) >> 16;
+    g = (n & 0x00ffff) >> 8;
+    b = n & 0x0000ff;
+    
+    k = 1.0 / 255.0;
+    red = k * r;
+    green = k * g;
+    blue = k * b;
+    
+    UIColor *color = [UIColor colorWithRed:red green:green blue:blue alpha:1.0];
+    return color;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSObject (Helpers)
+
++ (void)swizzleClassMethod:(SEL)swizzling with:(SEL)original {
+    Method swizzlingMethod = class_getClassMethod(self, swizzling);
+    Method originalMethod = class_getClassMethod(self, original);
+    method_exchangeImplementations(originalMethod, swizzlingMethod);
+}
+
++ (void)swizzleInstanceMethod:(SEL)swizzling with:(SEL)original {
+    Method swizzlingMethod = class_getInstanceMethod(self, swizzling);
+    Method originalMethod = class_getInstanceMethod(self, original);
+    method_exchangeImplementations(originalMethod, swizzlingMethod);
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSDictionary (Helpers)
+
++ (void)load {
+    [self swizzleInstanceMethod:@selector(swizzledObjectForKeyedSubscript:) with:@selector(objectForKeyedSubscript:)];
+}
+
+- (id)swizzledObjectForKeyedSubscript:(id)key {
+    id object = [self swizzledObjectForKeyedSubscript:key];
+    if ([object isKindOfClass:[NSNull class]]) {
+        object = nil;
+    }
+    return object;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSDateFormatter (Helpers)
+
++ (instancetype)fixedDateFormatterWithDateFormat:(NSString *)dateFormat {
+    NSDateFormatter *df = [NSDateFormatter new];
+    df.dateFormat = dateFormat;
+    df.locale = [NSLocale localeWithLocaleIdentifier:NSLocaleIdentifierPosix];
+    df.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+    return df;
 }
 
 @end

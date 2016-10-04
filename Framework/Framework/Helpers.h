@@ -11,6 +11,9 @@
 FOUNDATION_EXPORT double HelpersVersionNumber;
 FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 
+extern NSString *const DateFormatRFC1123;
+extern NSString *const DateFormatRFC850;
+extern NSString *const DateFormatAsctime;
 
 
 
@@ -20,20 +23,8 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 
 
 
-@interface UIColor (Helpers)
 
-+ colorWithHexString:(NSString *)hexString;
-
-@end
-
-
-
-
-
-
-
-
-
+#pragma mark - Classes
 
 @interface ImageView : UIImageView
 
@@ -57,6 +48,38 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 @property NSData *credential;
 @property NSString *password;
 @property OSStatus status;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface SurrogateContainer : NSObject
+
+@property NSArray *objects;
+
+@end
+
+
+
+
+
+
+
+
+
+
+#pragma mark - Categories
+
+@interface UIColor (Helpers)
+
++ colorWithHexString:(NSString *)hexString;
 
 @end
 
@@ -98,8 +121,8 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 
 
 
-@interface SurrogateContainer : NSObject
+@interface NSDateFormatter (Helpers)
 
-@property NSArray *objects;
++ (instancetype)fixedDateFormatterWithDateFormat:(NSString *)dateFormat;
 
 @end
