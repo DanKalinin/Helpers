@@ -15,6 +15,9 @@ extern NSString *const DateFormatRFC1123;
 extern NSString *const DateFormatRFC850;
 extern NSString *const DateFormatAsctime;
 
+typedef void (^VoidBlock)(void);
+typedef void (^BoolBlock)(BOOL);
+
 
 
 
