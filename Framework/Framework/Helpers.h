@@ -17,6 +17,7 @@ extern NSString *const DateFormatAsctime;
 
 typedef void (^VoidBlock)(void);
 typedef void (^BoolBlock)(BOOL);
+typedef void (^ErrorBlock)(NSError *);
 
 
 
