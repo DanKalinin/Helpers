@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:Framework.xcodeproj">
+      location = "self:/Users/Dan/Helpers/Framework/Helpers.xcodeproj">
    </FileRef>
 </Workspace>
