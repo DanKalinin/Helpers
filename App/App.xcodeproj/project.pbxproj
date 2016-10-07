@@ -13,14 +13,23 @@
 		374392431D91F026005E1075 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 374392411D91F026005E1075 /* Main.storyboard */; };
 		374392451D91F026005E1075 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 374392441D91F026005E1075 /* Assets.xcassets */; };
 		374392481D91F026005E1075 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 374392461D91F026005E1075 /* LaunchScreen.storyboard */; };
+		37B659BF1DA7AF54005B0F80 /* Helpers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37B659BE1DA7AF4B005B0F80 /* Helpers.framework */; };
+		37B659C01DA7AF54005B0F80 /* Helpers.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 37B659BE1DA7AF4B005B0F80 /* Helpers.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		37809B251DA7ADE20043A08E /* PBXContainerItemProxy */ = {
+		37B659BD1DA7AF4B005B0F80 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 37809B211DA7ADE20043A08E /* Helpers.xcodeproj */;
+			containerPortal = 37B659B91DA7AF4B005B0F80 /* Framework.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 3743921C1D91EED7005E1075;
+			remoteInfo = Helpers;
+		};
+		37B659C11DA7AF54005B0F80 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37B659B91DA7AF4B005B0F80 /* Framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 3743921B1D91EED7005E1075;
 			remoteInfo = Helpers;
 		};
 /* End PBXContainerItemProxy section */
@@ -32,6 +41,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				37B659C01DA7AF54005B0F80 /* Helpers.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -49,7 +59,7 @@
 		374392441D91F026005E1075 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		374392471D91F026005E1075 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		374392491D91F026005E1075 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		37809B211DA7ADE20043A08E /* Helpers.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Helpers.xcodeproj; path = ../Framework/Helpers.xcodeproj; sourceTree = "<group>"; };
+		37B659B91DA7AF4B005B0F80 /* Framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Framework.xcodeproj; path = ../Framework/Framework.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37B659BF1DA7AF54005B0F80 /* Helpers.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,7 +77,7 @@
 		3743922C1D91F026005E1075 = {
 			isa = PBXGroup;
 			children = (
-				37809B211DA7ADE20043A08E /* Helpers.xcodeproj */,
+				37B659B91DA7AF4B005B0F80 /* Framework.xcodeproj */,
 				374392371D91F026005E1075 /* App */,
 				374392361D91F026005E1075 /* Products */,
 			);
@@ -104,10 +115,10 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		37809B221DA7ADE20043A08E /* Products */ = {
+		37B659BA1DA7AF4B005B0F80 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				37809B261DA7ADE20043A08E /* Helpers.framework */,
+				37B659BE1DA7AF4B005B0F80 /* Helpers.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -127,6 +138,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				37B659C21DA7AF54005B0F80 /* PBXTargetDependency */,
 			);
 			name = App;
 			productName = App;
@@ -162,8 +174,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 37809B221DA7ADE20043A08E /* Products */;
-					ProjectRef = 37809B211DA7ADE20043A08E /* Helpers.xcodeproj */;
+					ProductGroup = 37B659BA1DA7AF4B005B0F80 /* Products */;
+					ProjectRef = 37B659B91DA7AF4B005B0F80 /* Framework.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -174,11 +186,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		37809B261DA7ADE20043A08E /* Helpers.framework */ = {
+		37B659BE1DA7AF4B005B0F80 /* Helpers.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = Helpers.framework;
-			remoteRef = 37809B251DA7ADE20043A08E /* PBXContainerItemProxy */;
+			remoteRef = 37B659BD1DA7AF4B005B0F80 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -208,6 +220,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		37B659C21DA7AF54005B0F80 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Helpers;
+			targetProxy = 37B659C11DA7AF54005B0F80 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		374392411D91F026005E1075 /* Main.storyboard */ = {
