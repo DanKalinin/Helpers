@@ -187,4 +187,6 @@ typedef void (^ErrorBlock)(NSError *);
 
 @property IBInspectable NSUInteger orientations;
 
+- (NSString *)localize:(NSString *)string;
+
 @end

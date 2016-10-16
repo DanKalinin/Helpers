@@ -535,4 +535,11 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return orientations;
 }
 
+- (NSString *)localize:(NSString *)string {
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSString *table = [self.storyboard valueForKey:@"name"];
+    string = [bundle localizedStringForKey:string value:string table:table];
+    return string;
+}
+
 @end
