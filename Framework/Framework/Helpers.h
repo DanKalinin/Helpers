@@ -81,11 +81,52 @@ typedef void (^ErrorBlock)(NSError *);
 
 
 
+@interface PasswordTextField : UITextField
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface FilledButton : UIButton
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface KeyboardContainerView : UIView
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomConstraint;
+
+@end
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Categories
 
 @interface UIColor (Helpers)
 
-+ colorWithHexString:(NSString *)hexString;
++ (UIColor *)colorWithHexString:(NSString *)hexString;
 
 @end
 
@@ -130,5 +171,20 @@ typedef void (^ErrorBlock)(NSError *);
 @interface NSDateFormatter (Helpers)
 
 + (instancetype)fixedDateFormatterWithDateFormat:(NSString *)dateFormat;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface UIViewController (Helpers)
+
+@property IBInspectable NSUInteger orientations;
 
 @end

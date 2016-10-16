@@ -216,6 +216,178 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return signature;
 }
 
+- (BOOL)respondsToSelector:(SEL)aSelector {
+    if ([super respondsToSelector:aSelector]) {
+        return YES;
+    }
+    
+    [self.pointers compact];
+    for (id object in self.pointers) {
+        if ([object respondsToSelector:aSelector]) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface PasswordTextFieldDelegate : NSObject <UITextFieldDelegate>
+
+@end
+
+
+
+@implementation PasswordTextFieldDelegate
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    textField.text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    return NO;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface PasswordTextField ()
+
+@property SurrogateContainer *delegates;
+@property PasswordTextFieldDelegate *textFieldDelegate;
+
+@end
+
+
+
+@implementation PasswordTextField
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.delegates = [SurrogateContainer new];
+        self.textFieldDelegate = [PasswordTextFieldDelegate new];
+        self.delegates.objects = @[self.textFieldDelegate];
+        [super setDelegate:(id)self.delegates];
+    }
+    return self;
+}
+
+- (void)setDelegate:(id<UITextFieldDelegate>)delegate {
+    self.delegates.objects = @[self.textFieldDelegate, delegate];
+}
+
+- (void)setRightView:(UIButton *)btnEye {
+    [super setRightView:btnEye];
+    [btnEye addTarget:self action:@selector(onEye:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)onEye:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    self.secureTextEntry = !sender.selected;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface FilledButton ()
+
+@property UIColor *initialBackgroundColor;
+
+@end
+
+
+
+@implementation FilledButton
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.initialBackgroundColor = self.backgroundColor;
+    }
+    return self;
+}
+
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    self.backgroundColor = highlighted ? self.tintColor : self.initialBackgroundColor;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface KeyboardContainerView ()
+
+@end
+
+
+
+@implementation KeyboardContainerView
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willChangeKeyboardFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
+        
+        UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
+        [self addGestureRecognizer:tgr];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)willChangeKeyboardFrame:(NSNotification *)note {
+    BOOL isLocalKeyboard = [note.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue];
+    if (isLocalKeyboard) {
+        NSTimeInterval duration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+        CGRect endFrame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+        UIViewAnimationCurve curve = [note.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
+        BOOL shown = endFrame.origin.y < self.window.frame.size.height;
+        self.bottomConstraint.constant = shown ? endFrame.size.height : 0.0;
+        [UIView animateWithDuration:duration delay:0.0 options:(curve << 16) animations:^{
+            [self.superview layoutIfNeeded];
+        } completion:nil];
+    }
+}
+
+- (void)onTap:(UITapGestureRecognizer *)tgr {
+    [self endEditing:YES];
+}
+
 @end
 
 
@@ -231,7 +403,7 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @implementation UIColor (Helpers)
 
-+ (id)colorWithHexString:(NSString *)hexString {
++ (UIColor *)colorWithHexString:(NSString *)hexString {
     unsigned int n, r, g, b;
     CGFloat k, red, green, blue;
     
@@ -320,6 +492,47 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     df.locale = [NSLocale localeWithLocaleIdentifier:NSLocaleIdentifierPosix];
     df.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
     return df;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation UIViewController (Helpers)
+
++ (void)load {
+    SEL swizzling = @selector(supportedInterfaceOrientations);
+    SEL swizzled = @selector(swizzledSupportedInterfaceOrientations);
+    [self swizzleInstanceMethod:swizzling with:swizzled];
+}
+
+- (void)setOrientations:(NSUInteger)orientations {
+    objc_setAssociatedObject(self, @selector(orientations), @(orientations), OBJC_ASSOCIATION_RETAIN);
+}
+
+- (NSUInteger)orientations {
+    NSNumber *orientations = objc_getAssociatedObject(self, @selector(orientations));
+    if (orientations) {
+        return orientations.unsignedIntegerValue;
+    }
+    return NSNotFound;
+}
+
+- (UIInterfaceOrientationMask)swizzledSupportedInterfaceOrientations {
+    UIInterfaceOrientationMask orientations = self.orientations;
+    if (orientations != NSNotFound) {
+        return orientations;
+    }
+    
+    orientations = [self swizzledSupportedInterfaceOrientations];
+    return orientations;
 }
 
 @end
