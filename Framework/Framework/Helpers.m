@@ -13,6 +13,8 @@ NSString *const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
 NSString *const DateFormatRFC850 = @"EEEE, dd-MMM-yy HH:mm:ss 'GMT'";
 NSString *const DateFormatAsctime = @"E MMM dd HH:mm:ss yyyy";
 
+NSString *const ErrorKey = @"ErrorKey";
+
 static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
