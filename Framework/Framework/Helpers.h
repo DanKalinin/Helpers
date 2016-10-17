@@ -144,6 +144,9 @@ typedef void (^ErrorBlock)(NSError *);
 + (void)swizzleClassMethod:(SEL)swizzling with:(SEL)original;
 + (void)swizzleInstanceMethod:(SEL)swizzling with:(SEL)original;
 
+@property (class, readonly) NSBundle *bundle;
+@property (readonly) NSBundle *bundle;
+
 @end
 
 

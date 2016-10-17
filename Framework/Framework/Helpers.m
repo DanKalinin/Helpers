@@ -448,6 +448,16 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     method_exchangeImplementations(originalMethod, swizzlingMethod);
 }
 
++ (NSBundle *)bundle {
+    NSBundle *bundle = [NSBundle bundleForClass:self];
+    return bundle;
+}
+
+- (NSBundle *)bundle {
+    NSBundle *bundle = self.class.bundle;
+    return bundle;
+}
+
 @end
 
 
@@ -536,9 +546,8 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 }
 
 - (NSString *)localize:(NSString *)string {
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     NSString *table = [self.storyboard valueForKey:@"name"];
-    string = [bundle localizedStringForKey:string value:string table:table];
+    string = [self.bundle localizedStringForKey:string value:string table:table];
     return string;
 }
 
