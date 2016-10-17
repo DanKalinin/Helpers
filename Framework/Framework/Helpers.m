@@ -399,6 +399,19 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
+@implementation TableViewCell
+
+@end
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Categories
 
 @implementation UIColor (Helpers)

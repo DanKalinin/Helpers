@@ -122,6 +122,24 @@ typedef void (^ErrorBlock)(NSError *);
 
 
 
+@interface TableViewCell : UITableViewCell
+
+@property (weak, nonatomic) IBOutlet UIImageView *imageView1;
+
+@property (weak, nonatomic) IBOutlet UILabel *label1;
+@property (weak, nonatomic) IBOutlet UILabel *label2;
+
+@end
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Categories
 
 @interface UIColor (Helpers)
