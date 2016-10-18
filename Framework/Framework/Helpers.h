@@ -211,3 +211,18 @@ typedef void (^ErrorBlock)(NSError *);
 - (NSString *)localize:(NSString *)string;
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface UITableView (Helpers)
+
+@property (strong, nonatomic) IBOutlet UIView *emptyView;
+
+@end

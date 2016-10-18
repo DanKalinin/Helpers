@@ -565,3 +565,89 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface TableViewDataSource : NSObject <UITableViewDataSource>
+
+@end
+
+
+
+@implementation TableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    SurrogateContainer *dataSources = tableView.dataSource;
+    id <UITableViewDataSource> dataSource = dataSources.objects.firstObject;
+    NSInteger sections = [dataSource numberOfSectionsInTableView:tableView];
+    tableView.backgroundView = (sections == 0) ? tableView.emptyView : nil;
+    return sections;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface UITableView (HelpersSelectors)
+
+@property SurrogateContainer *dataSources;
+@property TableViewDataSource *tableViewDataSource;
+
+@end
+
+
+
+@implementation UITableView (Helpers)
+
++ (void)load {
+    SEL swizzling = @selector(setDataSource:);
+    SEL swizzled = @selector(swizzledSetDataSource:);
+    [self swizzleInstanceMethod:swizzling with:swizzled];
+}
+
+- (void)swizzledSetDataSource:(id<UITableViewDataSource>)dataSource {
+    self.dataSources = [SurrogateContainer new];
+    self.tableViewDataSource = [TableViewDataSource new];
+    self.dataSources.objects = @[dataSource, self.tableViewDataSource];
+    [self swizzledSetDataSource:(id)self.dataSources];
+}
+
+- (void)setEmptyView:(UIView *)emptyView {
+    objc_setAssociatedObject(self, @selector(emptyView), emptyView, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (UIView *)emptyView {
+    return objc_getAssociatedObject(self, @selector(emptyView));
+}
+
+- (void)setDataSources:(SurrogateContainer *)dataSources {
+    objc_setAssociatedObject(self, @selector(dataSources), dataSources, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (SurrogateContainer *)dataSources {
+    return objc_getAssociatedObject(self, @selector(dataSources));
+}
+
+- (void)setTableViewDataSource:(TableViewDataSource *)tableViewDataSource {
+    objc_setAssociatedObject(self, @selector(tableViewDataSource), tableViewDataSource, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (TableViewDataSource *)tableViewDataSource {
+    return objc_getAssociatedObject(self, @selector(tableViewDataSource));
+}
+
+@end
