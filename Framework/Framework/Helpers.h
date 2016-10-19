@@ -15,6 +15,10 @@ extern NSString *const DateFormatRFC1123;
 extern NSString *const DateFormatRFC850;
 extern NSString *const DateFormatAsctime;
 
+extern NSString *const PlistExtension;
+extern NSString *const XMLExtension;
+extern NSString *const JSONExtension;
+
 extern NSString *const ErrorKey;
 
 typedef void (^VoidBlock)(void);
