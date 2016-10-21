@@ -23,6 +23,8 @@ extern NSString *const ErrorKey;
 
 typedef void (^VoidBlock)(void);
 typedef void (^BoolBlock)(BOOL);
+typedef void (^FloatBlock)(float);
+typedef void (^DoubleBlock)(double);
 typedef void (^ErrorBlock)(NSError *);
 
 
