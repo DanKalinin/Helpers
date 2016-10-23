@@ -185,6 +185,9 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @interface NSDictionary (Helpers)
 
+- (NSDictionary *)deepCopy;
+- (NSMutableDictionary *)deepMutableCopy;
+
 @end
 
 

@@ -500,6 +500,18 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return object;
 }
 
+- (NSDictionary *)deepCopy {
+    NSData *data = [NSJSONSerialization dataWithJSONObject:self options:0 error:nil];
+    NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    return dictionary;
+}
+
+- (NSMutableDictionary *)deepMutableCopy {
+    NSData *data = [NSJSONSerialization dataWithJSONObject:self options:0 error:nil];
+    NSMutableDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:(NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves) error:nil];
+    return dictionary;
+}
+
 @end
 
 
