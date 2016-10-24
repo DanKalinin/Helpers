@@ -21,6 +21,8 @@ NSString *const ErrorKey = @"ErrorKey";
 
 static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
+static NSString *const ErrorsTable = @"Errors";
+
 
 
 
@@ -453,16 +455,16 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @implementation NSObject (Helpers)
 
-+ (void)swizzleClassMethod:(SEL)swizzling with:(SEL)original {
-    Method swizzlingMethod = class_getClassMethod(self, swizzling);
++ (void)swizzleClassMethod:(SEL)original with:(SEL)swizzled {
     Method originalMethod = class_getClassMethod(self, original);
-    method_exchangeImplementations(originalMethod, swizzlingMethod);
+    Method swizzledMethod = class_getClassMethod(self, swizzled);
+    method_exchangeImplementations(originalMethod, swizzledMethod);
 }
 
-+ (void)swizzleInstanceMethod:(SEL)swizzling with:(SEL)original {
-    Method swizzlingMethod = class_getInstanceMethod(self, swizzling);
++ (void)swizzleInstanceMethod:(SEL)original with:(SEL)swizzled {
     Method originalMethod = class_getInstanceMethod(self, original);
-    method_exchangeImplementations(originalMethod, swizzlingMethod);
+    Method swizzledMethod = class_getInstanceMethod(self, swizzled);
+    method_exchangeImplementations(originalMethod, swizzledMethod);
 }
 
 + (NSBundle *)bundle {
@@ -489,7 +491,9 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 @implementation NSDictionary (Helpers)
 
 + (void)load {
-    [self swizzleInstanceMethod:@selector(swizzledObjectForKeyedSubscript:) with:@selector(objectForKeyedSubscript:)];
+    SEL original = @selector(objectForKeyedSubscript:);
+    SEL swizzled = @selector(swizzledObjectForKeyedSubscript:);
+    [self swizzleInstanceMethod:original with:swizzled];
 }
 
 - (id)swizzledObjectForKeyedSubscript:(id)key {
@@ -547,9 +551,9 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 @implementation UIViewController (Helpers)
 
 + (void)load {
-    SEL swizzling = @selector(supportedInterfaceOrientations);
+    SEL original = @selector(supportedInterfaceOrientations);
     SEL swizzled = @selector(swizzledSupportedInterfaceOrientations);
-    [self swizzleInstanceMethod:swizzling with:swizzled];
+    [self swizzleInstanceMethod:original with:swizzled];
 }
 
 - (void)setOrientations:(NSUInteger)orientations {
@@ -630,9 +634,9 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 @implementation UITableView (Helpers)
 
 + (void)load {
-    SEL swizzling = @selector(setDataSource:);
+    SEL original = @selector(setDataSource:);
     SEL swizzled = @selector(swizzledSetDataSource:);
-    [self swizzleInstanceMethod:swizzling with:swizzled];
+    [self swizzleInstanceMethod:original with:swizzled];
 }
 
 - (void)swizzledSetDataSource:(id<UITableViewDataSource>)dataSource {
@@ -664,6 +668,47 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 - (TableViewDataSource *)tableViewDataSource {
     return objc_getAssociatedObject(self, @selector(tableViewDataSource));
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSBundle (HelpersSelectors)
+
+@property NSDictionary *errorUserInfos;
+
+@end
+
+
+
+@implementation NSBundle (Helpers)
+
+- (void)setErrorUserInfos:(NSDictionary *)errorUserInfos {
+    objc_setAssociatedObject(self, @selector(errorUserInfos), errorUserInfos, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (NSDictionary *)errorUserInfos {
+    NSDictionary *userInfos = objc_getAssociatedObject(self, @selector(errorUserInfos));
+    if (userInfos) return userInfos;
+    
+    NSURL *URL = [self URLForResource:ErrorsTable withExtension:PlistExtension];
+    NSDictionary *errorUserInfos = [NSDictionary dictionaryWithContentsOfURL:URL];
+    self.errorUserInfos = errorUserInfos;
+    return errorUserInfos;
+}
+
+- (NSError *)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code {
+    NSDictionary *userInfo = self.errorUserInfos[domain][@(code).stringValue];
+    NSError *error = [NSError errorWithDomain:domain code:code userInfo:userInfo];
+    return error;
 }
 
 @end

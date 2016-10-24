@@ -166,8 +166,8 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @interface NSObject (Helpers)
 
-+ (void)swizzleClassMethod:(SEL)swizzling with:(SEL)original;
-+ (void)swizzleInstanceMethod:(SEL)swizzling with:(SEL)original;
++ (void)swizzleClassMethod:(SEL)original with:(SEL)swizzled;
++ (void)swizzleInstanceMethod:(SEL)original with:(SEL)swizzled;
 
 @property (class, readonly) NSBundle *bundle;
 @property (readonly) NSBundle *bundle;
@@ -234,5 +234,20 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @interface UITableView (Helpers)
 
 @property (strong, nonatomic) IBOutlet UIView *emptyView;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSBundle (Helpers)
+
+- (NSError *)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code;
 
 @end
