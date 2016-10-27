@@ -8,6 +8,7 @@
 
 #import "Helpers.h"
 #import <objc/runtime.h>
+#import <arpa/inet.h>
 
 NSString *const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
 NSString *const DateFormatRFC850 = @"EEEE, dd-MMM-yy HH:mm:ss 'GMT'";
@@ -754,6 +755,30 @@ static NSString *const ErrorsTable = @"Errors";
 - (UIColor *)borderColor {
     UIColor *color = [UIColor colorWithCGColor:self.layer.borderColor];
     return color;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSNetService (Helpers)
+
+- (NSArray<NSString *> *)addressStrings {
+    NSMutableArray *addressStrings = [NSMutableArray array];
+    for (NSData *addressData in self.addresses) {
+        struct sockaddr_in *addressStruct = (struct sockaddr_in *)addressData.bytes;
+        char *addressChars = inet_ntoa(addressStruct->sin_addr);
+        NSString *addressString = [NSString stringWithUTF8String:addressChars];
+        [addressStrings addObject:addressString];
+    }
+    return addressStrings;
 }
 
 @end

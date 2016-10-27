@@ -135,6 +135,7 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @property (weak, nonatomic) IBOutlet UILabel *label1;
 @property (weak, nonatomic) IBOutlet UILabel *label2;
+@property (weak, nonatomic) IBOutlet UILabel *label3;
 
 @end
 
@@ -267,5 +268,20 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @interface UIView (Helpers)
 
 @property IBInspectable UIColor *borderColor;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSNetService (Helpers)
+
+@property (readonly) NSArray<NSString *> *addressStrings;
 
 @end
