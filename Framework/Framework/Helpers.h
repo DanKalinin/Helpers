@@ -151,6 +151,9 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @interface UIColor (Helpers)
 
++ (UIColor *)r:(CGFloat)r g:(CGFloat)g b:(CGFloat)b a:(CGFloat)a;
+
++ (UIColor *)colorWithRGBAString:(NSString *)rgbaString;
 + (UIColor *)colorWithHexString:(NSString *)hexString;
 
 @end
@@ -249,5 +252,20 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @interface NSBundle (Helpers)
 
 - (NSError *)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface UIView (Helpers)
+
+@property IBInspectable UIColor *borderColor;
 
 @end

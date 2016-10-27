@@ -422,6 +422,24 @@ static NSString *const ErrorsTable = @"Errors";
 
 @implementation UIColor (Helpers)
 
++ (UIColor *)r:(CGFloat)r g:(CGFloat)g b:(CGFloat)b a:(CGFloat)a {
+    r /= 255.0;
+    g /= 255.0;
+    b /= 255.0;
+    UIColor *color = [self colorWithRed:r green:g blue:b alpha:a];
+    return color;
+}
+
++ (UIColor *)colorWithRGBAString:(NSString *)rgbaString {
+    NSArray *components = [rgbaString componentsSeparatedByString:@","];
+    NSString *r = components[0];
+    NSString *g = components[1];
+    NSString *b = components[2];
+    NSString *a = components[3];
+    UIColor *color = [self r:r.doubleValue g:g.doubleValue b:b.doubleValue a:a.doubleValue];
+    return color;
+}
+
 + (UIColor *)colorWithHexString:(NSString *)hexString {
     unsigned int n, r, g, b;
     CGFloat k, red, green, blue;
@@ -438,7 +456,7 @@ static NSString *const ErrorsTable = @"Errors";
     green = k * g;
     blue = k * b;
     
-    UIColor *color = [UIColor colorWithRed:red green:green blue:blue alpha:1.0];
+    UIColor *color = [self colorWithRed:red green:green blue:blue alpha:1.0];
     return color;
 }
 
@@ -607,7 +625,12 @@ static NSString *const ErrorsTable = @"Errors";
     SurrogateContainer *dataSources = tableView.dataSource;
     id <UITableViewDataSource> dataSource = dataSources.objects.firstObject;
     NSInteger sections = [dataSource numberOfSectionsInTableView:tableView];
-    tableView.backgroundView = (sections == 0) ? tableView.emptyView : nil;
+    BOOL show = (sections == 0);
+    if (sections == 1) {
+        NSInteger rows = [dataSource tableView:tableView numberOfRowsInSection:0];
+        show = (rows == 0);
+    }
+    tableView.backgroundView = show ? tableView.emptyView : nil;
     return sections;
 }
 
@@ -709,6 +732,28 @@ static NSString *const ErrorsTable = @"Errors";
     NSDictionary *userInfo = self.errorUserInfos[domain][@(code).stringValue];
     NSError *error = [NSError errorWithDomain:domain code:code userInfo:userInfo];
     return error;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation UIView (Helpers)
+
+- (void)setBorderColor:(UIColor *)borderColor {
+    self.layer.borderColor = borderColor.CGColor;
+}
+
+- (UIColor *)borderColor {
+    UIColor *color = [UIColor colorWithCGColor:self.layer.borderColor];
+    return color;
 }
 
 @end
