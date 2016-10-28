@@ -20,6 +20,7 @@ extern NSString *const XMLExtension;
 extern NSString *const JSONExtension;
 
 extern NSString *const ErrorKey;
+extern NSString *const ObjectKey;
 
 typedef void (^VoidBlock)(void);
 typedef void (^BoolBlock)(BOOL);
@@ -253,6 +254,21 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @interface NSBundle (Helpers)
 
 - (NSError *)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSError (Helpers)
+
+- (void)setUserInfoValue:(id)value forKey:(NSString *)key;
 
 @end
 

@@ -18,11 +18,12 @@ NSString *const PlistExtension = @"plist";
 NSString *const XMLExtension = @"xml";
 NSString *const JSONExtension = @"json";
 
-NSString *const ErrorKey = @"ErrorKey";
-
-static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
+NSString *const ErrorKey = @"error";
+NSString *const ObjectKey = @"object";
 
 static NSString *const ErrorsTable = @"Errors";
+
+static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
@@ -733,6 +734,26 @@ static NSString *const ErrorsTable = @"Errors";
     NSDictionary *userInfo = self.errorUserInfos[domain][@(code).stringValue];
     NSError *error = [NSError errorWithDomain:domain code:code userInfo:userInfo];
     return error;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSError (Helpers)
+
+- (void)setUserInfoValue:(id)value forKey:(NSString *)key {
+    NSString *userInfoKey = NSStringFromSelector(@selector(userInfo));
+    NSMutableDictionary *userInfo = self.userInfo.mutableCopy;
+    userInfo[key] = value;
+    [self setValue:userInfo forKey:userInfoKey];
 }
 
 @end
