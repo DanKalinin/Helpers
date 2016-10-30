@@ -104,6 +104,14 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @interface FilledButton : UIButton
 
+@property IBInspectable UIColor *highlightedBackgroundColor;
+@property IBInspectable UIColor *selectedBackgroundColor;
+@property IBInspectable UIColor *disabledBackgroundColor;
+
+@property IBInspectable UIColor *highlightedBorderColor;
+@property IBInspectable UIColor *selectedBorderColor;
+@property IBInspectable UIColor *disabledBorderColor;
+
 @end
 
 
@@ -298,6 +306,6 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @interface NSNetService (Helpers)
 
-@property (readonly) NSArray<NSString *> *addressStrings;
++ (NSString *)stringFromAddressData:(NSData *)data;
 
 @end

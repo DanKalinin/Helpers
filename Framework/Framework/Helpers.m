@@ -323,7 +323,8 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @interface FilledButton ()
 
-@property UIColor *initialBackgroundColor;
+@property UIColor *defaultBackgroundColor;
+@property UIColor *defaultBorderColor;
 
 @end
 
@@ -331,17 +332,43 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @implementation FilledButton
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        self.initialBackgroundColor = self.backgroundColor;
-    }
-    return self;
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.defaultBackgroundColor = self.backgroundColor;
+    self.defaultBorderColor = self.borderColor;
 }
 
 - (void)setHighlighted:(BOOL)highlighted {
     [super setHighlighted:highlighted];
-    self.backgroundColor = highlighted ? self.tintColor : self.initialBackgroundColor;
+    if (highlighted) {
+        self.backgroundColor = self.highlightedBackgroundColor;
+        self.borderColor = self.highlightedBorderColor;
+    } else {
+        self.backgroundColor = self.defaultBackgroundColor;
+        self.borderColor = self.defaultBorderColor;
+    }
+}
+
+- (void)setSelected:(BOOL)selected {
+    [super setSelected:selected];
+    if (selected) {
+        self.backgroundColor = self.selectedBackgroundColor;
+        self.borderColor = self.selectedBorderColor;
+    } else {
+        self.backgroundColor = self.defaultBackgroundColor;
+        self.borderColor = self.defaultBorderColor;
+    }
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    [super setEnabled:enabled];
+    if (enabled) {
+        self.backgroundColor = self.defaultBackgroundColor;
+        self.borderColor = self.defaultBorderColor;
+    } else {
+        self.backgroundColor = self.disabledBackgroundColor;
+        self.borderColor = self.disabledBorderColor;
+    }
 }
 
 @end
@@ -627,12 +654,14 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     SurrogateContainer *dataSources = tableView.dataSource;
     id <UITableViewDataSource> dataSource = dataSources.objects.firstObject;
     NSInteger sections = [dataSource numberOfSectionsInTableView:tableView];
-    BOOL show = (sections == 0);
-    if (sections == 1) {
-        NSInteger rows = [dataSource tableView:tableView numberOfRowsInSection:0];
-        show = (rows == 0);
+    if (tableView.emptyView) {
+        BOOL show = (sections == 0);
+        if (sections == 1) {
+            NSInteger rows = [dataSource tableView:tableView numberOfRowsInSection:0];
+            show = (rows == 0);
+        }
+        tableView.backgroundView = show ? tableView.emptyView : nil;
     }
-    tableView.backgroundView = show ? tableView.emptyView : nil;
     return sections;
 }
 
@@ -791,15 +820,11 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @implementation NSNetService (Helpers)
 
-- (NSArray<NSString *> *)addressStrings {
-    NSMutableArray *addressStrings = [NSMutableArray array];
-    for (NSData *addressData in self.addresses) {
-        struct sockaddr_in *addressStruct = (struct sockaddr_in *)addressData.bytes;
-        char *addressChars = inet_ntoa(addressStruct->sin_addr);
-        NSString *addressString = [NSString stringWithUTF8String:addressChars];
-        [addressStrings addObject:addressString];
-    }
-    return addressStrings;
++ (NSString *)stringFromAddressData:(NSData *)data {
+    struct sockaddr_in *addressStruct = (struct sockaddr_in *)data.bytes;
+    char *addressChars = inet_ntoa(addressStruct->sin_addr);
+    NSString *addressString = [NSString stringWithUTF8String:addressChars];
+    return addressString;
 }
 
 @end
