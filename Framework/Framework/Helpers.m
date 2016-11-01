@@ -250,29 +250,20 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
-@implementation TextField
+@interface TextFieldDelegate : NSObject <UITextFieldDelegate>
 
 @end
 
 
 
+@implementation TextFieldDelegate
 
-
-
-
-
-
-
-@interface PasswordTextFieldDelegate : NSObject <UITextFieldDelegate>
-
-@end
-
-
-
-@implementation PasswordTextFieldDelegate
-
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    textField.text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+- (BOOL)textField:(TextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString *text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if (textField.maxLength > 0 && text.length > textField.maxLength) {
+        text = [text substringToIndex:textField.maxLength];
+    }
+    textField.text = text;
     return NO;
 }
 
@@ -287,22 +278,22 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
-@interface PasswordTextField ()
+@interface TextField ()
 
 @property SurrogateContainer *delegates;
-@property PasswordTextFieldDelegate *textFieldDelegate;
+@property TextFieldDelegate *textFieldDelegate;
 
 @end
 
 
 
-@implementation PasswordTextField
+@implementation TextField
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
         self.delegates = [SurrogateContainer new];
-        self.textFieldDelegate = [PasswordTextFieldDelegate new];
+        self.textFieldDelegate = [TextFieldDelegate new];
         self.delegates.objects = @[self.textFieldDelegate];
         [super setDelegate:(id)self.delegates];
     }
@@ -315,7 +306,9 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 - (void)setRightView:(UIButton *)btnEye {
     [super setRightView:btnEye];
-    [btnEye addTarget:self action:@selector(onEye:) forControlEvents:UIControlEventTouchUpInside];
+    if (self.secureTextEntry) {
+        [btnEye addTarget:self action:@selector(onEye:) forControlEvents:UIControlEventTouchUpInside];
+    }
 }
 
 - (void)onEye:(UIButton *)sender {

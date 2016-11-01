@@ -104,19 +104,6 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 
 
-@interface PasswordTextField : TextField
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface FilledButton : UIButton
 
 @property IBInspectable UIColor *highlightedBackgroundColor;
