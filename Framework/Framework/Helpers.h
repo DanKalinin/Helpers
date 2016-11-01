@@ -89,7 +89,22 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 
 
-@interface PasswordTextField : UITextField
+@interface TextField : UITextField
+
+@property IBInspectable NSUInteger maxLength;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface PasswordTextField : TextField
 
 @end
 
@@ -140,11 +155,15 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @interface TableViewCell : UITableViewCell
 
+@property IBInspectable NSInteger selectedAccessoryType;
+
 @property (weak, nonatomic) IBOutlet UIImageView *imageView1;
 
 @property (weak, nonatomic) IBOutlet UILabel *label1;
 @property (weak, nonatomic) IBOutlet UILabel *label2;
 @property (weak, nonatomic) IBOutlet UILabel *label3;
+
+@property (weak, nonatomic) IBOutlet UITextField *textField1;
 
 @end
 
@@ -232,6 +251,21 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @property IBInspectable NSUInteger orientations;
 
 - (NSString *)localize:(NSString *)string;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface UITableViewController (Helpers)
+
+- (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 

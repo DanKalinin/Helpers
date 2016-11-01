@@ -250,6 +250,19 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
+@implementation TextField
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface PasswordTextFieldDelegate : NSObject <UITextFieldDelegate>
 
 @end
@@ -434,7 +447,25 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
+@interface TableViewCell ()
+
+@property UITableViewCellAccessoryType defaultAccessoryType;
+
+@end
+
+
+
 @implementation TableViewCell
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.defaultAccessoryType = self.accessoryType;
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+    self.accessoryType = selected ? self.selectedAccessoryType : self.defaultAccessoryType;
+}
 
 @end
 
@@ -663,6 +694,24 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
         tableView.backgroundView = show ? tableView.emptyView : nil;
     }
     return sections;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation UITableViewController (Helpers)
+
+- (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    cell.accessoryType = accessoryType;
 }
 
 @end
