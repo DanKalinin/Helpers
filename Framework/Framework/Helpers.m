@@ -715,8 +715,8 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 }
 
 - (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType {
-    BOOL authorized = [self isAuthorizedImagePickerControllerSourceType:sourceType];
-    if (!authorized) return;
+    BOOL denied = [self isDeniedImagePickerControllerSourceType:sourceType];
+    if (denied) return;
     
     UIImagePickerController *cameraController = [UIImagePickerController new];
     cameraController.sourceType = sourceType;
@@ -726,22 +726,22 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     [self presentViewController:cameraController animated:YES completion:nil];
 }
 
-- (BOOL)isAuthorizedImagePickerControllerSourceType:(UIImagePickerControllerSourceType)sourceType {
-    BOOL authorized = YES;
+- (BOOL)isDeniedImagePickerControllerSourceType:(UIImagePickerControllerSourceType)sourceType {
+    BOOL denied = NO;
     
     BOOL cameraSourceType = (sourceType == UIImagePickerControllerSourceTypeCamera);
     if (cameraSourceType) {
         AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-        authorized = (status == AVAuthorizationStatusAuthorized);
+        denied = (status == AVAuthorizationStatusDenied);
     } else {
         PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
-        authorized = (status == PHAuthorizationStatusAuthorized);
+        denied = (status == PHAuthorizationStatusDenied);
     }
     
-    if (!authorized) {
+    if (denied) {
         UIAlertAction *settingsAction = [UIAlertAction actionWithTitle:[self localize:@"Open Settings"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-            [UIApplication.sharedApplication openURL:settingsURL options:@{} completionHandler:nil];
+            [UIApplication.sharedApplication openURL:settingsURL];
         }];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[self localize:@"Cancel"] style:UIAlertActionStyleCancel handler:nil];
         
@@ -761,7 +761,7 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
         [self presentViewController:ac animated:YES completion:nil];
     }
     
-    return authorized;
+    return denied;
 }
 
 @end
