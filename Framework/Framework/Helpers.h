@@ -207,6 +207,23 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 - (NSDictionary *)deepCopy;
 - (NSMutableDictionary *)deepMutableCopy;
 
+@property (readonly) NSDictionary *swappedDictionary;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSMutableDictionary (Helpers)
+
+- (void)swap;
+
 @end
 
 
@@ -233,11 +250,13 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 
 
-@interface UIViewController (Helpers)
+@interface UIViewController (Helpers) <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property IBInspectable NSUInteger orientations;
+@property (readonly) UIAlertController *imagePickerAlertController;
 
 - (NSString *)localize:(NSString *)string;
+- (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType;
 
 @end
 
@@ -328,5 +347,35 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @interface NSNetService (Helpers)
 
 + (NSString *)stringFromAddressData:(NSData *)data;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface UIImage (Helpers)
+
+- (instancetype)imageByRotatingClockwise:(BOOL)clockwise;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSFileManager (Helpers)
+
+@property (readonly) NSURL *userDocumentsDirectoryURL;
 
 @end

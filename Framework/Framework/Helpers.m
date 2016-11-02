@@ -9,6 +9,8 @@
 #import "Helpers.h"
 #import <objc/runtime.h>
 #import <arpa/inet.h>
+#import <AVFoundation/AVFoundation.h>
+#import <Photos/Photos.h>
 
 NSString *const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
 NSString *const DateFormatRFC850 = @"EEEE, dd-MMM-yy HH:mm:ss 'GMT'";
@@ -587,6 +589,29 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return dictionary;
 }
 
+- (NSDictionary *)swappedDictionary {
+    NSDictionary *dictionary = [NSDictionary dictionaryWithObjects:self.allKeys forKeys:self.allValues];
+    return dictionary;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSMutableDictionary (Helpers)
+
+- (void)swap {
+    NSDictionary *dictionary = [self swappedDictionary];
+    [self setDictionary:dictionary];
+}
+
 @end
 
 
@@ -653,6 +678,90 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     NSString *table = [self.storyboard valueForKey:@"name"];
     string = [self.bundle localizedStringForKey:string value:string table:table];
     return string;
+}
+
+#pragma mark - Image picker controller
+
+- (UIAlertController *)imagePickerAlertController {
+    
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    // Camera
+    
+    BOOL addAction = [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera];
+    if (addAction) {
+        UIAlertAction *cameraAction = [UIAlertAction actionWithTitle:[self localize:@"Take a picture"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self presentImagePickerControllerForSourceType:UIImagePickerControllerSourceTypeCamera];
+        }];
+        [ac addAction:cameraAction];
+    }
+    
+    // Photos
+    
+    addAction = [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
+    if (addAction) {
+        UIAlertAction *photoAction = [UIAlertAction actionWithTitle:[self localize:@"Choose from gallery"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self presentImagePickerControllerForSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
+        }];
+        [ac addAction:photoAction];
+    }
+    
+    // Cancel
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[self localize:@"Cancel"] style:UIAlertActionStyleCancel handler:nil];
+    [ac addAction:cancelAction];
+    
+    return ac;
+}
+
+- (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType {
+    BOOL authorized = [self isAuthorizedImagePickerControllerSourceType:sourceType];
+    if (!authorized) return;
+    
+    UIImagePickerController *cameraController = [UIImagePickerController new];
+    cameraController.sourceType = sourceType;
+    cameraController.allowsEditing = NO;
+    cameraController.delegate = self;
+    
+    [self presentViewController:cameraController animated:YES completion:nil];
+}
+
+- (BOOL)isAuthorizedImagePickerControllerSourceType:(UIImagePickerControllerSourceType)sourceType {
+    BOOL authorized = YES;
+    
+    BOOL cameraSourceType = (sourceType == UIImagePickerControllerSourceTypeCamera);
+    if (cameraSourceType) {
+        AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        authorized = (status == AVAuthorizationStatusAuthorized);
+    } else {
+        PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+        authorized = (status == PHAuthorizationStatusAuthorized);
+    }
+    
+    if (!authorized) {
+        UIAlertAction *settingsAction = [UIAlertAction actionWithTitle:[self localize:@"Open Settings"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+            [UIApplication.sharedApplication openURL:settingsURL options:@{} completionHandler:nil];
+        }];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[self localize:@"Cancel"] style:UIAlertActionStyleCancel handler:nil];
+        
+        NSString *title, *message;
+        if (cameraSourceType) {
+            title = [self localize:@"Camera access denied"];
+            message = [self localize:@"You can allow access to camera in Settings"];
+        } else {
+            title = [self localize:@"Photos access denied"];
+            message = [self localize:@"You can allow access to photos in Settings"];
+        }
+        
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:settingsAction];
+        [ac addAction:cancelAction];
+        
+        [self presentViewController:ac animated:YES completion:nil];
+    }
+    
+    return authorized;
 }
 
 @end
@@ -867,6 +976,54 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     char *addressChars = inet_ntoa(addressStruct->sin_addr);
     NSString *addressString = [NSString stringWithUTF8String:addressChars];
     return addressString;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation UIImage (Helpers)
+
+- (instancetype)imageByRotatingClockwise:(BOOL)clockwise {
+    
+    UIImageOrientation orientation = self.imageOrientation;
+    if (orientation == UIImageOrientationUp) {
+        orientation = clockwise ? UIImageOrientationRight : UIImageOrientationLeft;
+    } else if (orientation == UIImageOrientationDown) {
+        orientation = clockwise ? UIImageOrientationLeft : UIImageOrientationRight;
+    } else if (orientation == UIImageOrientationLeft) {
+        orientation = clockwise ? UIImageOrientationUp : UIImageOrientationDown;
+    } else if (orientation == UIImageOrientationRight) {
+        orientation = clockwise ? UIImageOrientationDown : UIImageOrientationUp;
+    }
+    
+    UIImage *image = [UIImage imageWithCGImage:self.CGImage scale:self.scale orientation:orientation];
+    return image;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSFileManager (Helpers)
+
+- (NSURL *)userDocumentsDirectoryURL {
+    NSArray *URLs = [self URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+    return URLs.firstObject;
 }
 
 @end
