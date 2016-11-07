@@ -11,6 +11,7 @@
 #import <arpa/inet.h>
 #import <AVFoundation/AVFoundation.h>
 #import <Photos/Photos.h>
+#import <GLKit/GLKit.h>
 
 NSString *const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
 NSString *const DateFormatRFC850 = @"EEEE, dd-MMM-yy HH:mm:ss 'GMT'";
@@ -22,6 +23,13 @@ NSString *const JSONExtension = @"json";
 
 NSString *const ErrorKey = @"error";
 NSString *const ObjectKey = @"object";
+
+CGFloat CGPointDistance(CGPoint p1, CGPoint p2) {
+    GLKVector2 v1 = GLKVector2Make(p1.x, p1.y);
+    GLKVector2 v2 = GLKVector2Make(p2.x, p2.y);
+    CGFloat distance = GLKVector2Distance(v1, v2);
+    return distance;
+}
 
 static NSString *const ErrorsTable = @"Errors";
 
@@ -473,6 +481,25 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
+@implementation ShapeLayerView
+
+@dynamic layer;
+
++ (Class)layerClass {
+    return CAShapeLayer.class;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Categories
 
 @implementation UIColor (Helpers)
@@ -548,6 +575,17 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 - (NSBundle *)bundle {
     NSBundle *bundle = self.class.bundle;
     return bundle;
+}
+
++ (UINib *)nib {
+    NSString *name = NSStringFromClass(self);
+    UINib *nib = [UINib nibWithNibName:name bundle:self.bundle];
+    return nib;
+}
+
+- (UINib *)nib {
+    UINib *nib = self.class.nib;
+    return nib;
 }
 
 @end
@@ -1024,6 +1062,27 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 - (NSURL *)userDocumentsDirectoryURL {
     NSArray *URLs = [self URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
     return URLs.firstObject;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation UINib (Helpers)
+
+- (id)viewWithTag:(NSInteger)tag {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"tag = %i", (int)tag];
+    
+    NSArray *objects = [self instantiateWithOwner:nil options:nil];
+    id object = [objects filteredArrayUsingPredicate:predicate].firstObject;
+    return object;
 }
 
 @end

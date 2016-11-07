@@ -22,6 +22,8 @@ extern NSString *const JSONExtension;
 extern NSString *const ErrorKey;
 extern NSString *const ObjectKey;
 
+extern CGFloat CGPointDistance(CGPoint p1, CGPoint p2);
+
 typedef void (^VoidBlock)(void);
 typedef void (^BoolBlock)(BOOL);
 typedef void (^FloatBlock)(float);
@@ -152,6 +154,24 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @property (weak, nonatomic) IBOutlet UITextField *textField1;
 
+@property (weak, nonatomic) IBOutlet UIControl *control1;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface ShapeLayerView : UIView
+
+@property (class, readonly) Class layerClass;
+@property (readonly) CAShapeLayer *layer;
+
 @end
 
 
@@ -190,6 +210,9 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @property (class, readonly) NSBundle *bundle;
 @property (readonly) NSBundle *bundle;
+
+@property (class, readonly) UINib *nib;
+@property (readonly) UINib *nib;
 
 @end
 
@@ -377,5 +400,20 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @interface NSFileManager (Helpers)
 
 @property (readonly) NSURL *userDocumentsDirectoryURL;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface UINib (Helpers)
+
+- (id)viewWithTag:(NSInteger)tag;
 
 @end
