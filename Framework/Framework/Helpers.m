@@ -1086,3 +1086,25 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+@implementation NSArray (Helpers)
+
+- (id)_indexForKeyPath:(NSString *)keypath {
+    NSInteger index = keypath.integerValue;
+    if (index < 0) return nil;
+    if (index >= self.count) return nil;
+    
+    id object = self[index];
+    return object;
+}
+
+@end

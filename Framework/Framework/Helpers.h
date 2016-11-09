@@ -417,3 +417,16 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 - (id)viewWithTag:(NSInteger)tag;
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface NSArray (Helpers)
+
+@end
