@@ -281,6 +281,9 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 - (NSString *)localize:(NSString *)string;
 - (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType;
 
+- (void)embedViewController:(UIViewController *)vc toFrame:(CGRect)frame;
+- (void)removeEmbeddedViewController:(UIViewController *)vc;
+
 @end
 
 

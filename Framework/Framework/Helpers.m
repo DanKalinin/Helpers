@@ -274,6 +274,7 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
         text = [text substringToIndex:textField.maxLength];
     }
     textField.text = text;
+    [textField sendActionsForControlEvents:UIControlEventEditingChanged];
     return NO;
 }
 
@@ -716,6 +717,19 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     NSString *table = [self.storyboard valueForKey:@"name"];
     string = [self.bundle localizedStringForKey:string value:string table:table];
     return string;
+}
+
+- (void)embedViewController:(UIViewController *)vc toFrame:(CGRect)frame {
+    [self addChildViewController:vc];
+    vc.view.frame = frame;
+    [self.view addSubview:vc.view];
+    [vc didMoveToParentViewController:self];
+}
+
+- (void)removeEmbeddedViewController:(UIViewController *)vc {
+    [vc willMoveToParentViewController:nil];
+    [vc.view removeFromSuperview];
+    [vc removeFromParentViewController];
 }
 
 #pragma mark - Image picker controller
