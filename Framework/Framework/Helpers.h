@@ -183,6 +183,22 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 
 
+@interface GradientLayerView : UIView
+
+@property (class, readonly) Class layerClass;
+@property (readonly) CAGradientLayer *layer;
+
+@end
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Categories
 
 @interface UIColor (Helpers)

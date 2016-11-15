@@ -501,6 +501,25 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
+@implementation GradientLayerView
+
+@dynamic layer;
+
++ (Class)layerClass {
+    return CAGradientLayer.class;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Categories
 
 @implementation UIColor (Helpers)
