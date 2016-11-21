@@ -916,10 +916,16 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 }
 
 - (void)swizzledSetDataSource:(id<UITableViewDataSource>)dataSource {
-    self.dataSources = [SurrogateContainer new];
-    self.tableViewDataSource = [TableViewDataSource new];
-    self.dataSources.objects = @[dataSource, self.tableViewDataSource];
-    [self swizzledSetDataSource:(id)self.dataSources];
+    NSString *a = NSStringFromClass(self.class);
+    NSString *b = NSStringFromClass(UITableView.class);
+    if ([a isEqualToString:b]) {
+        self.dataSources = [SurrogateContainer new];
+        self.tableViewDataSource = [TableViewDataSource new];
+        self.dataSources.objects = @[dataSource, self.tableViewDataSource];
+        [self swizzledSetDataSource:(id)self.dataSources];
+    } else {
+        [self swizzledSetDataSource:dataSource];
+    }
 }
 
 - (void)setEmptyView:(UIView *)emptyView {
@@ -1027,6 +1033,12 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 - (UIColor *)borderColor {
     UIColor *color = [UIColor colorWithCGColor:self.layer.borderColor];
     return color;
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self];
+    id copy = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    return copy;
 }
 
 @end

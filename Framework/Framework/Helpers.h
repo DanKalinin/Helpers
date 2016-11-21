@@ -371,9 +371,10 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 
 
-@interface UIView (Helpers)
+@interface UIView (Helpers) <NSCopying>
 
 @property IBInspectable UIColor *borderColor;
+- (id)copyWithZone:(NSZone *)zone;
 
 @end
 
