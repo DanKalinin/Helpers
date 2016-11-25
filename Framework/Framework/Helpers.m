@@ -451,6 +451,25 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
+@implementation TableViewController
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = self.cells[indexPath.row];
+    CGFloat height = cell.frame.size.height * !cell.hidden;
+    return height;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface TableViewCell ()
 
 @property UITableViewCellAccessoryType defaultAccessoryType;

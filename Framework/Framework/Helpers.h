@@ -142,6 +142,21 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 
 
+@interface TableViewController : UITableViewController
+
+@property (strong, nonatomic) IBOutletCollection(UITableViewCell) NSArray *cells;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface TableViewCell : UITableViewCell
 
 @property IBInspectable NSInteger selectedAccessoryType;
