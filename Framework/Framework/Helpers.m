@@ -1045,6 +1045,12 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @implementation UIView (Helpers)
 
++ (void)load {
+    SEL original = @selector(intrinsicContentSize);
+    SEL swizzled = @selector(swizzledIntrinsicContentSize);
+    [self swizzleInstanceMethod:original with:swizzled];
+}
+
 - (void)setBorderColor:(UIColor *)borderColor {
     self.layer.borderColor = borderColor.CGColor;
 }
@@ -1052,6 +1058,21 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 - (UIColor *)borderColor {
     UIColor *color = [UIColor colorWithCGColor:self.layer.borderColor];
     return color;
+}
+
+- (void)setIntrinsicContentSize:(CGSize)intrinsicContentSize {
+    NSValue *size = [NSValue valueWithCGSize:intrinsicContentSize];
+    objc_setAssociatedObject(self, @selector(intrinsicContentSize), size, OBJC_ASSOCIATION_RETAIN);
+    [self invalidateIntrinsicContentSize];
+}
+
+- (CGSize)swizzledIntrinsicContentSize {
+    NSValue *size = objc_getAssociatedObject(self, @selector(intrinsicContentSize));
+    if (size) {
+        return size.CGSizeValue;
+    } else {
+        return [self swizzledIntrinsicContentSize];
+    }
 }
 
 - (id)copyWithZone:(NSZone *)zone {

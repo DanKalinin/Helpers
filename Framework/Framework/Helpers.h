@@ -389,6 +389,7 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @interface UIView (Helpers) <NSCopying>
 
 @property IBInspectable UIColor *borderColor;
+@property IBInspectable CGSize intrinsicContentSize;
 - (id)copyWithZone:(NSZone *)zone;
 
 @end
