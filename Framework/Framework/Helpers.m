@@ -627,6 +627,17 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return nib;
 }
 
++ (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle {
+    NSDataAsset *asset = [NSDataAsset.alloc initWithName:name bundle:bundle];
+    id object = [NSKeyedUnarchiver unarchiveObjectWithData:asset.data];
+    return object;
+}
+
++ (instancetype)objectNamed:(NSString *)name {
+    id object = [self objectNamed:name inBundle:nil];
+    return object;
+}
+
 @end
 
 

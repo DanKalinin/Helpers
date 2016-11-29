@@ -245,6 +245,9 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @property (class, readonly) UINib *nib;
 @property (readonly) UINib *nib;
 
++ (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle;
++ (instancetype)objectNamed:(NSString *)name;
+
 @end
 
 
