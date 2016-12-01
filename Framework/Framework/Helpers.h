@@ -29,6 +29,7 @@ typedef void (^BoolBlock)(BOOL);
 typedef void (^FloatBlock)(float);
 typedef void (^DoubleBlock)(double);
 typedef void (^ErrorBlock)(NSError *);
+typedef void (^ArrayBlock)(NSArray *);
 typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 
