@@ -912,11 +912,6 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @implementation UITableViewController (Helpers)
 
-- (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    cell.accessoryType = accessoryType;
-}
-
 @end
 
 
@@ -980,6 +975,11 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 - (TableViewDataSource *)tableViewDataSource {
     return objc_getAssociatedObject(self, @selector(tableViewDataSource));
+}
+
+- (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [self cellForRowAtIndexPath:indexPath];
+    cell.accessoryType = accessoryType;
 }
 
 @end

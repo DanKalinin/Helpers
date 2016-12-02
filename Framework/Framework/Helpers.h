@@ -332,8 +332,6 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @interface UITableViewController (Helpers)
 
-- (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath;
-
 @end
 
 
@@ -348,6 +346,8 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @interface UITableView (Helpers)
 
 @property (strong, nonatomic) IBOutlet UIView *emptyView;
+
+- (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
