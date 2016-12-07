@@ -249,6 +249,9 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 + (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle;
 + (instancetype)objectNamed:(NSString *)name;
 
++ (void)invokeHandler:(VoidBlock)handler;
+- (void)invokeHandler:(VoidBlock)handler;
+
 + (void)invokeHandler:(ErrorBlock)handler error:(NSError *)error;
 - (void)invokeHandler:(ErrorBlock)handler error:(NSError *)error;
 
@@ -432,8 +435,11 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 - (instancetype)imageWithSize:(CGSize)size;
 - (instancetype)imageWithScale:(CGFloat)scale;
 
-- (BOOL)writePNGToURL:(NSURL *)URL error:(NSError **)error;
-- (void)writePNGToURL:(NSURL *)URL completion:(ErrorBlock)completion;
+- (void)writePNGToURL:(NSURL *)URL;
+- (void)writePNGToURL:(NSURL *)URL completion:(VoidBlock)completion;
+
+- (void)writeJPEGToURL:(NSURL *)URL quality:(CGFloat)quality;
+- (void)writeJPEGToURL:(NSURL *)URL quality:(CGFloat)quality completion:(VoidBlock)completion;
 
 @end
 
@@ -491,7 +497,6 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @interface NSData (Helpers)
 
-- (BOOL)writeToURL:(NSURL *)URL error:(NSError **)error;
-- (void)writeToURL:(NSURL *)URL completion:(ErrorBlock)completion;
+- (void)writeToURL:(NSURL *)URL completion:(VoidBlock)completion;
 
 @end

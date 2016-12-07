@@ -638,6 +638,16 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return object;
 }
 
++ (void)invokeHandler:(VoidBlock)handler {
+    if (handler) {
+        handler();
+    }
+}
+
+- (void)invokeHandler:(VoidBlock)handler {
+    [self.class invokeHandler:handler];
+}
+
 + (void)invokeHandler:(ErrorBlock)handler error:(NSError *)error {
     if (handler) {
         handler(error);
@@ -1177,14 +1187,23 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return image;
 }
 
-- (BOOL)writePNGToURL:(NSURL *)URL error:(NSError **)error {
+- (void)writePNGToURL:(NSURL *)URL {
     NSData *data = UIImagePNGRepresentation(self);
-    BOOL success = [data writeToURL:URL error:error];
-    return success;
+    [data writeToURL:URL atomically:YES];
 }
 
-- (void)writePNGToURL:(NSURL *)URL completion:(ErrorBlock)completion {
+- (void)writePNGToURL:(NSURL *)URL completion:(VoidBlock)completion {
     NSData *data = UIImagePNGRepresentation(self);
+    [data writeToURL:URL completion:completion];
+}
+
+- (void)writeJPEGToURL:(NSURL *)URL quality:(CGFloat)quality {
+    NSData *data = UIImageJPEGRepresentation(self, quality);
+    [data writeToURL:URL atomically:YES];
+}
+
+- (void)writeJPEGToURL:(NSURL *)URL quality:(CGFloat)quality completion:(VoidBlock)completion {
+    NSData *data = UIImageJPEGRepresentation(self, quality);
     [data writeToURL:URL completion:completion];
 }
 
@@ -1262,17 +1281,11 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @implementation NSData (Helpers)
 
-- (BOOL)writeToURL:(NSURL *)URL error:(NSError **)error {
-    BOOL success = [self writeToURL:URL options:NSDataWritingAtomic error:error];
-    return success;
-}
-
-- (void)writeToURL:(NSURL *)URL completion:(ErrorBlock)completion {
+- (void)writeToURL:(NSURL *)URL completion:(VoidBlock)completion {
     [NSOperationQueue.new addOperationWithBlock:^{
-        NSError *error = nil;
-        [self writeToURL:URL options:NSDataWritingAtomic error:&error];
+        [self writeToURL:URL atomically:YES];
         [NSOperationQueue.mainQueue addOperationWithBlock:^{
-            [self invokeHandler:completion error:error];
+            [self invokeHandler:completion];
         }];
     }];
 }
