@@ -638,6 +638,16 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return object;
 }
 
++ (void)invokeHandler:(ErrorBlock)handler error:(NSError *)error {
+    if (handler) {
+        handler(error);
+    }
+}
+
+- (void)invokeHandler:(ErrorBlock)handler error:(NSError *)error {
+    [self.class invokeHandler:handler error:error];
+}
+
 @end
 
 
@@ -1086,6 +1096,15 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     }
 }
 
+- (UIImage *)renderedLayer {
+    UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, 0.0);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    [self.layer renderInContext:ctx];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 - (id)copyWithZone:(NSZone *)zone {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self];
     id copy = [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -1140,6 +1159,33 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     
     UIImage *image = [UIImage imageWithCGImage:self.CGImage scale:self.scale orientation:orientation];
     return image;
+}
+
+- (instancetype)imageWithSize:(CGSize)size {
+    UIGraphicsBeginImageContextWithOptions(size, YES, 0.0);
+    CGRect rect = {CGPointZero, size};
+    [self drawInRect:rect];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
+- (instancetype)imageWithScale:(CGFloat)scale {
+    CGAffineTransform transform = CGAffineTransformMakeScale(scale, scale);
+    CGSize size = CGSizeApplyAffineTransform(self.size, transform);
+    UIImage *image = [self imageWithSize:size];
+    return image;
+}
+
+- (BOOL)writePNGToURL:(NSURL *)URL error:(NSError **)error {
+    NSData *data = UIImagePNGRepresentation(self);
+    BOOL success = [data writeToURL:URL error:error];
+    return success;
+}
+
+- (void)writePNGToURL:(NSURL *)URL completion:(ErrorBlock)completion {
+    NSData *data = UIImagePNGRepresentation(self);
+    [data writeToURL:URL completion:completion];
 }
 
 @end
@@ -1201,6 +1247,34 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     
     id object = self[index];
     return object;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSData (Helpers)
+
+- (BOOL)writeToURL:(NSURL *)URL error:(NSError **)error {
+    BOOL success = [self writeToURL:URL options:NSDataWritingAtomic error:error];
+    return success;
+}
+
+- (void)writeToURL:(NSURL *)URL completion:(ErrorBlock)completion {
+    [NSOperationQueue.new addOperationWithBlock:^{
+        NSError *error = nil;
+        [self writeToURL:URL options:NSDataWritingAtomic error:&error];
+        [NSOperationQueue.mainQueue addOperationWithBlock:^{
+            [self invokeHandler:completion error:error];
+        }];
+    }];
 }
 
 @end

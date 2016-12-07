@@ -249,6 +249,9 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 + (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle;
 + (instancetype)objectNamed:(NSString *)name;
 
++ (void)invokeHandler:(ErrorBlock)handler error:(NSError *)error;
+- (void)invokeHandler:(ErrorBlock)handler error:(NSError *)error;
+
 @end
 
 
@@ -394,6 +397,7 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @property IBInspectable UIColor *borderColor;
 @property IBInspectable CGSize intrinsicContentSize;
+@property (readonly) UIImage *renderedLayer;
 - (id)copyWithZone:(NSZone *)zone;
 
 @end
@@ -425,6 +429,11 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @interface UIImage (Helpers)
 
 - (instancetype)imageByRotatingClockwise:(BOOL)clockwise;
+- (instancetype)imageWithSize:(CGSize)size;
+- (instancetype)imageWithScale:(CGFloat)scale;
+
+- (BOOL)writePNGToURL:(NSURL *)URL error:(NSError **)error;
+- (void)writePNGToURL:(NSURL *)URL completion:(ErrorBlock)completion;
 
 @end
 
@@ -468,5 +477,21 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 
 @interface NSArray (Helpers)
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSData (Helpers)
+
+- (BOOL)writeToURL:(NSURL *)URL error:(NSError **)error;
+- (void)writeToURL:(NSURL *)URL completion:(ErrorBlock)completion;
 
 @end
