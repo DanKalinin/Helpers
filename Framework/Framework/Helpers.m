@@ -447,8 +447,9 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
         CGRect endFrame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
         UIViewAnimationCurve curve = [note.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
         BOOL shown = endFrame.origin.y < self.window.frame.size.height;
-        self.bottomConstraint.constant = shown ? endFrame.size.height : 0.0;
+        [self.superview layoutIfNeeded];
         [UIView animateWithDuration:duration delay:0.0 options:(curve << 16) animations:^{
+            self.bottomConstraint.constant = shown ? endFrame.size.height : 0.0;
             [self.superview layoutIfNeeded];
         } completion:nil];
     }
@@ -828,7 +829,7 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 - (void)embedViewController:(UIViewController *)vc toFrame:(CGRect)frame {
     [self addChildViewController:vc];
     vc.view.frame = frame;
-    [self.view addSubview:vc.view];
+    [self.view insertSubview:vc.view atIndex:0];
     [vc didMoveToParentViewController:self];
 }
 
