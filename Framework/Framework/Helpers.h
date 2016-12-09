@@ -45,7 +45,7 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @interface ImageView : UIImageView
 
-- (void)setHighlighted:(BOOL)highlighted;
+@property IBInspectable UIColor *highlightedBackgroundColor;
 
 @end
 
@@ -161,6 +161,29 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @interface TableViewCell : UITableViewCell
 
 @property IBInspectable NSInteger selectedAccessoryType;
+
+@property (weak, nonatomic) IBOutlet UIImageView *imageView1;
+
+@property (weak, nonatomic) IBOutlet UILabel *label1;
+@property (weak, nonatomic) IBOutlet UILabel *label2;
+@property (weak, nonatomic) IBOutlet UILabel *label3;
+
+@property (weak, nonatomic) IBOutlet UITextField *textField1;
+
+@property (weak, nonatomic) IBOutlet UIControl *control1;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface CollectionViewCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView1;
 

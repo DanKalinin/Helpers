@@ -46,11 +46,28 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 #pragma mark - Classes
 
+@interface ImageView ()
+
+@property UIColor *defaultBackgroundColor;
+
+@end
+
+
+
 @implementation ImageView
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.defaultBackgroundColor = self.backgroundColor;
+}
 
 - (void)setHighlighted:(BOOL)highlighted {
     [super setHighlighted:highlighted];
-    self.backgroundColor = self.tintColor;
+    if (highlighted) {
+        self.backgroundColor = self.highlightedBackgroundColor;
+    } else {
+        self.backgroundColor = self.defaultBackgroundColor;
+    }
 }
 
 @end
@@ -412,7 +429,8 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willChangeKeyboardFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
         
-        UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
+        UITapGestureRecognizer *tgr = [UITapGestureRecognizer.alloc initWithTarget:self action:@selector(onTap:)];
+        tgr.cancelsTouchesInView = NO;
         [self addGestureRecognizer:tgr];
     }
     return self;
@@ -489,6 +507,25 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     [super setSelected:selected animated:animated];
     self.accessoryType = selected ? self.selectedAccessoryType : self.defaultAccessoryType;
 }
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface CollectionViewCell ()
+
+@end
+
+
+
+@implementation CollectionViewCell
 
 @end
 
