@@ -826,10 +826,10 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return string;
 }
 
-- (void)embedViewController:(UIViewController *)vc toFrame:(CGRect)frame {
+- (void)embedViewController:(UIViewController *)vc toView:(UIView *)view {
     [self addChildViewController:vc];
-    vc.view.frame = frame;
-    [self.view insertSubview:vc.view atIndex:0];
+    vc.view.frame = view.bounds;
+    [view insertSubview:vc.view atIndex:0];
     [vc didMoveToParentViewController:self];
 }
 

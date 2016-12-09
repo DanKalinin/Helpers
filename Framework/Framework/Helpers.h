@@ -162,7 +162,7 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @property IBInspectable NSInteger selectedAccessoryType;
 
-@property (weak, nonatomic) IBOutlet UIImageView *imageView1;
+@property (weak, nonatomic) IBOutlet ImageView *imageView1;
 
 @property (weak, nonatomic) IBOutlet UILabel *label1;
 @property (weak, nonatomic) IBOutlet UILabel *label2;
@@ -345,7 +345,7 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 - (NSString *)localize:(NSString *)string;
 - (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType;
 
-- (void)embedViewController:(UIViewController *)vc toFrame:(CGRect)frame;
+- (void)embedViewController:(UIViewController *)vc toView:(UIView *)view;
 - (void)removeEmbeddedViewController:(UIViewController *)vc;
 
 @end
