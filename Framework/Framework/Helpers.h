@@ -22,6 +22,10 @@ extern NSString *const JSONExtension;
 extern NSString *const ErrorKey;
 extern NSString *const ObjectKey;
 
+extern CGPoint CGRectGetMidXY(CGRect rect);
+extern CGPoint CGPointAdd(CGPoint p1, CGPoint p2);
+extern CGPoint CGPointSubtract(CGPoint p1, CGPoint p2);
+extern CGPoint CGPointMultiply(CGPoint p, CGFloat k);
 extern CGFloat CGPointDistance(CGPoint p1, CGPoint p2);
 
 typedef void (^VoidBlock)(void);

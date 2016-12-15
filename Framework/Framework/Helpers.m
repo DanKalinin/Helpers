@@ -31,6 +31,36 @@ CGFloat CGPointDistance(CGPoint p1, CGPoint p2) {
     return distance;
 }
 
+CGPoint CGPointAdd(CGPoint p1, CGPoint p2) {
+    GLKVector2 v1 = GLKVector2Make(p1.x, p1.y);
+    GLKVector2 v2 = GLKVector2Make(p2.x, p2.y);
+    GLKVector2 v = GLKVector2Add(v1, v2);
+    CGPoint p = CGPointMake(v.x, v.y);
+    return p;
+}
+
+CGPoint CGPointSubtract(CGPoint p1, CGPoint p2) {
+    GLKVector2 v1 = GLKVector2Make(p1.x, p1.y);
+    GLKVector2 v2 = GLKVector2Make(p2.x, p2.y);
+    GLKVector2 v = GLKVector2Subtract(v1, v2);
+    CGPoint p = CGPointMake(v.x, v.y);
+    return p;
+}
+
+CGPoint CGPointMultiply(CGPoint p, CGFloat k) {
+    GLKVector2 v = GLKVector2Make(p.x, p.y);
+    v = GLKVector2MultiplyScalar(v, k);
+    p = CGPointMake(v.x, v.y);
+    return p;
+}
+
+CGPoint CGRectGetMidXY(CGRect rect) {
+    CGFloat x = CGRectGetMidX(rect);
+    CGFloat y = CGRectGetMidY(rect);
+    CGPoint p = CGPointMake(x, y);
+    return p;
+}
+
 static NSString *const ErrorsTable = @"Errors";
 
 static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
@@ -374,35 +404,38 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 - (void)setHighlighted:(BOOL)highlighted {
     [super setHighlighted:highlighted];
-    if (highlighted) {
-        self.backgroundColor = self.highlightedBackgroundColor;
-        self.borderColor = self.highlightedBorderColor;
-    } else {
-        self.backgroundColor = self.defaultBackgroundColor;
-        self.borderColor = self.defaultBorderColor;
-    }
+    [self updateState];
 }
 
 - (void)setSelected:(BOOL)selected {
     [super setSelected:selected];
-    if (selected) {
+    [self updateState];
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    [super setEnabled:enabled];
+    [self updateState];
+}
+
+#pragma mark - Helpers
+
+- (void)updateState {
+    
+    if (self.state == UIControlStateHighlighted) {
+        self.backgroundColor = self.highlightedBackgroundColor;
+        self.borderColor = self.highlightedBorderColor;
+    } else if (self.state == UIControlStateDisabled) {
+        self.backgroundColor = self.disabledBackgroundColor;
+        self.borderColor = self.disabledBorderColor;
+    } else if (self.state == UIControlStateSelected) {
         self.backgroundColor = self.selectedBackgroundColor;
         self.borderColor = self.selectedBorderColor;
     } else {
         self.backgroundColor = self.defaultBackgroundColor;
         self.borderColor = self.defaultBorderColor;
     }
-}
-
-- (void)setEnabled:(BOOL)enabled {
-    [super setEnabled:enabled];
-    if (enabled) {
-        self.backgroundColor = self.defaultBackgroundColor;
-        self.borderColor = self.defaultBorderColor;
-    } else {
-        self.backgroundColor = self.disabledBackgroundColor;
-        self.borderColor = self.disabledBorderColor;
-    }
+    
+    [self setNeedsDisplay];
 }
 
 @end
