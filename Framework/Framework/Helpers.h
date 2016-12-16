@@ -22,15 +22,15 @@ extern NSString *const JSONExtension;
 extern NSString *const ErrorKey;
 extern NSString *const ObjectKey;
 
-extern CGPoint CGPointAdd(CGPoint p1, CGPoint p2);
-extern CGPoint CGPointSubtract(CGPoint p1, CGPoint p2);
-extern CGPoint CGPointMultiply(CGPoint p, CGFloat k);
-extern CGFloat CGPointDistance(CGPoint p1, CGPoint p2);
-extern CGPoint CGPointClampInsideRect(CGPoint p, CGRect rect);
-extern CGPoint CGPointClampOutsideRect(CGPoint p1, CGPoint p2, CGRect rect);
+extern CGFloat CGFloatClampToRange(CGFloat value, UIFloatRange range);
 
-extern CGPoint CGRectGetMidXY(CGRect rect);
-extern CGRect CGRectNewCenter(CGRect rect, CGPoint c);
+extern CGPoint CGPointAdd(CGPoint pointLeft, CGPoint pointRight);
+extern CGPoint CGPointSubtract(CGPoint pointLeft, CGPoint pointRight);
+extern CGPoint CGPointMultiply(CGPoint point, CGFloat value);
+extern CGFloat CGPointDistance(CGPoint pointStart, CGPoint pointEnd);
+extern CGPoint CGPointClampToRect(CGPoint point, CGRect rect);
+
+extern CGPoint CGRectGetMidXMidY(CGRect rect);
 
 typedef void (^VoidBlock)(void);
 typedef void (^BoolBlock)(BOOL);

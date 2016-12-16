@@ -24,99 +24,62 @@ NSString *const JSONExtension = @"json";
 NSString *const ErrorKey = @"error";
 NSString *const ObjectKey = @"object";
 
-CGFloat CGPointDistance(CGPoint p1, CGPoint p2) {
-    GLKVector2 v1 = GLKVector2Make(p1.x, p1.y);
-    GLKVector2 v2 = GLKVector2Make(p2.x, p2.y);
-    CGFloat distance = GLKVector2Distance(v1, v2);
+CGFloat CGFloatClampToRange(CGFloat value, UIFloatRange range) {
+    value = fmax(value, range.minimum);
+    value = fmin(value, range.maximum);
+    return value;
+}
+
+CGPoint CGPointAdd(CGPoint pointLeft, CGPoint pointRight) {
+    GLKVector2 vectorLeft = GLKVector2Make(pointLeft.x, pointLeft.y);
+    GLKVector2 vectorRight = GLKVector2Make(pointRight.x, pointRight.y);
+    GLKVector2 vector = GLKVector2Add(vectorLeft, vectorRight);
+    CGPoint point = CGPointMake(vector.x, vector.y);
+    return point;
+}
+
+CGPoint CGPointSubtract(CGPoint pointLeft, CGPoint pointRight) {
+    GLKVector2 vectorLeft = GLKVector2Make(pointLeft.x, pointLeft.y);
+    GLKVector2 vectorRight = GLKVector2Make(pointRight.x, pointRight.y);
+    GLKVector2 vector = GLKVector2Subtract(vectorLeft, vectorRight);
+    CGPoint point = CGPointMake(vector.x, vector.y);
+    return point;
+}
+
+CGPoint CGPointMultiply(CGPoint point, CGFloat value) {
+    GLKVector2 vector = GLKVector2Make(point.x, point.y);
+    vector = GLKVector2MultiplyScalar(vector, value);
+    point = CGPointMake(vector.x, vector.y);
+    return point;
+}
+
+CGFloat CGPointDistance(CGPoint pointStart, CGPoint pointEnd) {
+    GLKVector2 vectorStart = GLKVector2Make(pointStart.x, pointStart.y);
+    GLKVector2 vectorEnd = GLKVector2Make(pointEnd.x, pointEnd.y);
+    CGFloat distance = GLKVector2Distance(vectorStart, vectorEnd);
     return distance;
 }
 
-CGPoint CGPointAdd(CGPoint p1, CGPoint p2) {
-    GLKVector2 v1 = GLKVector2Make(p1.x, p1.y);
-    GLKVector2 v2 = GLKVector2Make(p2.x, p2.y);
-    GLKVector2 v = GLKVector2Add(v1, v2);
-    CGPoint p = CGPointMake(v.x, v.y);
-    return p;
+CGPoint CGPointClampToRect(CGPoint point, CGRect rect) {
+    
+    CGFloat minimum = CGRectGetMinX(rect);
+    CGFloat maximum = CGRectGetMaxX(rect);
+    UIFloatRange range = UIFloatRangeMake(minimum, maximum);
+    point.x = CGFloatClampToRange(point.x, range);
+    
+    minimum = CGRectGetMinY(rect);
+    maximum = CGRectGetMaxY(rect);
+    range = UIFloatRangeMake(minimum, maximum);
+    point.y = CGFloatClampToRange(point.y, range);
+    
+    return point;
 }
 
-CGPoint CGPointSubtract(CGPoint p1, CGPoint p2) {
-    GLKVector2 v1 = GLKVector2Make(p1.x, p1.y);
-    GLKVector2 v2 = GLKVector2Make(p2.x, p2.y);
-    GLKVector2 v = GLKVector2Subtract(v1, v2);
-    CGPoint p = CGPointMake(v.x, v.y);
-    return p;
-}
-
-CGPoint CGPointMultiply(CGPoint p, CGFloat k) {
-    GLKVector2 v = GLKVector2Make(p.x, p.y);
-    v = GLKVector2MultiplyScalar(v, k);
-    p = CGPointMake(v.x, v.y);
-    return p;
-}
-
-CGPoint CGPointClampInsideRect(CGPoint p, CGRect rect) {
-    
-    if (CGRectContainsPoint(rect, p)) return p;
-    
-    CGFloat minX = CGRectGetMinX(rect);
-    CGFloat maxX = CGRectGetMaxX(rect);
-    CGFloat minY = CGRectGetMinY(rect);
-    CGFloat maxY = CGRectGetMaxY(rect);
-    
-    if (p.x < minX) {
-        p.x = minX;
-    }
-    if (p.x > maxX) {
-        p.x = maxX;
-    }
-    if (p.y < minY) {
-        p.y = minY;
-    }
-    if (p.y > maxY) {
-        p.y = maxY;
-    }
-    
-    return p;
-}
-
-CGPoint CGPointClampOutsideRect(CGPoint p1, CGPoint p2, CGRect rect) {
-    
-    if (!CGRectContainsPoint(rect, p2)) return p2;
-    
-    CGFloat minX = CGRectGetMinX(rect);
-    CGFloat maxX = CGRectGetMaxX(rect);
-    CGFloat minY = CGRectGetMinY(rect);
-    CGFloat maxY = CGRectGetMaxY(rect);
-    
-    if (p2.x > minX && p1.x <= minX) {
-        p2.x = minX;
-    }
-    if (p2.x < maxX && p1.x >= maxX) {
-        p2.x = maxX;
-    }
-    if (p2.y > minY && p1.y <= minY) {
-        p2.y = minY;
-    }
-    if (p2.y < maxY && p1.y >= maxY) {
-        p2.y = maxY;
-    }
-    
-    return p2;
-}
-
-CGPoint CGRectGetMidXY(CGRect rect) {
+CGPoint CGRectGetMidXMidY(CGRect rect) {
     CGFloat x = CGRectGetMidX(rect);
     CGFloat y = CGRectGetMidY(rect);
-    CGPoint p = CGPointMake(x, y);
-    return p;
-}
-
-CGRect CGRectNewCenter(CGRect rect, CGPoint c) {
-    CGPoint rc = CGRectGetMidXY(rect);
-    CGPoint dp = CGPointSubtract(c, rc);
-    CGAffineTransform t = CGAffineTransformMakeTranslation(dp.x, dp.y);
-    rect = CGRectApplyAffineTransform(rect, t);
-    return rect;
+    CGPoint point = CGPointMake(x, y);
+    return point;
 }
 
 static NSString *const ErrorsTable = @"Errors";
