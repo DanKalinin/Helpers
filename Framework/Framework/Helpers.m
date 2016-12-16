@@ -54,11 +54,69 @@ CGPoint CGPointMultiply(CGPoint p, CGFloat k) {
     return p;
 }
 
+CGPoint CGPointClampInsideRect(CGPoint p, CGRect rect) {
+    
+    if (CGRectContainsPoint(rect, p)) return p;
+    
+    CGFloat minX = CGRectGetMinX(rect);
+    CGFloat maxX = CGRectGetMaxX(rect);
+    CGFloat minY = CGRectGetMinY(rect);
+    CGFloat maxY = CGRectGetMaxY(rect);
+    
+    if (p.x < minX) {
+        p.x = minX;
+    }
+    if (p.x > maxX) {
+        p.x = maxX;
+    }
+    if (p.y < minY) {
+        p.y = minY;
+    }
+    if (p.y > maxY) {
+        p.y = maxY;
+    }
+    
+    return p;
+}
+
+CGPoint CGPointClampOutsideRect(CGPoint p1, CGPoint p2, CGRect rect) {
+    
+    if (!CGRectContainsPoint(rect, p2)) return p2;
+    
+    CGFloat minX = CGRectGetMinX(rect);
+    CGFloat maxX = CGRectGetMaxX(rect);
+    CGFloat minY = CGRectGetMinY(rect);
+    CGFloat maxY = CGRectGetMaxY(rect);
+    
+    if (p2.x > minX && p1.x <= minX) {
+        p2.x = minX;
+    }
+    if (p2.x < maxX && p1.x >= maxX) {
+        p2.x = maxX;
+    }
+    if (p2.y > minY && p1.y <= minY) {
+        p2.y = minY;
+    }
+    if (p2.y < maxY && p1.y >= maxY) {
+        p2.y = maxY;
+    }
+    
+    return p2;
+}
+
 CGPoint CGRectGetMidXY(CGRect rect) {
     CGFloat x = CGRectGetMidX(rect);
     CGFloat y = CGRectGetMidY(rect);
     CGPoint p = CGPointMake(x, y);
     return p;
+}
+
+CGRect CGRectNewCenter(CGRect rect, CGPoint c) {
+    CGPoint rc = CGRectGetMidXY(rect);
+    CGPoint dp = CGPointSubtract(c, rc);
+    CGAffineTransform t = CGAffineTransformMakeTranslation(dp.x, dp.y);
+    rect = CGRectApplyAffineTransform(rect, t);
+    return rect;
 }
 
 static NSString *const ErrorsTable = @"Errors";
