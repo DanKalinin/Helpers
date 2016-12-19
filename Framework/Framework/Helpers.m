@@ -1213,6 +1213,12 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return copy;
 }
 
+- (void)moveToView:(UIView *)view {
+    CGPoint center = [view convertPoint:self.center fromView:self.superview];
+    [view addSubview:self];
+    self.center = center;
+}
+
 @end
 
 

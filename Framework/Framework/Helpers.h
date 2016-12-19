@@ -433,6 +433,7 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @property IBInspectable CGSize intrinsicContentSize;
 @property (readonly) UIImage *renderedLayer;
 - (id)copyWithZone:(NSZone *)zone;
+- (void)moveToView:(UIView *)view;
 
 @end
 
