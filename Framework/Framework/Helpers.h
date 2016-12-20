@@ -180,6 +180,8 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @property (weak, nonatomic) IBOutlet UIControl *control1;
 
+@property id userInfo;
+
 @end
 
 
