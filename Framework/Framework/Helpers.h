@@ -384,6 +384,7 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @interface UITableView (Helpers)
 
+@property IBOutlet UIView *backgroundView;
 @property (strong, nonatomic) IBOutlet UIView *emptyView;
 
 - (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath;
@@ -474,6 +475,21 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 - (void)writeJPEGToURL:(NSURL *)URL quality:(CGFloat)quality;
 - (void)writeJPEGToURL:(NSURL *)URL quality:(CGFloat)quality completion:(VoidBlock)completion;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface UINavigationBar (Helpers)
+
+@property IBInspectable BOOL bottomLine;
 
 @end
 

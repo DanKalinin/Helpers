@@ -1316,6 +1316,25 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
+@implementation UINavigationBar (Helpers)
+
+- (void)setBottomLine:(BOOL)bottomLine {
+    UIImage *image = bottomLine ? nil : [UIImage new];
+    [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+    self.shadowImage = image;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @implementation NSFileManager (Helpers)
 
 - (NSURL *)userDocumentsDirectoryURL {
