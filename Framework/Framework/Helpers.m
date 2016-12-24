@@ -1183,6 +1183,15 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return color;
 }
 
+- (void)setShadowColor:(UIColor *)shadowColor {
+    self.layer.shadowColor = shadowColor.CGColor;
+}
+
+- (UIColor *)shadowColor {
+    UIColor *color = [UIColor colorWithCGColor:self.layer.shadowColor];
+    return color;
+}
+
 - (void)setIntrinsicContentSize:(CGSize)intrinsicContentSize {
     NSValue *size = [NSValue valueWithCGSize:intrinsicContentSize];
     objc_setAssociatedObject(self, @selector(intrinsicContentSize), size, OBJC_ASSOCIATION_RETAIN);

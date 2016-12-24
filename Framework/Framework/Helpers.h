@@ -433,6 +433,7 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @interface UIView (Helpers) <NSCopying>
 
 @property IBInspectable UIColor *borderColor;
+@property IBInspectable UIColor *shadowColor;
 @property IBInspectable CGSize intrinsicContentSize;
 @property (readonly) UIImage *renderedLayer;
 - (id)copyWithZone:(NSZone *)zone;
