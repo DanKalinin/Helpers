@@ -467,6 +467,11 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 @interface UIImage (Helpers)
 
+@property (readonly) UIColor *averageColor;
+
+- (instancetype)imageInRect:(CGRect)rect;
+- (UIColor *)colorForPoint:(CGPoint)point;
+
 - (instancetype)imageByRotatingClockwise:(BOOL)clockwise;
 - (instancetype)imageWithSize:(CGSize)size;
 - (instancetype)imageWithScale:(CGFloat)scale;

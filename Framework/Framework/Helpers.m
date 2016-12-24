@@ -1261,6 +1261,36 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @implementation UIImage (Helpers)
 
+- (UIColor *)averageColor {
+    uint8_t rgba[4];
+    CGContextRef ctx = CGBitmapContextCreate(rgba, 1, 1, 8, 4, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
+    CGRect rect = CGRectMake(0.0, 0.0, 1.0, 1.0);
+    CGContextDrawImage(ctx, rect, self.CGImage);
+    CGFloat r = (CGFloat)rgba[0] / 255.0;
+    CGFloat g = (CGFloat)rgba[1] / 255.0;
+    CGFloat b = (CGFloat)rgba[2] / 255.0;
+    CGFloat a = (CGFloat)rgba[3] / 255.0;
+    UIColor *color = [UIColor colorWithRed:r green:g blue:b alpha:a];
+    return color;
+}
+
+- (instancetype)imageInRect:(CGRect)rect {
+    CGAffineTransform transform = CGAffineTransformMakeScale(self.scale, self.scale);
+    rect = CGRectApplyAffineTransform(rect, transform);
+    CGImageRef img = CGImageCreateWithImageInRect(self.CGImage, rect);
+    UIImage *image = [UIImage imageWithCGImage:img scale:self.scale orientation:UIImageOrientationUp];
+    return image;
+}
+
+- (UIColor *)colorForPoint:(CGPoint)point {
+    CGFloat x = point.x - 0.5;
+    CGFloat y = point.y - 0.5;
+    CGRect rect = CGRectMake(x, y, 1.0, 1.0);
+    UIImage *image = [self imageInRect:rect];
+    UIColor *color = image.averageColor;
+    return color;
+}
+
 - (instancetype)imageByRotatingClockwise:(BOOL)clockwise {
     
     UIImageOrientation orientation = self.imageOrientation;
