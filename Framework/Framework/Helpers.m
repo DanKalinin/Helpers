@@ -1239,6 +1239,25 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
+@implementation UIStackView (Helpers)
+
+- (NSArray<UIView *> *)visibleArrangedSubviews {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"hidden = NO"];
+    NSArray *views = [self.arrangedSubviews filteredArrayUsingPredicate:predicate];
+    return views;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @implementation NSNetService (Helpers)
 
 + (NSString *)stringFromAddressData:(NSData *)data {

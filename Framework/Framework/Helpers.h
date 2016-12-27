@@ -450,6 +450,21 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 
 
+@interface UIStackView (Helpers)
+
+@property (readonly) NSArray<UIView *> *visibleArrangedSubviews;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface NSNetService (Helpers)
 
 + (NSString *)stringFromAddressData:(NSData *)data;
