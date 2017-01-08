@@ -85,14 +85,6 @@ CGPoint CGRectGetMidXMidY(CGRect rect) {
     return point;
 }
 
-NSDate *GCCDate() {
-    NSString *string = [NSString stringWithFormat:@"%s %s", __DATE__, __TIME__];
-    NSString *format = [NSString stringWithFormat:@"%@ %@", DateFormatGCCDate, DateFormatGCCTime];
-    NSDateFormatter *df = [NSDateFormatter fixedDateFormatterWithDateFormat:format];
-    NSDate *date = [df dateFromString:string];
-    return date;
-}
-
 static NSString *const ErrorsTable = @"Errors";
 
 static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
@@ -862,6 +854,27 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     df.locale = [NSLocale localeWithLocaleIdentifier:NSLocaleIdentifierPosix];
     df.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
     return df;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSDate (Helpers)
+
++ (instancetype)GCCDate {
+    NSString *string = [NSString stringWithFormat:@"%s %s", __DATE__, __TIME__];
+    NSString *format = [NSString stringWithFormat:@"%@ %@", DateFormatGCCDate, DateFormatGCCTime];
+    NSDateFormatter *df = [NSDateFormatter fixedDateFormatterWithDateFormat:format];
+    NSDate *date = [df dateFromString:string];
+    return date;
 }
 
 @end

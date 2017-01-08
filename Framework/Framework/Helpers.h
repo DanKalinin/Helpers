@@ -34,8 +34,6 @@ extern CGPoint CGPointClampToRect(CGPoint point, CGRect rect);
 
 extern CGPoint CGRectGetMidXMidY(CGRect rect);
 
-extern NSDate *GCCDate();
-
 typedef void (^VoidBlock)(void);
 typedef void (^BoolBlock)(BOOL);
 typedef void (^FloatBlock)(float);
@@ -358,6 +356,21 @@ typedef NS_ENUM(NSUInteger, Digest) {
 @interface NSDateFormatter (Helpers)
 
 + (instancetype)fixedDateFormatterWithDateFormat:(NSString *)dateFormat;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSDate (Helpers)
+
++ (instancetype)GCCDate;
 
 @end
 
