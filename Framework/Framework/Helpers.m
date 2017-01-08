@@ -17,6 +17,8 @@
 NSString *const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
 NSString *const DateFormatRFC850 = @"EEEE, dd-MMM-yy HH:mm:ss 'GMT'";
 NSString *const DateFormatAsctime = @"E MMM dd HH:mm:ss yyyy";
+NSString *const DateFormatGCCDate = @"MMM d yyyy";
+NSString *const DateFormatGCCTime = @"HH:mm:ss";
 
 NSString *const PlistExtension = @"plist";
 NSString *const XMLExtension = @"xml";
@@ -81,6 +83,14 @@ CGPoint CGRectGetMidXMidY(CGRect rect) {
     CGFloat y = CGRectGetMidY(rect);
     CGPoint point = CGPointMake(x, y);
     return point;
+}
+
+NSDate *GCCDate() {
+    NSString *string = [NSString stringWithFormat:@"%s %s", __DATE__, __TIME__];
+    NSString *format = [NSString stringWithFormat:@"%@ %@", DateFormatGCCDate, DateFormatGCCTime];
+    NSDateFormatter *df = [NSDateFormatter fixedDateFormatterWithDateFormat:format];
+    NSDate *date = [df dateFromString:string];
+    return date;
 }
 
 static NSString *const ErrorsTable = @"Errors";

@@ -14,6 +14,8 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 extern NSString *const DateFormatRFC1123;
 extern NSString *const DateFormatRFC850;
 extern NSString *const DateFormatAsctime;
+extern NSString *const DateFormatGCCDate;
+extern NSString *const DateFormatGCCTime;
 
 extern NSString *const PlistExtension;
 extern NSString *const XMLExtension;
@@ -31,6 +33,8 @@ extern CGFloat CGPointDistance(CGPoint pointStart, CGPoint pointEnd);
 extern CGPoint CGPointClampToRect(CGPoint point, CGRect rect);
 
 extern CGPoint CGRectGetMidXMidY(CGRect rect);
+
+extern NSDate *GCCDate();
 
 typedef void (^VoidBlock)(void);
 typedef void (^BoolBlock)(BOOL);
