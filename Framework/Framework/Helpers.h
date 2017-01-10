@@ -193,6 +193,8 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 @property (weak, nonatomic) IBOutlet UIControl *control1;
 
+@property (weak, nonatomic) IBOutlet UIButton *button1;
+
 @property IBInspectable NSString *storyboard;
 @property IBInspectable NSString *viewController;
 @property id userInfo;
