@@ -526,6 +526,7 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @interface NSFileManager (Helpers)
 
 @property (readonly) NSURL *userDocumentsDirectoryURL;
+@property (readonly) NSURL *userCachesDirectoryURL;
 
 @end
 

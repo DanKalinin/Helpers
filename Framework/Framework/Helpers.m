@@ -1400,6 +1400,11 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return URLs.firstObject;
 }
 
+- (NSURL *)userCachesDirectoryURL {
+    NSArray *URLs = [self URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask];
+    return URLs.firstObject;
+}
+
 @end
 
 
