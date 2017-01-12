@@ -213,7 +213,7 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 - (NSString *)password {
     NSData *credential = [self credential];
-    NSString *password = [[NSString alloc] initWithData:credential encoding:NSUTF8StringEncoding];
+    NSString *password = [NSString.alloc initWithData:credential encoding:NSUTF8StringEncoding];
     return password;
 }
 
