@@ -40,6 +40,15 @@ typedef void (^ErrorBlock)(NSError *);
 typedef void (^ArrayBlock)(NSArray *);
 typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
+typedef NS_ENUM(NSUInteger, Digest) {
+    DigestMD5,
+    DigestSHA1,
+    DigestSHA224,
+    DigestSHA256,
+    DigestSHA384,
+    DigestSHA512
+};
+
 
 
 
@@ -570,5 +579,23 @@ typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 @interface NSData (Helpers)
 
 - (void)writeToURL:(NSURL *)URL completion:(VoidBlock)completion;
+
+- (instancetype)digest:(Digest)digest;
+@property (readonly) NSString *string;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSString (Helpers)
+
+- (instancetype)digest:(Digest)digest;
 
 @end

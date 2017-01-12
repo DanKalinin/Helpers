@@ -12,6 +12,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Photos/Photos.h>
 #import <GLKit/GLKit.h>
+#import <CommonCrypto/CommonCrypto.h>
 
 NSString *const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
 NSString *const DateFormatRFC850 = @"EEEE, dd-MMM-yy HH:mm:ss 'GMT'";
@@ -1459,7 +1460,23 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
+@interface NSData (HelpersSelectors)
+
+@property NSString *cachedString;
+
+@end
+
+
+
 @implementation NSData (Helpers)
+
+- (void)setCachedString:(NSString *)cachedString {
+    objc_setAssociatedObject(self, @selector(cachedString), cachedString, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (NSString *)cachedString {
+    return objc_getAssociatedObject(self, @selector(cachedString));
+}
 
 - (void)writeToURL:(NSURL *)URL completion:(VoidBlock)completion {
     [NSOperationQueue.new addOperationWithBlock:^{
@@ -1468,6 +1485,65 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
             [self invokeHandler:completion];
         }];
     }];
+}
+
+- (instancetype)digest:(Digest)digest {
+    
+    NSMutableData *data = [NSMutableData data];
+    
+    if (digest == DigestMD5) {
+        data.length = CC_MD5_DIGEST_LENGTH;
+        CC_MD5(self.bytes, self.length, data.mutableBytes);
+    } else if (digest == DigestSHA1) {
+        data.length = CC_SHA1_DIGEST_LENGTH;
+        CC_SHA1(self.bytes, self.length, data.mutableBytes);
+    } else if (digest == DigestSHA224) {
+        data.length = CC_SHA224_DIGEST_LENGTH;
+        CC_SHA224(self.bytes, self.length, data.mutableBytes);
+    } else if (digest == DigestSHA256) {
+        data.length = CC_SHA256_DIGEST_LENGTH;
+        CC_SHA256(self.bytes, self.length, data.mutableBytes);
+    } else if (digest == DigestSHA384) {
+        data.length = CC_SHA384_DIGEST_LENGTH;
+        CC_SHA384(self.bytes, self.length, data.mutableBytes);
+    } else if (digest == DigestSHA512) {
+        data.length = CC_SHA512_DIGEST_LENGTH;
+        CC_SHA512(self.bytes, self.length, data.mutableBytes);
+    }
+    
+    return data;
+}
+
+- (NSString *)string {
+    if (self.cachedString) return self.cachedString;
+    
+    NSMutableString *string = [NSMutableString string];
+    uint8_t *bytes = self.bytes;
+    for (int i = 0; i < self.length; i++) {
+        uint8_t byte = bytes[i];
+        [string appendFormat:@"%02x", byte];
+    }
+    self.cachedString = string;
+    return string;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSString (Helpers)
+
+- (instancetype)digest:(Digest)digest {
+    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
+    data = [data digest:digest];
+    return data.string;
 }
 
 @end
