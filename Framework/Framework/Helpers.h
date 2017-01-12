@@ -596,6 +596,6 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 @interface NSString (Helpers)
 
-- (instancetype)digest:(Digest)digest;
+- (NSData *)digest:(Digest)digest;
 
 @end

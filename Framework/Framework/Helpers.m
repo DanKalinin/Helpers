@@ -1377,6 +1377,8 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @implementation UINavigationBar (Helpers)
 
+@dynamic bottomLine;
+
 - (void)setBottomLine:(BOOL)bottomLine {
     UIImage *image = bottomLine ? nil : [UIImage new];
     [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
@@ -1493,22 +1495,22 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     
     if (digest == DigestMD5) {
         data.length = CC_MD5_DIGEST_LENGTH;
-        CC_MD5(self.bytes, self.length, data.mutableBytes);
+        CC_MD5(self.bytes, (CC_LONG)self.length, data.mutableBytes);
     } else if (digest == DigestSHA1) {
         data.length = CC_SHA1_DIGEST_LENGTH;
-        CC_SHA1(self.bytes, self.length, data.mutableBytes);
+        CC_SHA1(self.bytes, (CC_LONG)self.length, data.mutableBytes);
     } else if (digest == DigestSHA224) {
         data.length = CC_SHA224_DIGEST_LENGTH;
-        CC_SHA224(self.bytes, self.length, data.mutableBytes);
+        CC_SHA224(self.bytes, (CC_LONG)self.length, data.mutableBytes);
     } else if (digest == DigestSHA256) {
         data.length = CC_SHA256_DIGEST_LENGTH;
-        CC_SHA256(self.bytes, self.length, data.mutableBytes);
+        CC_SHA256(self.bytes, (CC_LONG)self.length, data.mutableBytes);
     } else if (digest == DigestSHA384) {
         data.length = CC_SHA384_DIGEST_LENGTH;
-        CC_SHA384(self.bytes, self.length, data.mutableBytes);
+        CC_SHA384(self.bytes, (CC_LONG)self.length, data.mutableBytes);
     } else if (digest == DigestSHA512) {
         data.length = CC_SHA512_DIGEST_LENGTH;
-        CC_SHA512(self.bytes, self.length, data.mutableBytes);
+        CC_SHA512(self.bytes, (CC_LONG)self.length, data.mutableBytes);
     }
     
     return data;
@@ -1518,7 +1520,7 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     if (self.cachedString) return self.cachedString;
     
     NSMutableString *string = [NSMutableString string];
-    uint8_t *bytes = self.bytes;
+    uint8_t *bytes = (uint8_t *)self.bytes;
     for (int i = 0; i < self.length; i++) {
         uint8_t byte = bytes[i];
         [string appendFormat:@"%02x", byte];
@@ -1540,10 +1542,10 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @implementation NSString (Helpers)
 
-- (instancetype)digest:(Digest)digest {
+- (NSData *)digest:(Digest)digest {
     NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
     data = [data digest:digest];
-    return data.string;
+    return data;
 }
 
 @end
