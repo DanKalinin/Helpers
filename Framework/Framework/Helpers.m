@@ -751,6 +751,26 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     [self.class invokeHandler:handler error:error];
 }
 
++ (void)invokeHandler:(DataBlock)handler data:(NSData *)data {
+    if (handler) {
+        handler(data);
+    }
+}
+
+- (void)invokeHandler:(DataBlock)handler data:(NSData *)data {
+    [self.class invokeHandler:handler data:data];
+}
+
++ (void)invokeHandler:(ImageBlock)handler image:(UIImage *)image {
+    if (handler) {
+        handler(image);
+    }
+}
+
+- (void)invokeHandler:(ImageBlock)handler image:(UIImage *)image {
+    [self.class invokeHandler:handler image:image];
+}
+
 @end
 
 

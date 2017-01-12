@@ -38,6 +38,8 @@ typedef void (^FloatBlock)(float);
 typedef void (^DoubleBlock)(double);
 typedef void (^ErrorBlock)(NSError *);
 typedef void (^ArrayBlock)(NSArray *);
+typedef void (^DataBlock)(NSData *);
+typedef void (^ImageBlock)(UIImage *);
 typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 typedef NS_ENUM(NSUInteger, Digest) {
@@ -296,6 +298,12 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 + (void)invokeHandler:(ErrorBlock)handler error:(NSError *)error;
 - (void)invokeHandler:(ErrorBlock)handler error:(NSError *)error;
+
++ (void)invokeHandler:(DataBlock)handler data:(NSData *)data;
+- (void)invokeHandler:(DataBlock)handler data:(NSData *)data;
+
++ (void)invokeHandler:(ImageBlock)handler image:(UIImage *)image;
+- (void)invokeHandler:(ImageBlock)handler image:(UIImage *)image;
 
 @end
 
