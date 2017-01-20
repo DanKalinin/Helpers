@@ -299,6 +299,8 @@ typedef NS_ENUM(NSUInteger, Digest) {
 + (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle;
 + (instancetype)objectNamed:(NSString *)name;
 
+- (UIImage *)imageNamed:(NSString *)name;
+
 + (void)invokeHandler:(VoidBlock)handler;
 - (void)invokeHandler:(VoidBlock)handler;
 

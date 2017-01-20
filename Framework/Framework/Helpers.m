@@ -733,6 +733,12 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return object;
 }
 
+- (UIImage *)imageNamed:(NSString *)name {
+    id <UITraitEnvironment> object = self;
+    UIImage *image = [UIImage imageNamed:name inBundle:self.bundle compatibleWithTraitCollection:object.traitCollection];
+    return image;
+}
+
 + (void)invokeHandler:(VoidBlock)handler {
     if (handler) {
         handler();
