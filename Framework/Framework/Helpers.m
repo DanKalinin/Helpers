@@ -531,7 +531,7 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = self.cells[indexPath.row];
-    CGFloat height = cell.frame.size.height * !cell.hidden;
+    CGFloat height = tableView.rowHeight * !cell.hidden;
     return height;
 }
 
