@@ -197,6 +197,8 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 @property (weak, nonatomic) IBOutlet UISwitch *switch1;
 
+@property (weak, nonatomic) IBOutlet UISlider *slider1;
+
 @property IBInspectable NSString *storyboard;
 @property IBInspectable NSString *viewController;
 @property id userInfo;
