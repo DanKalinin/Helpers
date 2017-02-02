@@ -269,6 +269,39 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 
 
+@interface EmitterCellImageView : UIImageView
+
+@property (readonly) CAEmitterCell *cell;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface EmitterLayerView : UIView
+
+@property (strong, nonatomic) IBOutletCollection(EmitterCellImageView) NSArray *cells;
+
+@property (class, readonly) Class layerClass;
+@property (readonly) CAEmitterLayer *layer;
+
+@end
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Categories
 
 @interface UIColor (Helpers)

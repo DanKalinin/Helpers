@@ -634,6 +634,64 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
+@interface EmitterCellImageView ()
+
+@property CAEmitterCell *cell;
+
+@end
+
+
+
+@implementation EmitterCellImageView
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.cell = [CAEmitterCell emitterCell];
+    }
+    return self;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.cell.contents = (id)self.image.CGImage;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation EmitterLayerView
+
+@dynamic layer;
+
++ (Class)layerClass {
+    return CAEmitterLayer.class;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.layer.emitterCells = [self.cells valueForKey:@"cell"];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Categories
 
 @implementation UIColor (Helpers)
