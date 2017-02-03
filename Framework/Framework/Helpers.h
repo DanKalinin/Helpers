@@ -327,6 +327,9 @@ typedef NS_ENUM(NSUInteger, Digest) {
 + (void)swizzleClassMethod:(SEL)original with:(SEL)swizzled;
 + (void)swizzleInstanceMethod:(SEL)original with:(SEL)swizzled;
 
+@property (class, readonly) NSArray<NSString *> *propertyKeys;
+@property (readonly) NSArray<NSString *> *propertyKeys;
+
 @property (class, readonly) NSBundle *bundle;
 @property (readonly) NSBundle *bundle;
 

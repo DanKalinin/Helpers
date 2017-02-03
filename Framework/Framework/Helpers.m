@@ -759,6 +759,24 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     method_exchangeImplementations(originalMethod, swizzledMethod);
 }
 
++ (NSArray<NSString *> *)propertyKeys {
+    NSMutableArray *names = [NSMutableArray array];
+    unsigned int count;
+    objc_property_t *properties = class_copyPropertyList(self, &count);
+    for (unsigned int index = 0; index < count; index++) {
+        objc_property_t property = properties[index];
+        const char *n = property_getName(property);
+        NSString *name = [NSString stringWithUTF8String:n];
+        [names addObject:name];
+    }
+    return names;
+}
+
+- (NSArray<NSString *> *)propertyKeys {
+    NSArray *keys = self.class.propertyKeys;
+    return keys;
+}
+
 + (NSBundle *)bundle {
     NSBundle *bundle = [NSBundle bundleForClass:self];
     return bundle;
