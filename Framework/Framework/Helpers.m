@@ -33,6 +33,11 @@ CGFloat CGFloatClampToRange(CGFloat value, UIFloatRange range) {
     return value;
 }
 
+CGFloat CGFloatSign(CGFloat value) {
+    value /= fabs(value);
+    return value;
+}
+
 CGPoint CGPointAdd(CGPoint pointLeft, CGPoint pointRight) {
     GLKVector2 vectorLeft = GLKVector2Make(pointLeft.x, pointLeft.y);
     GLKVector2 vectorRight = GLKVector2Make(pointRight.x, pointRight.y);
