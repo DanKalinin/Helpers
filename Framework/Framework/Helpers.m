@@ -1359,6 +1359,15 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     self.center = center;
 }
 
+- (UIView *)subviewWithTag:(NSInteger)tag ofClass:(Class)class {
+    for (UIView *view in self.subviews) {
+        if ([view isKindOfClass:class] && view.tag == tag) {
+            return view;
+        }
+    }
+    return nil;
+}
+
 @end
 
 
