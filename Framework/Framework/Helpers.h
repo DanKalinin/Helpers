@@ -521,7 +521,7 @@ typedef NS_ENUM(NSUInteger, Digest) {
 @property (readonly) UIImage *renderedLayer;
 - (id)copyWithZone:(NSZone *)zone;
 - (void)moveToView:(UIView *)view;
-- (__kindof UIView *)subviewWithTag:(NSInteger)tag ofClass:(Class)class;
+- (__kindof UIView *)subviewWithTag:(NSInteger)tag;
 
 @end
 
