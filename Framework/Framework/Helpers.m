@@ -416,9 +416,6 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @interface FilledButton ()
 
-@property UIColor *defaultBackgroundColor;
-@property UIColor *defaultBorderColor;
-
 @end
 
 
@@ -427,8 +424,7 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    self.defaultBackgroundColor = self.backgroundColor;
-    self.defaultBorderColor = self.borderColor;
+    [self updateState];
 }
 
 - (void)setHighlighted:(BOOL)highlighted {

@@ -131,10 +131,12 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 @interface FilledButton : UIButton
 
+@property IBInspectable UIColor *defaultBackgroundColor;
 @property IBInspectable UIColor *highlightedBackgroundColor;
 @property IBInspectable UIColor *selectedBackgroundColor;
 @property IBInspectable UIColor *disabledBackgroundColor;
 
+@property IBInspectable UIColor *defaultBorderColor;
 @property IBInspectable UIColor *highlightedBorderColor;
 @property IBInspectable UIColor *selectedBorderColor;
 @property IBInspectable UIColor *disabledBorderColor;
