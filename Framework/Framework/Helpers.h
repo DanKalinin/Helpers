@@ -18,6 +18,7 @@ extern NSString *const DateFormatGCCDate;
 extern NSString *const DateFormatGCCTime;
 
 extern NSString *const PlistExtension;
+extern NSString *const StringsExtension;
 extern NSString *const XMLExtension;
 extern NSString *const JSONExtension;
 

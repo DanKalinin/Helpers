@@ -21,6 +21,7 @@ NSString *const DateFormatGCCDate = @"MMM d yyyy";
 NSString *const DateFormatGCCTime = @"HH:mm:ss";
 
 NSString *const PlistExtension = @"plist";
+NSString *const StringsExtension = @"strings";
 NSString *const XMLExtension = @"xml";
 NSString *const JSONExtension = @"json";
 
@@ -1002,9 +1003,13 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 }
 
 - (NSString *)localize:(NSString *)string {
+    NSString *notFoundValue = @(NSNotFound).stringValue;
     NSString *table = [self.storyboard valueForKey:@"name"];
-    string = [self.bundle localizedStringForKey:string value:string table:table];
-    return string;
+    NSString *localizedString = [self.bundle localizedStringForKey:string value:notFoundValue table:table];
+    if ([localizedString isEqualToString:notFoundValue]) {
+        localizedString = [NSBundle.mainBundle localizedStringForKey:string value:string table:@"Localizable"];
+    }
+    return localizedString;
 }
 
 - (void)embedViewController:(UIViewController *)vc toView:(UIView *)view {
