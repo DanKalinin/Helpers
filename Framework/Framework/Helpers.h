@@ -674,4 +674,10 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 - (NSData *)digest:(Digest)digest;
 
+- (BOOL)isEqualToVersion:(NSString *)version;
+- (BOOL)isGreaterThanVersion:(NSString *)version;
+- (BOOL)isLessThanVersion:(NSString *)version;
+- (BOOL)isGreaterThanOrEqualToVersion:(NSString *)version;
+- (BOOL)isLessThanOrEqualToVersion:(NSString *)version;
+
 @end

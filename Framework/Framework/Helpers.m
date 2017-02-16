@@ -1685,4 +1685,29 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return data;
 }
 
+- (BOOL)isEqualToVersion:(NSString *)version {
+    BOOL equal = ([self compare:version options:NSNumericSearch] == NSOrderedSame);
+    return equal;
+}
+
+- (BOOL)isGreaterThanVersion:(NSString *)version {
+    BOOL greater = ([self compare:version options:NSNumericSearch] == NSOrderedDescending);
+    return greater;
+}
+
+- (BOOL)isLessThanVersion:(NSString *)version {
+    BOOL less = ([self compare:version options:NSNumericSearch] == NSOrderedAscending);
+    return less;
+}
+
+- (BOOL)isGreaterThanOrEqualToVersion:(NSString *)version {
+    BOOL result = ([self isGreaterThanVersion:version] || [self isEqualToVersion:version]);
+    return result;
+}
+
+- (BOOL)isLessThanOrEqualToVersion:(NSString *)version {
+    BOOL result = ([self isLessThanVersion:version] || [self isEqualToVersion:version]);
+    return result;
+}
+
 @end
