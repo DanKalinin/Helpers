@@ -548,56 +548,6 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
-@interface TableViewCell ()
-
-@property UITableViewCellAccessoryType defaultAccessoryType;
-
-@end
-
-
-
-@implementation TableViewCell
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    self.defaultAccessoryType = self.accessoryType;
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-    self.accessoryType = selected ? self.selectedAccessoryType : self.defaultAccessoryType;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface CollectionViewCell ()
-
-@end
-
-
-
-@implementation CollectionViewCell
-
-@end
-
-
-
-
-
-
-
-
-
-
 @implementation ShapeLayerView
 
 @dynamic layer;
