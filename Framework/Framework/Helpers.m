@@ -426,6 +426,10 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 - (void)awakeFromNib {
     [super awakeFromNib];
     [self updateState];
+    
+    if (self.toggle) {
+        [self addTarget:self action:@selector(onToggle) forControlEvents:UIControlEventTouchUpInside];
+    }
 }
 
 - (void)setHighlighted:(BOOL)highlighted {
@@ -441,6 +445,13 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 - (void)setEnabled:(BOOL)enabled {
     [super setEnabled:enabled];
     [self updateState];
+}
+
+#pragma mark - Actions
+
+- (void)onToggle {
+    self.selected = !self.selected;
+    [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
 #pragma mark - Helpers

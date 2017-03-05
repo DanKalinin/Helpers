@@ -142,6 +142,8 @@ typedef NS_ENUM(NSUInteger, Digest) {
 @property IBInspectable UIColor *selectedBorderColor;
 @property IBInspectable UIColor *disabledBorderColor;
 
+@property IBInspectable BOOL toggle;
+
 @end
 
 
