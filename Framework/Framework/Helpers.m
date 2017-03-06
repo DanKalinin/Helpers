@@ -1672,3 +1672,35 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+@implementation UILabel (Helpers)
+
+- (CGSize)textSize {
+    
+    CGSize size;
+    
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+    attributes[NSFontAttributeName] = self.font;
+    
+    if (self.numberOfLines == 1) {
+        size = [self.text sizeWithAttributes:attributes];
+    } else {
+        size = self.frame.size;
+        size.height = CGFLOAT_MAX;
+        CGRect rect = [self.text boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil];
+        size = rect.size;
+    }
+    
+    return size;
+}
+
+@end

@@ -625,3 +625,18 @@ typedef NS_ENUM(NSUInteger, Digest) {
 - (BOOL)isLessThanOrEqualToVersion:(NSString *)version;
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface UILabel (Helpers)
+
+@property (readonly) CGSize textSize;
+
+@end
