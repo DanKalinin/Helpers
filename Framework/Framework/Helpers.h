@@ -399,23 +399,7 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 
 
-@interface UITableViewController (Helpers)
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface UITableView (Helpers)
-
-@property IBOutlet UIView *backgroundView;
-@property (strong, nonatomic) IBOutlet UIView *emptyView;
 
 - (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath;
 
