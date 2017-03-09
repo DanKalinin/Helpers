@@ -130,7 +130,9 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 
 
-@interface FilledButton : UIButton
+@interface Button : UIButton
+
+@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *subbuttons;
 
 @property IBInspectable UIColor *defaultBackgroundColor;
 @property IBInspectable UIColor *highlightedBackgroundColor;

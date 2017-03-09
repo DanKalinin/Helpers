@@ -415,13 +415,13 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
-@interface FilledButton ()
+@interface Button ()
 
 @end
 
 
 
-@implementation FilledButton
+@implementation Button
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -434,16 +434,19 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 - (void)setHighlighted:(BOOL)highlighted {
     [super setHighlighted:highlighted];
+    [self.subbuttons setValue:@(highlighted) forKey:@"highlighted"];
     [self updateState];
 }
 
 - (void)setSelected:(BOOL)selected {
     [super setSelected:selected];
+    [self.subbuttons setValue:@(selected) forKey:@"selected"];
     [self updateState];
 }
 
 - (void)setEnabled:(BOOL)enabled {
     [super setEnabled:enabled];
+    [self.subbuttons setValue:@(enabled) forKey:@"enabled"];
     [self updateState];
 }
 
