@@ -1086,6 +1086,14 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @implementation UITableView (Helpers)
 
+- (NSInteger)numberOfRows {
+    NSInteger rows = 0;
+    for (NSInteger section = 0; section < self.numberOfSections; section++) {
+        rows += [self numberOfRowsInSection:section];
+    }
+    return rows;
+}
+
 - (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self cellForRowAtIndexPath:indexPath];
     cell.accessoryType = accessoryType;

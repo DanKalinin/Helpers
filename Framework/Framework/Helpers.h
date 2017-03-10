@@ -401,6 +401,8 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 @interface UITableView (Helpers)
 
+@property (readonly) NSInteger numberOfRows;
+
 - (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
