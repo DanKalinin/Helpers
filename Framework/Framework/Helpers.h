@@ -25,6 +25,7 @@ extern NSString *const JSONExtension;
 extern NSString *const ErrorKey;
 extern NSString *const ObjectKey;
 
+extern bool CGFloatInRange(CGFloat value, UIFloatRange range);
 extern CGFloat CGFloatClampToRange(CGFloat value, UIFloatRange range);
 extern CGFloat CGFloatSign(CGFloat value);
 

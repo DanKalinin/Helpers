@@ -28,6 +28,11 @@ NSString *const JSONExtension = @"json";
 NSString *const ErrorKey = @"error";
 NSString *const ObjectKey = @"object";
 
+bool CGFloatInRange(CGFloat value, UIFloatRange range) {
+    bool inRange = ((value >= range.minimum) && (value <= range.maximum));
+    return inRange;
+}
+
 CGFloat CGFloatClampToRange(CGFloat value, UIFloatRange range) {
     value = fmax(value, range.minimum);
     value = fmin(value, range.maximum);
