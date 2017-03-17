@@ -39,6 +39,12 @@ CGFloat CGFloatClampToRange(CGFloat value, UIFloatRange range) {
     return value;
 }
 
+CGFloat CGFloatRound(CGFloat value, NSInteger precision) {
+    CGFloat k = pow(10.0, precision);
+    value = round(k * value) / k;
+    return value;
+}
+
 CGFloat CGFloatSign(CGFloat value) {
     value /= fabs(value);
     return value;

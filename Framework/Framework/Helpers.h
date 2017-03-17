@@ -27,6 +27,7 @@ extern NSString *const ObjectKey;
 
 extern bool CGFloatInRange(CGFloat value, UIFloatRange range);
 extern CGFloat CGFloatClampToRange(CGFloat value, UIFloatRange range);
+extern CGFloat CGFloatRound(CGFloat value, NSInteger precision);
 extern CGFloat CGFloatSign(CGFloat value);
 
 extern CGPoint CGPointAdd(CGPoint pointLeft, CGPoint pointRight);
