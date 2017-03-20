@@ -117,6 +117,62 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 #pragma mark - Classes
 
+@interface MutableDictionary ()
+
+@property NSMutableDictionary *dictionary;
+
+@end
+
+
+
+@implementation MutableDictionary
+
+- (instancetype)initWithCapacity:(NSUInteger)numItems {
+    self = [super init];
+    if (self) {
+        self.dictionary = [NSMutableDictionary.alloc initWithCapacity:numItems];
+    }
+    return self;
+}
+
+- (NSUInteger)count {
+    NSUInteger count = self.dictionary.count;
+    return count;
+}
+
+- (id)objectForKey:(id)aKey {
+    id object = [self.dictionary objectForKey:aKey];
+    if (!object) {
+        object = [MutableDictionary dictionary];
+        [self setObject:object forKey:aKey];
+    }
+    return object;
+}
+
+- (NSEnumerator *)keyEnumerator {
+    NSEnumerator *enumerator = self.dictionary.keyEnumerator;
+    return enumerator;
+}
+
+- (void)setObject:(id)anObject forKey:(id<NSCopying>)aKey {
+    [self.dictionary setObject:anObject forKey:aKey];
+}
+
+- (void)removeObjectForKey:(id)aKey {
+    [self.dictionary removeObjectForKey:aKey];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface ImageView ()
 
 @property UIColor *defaultBackgroundColor;
@@ -722,6 +778,14 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
+@interface NSObject (HelpersSelectors) <UITraitEnvironment>
+
+@property MutableDictionary *dictionaryForUndefinedKeys;
+
+@end
+
+
+
 @implementation NSObject (Helpers)
 
 + (void)swizzleClassMethod:(SEL)original with:(SEL)swizzled {
@@ -830,6 +894,51 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 - (void)invokeHandler:(ImageBlock)handler image:(UIImage *)image {
     [self.class invokeHandler:handler image:image];
+}
+
+#pragma mark - Accessors
+
+- (void)setSupportsUndefinedKeys:(BOOL)supportsUndefinedKeys {
+    NSNumber *supports = @(supportsUndefinedKeys);
+    objc_setAssociatedObject(self, @selector(supportsUndefinedKeys), supports, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (BOOL)supportsUndefinedKeys {
+    NSNumber *supports = objc_getAssociatedObject(self, @selector(supportsUndefinedKeys));
+    return supports.boolValue;
+}
+
+- (void)setDictionaryForUndefinedKeys:(MutableDictionary *)dictionaryForUndefinedKeys {
+    objc_setAssociatedObject(self, @selector(dictionaryForUndefinedKeys), dictionaryForUndefinedKeys, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (MutableDictionary *)dictionaryForUndefinedKeys {
+    return objc_getAssociatedObject(self, @selector(dictionaryForUndefinedKeys));
+}
+
+#pragma mark - Swizzled methods
+
++ (void)load {
+    SEL original = @selector(valueForUndefinedKey:);
+    SEL swizzled = @selector(swizzledValueForUndefinedKey:);
+    [self swizzleInstanceMethod:original with:swizzled];
+}
+
+- (id)swizzledValueForUndefinedKey:(NSString *)key {
+    
+    id value;
+    
+    if (self.supportsUndefinedKeys) {
+        value = self.dictionaryForUndefinedKeys;
+        if (!value) {
+            value = [MutableDictionary dictionary];
+            [self setDictionaryForUndefinedKeys:value];
+        }
+    } else {
+        value = [self swizzledValueForUndefinedKey:key];
+    }
+    
+    return value;
 }
 
 @end

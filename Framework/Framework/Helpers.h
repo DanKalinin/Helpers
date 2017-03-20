@@ -68,6 +68,19 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 #pragma mark - Classes
 
+@interface MutableDictionary : NSMutableDictionary
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface ImageView : UIImageView
 
 @property IBInspectable UIColor *highlightedBackgroundColor;
@@ -287,6 +300,8 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 @property (class, readonly) UINib *nib;
 @property (readonly) UINib *nib;
+
+@property IBInspectable BOOL supportsUndefinedKeys;
 
 + (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle;
 + (instancetype)objectNamed:(NSString *)name;
