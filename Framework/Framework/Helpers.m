@@ -780,7 +780,7 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @interface NSObject (HelpersSelectors) <UITraitEnvironment>
 
-@property MutableDictionary *dictionaryForUndefinedKeys;
+@property MutableDictionary *keyValueStorage;
 
 @end
 
@@ -898,22 +898,27 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 #pragma mark - Accessors
 
-- (void)setSupportsUndefinedKeys:(BOOL)supportsUndefinedKeys {
-    NSNumber *supports = @(supportsUndefinedKeys);
-    objc_setAssociatedObject(self, @selector(supportsUndefinedKeys), supports, OBJC_ASSOCIATION_RETAIN);
+- (void)setHasKeyValueStorage:(BOOL)hasKeyValueStorage {
+    NSNumber *has = @(hasKeyValueStorage);
+    objc_setAssociatedObject(self, @selector(hasKeyValueStorage), has, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (BOOL)supportsUndefinedKeys {
-    NSNumber *supports = objc_getAssociatedObject(self, @selector(supportsUndefinedKeys));
-    return supports.boolValue;
+- (BOOL)hasKeyValueStorage {
+    NSNumber *has = objc_getAssociatedObject(self, @selector(hasKeyValueStorage));
+    return has.boolValue;
 }
 
-- (void)setDictionaryForUndefinedKeys:(MutableDictionary *)dictionaryForUndefinedKeys {
-    objc_setAssociatedObject(self, @selector(dictionaryForUndefinedKeys), dictionaryForUndefinedKeys, OBJC_ASSOCIATION_RETAIN);
+- (void)setKeyValueStorage:(MutableDictionary *)keyValueStorage {
+    objc_setAssociatedObject(self, @selector(keyValueStorage), keyValueStorage, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (MutableDictionary *)dictionaryForUndefinedKeys {
-    return objc_getAssociatedObject(self, @selector(dictionaryForUndefinedKeys));
+- (MutableDictionary *)keyValueStorage {
+    MutableDictionary *storage = objc_getAssociatedObject(self, @selector(keyValueStorage));
+    if (!storage) {
+        storage = [MutableDictionary dictionary];
+        [self setKeyValueStorage:storage];
+    }
+    return storage;
 }
 
 #pragma mark - Swizzled methods
@@ -928,12 +933,8 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     
     id value;
     
-    if (self.supportsUndefinedKeys) {
-        value = self.dictionaryForUndefinedKeys;
-        if (!value) {
-            value = [MutableDictionary dictionary];
-            [self setDictionaryForUndefinedKeys:value];
-        }
+    if (self.hasKeyValueStorage) {
+        value = self.keyValueStorage[key];
     } else {
         value = [self swizzledValueForUndefinedKey:key];
     }
