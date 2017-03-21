@@ -1184,6 +1184,12 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     return rows;
 }
 
+- (NSArray<NSIndexPath *> *)indexPaths {
+    CGRect rect = {CGPointZero, self.contentSize};
+    NSArray *indexPaths = [self indexPathsForRowsInRect:rect];
+    return indexPaths;
+}
+
 - (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self cellForRowAtIndexPath:indexPath];
     cell.accessoryType = accessoryType;
