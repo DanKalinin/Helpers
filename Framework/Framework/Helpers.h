@@ -301,8 +301,7 @@ typedef NS_ENUM(NSUInteger, Digest) {
 @property (class, readonly) UINib *nib;
 @property (readonly) UINib *nib;
 
-@property IBInspectable BOOL hasKeyValueStorage;
-@property (readonly) MutableDictionary *keyValueStorage;
+@property (readonly) MutableDictionary *kvs;
 
 + (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle;
 + (instancetype)objectNamed:(NSString *)name;

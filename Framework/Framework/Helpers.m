@@ -780,7 +780,7 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 @interface NSObject (HelpersSelectors) <UITraitEnvironment>
 
-@property MutableDictionary *keyValueStorage;
+@property MutableDictionary *kvs;
 
 @end
 
@@ -898,48 +898,17 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 #pragma mark - Accessors
 
-- (void)setHasKeyValueStorage:(BOOL)hasKeyValueStorage {
-    NSNumber *has = @(hasKeyValueStorage);
-    objc_setAssociatedObject(self, @selector(hasKeyValueStorage), has, OBJC_ASSOCIATION_RETAIN);
+- (void)setKvs:(MutableDictionary *)kvs {
+    objc_setAssociatedObject(self, @selector(kvs), kvs, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (BOOL)hasKeyValueStorage {
-    NSNumber *has = objc_getAssociatedObject(self, @selector(hasKeyValueStorage));
-    return has.boolValue;
-}
-
-- (void)setKeyValueStorage:(MutableDictionary *)keyValueStorage {
-    objc_setAssociatedObject(self, @selector(keyValueStorage), keyValueStorage, OBJC_ASSOCIATION_RETAIN);
-}
-
-- (MutableDictionary *)keyValueStorage {
-    MutableDictionary *storage = objc_getAssociatedObject(self, @selector(keyValueStorage));
-    if (!storage) {
-        storage = [MutableDictionary dictionary];
-        [self setKeyValueStorage:storage];
+- (MutableDictionary *)kvs {
+    MutableDictionary *kvs = objc_getAssociatedObject(self, @selector(kvs));
+    if (!kvs) {
+        kvs = [MutableDictionary dictionary];
+        self.kvs = kvs;
     }
-    return storage;
-}
-
-#pragma mark - Swizzled methods
-
-+ (void)load {
-    SEL original = @selector(valueForUndefinedKey:);
-    SEL swizzled = @selector(swizzledValueForUndefinedKey:);
-    [self swizzleInstanceMethod:original with:swizzled];
-}
-
-- (id)swizzledValueForUndefinedKey:(NSString *)key {
-    
-    id value;
-    
-    if (self.hasKeyValueStorage) {
-        value = self.keyValueStorage[key];
-    } else {
-        value = [self swizzledValueForUndefinedKey:key];
-    }
-    
-    return value;
+    return kvs;
 }
 
 @end
