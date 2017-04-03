@@ -610,25 +610,6 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 
 
-@implementation TableViewController
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = self.cells[indexPath.row];
-    CGFloat height = tableView.rowHeight * !cell.hidden;
-    return height;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
 @implementation ShapeLayerView
 
 @dynamic layer;

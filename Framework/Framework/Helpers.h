@@ -187,21 +187,6 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 
 
-@interface TableViewController : UITableViewController
-
-@property (strong, nonatomic) IBOutletCollection(UITableViewCell) NSArray *cells;
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface ShapeLayerView : UIView
 
 @property (class, readonly) Class layerClass;
