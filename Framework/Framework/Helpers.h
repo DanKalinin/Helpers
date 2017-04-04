@@ -38,6 +38,10 @@ extern CGPoint CGPointClampToRect(CGPoint point, CGRect rect);
 
 extern CGPoint CGRectGetMidXMidY(CGRect rect);
 
+extern NSString *MinutesToHHmm(NSUInteger minutes, NSString *separator);
+extern NSUInteger HHmmToMinutes(NSString *HHmm, NSString *separator);
+extern NSString *DaysToEE(NSArray *days, NSString *separator);
+
 typedef void (^VoidBlock)(void);
 typedef void (^BoolBlock)(BOOL);
 typedef void (^FloatBlock)(float);

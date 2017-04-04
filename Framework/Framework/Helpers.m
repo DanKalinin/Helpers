@@ -14,6 +14,11 @@
 #import <GLKit/GLKit.h>
 #import <CommonCrypto/CommonCrypto.h>
 
+static NSString *const ErrorsTable = @"Errors";
+static NSString *const LocalizableTable = @"Localizable";
+
+static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
+
 NSString *const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
 NSString *const DateFormatRFC850 = @"EEEE, dd-MMM-yy HH:mm:ss 'GMT'";
 NSString *const DateFormatAsctime = @"E MMM dd HH:mm:ss yyyy";
@@ -102,9 +107,38 @@ CGPoint CGRectGetMidXMidY(CGRect rect) {
     return point;
 }
 
-static NSString *const ErrorsTable = @"Errors";
+NSString *MinutesToHHmm(NSUInteger minutes, NSString *separator) {
+    NSUInteger HH = minutes / 60;
+    NSUInteger mm = minutes % 60;
+    NSString *HHmm = [NSString stringWithFormat:@"%02i%@%02i", (int)HH, separator, (int)mm];
+    return HHmm;
+}
 
-static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
+NSUInteger HHmmToMinutes(NSString *HHmm, NSString *separator) {
+    NSUInteger minutes = NSNotFound;
+    
+    NSArray *components = [HHmm componentsSeparatedByString:separator];
+    if (components.count == 2) {
+        NSUInteger HH = [components.firstObject intValue];
+        NSUInteger mm = [components.lastObject intValue];
+        minutes = 60 * HH + mm;
+    }
+    
+    return minutes;
+}
+
+NSString *DaysToEE(NSArray *days, NSString *separator) {
+    NSMutableArray *components = [NSMutableArray array];
+    for (NSNumber *day in days) {
+        NSString *component = [NSString stringWithFormat:@"Day%@", day];
+        component = [NSBundle.mainBundle localizedStringForKey:component value:component table:LocalizableTable];
+        [components addObject:component];
+    }
+    
+    NSString *EE = [components componentsJoinedByString:separator];
+    EE = [NSBundle.mainBundle localizedStringForKey:EE value:EE table:LocalizableTable];
+    return EE;
+}
 
 
 
@@ -1042,7 +1076,7 @@ static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
     NSString *table = [self.storyboard valueForKey:@"name"];
     NSString *localizedString = [self.bundle localizedStringForKey:string value:notFoundValue table:table];
     if ([localizedString isEqualToString:notFoundValue]) {
-        localizedString = [NSBundle.mainBundle localizedStringForKey:string value:string table:@"Localizable"];
+        localizedString = [NSBundle.mainBundle localizedStringForKey:string value:string table:LocalizableTable];
     }
     return localizedString;
 }
