@@ -14,16 +14,13 @@
 #import <GLKit/GLKit.h>
 #import <CommonCrypto/CommonCrypto.h>
 
-static NSString *const ErrorsTable = @"Errors";
-static NSString *const LocalizableTable = @"Localizable";
-
-static NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
-
 NSString *const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
 NSString *const DateFormatRFC850 = @"EEEE, dd-MMM-yy HH:mm:ss 'GMT'";
 NSString *const DateFormatAsctime = @"E MMM dd HH:mm:ss yyyy";
 NSString *const DateFormatGCCDate = @"MMM d yyyy";
 NSString *const DateFormatGCCTime = @"HH:mm:ss";
+
+NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
 NSString *const PlistExtension = @"plist";
 NSString *const StringsExtension = @"strings";
@@ -32,6 +29,9 @@ NSString *const JSONExtension = @"json";
 
 NSString *const ErrorKey = @"error";
 NSString *const ObjectKey = @"object";
+
+NSString *const ErrorsTable = @"Errors";
+NSString *const LocalizableTable = @"Localizable";
 
 bool CGFloatInRange(CGFloat value, UIFloatRange range) {
     bool inRange = ((value >= range.minimum) && (value <= range.maximum));

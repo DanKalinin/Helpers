@@ -17,6 +17,8 @@ extern NSString *const DateFormatAsctime;
 extern NSString *const DateFormatGCCDate;
 extern NSString *const DateFormatGCCTime;
 
+extern NSString *const NSLocaleIdentifierPosix;
+
 extern NSString *const PlistExtension;
 extern NSString *const StringsExtension;
 extern NSString *const XMLExtension;
@@ -24,6 +26,9 @@ extern NSString *const JSONExtension;
 
 extern NSString *const ErrorKey;
 extern NSString *const ObjectKey;
+
+extern NSString *const ErrorsTable;
+extern NSString *const LocalizableTable;
 
 extern bool CGFloatInRange(CGFloat value, UIFloatRange range);
 extern CGFloat CGFloatClampToRange(CGFloat value, UIFloatRange range);
