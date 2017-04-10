@@ -107,6 +107,14 @@ CGPoint CGRectGetMidXMidY(CGRect rect) {
     return point;
 }
 
+NSUInteger DateToMinutes(NSDate *date) {
+    NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
+    NSUInteger hours = [calendar component:NSCalendarUnitHour fromDate:date];
+    NSUInteger minutes = [calendar component:NSCalendarUnitMinute fromDate:date];
+    minutes = 60 * hours + minutes;
+    return minutes;
+}
+
 NSString *MinutesToHHmm(NSUInteger minutes, NSString *separator) {
     NSUInteger HH = minutes / 60;
     NSUInteger mm = minutes % 60;

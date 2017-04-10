@@ -43,6 +43,7 @@ extern CGPoint CGPointClampToRect(CGPoint point, CGRect rect);
 
 extern CGPoint CGRectGetMidXMidY(CGRect rect);
 
+extern NSUInteger DateToMinutes(NSDate *date);
 extern NSString *MinutesToHHmm(NSUInteger minutes, NSString *separator);
 extern NSUInteger HHmmToMinutes(NSString *HHmm, NSString *separator);
 extern NSString *DaysToEE(NSArray *days, NSString *separator);
