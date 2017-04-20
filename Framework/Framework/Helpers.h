@@ -93,6 +93,7 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 @interface ImageView : UIImageView
 
+@property IBInspectable UIColor *defaultBackgroundColor;
 @property IBInspectable UIColor *highlightedBackgroundColor;
 
 @end

@@ -217,26 +217,16 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 @interface ImageView ()
 
-@property UIColor *defaultBackgroundColor;
-
 @end
 
 
 
 @implementation ImageView
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    self.defaultBackgroundColor = self.backgroundColor;
-}
-
 - (void)setHighlighted:(BOOL)highlighted {
     [super setHighlighted:highlighted];
-    if (highlighted) {
-        self.backgroundColor = self.highlightedBackgroundColor;
-    } else {
-        self.backgroundColor = self.defaultBackgroundColor;
-    }
+    
+    self.backgroundColor = highlighted ? self.highlightedBackgroundColor : self.defaultBackgroundColor;
 }
 
 @end
