@@ -469,6 +469,8 @@ typedef NS_ENUM(NSUInteger, Digest) {
 - (id)copyWithZone:(NSZone *)zone;
 - (void)moveToView:(UIView *)view;
 - (__kindof UIView *)subviewWithTag:(NSInteger)tag;
+- (void)removeSubviews:(NSArray<UIView *> *)views;
+- (void)removeAllSubviews;
 
 @end
 
@@ -484,6 +486,8 @@ typedef NS_ENUM(NSUInteger, Digest) {
 @interface UIStackView (Helpers)
 
 @property (readonly) NSArray<UIView *> *visibleArrangedSubviews;
+- (void)removeArrangedSubviews:(NSArray<UIView *> *)views;
+- (void)removeAllArrangedSubviews;
 
 @end
 

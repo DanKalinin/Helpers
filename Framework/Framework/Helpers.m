@@ -1348,6 +1348,14 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     return view;
 }
 
+- (void)removeSubviews:(NSArray<UIView *> *)views {
+    [views makeObjectsPerformSelector:@selector(removeFromSuperview)];
+}
+
+- (void)removeAllSubviews {
+    [self removeSubviews:self.subviews];
+}
+
 @end
 
 
@@ -1365,6 +1373,16 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"hidden = NO"];
     NSArray *views = [self.arrangedSubviews filteredArrayUsingPredicate:predicate];
     return views;
+}
+
+- (void)removeArrangedSubviews:(NSArray<UIView *> *)views {
+    for (UIView *view in views) {
+        [self removeArrangedSubview:view];
+    }
+}
+
+- (void)removeAllArrangedSubviews {
+    [self removeArrangedSubviews:self.arrangedSubviews];
 }
 
 @end
