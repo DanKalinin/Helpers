@@ -160,6 +160,10 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *subbuttons;
 
+@property (weak, nonatomic) IBOutlet Button *button1;
+@property (weak, nonatomic) IBOutlet UILabel *label1;
+@property (weak, nonatomic) IBOutlet ImageView *imageView1;
+
 @property IBInspectable UIColor *defaultBackgroundColor;
 @property IBInspectable UIColor *highlightedBackgroundColor;
 @property IBInspectable UIColor *selectedBackgroundColor;
