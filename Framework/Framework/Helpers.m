@@ -1045,6 +1045,10 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     SEL original = @selector(supportedInterfaceOrientations);
     SEL swizzled = @selector(swizzledSupportedInterfaceOrientations);
     [self swizzleInstanceMethod:original with:swizzled];
+    
+    original = @selector(previewActionItems);
+    swizzled = @selector(swizzledPreviewActionItems);
+    [self swizzleInstanceMethod:original with:swizzled];
 }
 
 - (void)setOrientations:(NSUInteger)orientations {
@@ -1067,6 +1071,18 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     
     orientations = [self swizzledSupportedInterfaceOrientations];
     return orientations;
+}
+
+- (void)setPreviewActionItems:(NSArray<id<UIPreviewActionItem>> *)previewActionItems {
+    objc_setAssociatedObject(self, @selector(previewActionItems), previewActionItems, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (NSArray<id<UIPreviewActionItem>> *)swizzledPreviewActionItems {
+    NSArray *items = objc_getAssociatedObject(self, @selector(previewActionItems));
+    if (!items) {
+        items = [self swizzledPreviewActionItems];
+    }
+    return items;
 }
 
 - (NSString *)localize:(NSString *)string {

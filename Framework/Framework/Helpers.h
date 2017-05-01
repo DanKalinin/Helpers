@@ -398,6 +398,7 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 @property IBInspectable NSUInteger orientations;
 @property (readonly) UIAlertController *imagePickerAlertController;
+@property (nonatomic) NSArray<id<UIPreviewActionItem>> *previewActionItems;
 
 - (NSString *)localize:(NSString *)string;
 - (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType;
