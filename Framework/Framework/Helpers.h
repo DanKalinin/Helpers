@@ -396,7 +396,8 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 @interface UIViewController (Helpers) <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
-@property IBInspectable NSUInteger orientations;
+@property (nonatomic) IBInspectable UIInterfaceOrientationMask supportedInterfaceOrientations;
+
 @property (readonly) UIAlertController *imagePickerAlertController;
 @property (nonatomic) NSArray<id<UIPreviewActionItem>> *previewActionItems;
 
@@ -469,7 +470,7 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 @property IBInspectable UIColor *borderColor;
 @property IBInspectable UIColor *shadowColor;
-@property IBInspectable CGSize intrinsicContentSize;
+@property (nonatomic) IBInspectable CGSize intrinsicContentSize;
 @property (readonly) UIImage *renderedLayer;
 - (id)copyWithZone:(NSZone *)zone;
 - (void)moveToView:(UIView *)view;

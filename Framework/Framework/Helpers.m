@@ -1051,30 +1051,24 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     [self swizzleInstanceMethod:original with:swizzled];
 }
 
-- (void)setOrientations:(NSUInteger)orientations {
-    objc_setAssociatedObject(self, @selector(orientations), @(orientations), OBJC_ASSOCIATION_RETAIN);
-}
-
-- (NSUInteger)orientations {
-    NSNumber *orientations = objc_getAssociatedObject(self, @selector(orientations));
-    if (orientations) {
-        return orientations.unsignedIntegerValue;
-    }
-    return NSNotFound;
+- (void)setSupportedInterfaceOrientations:(UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    NSNumber *orientationsValue = @(supportedInterfaceOrientations);
+    objc_setAssociatedObject(self, @selector(supportedInterfaceOrientations), orientationsValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (UIInterfaceOrientationMask)swizzledSupportedInterfaceOrientations {
-    UIInterfaceOrientationMask orientations = self.orientations;
-    if (orientations != NSNotFound) {
-        return orientations;
+    UIInterfaceOrientationMask orientations;
+    NSNumber *orientationsValue = objc_getAssociatedObject(self, @selector(supportedInterfaceOrientations));
+    if (orientationsValue) {
+        orientations = orientationsValue.unsignedIntegerValue;
+    } else {
+        orientations = [self swizzledSupportedInterfaceOrientations];
     }
-    
-    orientations = [self swizzledSupportedInterfaceOrientations];
     return orientations;
 }
 
 - (void)setPreviewActionItems:(NSArray<id<UIPreviewActionItem>> *)previewActionItems {
-    objc_setAssociatedObject(self, @selector(previewActionItems), previewActionItems, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, @selector(previewActionItems), previewActionItems, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (NSArray<id<UIPreviewActionItem>> *)swizzledPreviewActionItems {
@@ -1323,18 +1317,20 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 }
 
 - (void)setIntrinsicContentSize:(CGSize)intrinsicContentSize {
-    NSValue *size = [NSValue valueWithCGSize:intrinsicContentSize];
-    objc_setAssociatedObject(self, @selector(intrinsicContentSize), size, OBJC_ASSOCIATION_RETAIN);
+    NSValue *sizeValue = [NSValue valueWithCGSize:intrinsicContentSize];
+    objc_setAssociatedObject(self, @selector(intrinsicContentSize), sizeValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self invalidateIntrinsicContentSize];
 }
 
 - (CGSize)swizzledIntrinsicContentSize {
-    NSValue *size = objc_getAssociatedObject(self, @selector(intrinsicContentSize));
-    if (size) {
-        return size.CGSizeValue;
+    CGSize size;
+    NSValue *sizeValue = objc_getAssociatedObject(self, @selector(intrinsicContentSize));
+    if (sizeValue) {
+        size = sizeValue.CGSizeValue;
     } else {
-        return [self swizzledIntrinsicContentSize];
+        size = [self swizzledIntrinsicContentSize];
     }
+    return size;
 }
 
 - (UIImage *)renderedLayer {
