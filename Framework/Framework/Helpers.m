@@ -599,7 +599,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willChangeKeyboardFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(willChangeKeyboardFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
         
         UITapGestureRecognizer *tgr = [UITapGestureRecognizer.alloc initWithTarget:self action:@selector(onTap:)];
         tgr.cancelsTouchesInView = NO;
@@ -609,7 +609,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 - (void)willChangeKeyboardFrame:(NSNotification *)note {
