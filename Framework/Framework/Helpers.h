@@ -267,6 +267,33 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 
 
+@interface StreamPair : NSObject
+
+@property (nonatomic) NSInputStream *inputStream;
+@property (nonatomic) NSOutputStream *outputStream;
+
+- (void)inputStreamOpenCompleted:(NSInputStream *)inputStream;
+- (void)inputStreamHasBytesAvailable:(NSInputStream *)inputStream;
+- (void)inputStreamErrorOccurred:(NSInputStream *)inputStream;
+- (void)inputStreamEndEncountered:(NSInputStream *)inputStream;
+- (void)inputStream:(NSInputStream *)inputStream didReceiveData:(NSData *)data;
+
+- (void)outputStreamOpenCompleted:(NSOutputStream *)outputStream;
+- (void)outputStreamHasSpaceAvailable:(NSOutputStream *)outputStream;
+- (void)outputStreamErrorOccurred:(NSOutputStream *)outputStream;
+- (void)outputStreamEndEncountered:(NSOutputStream *)outputStream;
+
+@end
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Categories
 
 @interface UIColor (Helpers)

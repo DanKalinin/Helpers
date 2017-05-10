@@ -738,6 +738,144 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 
 
+@interface StreamPair () <NSStreamDelegate>
+
+@end
+
+
+
+@implementation StreamPair {
+    NSMutableData *_inputStreamData;
+}
+
+- (void)dealloc {
+    self.inputStream = nil;
+    self.outputStream = nil;
+}
+
+- (void)setInputStream:(NSInputStream *)inputStream {
+    if (inputStream) {
+        [self createStream:inputStream];
+    } else {
+        [self disposeStream:inputStream];
+    }
+    
+    _inputStream = inputStream;
+}
+
+- (void)setOutputStream:(NSOutputStream *)outputStream {
+    if (outputStream) {
+        [self createStream:outputStream];
+    } else {
+        [self disposeStream:outputStream];
+    }
+    
+    _outputStream = outputStream;
+}
+
+#pragma mark - Stream
+
+- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
+    if ([aStream isEqual:self.inputStream]) {
+        
+        if (eventCode == NSStreamEventOpenCompleted) {
+            [self inputStreamOpenCompleted:self.inputStream];
+        } else if (eventCode == NSStreamEventHasBytesAvailable) {
+            [self inputStreamHasBytesAvailable:self.inputStream];
+        } else if (eventCode == NSStreamEventEndEncountered) {
+            [self inputStreamEndEncountered:self.inputStream];
+        } else if (eventCode == NSStreamEventErrorOccurred) {
+            [self inputStreamErrorOccurred:self.inputStream];
+        }
+        
+    } else if ([aStream isEqual:self.outputStream]) {
+        
+        if (eventCode == NSStreamEventOpenCompleted) {
+            [self outputStreamOpenCompleted:self.outputStream];
+        } else if (eventCode == NSStreamEventHasSpaceAvailable) {
+            [self outputStreamHasSpaceAvailable:self.outputStream];
+        } else if (eventCode == NSStreamEventEndEncountered) {
+            [self outputStreamEndEncountered:self.outputStream];
+        } else if (eventCode == NSStreamEventErrorOccurred) {
+            [self outputStreamErrorOccurred:self.outputStream];
+        }
+        
+    }
+}
+
+// Input stream
+
+- (void)inputStreamOpenCompleted:(NSInputStream *)inputStream {
+    _inputStreamData = [NSMutableData data];
+}
+
+- (void)inputStreamHasBytesAvailable:(NSInputStream *)inputStream {
+    uint8_t buffer[10];
+    NSInteger length = [self.inputStream read:buffer maxLength:10];
+    if (length > 0) {
+        [_inputStreamData appendBytes:(const void *)buffer length:length];
+        if (!self.inputStream.hasBytesAvailable) {
+            [self inputStream:self.inputStream didReceiveData:_inputStreamData.copy];
+            _inputStreamData.length = 0;
+        }
+    } else if (length == 0) {
+        
+    } else {
+        
+    }
+}
+
+- (void)inputStreamErrorOccurred:(NSInputStream *)inputStream {
+    self.inputStream = nil;
+}
+
+- (void)inputStreamEndEncountered:(NSInputStream *)inputStream {
+    self.inputStream = nil;
+}
+
+- (void)inputStream:(NSInputStream *)inputStream didReceiveData:(NSData *)data {
+}
+
+// Output stream
+
+- (void)outputStreamOpenCompleted:(NSOutputStream *)outputStream {
+}
+
+- (void)outputStreamHasSpaceAvailable:(NSOutputStream *)outputStream {
+}
+
+- (void)outputStreamErrorOccurred:(NSOutputStream *)outputStream {
+    self.outputStream = nil;
+}
+
+- (void)outputStreamEndEncountered:(NSOutputStream *)outputStream {
+    self.outputStream = nil;
+}
+
+#pragma mark - Helpers
+
+- (void)createStream:(NSStream *)stream {
+    stream.delegate = self;
+    [stream scheduleInRunLoop:NSRunLoop.currentRunLoop forMode:NSDefaultRunLoopMode];
+    [stream open];
+}
+
+- (void)disposeStream:(NSStream *)stream {
+    [stream close];
+    [stream removeFromRunLoop:NSRunLoop.currentRunLoop forMode:NSDefaultRunLoopMode];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Categories
 
 @implementation UIColor (Helpers)
