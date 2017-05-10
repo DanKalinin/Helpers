@@ -738,7 +738,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 
 
-@interface StreamPair () <NSStreamDelegate>
+@interface StreamPair ()
 
 @end
 
@@ -746,6 +746,18 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 @implementation StreamPair {
     NSMutableData *_inputStreamData;
+}
+
+- (instancetype)initWithHost:(NSString *)host port:(NSUInteger)port {
+    self = [super init];
+    if (self) {
+        CFReadStreamRef readStream;
+        CFWriteStreamRef writeStream;
+        CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)host, (UInt32)port, &readStream, &writeStream);
+        self.inputStream = (__bridge_transfer NSInputStream *)readStream;
+        self.outputStream = (__bridge_transfer NSOutputStream *)writeStream;
+    }
+    return self;
 }
 
 - (void)dealloc {
@@ -803,7 +815,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     }
 }
 
-// Input stream
+#pragma mark - Input stream
 
 - (void)inputStreamOpenCompleted:(NSInputStream *)inputStream {
     _inputStreamData = [NSMutableData data];
@@ -836,7 +848,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 - (void)inputStream:(NSInputStream *)inputStream didReceiveData:(NSData *)data {
 }
 
-// Output stream
+#pragma mark - Output stream
 
 - (void)outputStreamOpenCompleted:(NSOutputStream *)outputStream {
 }

@@ -267,10 +267,40 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 
 
-@interface StreamPair : NSObject
+@protocol NSInputStreamDelegate <NSStreamDelegate>
+
+@optional
+- (void)inputStreamOpenCompleted:(NSInputStream *)inputStream;
+- (void)inputStreamHasBytesAvailable:(NSInputStream *)inputStream;
+- (void)inputStreamErrorOccurred:(NSInputStream *)inputStream;
+- (void)inputStreamEndEncountered:(NSInputStream *)inputStream;
+- (void)inputStream:(NSInputStream *)inputStream didReceiveData:(NSData *)data;
+
+@end
+
+
+
+@protocol NSOutputStreamDelegate <NSStreamDelegate>
+
+@optional
+- (void)outputStreamOpenCompleted:(NSOutputStream *)outputStream;
+- (void)outputStreamHasSpaceAvailable:(NSOutputStream *)outputStream;
+- (void)outputStreamErrorOccurred:(NSOutputStream *)outputStream;
+- (void)outputStreamEndEncountered:(NSOutputStream *)outputStream;
+
+@end
+
+
+
+@interface StreamPair : NSObject <NSInputStreamDelegate, NSOutputStreamDelegate>
 
 @property (nonatomic) NSInputStream *inputStream;
 @property (nonatomic) NSOutputStream *outputStream;
+
+@property (weak) id<NSInputStreamDelegate> inputStreamDelegate;
+@property (weak) id<NSOutputStreamDelegate> outputStreamDelegate;
+
+- (instancetype)initWithHost:(NSString *)host port:(NSUInteger)port;
 
 - (void)inputStreamOpenCompleted:(NSInputStream *)inputStream;
 - (void)inputStreamHasBytesAvailable:(NSInputStream *)inputStream;
