@@ -752,26 +752,33 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 
 
-@implementation StreamPair {
-    NSMutableData *_inputStreamData;
-}
+@implementation StreamPair
 
-- (instancetype)initWithHost:(NSString *)host port:(NSUInteger)port {
+- (instancetype)init {
     self = [super init];
     if (self) {
-        CFReadStreamRef readStream;
-        CFWriteStreamRef writeStream;
-        CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)host, (UInt32)port, &readStream, &writeStream);
-        self.inputStream = (__bridge_transfer NSInputStream *)readStream;
-        self.outputStream = (__bridge_transfer NSOutputStream *)writeStream;
+        _inputStreamDelegate = self;
+        _outputStreamDelegate = self;
     }
     return self;
+}
+
++ (instancetype)streamPairWithHost:(NSString *)host port:(NSUInteger)port {
+    CFReadStreamRef readStream;
+    CFWriteStreamRef writeStream;
+    CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)host, (UInt32)port, &readStream, &writeStream);
+    StreamPair *streamPair = [self new];
+    streamPair.inputStream = (__bridge_transfer NSInputStream *)readStream;
+    streamPair.outputStream = (__bridge_transfer NSOutputStream *)writeStream;
+    return streamPair;
 }
 
 - (void)dealloc {
     self.inputStream = nil;
     self.outputStream = nil;
 }
+
+#pragma mark - Accessors
 
 - (void)setInputStream:(NSInputStream *)inputStream {
     if (inputStream) {
@@ -793,31 +800,51 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     _outputStream = outputStream;
 }
 
+- (void)setInputStreamDelegate:(id<NSInputStreamDelegate>)inputStreamDelegate {
+    if (inputStreamDelegate) {
+        _inputStreamDelegates = [SurrogateContainer new];
+        _inputStreamDelegates.objects = @[self, inputStreamDelegate];
+        _inputStreamDelegate = (id)_inputStreamDelegates;
+    } else {
+        _inputStreamDelegate = inputStreamDelegate;
+    }
+}
+
+- (void)setOutputStreamDelegate:(id<NSOutputStreamDelegate>)outputStreamDelegate {
+    if (outputStreamDelegate) {
+        _outputStreamDelegates = [SurrogateContainer new];
+        _outputStreamDelegates.objects = @[self, outputStreamDelegate];
+        _outputStreamDelegate = (id)_inputStreamDelegates;
+    } else {
+        _outputStreamDelegate = outputStreamDelegate;
+    }
+}
+
 #pragma mark - Stream
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
     if ([aStream isEqual:self.inputStream]) {
         
         if (eventCode == NSStreamEventOpenCompleted) {
-            [self inputStreamOpenCompleted:self.inputStream];
+            [self.inputStreamDelegate inputStreamOpenCompleted:self.inputStream];
         } else if (eventCode == NSStreamEventHasBytesAvailable) {
-            [self inputStreamHasBytesAvailable:self.inputStream];
+            [self.inputStreamDelegate inputStreamHasBytesAvailable:self.inputStream];
         } else if (eventCode == NSStreamEventEndEncountered) {
-            [self inputStreamEndEncountered:self.inputStream];
+            [self.inputStreamDelegate inputStreamEndEncountered:self.inputStream];
         } else if (eventCode == NSStreamEventErrorOccurred) {
-            [self inputStreamErrorOccurred:self.inputStream];
+            [self.inputStreamDelegate inputStreamErrorOccurred:self.inputStream];
         }
         
     } else if ([aStream isEqual:self.outputStream]) {
         
         if (eventCode == NSStreamEventOpenCompleted) {
-            [self outputStreamOpenCompleted:self.outputStream];
+            [self.outputStreamDelegate outputStreamOpenCompleted:self.outputStream];
         } else if (eventCode == NSStreamEventHasSpaceAvailable) {
-            [self outputStreamHasSpaceAvailable:self.outputStream];
+            [self.outputStreamDelegate outputStreamHasSpaceAvailable:self.outputStream];
         } else if (eventCode == NSStreamEventEndEncountered) {
-            [self outputStreamEndEncountered:self.outputStream];
+            [self.outputStreamDelegate outputStreamEndEncountered:self.outputStream];
         } else if (eventCode == NSStreamEventErrorOccurred) {
-            [self outputStreamErrorOccurred:self.outputStream];
+            [self.outputStreamDelegate outputStreamErrorOccurred:self.outputStream];
         }
         
     }

@@ -292,15 +292,20 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 
 
-@interface StreamPair : NSObject <NSInputStreamDelegate, NSOutputStreamDelegate>
+@interface StreamPair : NSObject <NSInputStreamDelegate, NSOutputStreamDelegate> {
+    @private
+    SurrogateContainer *_inputStreamDelegates;
+    SurrogateContainer *_outputStreamDelegates;
+    NSMutableData *_inputStreamData;
+}
 
 @property (nonatomic) NSInputStream *inputStream;
 @property (nonatomic) NSOutputStream *outputStream;
 
-@property (weak) id<NSInputStreamDelegate> inputStreamDelegate;
-@property (weak) id<NSOutputStreamDelegate> outputStreamDelegate;
+@property (weak, nonatomic) id<NSInputStreamDelegate> inputStreamDelegate;
+@property (weak, nonatomic) id<NSOutputStreamDelegate> outputStreamDelegate;
 
-- (instancetype)initWithHost:(NSString *)host port:(NSUInteger)port;
++ (instancetype)streamPairWithHost:(NSString *)host port:(NSUInteger)port;
 
 - (void)inputStreamOpenCompleted:(NSInputStream *)inputStream;
 - (void)inputStreamHasBytesAvailable:(NSInputStream *)inputStream;
