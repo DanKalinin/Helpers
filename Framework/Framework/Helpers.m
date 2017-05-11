@@ -1799,6 +1799,8 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 @interface NSData (HelpersSelectors)
 
 @property NSString *cachedString;
+@property id cachedJSON;
+@property UIImage *cachedImage;
 
 @end
 
@@ -1812,6 +1814,22 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 - (NSString *)cachedString {
     return objc_getAssociatedObject(self, @selector(cachedString));
+}
+
+- (void)setCachedJSON:(id)cachedJSON {
+    objc_setAssociatedObject(self, @selector(cachedJSON), cachedJSON, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (id)cachedJSON {
+    return objc_getAssociatedObject(self, @selector(cachedJSON));
+}
+
+- (void)setCachedImage:(UIImage *)cachedImage {
+    objc_setAssociatedObject(self, @selector(cachedImage), cachedImage, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (UIImage *)cachedImage {
+    return objc_getAssociatedObject(self, @selector(cachedImage));
 }
 
 - (void)writeToURL:(NSURL *)URL completion:(VoidBlock)completion {
@@ -1861,6 +1879,26 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     }
     self.cachedString = string;
     return string;
+}
+
+- (id)json {
+    if (self.cachedJSON) return self.cachedJSON;
+    
+    @try {
+        id json = [NSJSONSerialization JSONObjectWithData:self options:0 error:nil];
+        self.cachedJSON = json;
+        return json;
+    } @catch (NSException *exception) {
+        return nil;
+    }
+}
+
+- (UIImage *)image {
+    if (self.cachedImage) return self.cachedImage;
+    
+    CGFloat scale = UIApplication.sharedApplication.keyWindow.screen.scale;
+    self.cachedImage = [UIImage imageWithData:self scale:scale];
+    return self.cachedImage;
 }
 
 @end

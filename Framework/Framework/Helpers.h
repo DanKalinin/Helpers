@@ -676,6 +676,8 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 - (instancetype)digest:(Digest)digest;
 @property (readonly) NSString *string;
+@property (readonly) id json;
+@property (readonly) UIImage *image;
 
 @end
 
