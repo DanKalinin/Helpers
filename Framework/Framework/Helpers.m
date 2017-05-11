@@ -467,8 +467,8 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 @interface TextField ()
 
-@property SurrogateContainer *surrogateContainer;
-@property TextFieldDelegate *textFieldDelegate;
+@property SurrogateContainer *delegates;
+@property TextFieldDelegate *selfDelegate;
 
 @end
 
@@ -479,19 +479,21 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        self.textFieldDelegate = [TextFieldDelegate new];
+        self.selfDelegate = [TextFieldDelegate new];
         self.delegate = nil;
     }
     return self;
 }
 
+#pragma mark - Accessors
+
 - (void)setDelegate:(id<UITextFieldDelegate>)delegate {
     if (delegate) {
-        self.surrogateContainer = [SurrogateContainer new];
-        self.surrogateContainer.objects = @[self.textFieldDelegate, delegate];
-        [super setDelegate:(id)self.surrogateContainer];
+        self.delegates = [SurrogateContainer new];
+        self.delegates.objects = @[self.selfDelegate, delegate];
+        [super setDelegate:(id)self.delegates];
     } else {
-        [super setDelegate:self.textFieldDelegate];
+        [super setDelegate:self.selfDelegate];
     }
 }
 
@@ -501,6 +503,8 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
         [btnEye addTarget:self action:@selector(onEye:) forControlEvents:UIControlEventTouchUpInside];
     }
 }
+
+#pragma mark - Actions
 
 - (void)onEye:(UIButton *)sender {
     sender.selected = !sender.selected;
