@@ -480,7 +480,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     self = [super initWithCoder:aDecoder];
     if (self) {
         self.selfDelegate = [TextFieldDelegate new];
-        self.delegate = nil;
+        [super setDelegate:self.selfDelegate];
     }
     return self;
 }
