@@ -467,7 +467,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 @interface TextField ()
 
-@property SurrogateContainer *delegates;
+@property SurrogateContainer *surrogateContainer;
 @property TextFieldDelegate *textFieldDelegate;
 
 @end
@@ -479,16 +479,20 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        self.delegates = [SurrogateContainer new];
         self.textFieldDelegate = [TextFieldDelegate new];
-        self.delegates.objects = @[self.textFieldDelegate];
-        [super setDelegate:(id)self.delegates];
+        self.delegate = nil;
     }
     return self;
 }
 
 - (void)setDelegate:(id<UITextFieldDelegate>)delegate {
-    self.delegates.objects = @[self.textFieldDelegate, delegate];
+    if (delegate) {
+        self.surrogateContainer = [SurrogateContainer new];
+        self.surrogateContainer.objects = @[self.textFieldDelegate, delegate];
+        [super setDelegate:(id)self.surrogateContainer];
+    } else {
+        [super setDelegate:self.textFieldDelegate];
+    }
 }
 
 - (void)setRightView:(UIButton *)btnEye {
