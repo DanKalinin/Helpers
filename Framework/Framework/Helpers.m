@@ -1064,34 +1064,14 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     [self.class invokeHandler:handler];
 }
 
-+ (void)invokeHandler:(ErrorBlock)handler error:(NSError *)error {
++ (void)invokeHandler:(ObjectBlock)handler object:(id)object {
     if (handler) {
-        handler(error);
+        handler(object);
     }
 }
 
-- (void)invokeHandler:(ErrorBlock)handler error:(NSError *)error {
-    [self.class invokeHandler:handler error:error];
-}
-
-+ (void)invokeHandler:(DataBlock)handler data:(NSData *)data {
-    if (handler) {
-        handler(data);
-    }
-}
-
-- (void)invokeHandler:(DataBlock)handler data:(NSData *)data {
-    [self.class invokeHandler:handler data:data];
-}
-
-+ (void)invokeHandler:(ImageBlock)handler image:(UIImage *)image {
-    if (handler) {
-        handler(image);
-    }
-}
-
-- (void)invokeHandler:(ImageBlock)handler image:(UIImage *)image {
-    [self.class invokeHandler:handler image:image];
+- (void)invokeHandler:(ObjectBlock)handler object:(id)object {
+    [self.class invokeHandler:handler object:object];
 }
 
 #pragma mark - Accessors

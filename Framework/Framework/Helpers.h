@@ -52,6 +52,7 @@ typedef void (^VoidBlock)(void);
 typedef void (^BoolBlock)(BOOL);
 typedef void (^FloatBlock)(float);
 typedef void (^DoubleBlock)(double);
+typedef void (^ObjectBlock)(id);
 typedef void (^ErrorBlock)(NSError *);
 typedef void (^ArrayBlock)(NSArray *);
 typedef void (^DataBlock)(NSData *);
@@ -373,14 +374,8 @@ typedef NS_ENUM(NSUInteger, Digest) {
 + (void)invokeHandler:(VoidBlock)handler;
 - (void)invokeHandler:(VoidBlock)handler;
 
-+ (void)invokeHandler:(ErrorBlock)handler error:(NSError *)error;
-- (void)invokeHandler:(ErrorBlock)handler error:(NSError *)error;
-
-+ (void)invokeHandler:(DataBlock)handler data:(NSData *)data;
-- (void)invokeHandler:(DataBlock)handler data:(NSData *)data;
-
-+ (void)invokeHandler:(ImageBlock)handler image:(UIImage *)image;
-- (void)invokeHandler:(ImageBlock)handler image:(UIImage *)image;
++ (void)invokeHandler:(ObjectBlock)handler object:(id)object;
+- (void)invokeHandler:(ObjectBlock)handler object:(id)object;
 
 @end
 
