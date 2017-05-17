@@ -68,6 +68,12 @@ typedef NS_ENUM(NSUInteger, Digest) {
     DigestSHA512
 };
 
+typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
+    ReachabilityStatusNone,
+    ReachabilityStatusWiFi,
+    ReachabilityStatusWWAN
+};
+
 
 
 
@@ -256,6 +262,27 @@ typedef NS_ENUM(NSUInteger, Digest) {
 
 @property (class, readonly) Class layerClass;
 @property (readonly) CAEmitterLayer *layer;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface Reachability : NSObject
+
+typedef void (^ReachabilityHandler)(Reachability *reachability);
+
++ (instancetype)reachability;
+- (instancetype)initWithHost:(NSString *)host;
+
+@property (readonly) ReachabilityStatus status;
+@property (copy) ReachabilityHandler handler;
 
 @end
 
