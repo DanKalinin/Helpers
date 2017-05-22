@@ -327,6 +327,9 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
     NSMutableData *_inputStreamData;
 }
 
+@property (readonly) NSString *host;
+@property (readonly) NSUInteger port;
+
 @property (nonatomic) NSInputStream *inputStream;
 @property (nonatomic) NSOutputStream *outputStream;
 

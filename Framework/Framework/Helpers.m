@@ -840,6 +840,9 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 @interface StreamPair ()
 
+@property NSString *host;
+@property NSUInteger port;
+
 @end
 
 
@@ -860,6 +863,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     CFWriteStreamRef writeStream;
     CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)host, (UInt32)port, &readStream, &writeStream);
     StreamPair *streamPair = [self new];
+    streamPair.host = host;
+    streamPair.port = port;
     streamPair.inputStream = (__bridge_transfer NSInputStream *)readStream;
     streamPair.outputStream = (__bridge_transfer NSOutputStream *)writeStream;
     return streamPair;
@@ -949,8 +954,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 - (void)inputStreamHasBytesAvailable:(NSInputStream *)inputStream {
-    uint8_t buffer[10];
-    NSInteger length = [self.inputStream read:buffer maxLength:10];
+    uint8_t buffer[1024];
+    NSInteger length = [self.inputStream read:buffer maxLength:1024];
     if (length > 0) {
         [_inputStreamData appendBytes:(const void *)buffer length:length];
         if (!self.inputStream.hasBytesAvailable) {
