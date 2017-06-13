@@ -485,6 +485,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @interface UIViewController (Helpers) <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (nonatomic) IBInspectable UIInterfaceOrientationMask supportedInterfaceOrientations;
+@property IBInspectable BOOL editableByParent;
 
 @property (readonly) UIAlertController *imagePickerAlertController;
 @property (nonatomic) NSArray<id<UIPreviewActionItem>> *previewActionItems;

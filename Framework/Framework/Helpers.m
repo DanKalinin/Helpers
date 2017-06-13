@@ -1303,6 +1303,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 @implementation UIViewController (Helpers)
 
+#pragma mark - Swizzling
+
 + (void)load {
     SEL original = @selector(supportedInterfaceOrientations);
     SEL swizzled = @selector(swizzledSupportedInterfaceOrientations);
@@ -1311,11 +1313,10 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     original = @selector(previewActionItems);
     swizzled = @selector(swizzledPreviewActionItems);
     [self swizzleInstanceMethod:original with:swizzled];
-}
-
-- (void)setSupportedInterfaceOrientations:(UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    NSNumber *orientationsValue = @(supportedInterfaceOrientations);
-    objc_setAssociatedObject(self, @selector(supportedInterfaceOrientations), orientationsValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    original = @selector(setEditing:animated:);
+    swizzled = @selector(swizzledSetEditing:animated:);
+    [self swizzleInstanceMethod:original with:swizzled];
 }
 
 - (UIInterfaceOrientationMask)swizzledSupportedInterfaceOrientations {
@@ -1329,10 +1330,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return orientations;
 }
 
-- (void)setPreviewActionItems:(NSArray<id<UIPreviewActionItem>> *)previewActionItems {
-    objc_setAssociatedObject(self, @selector(previewActionItems), previewActionItems, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 - (NSArray<id<UIPreviewActionItem>> *)swizzledPreviewActionItems {
     NSArray *items = objc_getAssociatedObject(self, @selector(previewActionItems));
     if (!items) {
@@ -1340,6 +1337,40 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     }
     return items;
 }
+
+- (void)swizzledSetEditing:(BOOL)editing animated:(BOOL)animated {
+    [self swizzledSetEditing:editing animated:animated];
+    
+    for (UIViewController *vc in self.childViewControllers) {
+        if (vc.editableByParent) {
+            [vc setEditing:editing animated:animated];
+        }
+    }
+}
+
+#pragma mark - Accessors
+
+- (void)setSupportedInterfaceOrientations:(UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    NSNumber *orientationsValue = @(supportedInterfaceOrientations);
+    objc_setAssociatedObject(self, @selector(supportedInterfaceOrientations), orientationsValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)setPreviewActionItems:(NSArray<id<UIPreviewActionItem>> *)previewActionItems {
+    objc_setAssociatedObject(self, @selector(previewActionItems), previewActionItems, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)setEditableByParent:(BOOL)editableByParent {
+    NSNumber *editableByParentValue = @(editableByParent);
+    objc_setAssociatedObject(self, @selector(editableByParent), editableByParentValue, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (BOOL)editableByParent {
+    NSNumber *editableByParentValue = objc_getAssociatedObject(self, @selector(editableByParent));
+    BOOL editableByParent = editableByParentValue.boolValue;
+    return editableByParent;
+}
+
+#pragma mark - Helpers
 
 - (NSString *)localize:(NSString *)string {
     NSString *notFoundValue = @(NSNotFound).stringValue;
