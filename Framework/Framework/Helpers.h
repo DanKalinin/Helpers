@@ -168,6 +168,7 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *subbuttons;
 
 @property (weak, nonatomic) IBOutlet Button *button1;
+@property (weak, nonatomic) IBOutlet Button *button2;
 @property (weak, nonatomic) IBOutlet UILabel *label1;
 @property (weak, nonatomic) IBOutlet ImageView *imageView1;
 
