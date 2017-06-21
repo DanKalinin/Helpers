@@ -1229,12 +1229,12 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 + (void)load {
     SEL original = @selector(objectForKeyedSubscript:);
-    SEL swizzled = @selector(Helpers_NSDictionary_swizzledObjectForKeyedSubscript:);
+    SEL swizzled = @selector(Helpers_swizzledObjectForKeyedSubscript:);
     [self swizzleInstanceMethod:original with:swizzled];
 }
 
-- (id)Helpers_NSDictionary_swizzledObjectForKeyedSubscript:(id)key {
-    id object = [self Helpers_NSDictionary_swizzledObjectForKeyedSubscript:key];
+- (id)Helpers_swizzledObjectForKeyedSubscript:(id)key {
+    id object = [self Helpers_swizzledObjectForKeyedSubscript:key];
     if ([object isKindOfClass:[NSNull class]]) {
         object = nil;
     }
@@ -1337,47 +1337,47 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 + (void)load {
     SEL original = @selector(supportedInterfaceOrientations);
-    SEL swizzled = @selector(Helpers_UIViewController_swizzledSupportedInterfaceOrientations);
+    SEL swizzled = @selector(Helpers_swizzledSupportedInterfaceOrientations);
     [self swizzleInstanceMethod:original with:swizzled];
     
     original = @selector(previewActionItems);
-    swizzled = @selector(Helpers_UIViewController_swizzledPreviewActionItems);
+    swizzled = @selector(Helpers_swizzledPreviewActionItems);
     [self swizzleInstanceMethod:original with:swizzled];
     
     original = @selector(setEditing:animated:);
-    swizzled = @selector(Helpers_UIViewController_swizzledSetEditing:animated:);
+    swizzled = @selector(Helpers_swizzledSetEditing:animated:);
     [self swizzleInstanceMethod:original with:swizzled];
     
     original = @selector(shouldPerformSegueWithIdentifier:sender:);
-    swizzled = @selector(Helpers_UIViewController_swizzledShouldPerformSegueWithIdentifier:sender:);
+    swizzled = @selector(Helpers_swizzledShouldPerformSegueWithIdentifier:sender:);
     [self swizzleInstanceMethod:original with:swizzled];
     
     original = @selector(prepareForSegue:sender:);
-    swizzled = @selector(Helpers_UIViewController_swizzledPrepareForSegue:sender:);
+    swizzled = @selector(Helpers_swizzledPrepareForSegue:sender:);
     [self swizzleInstanceMethod:original with:swizzled];
 }
 
-- (UIInterfaceOrientationMask)Helpers_UIViewController_swizzledSupportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)Helpers_swizzledSupportedInterfaceOrientations {
     UIInterfaceOrientationMask orientations;
     NSNumber *orientationsValue = objc_getAssociatedObject(self, @selector(supportedInterfaceOrientations));
     if (orientationsValue) {
         orientations = orientationsValue.unsignedIntegerValue;
     } else {
-        orientations = [self Helpers_UIViewController_swizzledSupportedInterfaceOrientations];
+        orientations = [self Helpers_swizzledSupportedInterfaceOrientations];
     }
     return orientations;
 }
 
-- (NSArray<id<UIPreviewActionItem>> *)Helpers_UIViewController_swizzledPreviewActionItems {
+- (NSArray<id<UIPreviewActionItem>> *)Helpers_swizzledPreviewActionItems {
     NSArray *items = objc_getAssociatedObject(self, @selector(previewActionItems));
     if (!items) {
-        items = [self Helpers_UIViewController_swizzledPreviewActionItems];
+        items = [self Helpers_swizzledPreviewActionItems];
     }
     return items;
 }
 
-- (void)Helpers_UIViewController_swizzledSetEditing:(BOOL)editing animated:(BOOL)animated {
-    [self Helpers_UIViewController_swizzledSetEditing:editing animated:animated];
+- (void)Helpers_swizzledSetEditing:(BOOL)editing animated:(BOOL)animated {
+    [self Helpers_swizzledSetEditing:editing animated:animated];
     
     for (UIViewController *vc in self.childViewControllers) {
         if (vc.editableByParent) {
@@ -1386,8 +1386,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     }
 }
 
-- (BOOL)Helpers_UIViewController_swizzledShouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    BOOL shouldPerform = [self Helpers_UIViewController_swizzledShouldPerformSegueWithIdentifier:identifier sender:sender];
+- (BOOL)Helpers_swizzledShouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    BOOL shouldPerform = [self Helpers_swizzledShouldPerformSegueWithIdentifier:identifier sender:sender];
     if ([sender isKindOfClass:SegueSender.class]) {
         SegueSender *s = sender;
         shouldPerform = [s shouldPerformSegueWithIdentifier:identifier];
@@ -1395,13 +1395,13 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return shouldPerform;
 }
 
-- (void)Helpers_UIViewController_swizzledPrepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (void)Helpers_swizzledPrepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([sender isKindOfClass:SegueSender.class]) {
         SegueSender *s = sender;
         UIViewController *vc = [segue.destinationViewController valueForKeyPath:s.viewControllerKeyPath];
         vc.segueSender = s;
     } else {
-        [self Helpers_UIViewController_swizzledPrepareForSegue:segue sender:sender];
+        [self Helpers_swizzledPrepareForSegue:segue sender:sender];
     }
 }
 
@@ -1644,7 +1644,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 + (void)load {
     SEL original = @selector(intrinsicContentSize);
-    SEL swizzled = @selector(Helpers_UIView_swizzledIntrinsicContentSize);
+    SEL swizzled = @selector(Helpers_swizzledIntrinsicContentSize);
     [self swizzleInstanceMethod:original with:swizzled];
 }
 
@@ -1672,13 +1672,13 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [self invalidateIntrinsicContentSize];
 }
 
-- (CGSize)Helpers_UIView_swizzledIntrinsicContentSize {
+- (CGSize)Helpers_swizzledIntrinsicContentSize {
     CGSize size;
     NSValue *sizeValue = objc_getAssociatedObject(self, @selector(intrinsicContentSize));
     if (sizeValue) {
         size = sizeValue.CGSizeValue;
     } else {
-        size = [self Helpers_UIView_swizzledIntrinsicContentSize];
+        size = [self Helpers_swizzledIntrinsicContentSize];
     }
     return size;
 }
