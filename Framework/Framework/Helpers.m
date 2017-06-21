@@ -23,6 +23,9 @@ NSString *const DateFormatGCCTime = @"HH:mm:ss";
 
 NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
+NSString *const ViewControllerKeyPathSelf = @"self";
+NSString *const ViewControllerKeyPathNavigationFirst = @"viewControllers.@index.0";
+
 NSString *const PlistExtension = @"plist";
 NSString *const StringsExtension = @"strings";
 NSString *const XMLExtension = @"xml";
@@ -1020,6 +1023,31 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
+@implementation SegueSender
+
+- (instancetype)initWithViewControllerKeyPath:(NSString *)viewControllerKeyPath {
+    self = [super init];
+    if (self) {
+        self.viewControllerKeyPath = viewControllerKeyPath;
+    }
+    return self;
+}
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier {
+    return YES;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Categories
 
 @implementation UIColor (Helpers)
@@ -1201,12 +1229,12 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 + (void)load {
     SEL original = @selector(objectForKeyedSubscript:);
-    SEL swizzled = @selector(swizzledObjectForKeyedSubscript:);
+    SEL swizzled = @selector(Helpers_NSDictionary_swizzledObjectForKeyedSubscript:);
     [self swizzleInstanceMethod:original with:swizzled];
 }
 
-- (id)swizzledObjectForKeyedSubscript:(id)key {
-    id object = [self swizzledObjectForKeyedSubscript:key];
+- (id)Helpers_NSDictionary_swizzledObjectForKeyedSubscript:(id)key {
+    id object = [self Helpers_NSDictionary_swizzledObjectForKeyedSubscript:key];
     if ([object isKindOfClass:[NSNull class]]) {
         object = nil;
     }
@@ -1303,48 +1331,77 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 @implementation UIViewController (Helpers)
 
+@dynamic segueSender;
+
 #pragma mark - Swizzling
 
 + (void)load {
     SEL original = @selector(supportedInterfaceOrientations);
-    SEL swizzled = @selector(swizzledSupportedInterfaceOrientations);
+    SEL swizzled = @selector(Helpers_UIViewController_swizzledSupportedInterfaceOrientations);
     [self swizzleInstanceMethod:original with:swizzled];
     
     original = @selector(previewActionItems);
-    swizzled = @selector(swizzledPreviewActionItems);
+    swizzled = @selector(Helpers_UIViewController_swizzledPreviewActionItems);
     [self swizzleInstanceMethod:original with:swizzled];
     
     original = @selector(setEditing:animated:);
-    swizzled = @selector(swizzledSetEditing:animated:);
+    swizzled = @selector(Helpers_UIViewController_swizzledSetEditing:animated:);
+    [self swizzleInstanceMethod:original with:swizzled];
+    
+    original = @selector(shouldPerformSegueWithIdentifier:sender:);
+    swizzled = @selector(Helpers_UIViewController_swizzledShouldPerformSegueWithIdentifier:sender:);
+    [self swizzleInstanceMethod:original with:swizzled];
+    
+    original = @selector(prepareForSegue:sender:);
+    swizzled = @selector(Helpers_UIViewController_swizzledPrepareForSegue:sender:);
     [self swizzleInstanceMethod:original with:swizzled];
 }
 
-- (UIInterfaceOrientationMask)swizzledSupportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)Helpers_UIViewController_swizzledSupportedInterfaceOrientations {
     UIInterfaceOrientationMask orientations;
     NSNumber *orientationsValue = objc_getAssociatedObject(self, @selector(supportedInterfaceOrientations));
     if (orientationsValue) {
         orientations = orientationsValue.unsignedIntegerValue;
     } else {
-        orientations = [self swizzledSupportedInterfaceOrientations];
+        orientations = [self Helpers_UIViewController_swizzledSupportedInterfaceOrientations];
     }
     return orientations;
 }
 
-- (NSArray<id<UIPreviewActionItem>> *)swizzledPreviewActionItems {
+- (NSArray<id<UIPreviewActionItem>> *)Helpers_UIViewController_swizzledPreviewActionItems {
     NSArray *items = objc_getAssociatedObject(self, @selector(previewActionItems));
     if (!items) {
-        items = [self swizzledPreviewActionItems];
+        items = [self Helpers_UIViewController_swizzledPreviewActionItems];
     }
     return items;
 }
 
-- (void)swizzledSetEditing:(BOOL)editing animated:(BOOL)animated {
-    [self swizzledSetEditing:editing animated:animated];
+- (void)Helpers_UIViewController_swizzledSetEditing:(BOOL)editing animated:(BOOL)animated {
+    [self Helpers_UIViewController_swizzledSetEditing:editing animated:animated];
     
     for (UIViewController *vc in self.childViewControllers) {
         if (vc.editableByParent) {
             [vc setEditing:editing animated:animated];
         }
+    }
+}
+
+- (BOOL)Helpers_UIViewController_swizzledShouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    BOOL shouldPerform = [self Helpers_UIViewController_swizzledShouldPerformSegueWithIdentifier:identifier sender:sender];
+    if ([sender isKindOfClass:SegueSender.class]) {
+        SegueSender *s = sender;
+        shouldPerform = [s shouldPerformSegueWithIdentifier:identifier];
+    }
+    return shouldPerform;
+}
+
+- (void)Helpers_UIViewController_swizzledPrepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([sender isKindOfClass:SegueSender.class]) {
+        SegueSender *s = sender;
+        UIViewController *vc = [segue.destinationViewController valueForKeyPath:s.viewControllerKeyPath];
+        vc.segueSender = s;
+    } else {
+        [self Helpers_UIViewController_swizzledPrepareForSegue:segue sender:sender];
     }
 }
 
@@ -1587,7 +1644,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 + (void)load {
     SEL original = @selector(intrinsicContentSize);
-    SEL swizzled = @selector(swizzledIntrinsicContentSize);
+    SEL swizzled = @selector(Helpers_UIView_swizzledIntrinsicContentSize);
     [self swizzleInstanceMethod:original with:swizzled];
 }
 
@@ -1615,13 +1672,13 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [self invalidateIntrinsicContentSize];
 }
 
-- (CGSize)swizzledIntrinsicContentSize {
+- (CGSize)Helpers_UIView_swizzledIntrinsicContentSize {
     CGSize size;
     NSValue *sizeValue = objc_getAssociatedObject(self, @selector(intrinsicContentSize));
     if (sizeValue) {
         size = sizeValue.CGSizeValue;
     } else {
-        size = [self swizzledIntrinsicContentSize];
+        size = [self Helpers_UIView_swizzledIntrinsicContentSize];
     }
     return size;
 }
