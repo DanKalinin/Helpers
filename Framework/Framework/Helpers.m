@@ -1048,6 +1048,86 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
+@interface AlertAction ()
+
+@property NSInteger tag;
+
+@end
+
+
+
+@implementation AlertAction
+
++ (instancetype)actionWithTitle:(NSString *)title style:(UIAlertActionStyle)style delegate:(id<ActionDelegate>)delegate tag:(NSInteger)tag {
+    AlertAction *action = [self actionWithTitle:title style:style handler:^(UIAlertAction *action) {
+        AlertAction *a = (AlertAction *)action;
+        [delegate didHandleAction:a];
+    }];
+    action.tag = tag;
+    return action;
+}
+
+@end
+
+
+
+@interface PreviewAction ()
+
+@property NSInteger tag;
+@property UIViewController *previewViewController;
+
+@end
+
+
+
+@implementation PreviewAction
+
++ (instancetype)actionWithTitle:(NSString *)title style:(UIPreviewActionStyle)style delegate:(id<ActionDelegate>)delegate tag:(NSInteger)tag {
+    PreviewAction *action = [self actionWithTitle:title style:style handler:^(UIPreviewAction *action, UIViewController *previewViewController) {
+        PreviewAction *a = (PreviewAction *)action;
+        a.previewViewController = previewViewController;
+        [delegate didHandleAction:a];
+    }];
+    action.tag = tag;
+    return action;
+}
+
+@end
+
+
+
+@interface TableViewRowAction ()
+
+@property NSInteger tag;
+@property NSIndexPath *indexPath;
+
+@end
+
+
+
+@implementation TableViewRowAction
+
++ (instancetype)rowActionWithStyle:(UITableViewRowActionStyle)style title:(NSString *)title delegate:(id<ActionDelegate>)delegate tag:(NSInteger)tag {
+    TableViewRowAction *action = [self rowActionWithStyle:style title:title handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+        TableViewRowAction *a = (TableViewRowAction *)action;
+        a.indexPath = indexPath;
+        [delegate didHandleAction:a];
+    }];
+    action.tag = tag;
+    return action;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Categories
 
 @implementation UIColor (Helpers)

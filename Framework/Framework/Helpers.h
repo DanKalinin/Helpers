@@ -382,6 +382,64 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
+@protocol Action <NSObject>
+
+@required
+@property (readonly) NSInteger tag; // Common - action identication tag
+
+@optional
+@property (readonly) UIViewController *previewViewController; // Preview action - view controller to preview
+@property (readonly) NSIndexPath *indexPath; // Row action - row index path
+
+@end
+
+
+
+@protocol ActionDelegate <NSObject>
+
+@optional
+- (void)didHandleAction:(id <Action>)action;
+
+@end
+
+
+
+@interface AlertAction : UIAlertAction <Action>
+
+@property (readonly) NSInteger tag;
++ (instancetype)actionWithTitle:(NSString *)title style:(UIAlertActionStyle)style delegate:(id <ActionDelegate>)delegate tag:(NSInteger)tag;
+
+@end
+
+
+
+@interface PreviewAction : UIPreviewAction <Action>
+
+@property (readonly) NSInteger tag;
+@property (readonly) UIViewController *previewViewController;
++ (instancetype)actionWithTitle:(NSString *)title style:(UIPreviewActionStyle)style delegate:(id <ActionDelegate>)delegate tag:(NSInteger)tag;
+
+@end
+
+
+
+@interface TableViewRowAction : UITableViewRowAction <Action>
+
+@property (readonly) NSInteger tag;
+@property (readonly) NSIndexPath *indexPath;
++ (instancetype)rowActionWithStyle:(UITableViewRowActionStyle)style title:(NSString *)title delegate:(id <ActionDelegate>)delegate tag:(NSInteger)tag;
+
+@end
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Categories
 
 @interface UIColor (Helpers)
@@ -503,7 +561,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
-@interface UIViewController (Helpers) <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface UIViewController (Helpers) <UINavigationControllerDelegate, UIImagePickerControllerDelegate, ActionDelegate>
 
 @property (nonatomic) IBInspectable UIInterfaceOrientationMask supportedInterfaceOrientations;
 @property IBInspectable BOOL editableByParent;
