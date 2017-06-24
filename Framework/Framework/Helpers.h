@@ -570,6 +570,8 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property (nonatomic) NSArray<id<UIPreviewActionItem>> *previewActionItems;
 
 @property SegueSender *segueSender;
+@property IBInspectable NSString *segueViewControllerKeyPath;
+@property (readonly) __kindof UIViewController *segueViewController;
 
 - (NSString *)localize:(NSString *)string;
 - (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType;

@@ -1507,6 +1507,26 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return editableByParent;
 }
 
+- (void)setSegueViewControllerKeyPath:(NSString *)segueViewControllerKeyPath {
+    objc_setAssociatedObject(self, @selector(segueViewControllerKeyPath), segueViewControllerKeyPath, OBJC_ASSOCIATION_COPY);
+}
+
+- (NSString *)segueViewControllerKeyPath {
+    return objc_getAssociatedObject(self, @selector(segueViewControllerKeyPath));
+}
+
+- (void)setSegueViewController:(UIViewController *)segueViewController {
+    objc_setAssociatedObject(self, @selector(segueViewController), segueViewController, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (UIViewController *)segueViewController {
+    UIViewController *vc = objc_getAssociatedObject(self, @selector(segueViewController));
+    if (vc) return vc;
+    
+    vc = self.segueViewControllerKeyPath ? [self valueForKeyPath:self.segueViewControllerKeyPath] : self;
+    return vc;
+}
+
 #pragma mark - Helpers
 
 - (NSString *)localize:(NSString *)string {
@@ -2022,11 +2042,18 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 @implementation NSArray (Helpers)
 
 - (id)_indexForKeyPath:(NSString *)keypath {
-    NSInteger index = keypath.integerValue;
-    if (index < 0) return nil;
-    if (index >= self.count) return nil;
+    NSScanner *scanner = [NSScanner scannerWithString:keypath];
+    NSInteger index;
+    BOOL success = [scanner scanInteger:&index];
+    if (!success) return nil;
     
     id object = self[index];
+    success = [scanner scanString:@"." intoString:NULL];
+    if (success) {
+        keypath = [keypath substringFromIndex:scanner.scanLocation];
+        object = [object valueForKeyPath:keypath];
+    }
+    
     return object;
 }
 
