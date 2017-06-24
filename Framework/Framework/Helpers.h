@@ -19,9 +19,6 @@ extern NSString *const DateFormatGCCTime;
 
 extern NSString *const NSLocaleIdentifierPosix;
 
-extern NSString *const ViewControllerKeyPathSelf;
-extern NSString *const ViewControllerKeyPathNavigationFirst;
-
 extern NSString *const PlistExtension;
 extern NSString *const StringsExtension;
 extern NSString *const XMLExtension;
@@ -364,24 +361,6 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
-@interface SegueSender : NSObject
-
-@property NSString *viewControllerKeyPath;
-
-- (instancetype)initWithViewControllerKeyPath:(NSString *)viewControllerKeyPath;
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier;
-
-@end
-
-
-
-
-
-
-
-
-
-
 @protocol Action <NSObject>
 
 @required
@@ -561,6 +540,12 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
+@protocol ViewControllerDataSource <NSObject>
+
+@end
+
+
+
 @interface UIViewController (Helpers) <UINavigationControllerDelegate, UIImagePickerControllerDelegate, ActionDelegate>
 
 @property (nonatomic) IBInspectable UIInterfaceOrientationMask supportedInterfaceOrientations;
@@ -569,7 +554,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property (readonly) UIAlertController *imagePickerAlertController;
 @property (nonatomic) NSArray<id<UIPreviewActionItem>> *previewActionItems;
 
-@property SegueSender *segueSender;
+@property (weak) id <ViewControllerDataSource> dataSource;
 @property IBInspectable NSString *segueViewControllerKeyPath;
 @property (readonly) __kindof UIViewController *segueViewController;
 

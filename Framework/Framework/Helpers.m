@@ -23,9 +23,6 @@ NSString *const DateFormatGCCTime = @"HH:mm:ss";
 
 NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
 
-NSString *const ViewControllerKeyPathSelf = @"self";
-NSString *const ViewControllerKeyPathNavigationFirst = @"viewControllers.@index.0";
-
 NSString *const PlistExtension = @"plist";
 NSString *const StringsExtension = @"strings";
 NSString *const XMLExtension = @"xml";
@@ -1023,31 +1020,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
-@implementation SegueSender
-
-- (instancetype)initWithViewControllerKeyPath:(NSString *)viewControllerKeyPath {
-    self = [super init];
-    if (self) {
-        self.viewControllerKeyPath = viewControllerKeyPath;
-    }
-    return self;
-}
-
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier {
-    return YES;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface AlertAction ()
 
 @property NSInteger tag;
@@ -1411,7 +1383,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 @implementation UIViewController (Helpers)
 
-@dynamic segueSender;
+@dynamic dataSource;
 
 #pragma mark - Swizzling
 
@@ -1426,10 +1398,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     
     original = @selector(setEditing:animated:);
     swizzled = @selector(Helpers_swizzledSetEditing:animated:);
-    [self swizzleInstanceMethod:original with:swizzled];
-    
-    original = @selector(shouldPerformSegueWithIdentifier:sender:);
-    swizzled = @selector(Helpers_swizzledShouldPerformSegueWithIdentifier:sender:);
     [self swizzleInstanceMethod:original with:swizzled];
     
     original = @selector(prepareForSegue:sender:);
@@ -1466,20 +1434,9 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     }
 }
 
-- (BOOL)Helpers_swizzledShouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    BOOL shouldPerform = [self Helpers_swizzledShouldPerformSegueWithIdentifier:identifier sender:sender];
-    if ([sender isKindOfClass:SegueSender.class]) {
-        SegueSender *s = sender;
-        shouldPerform = [s shouldPerformSegueWithIdentifier:identifier];
-    }
-    return shouldPerform;
-}
-
 - (void)Helpers_swizzledPrepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([sender isKindOfClass:SegueSender.class]) {
-        SegueSender *s = sender;
-        UIViewController *vc = [segue.destinationViewController valueForKeyPath:s.viewControllerKeyPath];
-        vc.segueSender = s;
+    if ([self conformsToProtocol:@protocol(ViewControllerDataSource)]) {
+        segue.destinationViewController.segueViewController.dataSource = (id)self;
     } else {
         [self Helpers_swizzledPrepareForSegue:segue sender:sender];
     }
