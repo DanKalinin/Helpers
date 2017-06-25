@@ -11,24 +11,29 @@
 FOUNDATION_EXPORT double HelpersVersionNumber;
 FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 
-extern NSString *const DateFormatRFC1123;
-extern NSString *const DateFormatRFC850;
-extern NSString *const DateFormatAsctime;
-extern NSString *const DateFormatGCCDate;
-extern NSString *const DateFormatGCCTime;
+typedef NSString * DateFormat NS_STRING_ENUM;
+extern DateFormat const DateFormatRFC1123;
+extern DateFormat const DateFormatRFC850;
+extern DateFormat const DateFormatAsctime;
+extern DateFormat const DateFormatGCCDate;
+extern DateFormat const DateFormatGCCTime;
 
-extern NSString *const NSLocaleIdentifierPosix;
+typedef NSString * LocaleIdentifier NS_STRING_ENUM;
+extern LocaleIdentifier const LocaleIdentifierPosix;
 
-extern NSString *const PlistExtension;
-extern NSString *const StringsExtension;
-extern NSString *const XMLExtension;
-extern NSString *const JSONExtension;
+typedef NSString * Extension NS_STRING_ENUM;
+extern Extension const ExtensionPlist;
+extern Extension const ExtensionStrings;
+extern Extension const ExtensionXML;
+extern Extension const ExtensionJSON;
 
-extern NSString *const ErrorKey;
-extern NSString *const ObjectKey;
+typedef NSString * Key NS_STRING_ENUM;
+extern Key const KeyError;
+extern Key const KeyObject;
 
-extern NSString *const ErrorsTable;
-extern NSString *const LocalizableTable;
+typedef NSString * Table NS_STRING_ENUM;
+extern Table const TableErrors;
+extern Table const TableLocalizable;
 
 extern bool CGFloatInRange(CGFloat value, UIFloatRange range);
 extern CGFloat CGFloatClampToRange(CGFloat value, UIFloatRange range);

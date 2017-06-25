@@ -15,24 +15,24 @@
 #import <CommonCrypto/CommonCrypto.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
-NSString *const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
-NSString *const DateFormatRFC850 = @"EEEE, dd-MMM-yy HH:mm:ss 'GMT'";
-NSString *const DateFormatAsctime = @"E MMM dd HH:mm:ss yyyy";
-NSString *const DateFormatGCCDate = @"MMM d yyyy";
-NSString *const DateFormatGCCTime = @"HH:mm:ss";
+DateFormat const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
+DateFormat const DateFormatRFC850 = @"EEEE, dd-MMM-yy HH:mm:ss 'GMT'";
+DateFormat const DateFormatAsctime = @"E MMM dd HH:mm:ss yyyy";
+DateFormat const DateFormatGCCDate = @"MMM d yyyy";
+DateFormat const DateFormatGCCTime = @"HH:mm:ss";
 
-NSString *const NSLocaleIdentifierPosix = @"en_US_POSIX";
+LocaleIdentifier const LocaleIdentifierPosix = @"en_US_POSIX";
 
-NSString *const PlistExtension = @"plist";
-NSString *const StringsExtension = @"strings";
-NSString *const XMLExtension = @"xml";
-NSString *const JSONExtension = @"json";
+Extension const ExtensionPlist = @"plist";
+Extension const ExtensionStrings = @"strings";
+Extension const ExtensionXML = @"xml";
+Extension const ExtensionJSON = @"json";
 
-NSString *const ErrorKey = @"error";
-NSString *const ObjectKey = @"object";
+Key const KeyError = @"error";
+Key const KeyObject = @"object";
 
-NSString *const ErrorsTable = @"Errors";
-NSString *const LocalizableTable = @"Localizable";
+Table const TableErrors = @"Errors";
+Table const TableLocalizable = @"Localizable";
 
 bool CGFloatInRange(CGFloat value, UIFloatRange range) {
     bool inRange = ((value >= range.minimum) && (value <= range.maximum));
@@ -140,12 +140,12 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     NSMutableArray *components = [NSMutableArray array];
     for (NSNumber *day in days) {
         NSString *component = [NSString stringWithFormat:@"Day%@", day];
-        component = [NSBundle.mainBundle localizedStringForKey:component value:component table:LocalizableTable];
+        component = [NSBundle.mainBundle localizedStringForKey:component value:component table:TableLocalizable];
         [components addObject:component];
     }
     
     NSString *EE = [components componentsJoinedByString:separator];
-    EE = [NSBundle.mainBundle localizedStringForKey:EE value:EE table:LocalizableTable];
+    EE = [NSBundle.mainBundle localizedStringForKey:EE value:EE table:TableLocalizable];
     return EE;
 }
 
@@ -1344,7 +1344,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 + (instancetype)fixedDateFormatterWithDateFormat:(NSString *)dateFormat {
     NSDateFormatter *df = [NSDateFormatter new];
     df.dateFormat = dateFormat;
-    df.locale = [NSLocale localeWithLocaleIdentifier:NSLocaleIdentifierPosix];
+    df.locale = [NSLocale localeWithLocaleIdentifier:LocaleIdentifierPosix];
     df.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
     return df;
 }
@@ -1491,7 +1491,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     NSString *table = [self.storyboard valueForKey:@"name"];
     NSString *localizedString = [self.bundle localizedStringForKey:string value:notFoundValue table:table];
     if ([localizedString isEqualToString:notFoundValue]) {
-        localizedString = [NSBundle.mainBundle localizedStringForKey:string value:string table:LocalizableTable];
+        localizedString = [NSBundle.mainBundle localizedStringForKey:string value:string table:TableLocalizable];
     }
     return localizedString;
 }
@@ -1654,7 +1654,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     NSDictionary *userInfos = objc_getAssociatedObject(self, @selector(errorUserInfos));
     if (userInfos) return userInfos;
     
-    NSURL *URL = [self URLForResource:ErrorsTable withExtension:PlistExtension];
+    NSURL *URL = [self URLForResource:TableErrors withExtension:ExtensionPlist];
     NSDictionary *errorUserInfos = [NSDictionary dictionaryWithContentsOfURL:URL];
     self.errorUserInfos = errorUserInfos;
     return errorUserInfos;
