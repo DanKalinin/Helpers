@@ -1435,7 +1435,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 - (void)Helpers_swizzledPrepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([self conformsToProtocol:@protocol(ViewControllerDataSource)]) {
+    if ([self conformsToProtocol:@protocol(ViewControllerDataSource)] && [segue.destinationViewController.segueViewController respondsToSelector:@selector(setDataSource:)]) {
         segue.destinationViewController.segueViewController.dataSource = (id)self;
     } else {
         [self Helpers_swizzledPrepareForSegue:segue sender:sender];
