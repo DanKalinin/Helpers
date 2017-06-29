@@ -1310,12 +1310,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [self swizzleInstanceMethod:original with:swizzled];
 }
 
-+ (void)swizzleTraitCollectionDidChange {
-    SEL original = @selector(traitCollectionDidChange:);
-    SEL swizzled = @selector(Helpers_swizzledTraitCollectionDidChange:);
-    [self.class swizzleInstanceMethod:original with:swizzled];
-}
-
 - (void)Helpers_swizzledSetValue:(id)value forKeyPath:(NSString *)keyPath {
     if ([keyPath containsString:@"://"]) {
         NSURLComponents *components = [NSURLComponents componentsWithString:keyPath];
@@ -1326,24 +1320,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         }
     } else {
         [self Helpers_swizzledSetValue:value forKeyPath:keyPath];
-    }
-}
-
-- (void)Helpers_swizzledTraitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
-    [self Helpers_swizzledTraitCollectionDidChange:previousTraitCollection];
-    
-    if (previousTraitCollection && [self.traitCollection isEqual:previousTraitCollection]) return;
-    
-    NSDictionary *keyPathsByTraitCollection = self.kvs[SchemeTraitCollection];
-    if (keyPathsByTraitCollection.count == 0) return;
-    
-    for (UITraitCollection *traitCollection in keyPathsByTraitCollection.allKeys) {
-        if ([self.traitCollection containsTraitsInCollection:traitCollection]) {
-            NSDictionary *dictionary = keyPathsByTraitCollection[traitCollection];
-            [self setValuesForKeyPathsWithDictionary:dictionary];
-        } else {
-            continue;
-        }
     }
 }
 
@@ -1500,7 +1476,9 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     swizzled = @selector(Helpers_swizzledPrepareForSegue:sender:);
     [self swizzleInstanceMethod:original with:swizzled];
     
-    [self swizzleTraitCollectionDidChange];
+    original = @selector(traitCollectionDidChange:);
+    swizzled = @selector(Helpers_swizzledTraitCollectionDidChange:);
+    [self swizzleInstanceMethod:original with:swizzled];
 }
 
 - (UIInterfaceOrientationMask)Helpers_swizzledSupportedInterfaceOrientations {
@@ -1537,6 +1515,24 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         segue.destinationViewController.segueViewController.dataSource = (id)self;
     } else {
         [self Helpers_swizzledPrepareForSegue:segue sender:sender];
+    }
+}
+
+- (void)Helpers_swizzledTraitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    [self Helpers_swizzledTraitCollectionDidChange:previousTraitCollection];
+    
+    if (previousTraitCollection && [self.traitCollection isEqual:previousTraitCollection]) return;
+    
+    NSDictionary *keyPathsByTraitCollection = self.kvs[SchemeTraitCollection];
+    if (keyPathsByTraitCollection.count == 0) return;
+    
+    for (UITraitCollection *traitCollection in keyPathsByTraitCollection.allKeys) {
+        if ([self.traitCollection containsTraitsInCollection:traitCollection]) {
+            NSDictionary *dictionary = keyPathsByTraitCollection[traitCollection];
+            [self setValuesForKeyPathsWithDictionary:dictionary];
+        } else {
+            continue;
+        }
     }
 }
 
