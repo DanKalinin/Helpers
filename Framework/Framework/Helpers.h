@@ -35,6 +35,20 @@ typedef NSString * Table NS_STRING_ENUM;
 extern Table const TableErrors;
 extern Table const TableLocalizable;
 
+typedef NSString * Scheme NS_STRING_ENUM;
+extern Scheme const SchemeTraitCollection;
+
+typedef NSString * QueryItem NS_STRING_ENUM;
+extern QueryItem const QueryItemDisplayScale;
+extern QueryItem const QueryItemHorizontalSizeClass;
+extern QueryItem const QueryItemUserInterfaceIdiom;
+extern QueryItem const QueryItemVerticalSizeClass;
+extern QueryItem const QueryItemForceTouchCapability;
+extern QueryItem const QueryItemDisplayGamut;
+extern QueryItem const QueryItemLayoutDirection;
+extern QueryItem const QueryItemPreferredContentSizeCategory;
+extern QueryItem const QueryItemUserInterfaceStyle;
+
 extern bool CGFloatInRange(CGFloat value, UIFloatRange range);
 extern CGFloat CGFloatClampToRange(CGFloat value, UIFloatRange range);
 extern CGFloat CGFloatRound(CGFloat value, NSInteger precision);
@@ -463,6 +477,13 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 + (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle;
 + (instancetype)objectNamed:(NSString *)name;
 
++ (instancetype)objectWithComponents:(NSURLComponents *)components; // Person://?name=John&age=18
+- (void)setValuesForKeyPathsWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems;
+- (NSArray<NSURLQueryItem *> *)queryItemsForKeyPaths:(NSArray<NSString *> *)keyPaths;
+
+- (void)setValuesForKeyPathsWithDictionary:(NSDictionary<NSString *,id> *)keyedValues;
+- (NSDictionary<NSString *, id> *)dictionaryWithValuesForKeyPaths:(NSArray<NSString *> *)keyPaths;
+
 - (UIImage *)imageNamed:(NSString *)name;
 
 + (void)invokeHandler:(VoidBlock)handler;
@@ -814,5 +835,20 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @interface UILabel (Helpers)
 
 @property (readonly) CGSize textSize;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface UITraitCollection (Helpers)
+
++ (instancetype)traitCollectionWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems;
 
 @end

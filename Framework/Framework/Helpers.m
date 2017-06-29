@@ -34,6 +34,18 @@ Key const KeyObject = @"object";
 Table const TableErrors = @"Errors";
 Table const TableLocalizable = @"Localizable";
 
+Scheme const SchemeTraitCollection = @"tc";
+
+QueryItem const QueryItemDisplayScale = @"ds";
+QueryItem const QueryItemHorizontalSizeClass = @"hsc";
+QueryItem const QueryItemUserInterfaceIdiom = @"uii";
+QueryItem const QueryItemVerticalSizeClass = @"vsc";
+QueryItem const QueryItemForceTouchCapability = @"ftc";
+QueryItem const QueryItemDisplayGamut = @"dg";
+QueryItem const QueryItemLayoutDirection = @"ld";
+QueryItem const QueryItemPreferredContentSizeCategory = @"pcsc";
+QueryItem const QueryItemUserInterfaceStyle = @"uis";
+
 bool CGFloatInRange(CGFloat value, UIFloatRange range) {
     bool inRange = ((value >= range.minimum) && (value <= range.maximum));
     return inRange;
@@ -1225,6 +1237,45 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return object;
 }
 
++ (instancetype)objectWithComponents:(NSURLComponents *)components {
+    Class class = NSClassFromString(components.scheme);
+    id object = [class new];
+    [object setValuesForKeyPathsWithQueryItems:components.queryItems];
+    return object;
+}
+
+- (void)setValuesForKeyPathsWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems {
+    for (NSURLQueryItem *queryItem in queryItems) {
+        [self setValue:queryItem.value forKeyPath:queryItem.name];
+    }
+}
+
+- (NSArray<NSURLQueryItem *> *)queryItemsForKeyPaths:(NSArray<NSString *> *)keyPaths {
+    NSMutableArray *queryItems = [NSMutableArray array];
+    for (NSString *keyPath in keyPaths) {
+        NSString *name = keyPath;
+        NSString *value = [self valueForKeyPath:keyPath];
+        NSURLQueryItem *queryItem = [NSURLQueryItem queryItemWithName:name value:value];
+        [queryItems addObject:queryItem];
+    }
+    return queryItems;
+}
+
+- (void)setValuesForKeyPathsWithDictionary:(NSDictionary<NSString *,id> *)keyedValues {
+    for (NSString *keyPath in keyedValues.allKeys) {
+        id value = keyedValues[keyPath];
+        [self setValue:value forKeyPath:keyPath];
+    }
+}
+
+- (NSDictionary<NSString *,id> *)dictionaryWithValuesForKeyPaths:(NSArray<NSString *> *)keyPaths {
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    for (NSString *keyPath in keyPaths) {
+        dictionary[keyPath] = [self valueForKeyPath:keyPath];
+    }
+    return dictionary;
+}
+
 - (UIImage *)imageNamed:(NSString *)name {
     id <UITraitEnvironment> object = self;
     UIImage *image = [UIImage imageNamed:name inBundle:self.bundle compatibleWithTraitCollection:object.traitCollection];
@@ -1249,6 +1300,51 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 - (void)invokeHandler:(ObjectBlock)handler object:(id)object {
     [self.class invokeHandler:handler object:object];
+}
+
+#pragma mark - Swizzling
+
++ (void)load {
+    SEL original = @selector(setValue:forKeyPath:);
+    SEL swizzled = @selector(Helpers_swizzledSetValue:forKeyPath:);
+    [self swizzleInstanceMethod:original with:swizzled];
+}
+
++ (void)swizzleTraitCollectionDidChange {
+    SEL original = @selector(traitCollectionDidChange:);
+    SEL swizzled = @selector(Helpers_swizzledTraitCollectionDidChange:);
+    [self.class swizzleInstanceMethod:original with:swizzled];
+}
+
+- (void)Helpers_swizzledSetValue:(id)value forKeyPath:(NSString *)keyPath {
+    if ([keyPath containsString:@"://"]) {
+        NSURLComponents *components = [NSURLComponents componentsWithString:keyPath];
+        if ([components.scheme isEqualToString:SchemeTraitCollection]) {
+            UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithQueryItems:components.queryItems];
+            keyPath = [components.path substringFromIndex:1];
+            self.kvs[SchemeTraitCollection][traitCollection][keyPath] = value;
+        }
+    } else {
+        [self Helpers_swizzledSetValue:value forKeyPath:keyPath];
+    }
+}
+
+- (void)Helpers_swizzledTraitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    [self Helpers_swizzledTraitCollectionDidChange:previousTraitCollection];
+    
+    if (previousTraitCollection && [self.traitCollection isEqual:previousTraitCollection]) return;
+    
+    NSDictionary *keyPathsByTraitCollection = self.kvs[SchemeTraitCollection];
+    if (keyPathsByTraitCollection.count == 0) return;
+    
+    for (UITraitCollection *traitCollection in keyPathsByTraitCollection.allKeys) {
+        if ([self.traitCollection containsTraitsInCollection:traitCollection]) {
+            NSDictionary *dictionary = keyPathsByTraitCollection[traitCollection];
+            [self setValuesForKeyPathsWithDictionary:dictionary];
+        } else {
+            continue;
+        }
+    }
 }
 
 #pragma mark - Accessors
@@ -1403,6 +1499,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     original = @selector(prepareForSegue:sender:);
     swizzled = @selector(Helpers_swizzledPrepareForSegue:sender:);
     [self swizzleInstanceMethod:original with:swizzled];
+    
+    [self swizzleTraitCollectionDidChange];
 }
 
 - (UIInterfaceOrientationMask)Helpers_swizzledSupportedInterfaceOrientations {
@@ -2204,6 +2302,55 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     }
     
     return size;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation UITraitCollection (Helpers)
+
++ (instancetype)traitCollectionWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems {
+    UITraitCollection *traitCollection;
+    
+    NSMutableArray *traitCollections = [NSMutableArray array];
+    for (NSURLQueryItem *queryItem in queryItems) {
+        if ([queryItem.name isEqualToString:QueryItemDisplayScale]) {
+            traitCollection = [UITraitCollection traitCollectionWithDisplayScale:queryItem.value.doubleValue];
+            [traitCollections addObject:traitCollection];
+        } else if ([queryItem.name isEqualToString:QueryItemHorizontalSizeClass]) {
+            traitCollection = [UITraitCollection traitCollectionWithHorizontalSizeClass:queryItem.value.integerValue];
+            [traitCollections addObject:traitCollection];
+        } else if ([queryItem.name isEqualToString:QueryItemUserInterfaceIdiom]) {
+            traitCollection = [UITraitCollection traitCollectionWithUserInterfaceIdiom:queryItem.value.integerValue];
+            [traitCollections addObject:traitCollection];
+        } else if ([queryItem.name isEqualToString:QueryItemVerticalSizeClass]) {
+            traitCollection = [UITraitCollection traitCollectionWithVerticalSizeClass:queryItem.value.integerValue];
+            [traitCollections addObject:traitCollection];
+        } else if ([queryItem.name isEqualToString:QueryItemForceTouchCapability]) {
+            traitCollection = [UITraitCollection traitCollectionWithForceTouchCapability:queryItem.value.integerValue];
+            [traitCollections addObject:traitCollection];
+        } else if ([queryItem.name isEqualToString:QueryItemDisplayGamut]) {
+            traitCollection = [UITraitCollection traitCollectionWithDisplayGamut:queryItem.value.integerValue];
+            [traitCollections addObject:traitCollection];
+        } else if ([queryItem.name isEqualToString:QueryItemLayoutDirection]) {
+            traitCollection = [UITraitCollection traitCollectionWithLayoutDirection:queryItem.value.integerValue];
+            [traitCollections addObject:traitCollection];
+        } else if ([queryItem.name isEqualToString:QueryItemPreferredContentSizeCategory]) {
+            traitCollection = [UITraitCollection traitCollectionWithPreferredContentSizeCategory:queryItem.value];
+            [traitCollections addObject:traitCollection];
+        }
+    }
+    
+    traitCollection = [UITraitCollection traitCollectionWithTraitsFromCollections:traitCollections];
+    return traitCollection;
 }
 
 @end
