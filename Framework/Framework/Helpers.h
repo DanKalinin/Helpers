@@ -294,15 +294,15 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface Reachability : NSObject
+@interface Reachability : NSObject // Network configuration and host reachability monitor
 
 typedef void (^ReachabilityHandler)(Reachability *reachability);
 
-+ (instancetype)reachability;
-- (instancetype)initWithHost:(NSString *)host;
++ (instancetype)reachability; // Singleton reachability object for zero host name - 0.0.0.0
+- (instancetype)initWithHost:(NSString *)host; // Create reachability object for specified host name
 
-@property (readonly) ReachabilityStatus status;
-@property (copy) ReachabilityHandler handler;
+@property (readonly) ReachabilityStatus status; // Reachability current status - None | WiFi | WWAN
+@property (copy) ReachabilityHandler handler; // Reachability status change handler
 
 @end
 
@@ -380,7 +380,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
-@protocol Action <NSObject>
+@protocol Action <NSObject> // Universal action incorporating UIAlertAction, UIPreviewAction, UITableViewRowAction. Allows to handle all these actions by single handler.
 
 @required
 @property (readonly) NSInteger tag; // Common - action identication tag
@@ -396,7 +396,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @protocol ActionDelegate <NSObject>
 
 @optional
-- (void)didHandleAction:(id <Action>)action;
+- (void)didHandleAction:(id <Action>)action; // Universal action handler
 
 @end
 
@@ -440,12 +440,12 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 #pragma mark - Categories
 
-@interface UIColor (Helpers)
+@interface UIColor (Helpers) // Color helpers
 
-+ (UIColor *)r:(CGFloat)r g:(CGFloat)g b:(CGFloat)b a:(CGFloat)a;
++ (UIColor *)r:(CGFloat)r g:(CGFloat)g b:(CGFloat)b a:(CGFloat)a; // - colorWithRed:green:blue:alpha: counterpart for value range of 0 - 255
 
-+ (UIColor *)colorWithRGBAString:(NSString *)rgbaString;
-+ (UIColor *)colorWithHexString:(NSString *)hexString;
++ (UIColor *)colorWithRGBAString:(NSString *)rgbaString; // Create the color with human-readable RGBA string. For example - 123,13,255,255.
++ (UIColor *)colorWithHexString:(NSString *)hexString; // Create the color with human-readable HEX string. For example - af5a1b.
 
 @end
 
@@ -505,10 +505,10 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface NSDictionary (Helpers)
 
-- (NSDictionary *)deepCopy;
-- (NSMutableDictionary *)deepMutableCopy;
+- (NSDictionary *)deepCopy; // Immutable copy of the dictionary and all nested objects. The nested objects can be only property list objects.
+- (NSMutableDictionary *)deepMutableCopy; // Mutable counterpart
 
-@property (readonly) NSDictionary *swappedDictionary;
+@property (readonly) NSDictionary *swappedDictionary; // Swap keys and values of the dictionary. If the dictionary contains multiple equal values, any of the corresponding keys will be mapped to that value.
 
 @end
 
