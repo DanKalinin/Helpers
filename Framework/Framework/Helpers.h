@@ -460,37 +460,37 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface NSObject (Helpers)
 
-+ (void)swizzleClassMethod:(SEL)original with:(SEL)swizzled;
-+ (void)swizzleInstanceMethod:(SEL)original with:(SEL)swizzled;
++ (void)swizzleClassMethod:(SEL)original with:(SEL)swizzled; // Exchange implementations for class methods
++ (void)swizzleInstanceMethod:(SEL)original with:(SEL)swizzled; // Exchange implentations for instance methods
 
-@property (class, readonly) NSArray<NSString *> *propertyKeys;
-@property (readonly) NSArray<NSString *> *propertyKeys;
+@property (class, readonly) NSArray<NSString *> *propertyKeys; // Get keys for properties of the class
+@property (readonly) NSArray<NSString *> *propertyKeys; // Same for instances
 
-@property (class, readonly) NSBundle *bundle;
-@property (readonly) NSBundle *bundle;
+@property (class, readonly) NSBundle *bundle; // Get bundle where class in located
+@property (readonly) NSBundle *bundle; // Same for instances
 
-@property (class, readonly) UINib *nib;
-@property (readonly) UINib *nib;
+@property (class, readonly) UINib *nib; // Instantiate nib object from class bundle matching with class name
+@property (readonly) UINib *nib; // Same for instances
 
-@property (readonly) MutableDictionary *kvs;
+@property (readonly) MutableDictionary *kvs; // Runtime attribute storage
 
-+ (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle;
-+ (instancetype)objectNamed:(NSString *)name;
++ (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle; // Unarchive object from assets catalog
++ (instancetype)objectNamed:(NSString *)name; // Unarchive object from asset catalog located in the main bundle
 
-+ (instancetype)objectWithComponents:(NSURLComponents *)components; // Person://?name=John&age=18
-- (void)setValuesForKeyPathsWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems;
-- (NSArray<NSURLQueryItem *> *)queryItemsForKeyPaths:(NSArray<NSString *> *)keyPaths;
++ (instancetype)objectWithComponents:(NSURLComponents *)components; // Deserialize object from NSURLComponents. For example - Person://?name=John&age=18.
+- (void)setValuesForKeyPathsWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems; // Import object properties from NSURLQueryItem objects
+- (NSArray<NSURLQueryItem *> *)queryItemsForKeyPaths:(NSArray<NSString *> *)keyPaths; // Export object properties to NSURLQueryItem objects
 
-- (void)setValuesForKeyPathsWithDictionary:(NSDictionary<NSString *,id> *)keyedValues;
-- (NSDictionary<NSString *, id> *)dictionaryWithValuesForKeyPaths:(NSArray<NSString *> *)keyPaths;
+- (void)setValuesForKeyPathsWithDictionary:(NSDictionary<NSString *,id> *)keyedValues; // - setValuesForKeysWithDictionary: counterpart for key paths
+- (NSDictionary<NSString *, id> *)dictionaryWithValuesForKeyPaths:(NSArray<NSString *> *)keyPaths; // - dictionaryWithValuesForKeys: counterpart for key paths
 
-- (UIImage *)imageNamed:(NSString *)name;
+- (UIImage *)imageNamed:(NSString *)name; // Load the image from class bundle for object's trait collection. The object must conform to <UITraitEnvironment> protocol. Useful for loading images for view controllers located outside the main bundle.
 
-+ (void)invokeHandler:(VoidBlock)handler;
-- (void)invokeHandler:(VoidBlock)handler;
++ (void)invokeHandler:(VoidBlock)handler; // Check the passed block for existence and invoke it
+- (void)invokeHandler:(VoidBlock)handler; // Same for instances
 
-+ (void)invokeHandler:(ObjectBlock)handler object:(id)object;
-- (void)invokeHandler:(ObjectBlock)handler object:(id)object;
++ (void)invokeHandler:(ObjectBlock)handler object:(id)object; // Check the passed block for existence and invoke it with the passed object as argument
+- (void)invokeHandler:(ObjectBlock)handler object:(id)object; // Same for instances
 
 @end
 
