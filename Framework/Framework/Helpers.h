@@ -340,7 +340,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
-@interface StreamPair : NSObject <NSInputStreamDelegate, NSOutputStreamDelegate> {
+@interface StreamPair : NSObject <NSInputStreamDelegate, NSOutputStreamDelegate> { // Convenience wrapper for I/O stream pair. In order to receive stream events and write the data to output stream, subclass and override needed methods defined by protocols listed above.
     @private
     SurrogateContainer *_inputStreamDelegates;
     SurrogateContainer *_outputStreamDelegates;
@@ -577,18 +577,18 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property (nonatomic) IBInspectable UIInterfaceOrientationMask supportedInterfaceOrientations; // Orientations, supported by current container
 @property IBInspectable BOOL editableByParent; // YES - child view controller enters to edit mode with it's parent. - setEditing:animated: will be called. NO - otherwise.
 
-@property (readonly) UIAlertController *imagePickerAlertController;
+@property (readonly) UIAlertController *imagePickerAlertController; // Action sheet alert controller to pick image from Camera or Photo library. Additional actions can be added.
 @property (nonatomic) NSArray<id<UIPreviewActionItem>> *previewActionItems; // Set peek and pop actions for target view controller
 
 @property (weak) id <ViewControllerDataSource> dataSource; // View controller data source. Setting automatically during the segue transition if source view controller conforms to <ViewControllerDataSource> protocol.
-@property IBInspectable NSString *segueViewControllerKeyPath;
-@property (readonly) __kindof UIViewController *segueViewController;
+@property IBInspectable NSString *segueViewControllerKeyPath; // Key path for segue final destination view controller. If you want to specify the root view controller of navigation controller, the key path will be viewControllers.@index.0.
+@property (readonly) __kindof UIViewController *segueViewController; // View controller accessible at @ segueViewControllerKeyPath
 
-- (NSString *)localize:(NSString *)string;
-- (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType;
+- (NSString *)localize:(NSString *)string; // Programmatic localization of the string from storyboard strings file. If specified key is not found, the value is taken from Localizable.strings file. If there are no localizations found in both files, argument is returned.
+- (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType; // Present image picker controller for Camera or Photo library. Shows Open Settings alert controller if access to source is denied.
 
-- (void)embedViewController:(UIViewController *)vc toView:(UIView *)view;
-- (void)removeEmbeddedViewController:(UIViewController *)vc;
+- (void)embedViewController:(UIViewController *)vc toView:(UIView *)view; // Add child view controller to receiver restricting the size with specified view bounds
+- (void)removeEmbeddedViewController:(UIViewController *)vc; // Remove child view controller from the receiver
 
 @end
 
@@ -706,20 +706,20 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface UIImage (Helpers)
 
-@property (readonly) UIColor *averageColor;
+@property (readonly) UIColor *averageColor; // Get average pixel color of the image
 
-- (instancetype)imageInRect:(CGRect)rect;
-- (UIColor *)colorForPoint:(CGPoint)point;
+- (instancetype)imageInRect:(CGRect)rect; // Resize the image to fit the specified rect
+- (UIColor *)colorForPoint:(CGPoint)point; // Get average pixel color at the specified point
 
-- (instancetype)imageByRotatingClockwise:(BOOL)clockwise;
+- (instancetype)imageByRotatingClockwise:(BOOL)clockwise; // Get the image rotated CW/CCW
 - (instancetype)imageWithSize:(CGSize)size;
 - (instancetype)imageWithScale:(CGFloat)scale;
 
-- (void)writePNGToURL:(NSURL *)URL;
-- (void)writePNGToURL:(NSURL *)URL completion:(VoidBlock)completion;
+- (void)writePNGToURL:(NSURL *)URL; // Synchronously save the image to specified URL in PNG format
+- (void)writePNGToURL:(NSURL *)URL completion:(VoidBlock)completion; // Asynchronous counterpart
 
-- (void)writeJPEGToURL:(NSURL *)URL quality:(CGFloat)quality;
-- (void)writeJPEGToURL:(NSURL *)URL quality:(CGFloat)quality completion:(VoidBlock)completion;
+- (void)writeJPEGToURL:(NSURL *)URL quality:(CGFloat)quality; // Synchronously save the image to specified URL in JPEG format with specified quality. The range of quality is 0 - 1.
+- (void)writeJPEGToURL:(NSURL *)URL quality:(CGFloat)quality completion:(VoidBlock)completion; // Asynchronous counterpart
 
 @end
 
@@ -734,7 +734,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface UINavigationBar (Helpers)
 
-@property IBInspectable BOOL bottomLine;
+@property IBInspectable BOOL bottomLine; // Whether the bottom stroke should appear under the navigation bar
 
 @end
 
@@ -749,7 +749,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface NSFileManager (Helpers)
 
-@property (readonly) NSURL *userDocumentsDirectoryURL;
+@property (readonly) NSURL *userDocumentsDirectoryURL; // Quick access to user directories
 @property (readonly) NSURL *userCachesDirectoryURL;
 
 @end
@@ -765,7 +765,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface UINib (Helpers)
 
-- (id)viewWithTag:(NSInteger)tag;
+- (id)viewWithTag:(NSInteger)tag; // Get view by tag from instantiated nib file
 
 @end
 
@@ -795,10 +795,10 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 - (void)writeToURL:(NSURL *)URL completion:(VoidBlock)completion;
 
-- (instancetype)digest:(Digest)digest;
-@property (readonly) NSString *string;
-@property (readonly) id json;
-@property (readonly) UIImage *image;
+- (instancetype)digest:(Digest)digest; // Calculate the digest from the receiver using specified algorythm
+@property (readonly) NSString *string; // String representing the receiver in HEX format
+@property (readonly) id json; // JSON representation of the receiver
+@property (readonly) UIImage *image; // Image representation of the receiver with current screen scale
 
 @end
 
@@ -815,7 +815,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 - (NSData *)digest:(Digest)digest;
 
-- (BOOL)isEqualToVersion:(NSString *)version;
+- (BOOL)isEqualToVersion:(NSString *)version; // Compare 2 strings of version numbers. For example - 2.1 and 2.1.5.
 - (BOOL)isGreaterThanVersion:(NSString *)version;
 - (BOOL)isLessThanVersion:(NSString *)version;
 - (BOOL)isGreaterThanOrEqualToVersion:(NSString *)version;
