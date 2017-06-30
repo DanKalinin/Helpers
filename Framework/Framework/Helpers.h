@@ -523,7 +523,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface NSMutableDictionary (Helpers)
 
-- (void)swap;
+- (void)swap; // @ swappedDictionary mutable counterpart
 
 @end
 
@@ -538,7 +538,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface NSDateFormatter (Helpers)
 
-+ (instancetype)fixedDateFormatterWithDateFormat:(NSString *)dateFormat;
++ (instancetype)fixedDateFormatterWithDateFormat:(DateFormat)dateFormat; // Create the data formatter with en_US_POSIX locale identifier and 0 offset from GMT
 
 @end
 
@@ -553,7 +553,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface NSDate (Helpers)
 
-+ (instancetype)GCCDate;
++ (instancetype)GCCDate; // Get the compilation date composed using __DATE__ and __TIME__ macros
 
 @end
 
@@ -574,13 +574,13 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface UIViewController (Helpers) <UINavigationControllerDelegate, UIImagePickerControllerDelegate, ActionDelegate>
 
-@property (nonatomic) IBInspectable UIInterfaceOrientationMask supportedInterfaceOrientations;
-@property IBInspectable BOOL editableByParent;
+@property (nonatomic) IBInspectable UIInterfaceOrientationMask supportedInterfaceOrientations; // Orientations, supported by current container
+@property IBInspectable BOOL editableByParent; // YES - child view controller enters to edit mode with it's parent. - setEditing:animated: will be called. NO - otherwise.
 
 @property (readonly) UIAlertController *imagePickerAlertController;
-@property (nonatomic) NSArray<id<UIPreviewActionItem>> *previewActionItems;
+@property (nonatomic) NSArray<id<UIPreviewActionItem>> *previewActionItems; // Set peek and pop actions for target view controller
 
-@property (weak) id <ViewControllerDataSource> dataSource;
+@property (weak) id <ViewControllerDataSource> dataSource; // View controller data source. Setting automatically during the segue transition if source view controller conforms to <ViewControllerDataSource> protocol.
 @property IBInspectable NSString *segueViewControllerKeyPath;
 @property (readonly) __kindof UIViewController *segueViewController;
 
