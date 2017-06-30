@@ -35,6 +35,7 @@ Table const TableErrors = @"Errors";
 Table const TableLocalizable = @"Localizable";
 
 Scheme const SchemeTraitCollection = @"tc";
+Scheme const SchemeKeyPath = @"kp";
 
 QueryItem const QueryItemDisplayScale = @"ds";
 QueryItem const QueryItemHorizontalSizeClass = @"hsc";
