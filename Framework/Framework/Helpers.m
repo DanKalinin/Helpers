@@ -36,7 +36,8 @@ Table const TableLocalizable = @"Localizable";
 
 Scheme const SchemeTraitCollection = @"tc";
 Scheme const SchemeKeyPath = @"kp";
-Scheme const SchemeSegue = @"sg";
+Scheme const SchemeObject = @"object";
+Scheme const SchemeSegue = @"segue";
 
 QueryItem const QueryItemDisplayScale = @"ds";
 QueryItem const QueryItemHorizontalSizeClass = @"hsc";
@@ -1240,10 +1241,16 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 + (instancetype)objectWithComponents:(NSURLComponents *)components {
-    Class class = NSClassFromString(components.scheme);
+    Class class = NSClassFromString(components.host);
     id object = [class new];
     [object setValuesForKeyPathsWithQueryItems:components.queryItems];
     return object;
+}
+
+- (void)setValuesForKeysWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems {
+    for (NSURLQueryItem *queryItem in queryItems) {
+        [self setValue:queryItem.value forKey:queryItem.name];
+    }
 }
 
 - (void)setValuesForKeyPathsWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems {
@@ -1321,15 +1328,20 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     if ([value isKindOfClass:NSString.class] && [value containsString:@"://"]) {
         NSString *string = value;
         NSURLComponents *components = [NSURLComponents componentsWithString:string];
-        value = [NSObject objectWithComponents:components];
+        if ([components.scheme isEqualToString:SchemeObject]) {
+            value = [NSObject objectWithComponents:components];
+        } else if ([components.scheme isEqualToString:SchemeSegue]) {
+            NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+            dictionary[components.host] = [NSDictionary dictionaryWithQueryItems:components.queryItems];
+            value = dictionary;
+        }
     }
     
     if ([keyPath containsString:@"://"]) {
         NSURLComponents *components = [NSURLComponents componentsWithString:keyPath];
         if ([components.scheme isEqualToString:SchemeTraitCollection]) {
             UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithQueryItems:components.queryItems];
-            keyPath = [components.path substringFromIndex:1];
-            self.kvs[SchemeTraitCollection][traitCollection][keyPath] = value;
+            self.kvs[SchemeTraitCollection][traitCollection][components.host] = value;
         }
     } else {
         [self Helpers_NSObject_swizzledSetValue:value forKeyPath:keyPath];
@@ -1380,6 +1392,12 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         object = nil;
     }
     return object;
+}
+
++ (instancetype)dictionaryWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems {
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    [dictionary setValuesForKeysWithQueryItems:queryItems];
+    return dictionary;
 }
 
 - (NSDictionary *)deepCopy {
@@ -1532,6 +1550,12 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 - (void)Helpers_UIViewController_swizzledPrepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if (segue.identifier.length > 0) {
+        NSDictionary *dictionary = self.segueDictionary[segue.identifier];
+        [segue setValuesForKeyPathsWithDictionary:dictionary];
+    }
+    
     if ([self conformsToProtocol:@protocol(ViewControllerDataSource)] && [segue.destinationViewController.segueViewController respondsToSelector:@selector(setDataSource:)]) {
         segue.destinationViewController.segueViewController.dataSource = (id)self;
     } else {
@@ -1578,7 +1602,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 - (void)setSegueViewControllerKeyPath:(NSString *)segueViewControllerKeyPath {
-    objc_setAssociatedObject(self, @selector(segueViewControllerKeyPath), segueViewControllerKeyPath, OBJC_ASSOCIATION_COPY);
+    objc_setAssociatedObject(self, @selector(segueViewControllerKeyPath), segueViewControllerKeyPath, OBJC_ASSOCIATION_RETAIN);
 }
 
 - (NSString *)segueViewControllerKeyPath {
@@ -1595,6 +1619,14 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     
     vc = self.segueViewControllerKeyPath ? [self valueForKeyPath:self.segueViewControllerKeyPath] : self;
     return vc;
+}
+
+- (void)setSegueDictionary:(NSDictionary *)segueDictionary {
+    objc_setAssociatedObject(self, @selector(segueDictionary), segueDictionary, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (NSDictionary *)segueDictionary {
+    return objc_getAssociatedObject(self, @selector(segueDictionary));
 }
 
 #pragma mark - Helpers

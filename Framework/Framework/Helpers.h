@@ -38,6 +38,7 @@ extern Table const TableLocalizable;
 typedef NSString * Scheme NS_STRING_ENUM;
 extern Scheme const SchemeTraitCollection;
 extern Scheme const SchemeKeyPath;
+extern Scheme const SchemeObject;
 extern Scheme const SchemeSegue;
 
 typedef NSString * QueryItem NS_STRING_ENUM;
@@ -479,7 +480,8 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 + (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle; // Unarchive object from assets catalog
 + (instancetype)objectNamed:(NSString *)name; // Unarchive object from asset catalog located in the main bundle
 
-+ (instancetype)objectWithComponents:(NSURLComponents *)components; // Deserialize object from NSURLComponents. For example - Person://?name=John&age=18.
++ (instancetype)objectWithComponents:(NSURLComponents *)components; // Deserialize object from NSURLComponents. For example - Person?name=John&age=18.
+- (void)setValuesForKeysWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems;
 - (void)setValuesForKeyPathsWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems; // Import object properties from NSURLQueryItem objects
 - (NSArray<NSURLQueryItem *> *)queryItemsForKeyPaths:(NSArray<NSString *> *)keyPaths; // Export object properties to NSURLQueryItem objects
 
@@ -506,6 +508,8 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 @interface NSDictionary (Helpers)
+
++ (instancetype)dictionaryWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems;
 
 - (NSDictionary *)deepCopy; // Immutable copy of the dictionary and all nested objects. The nested objects can be only property list objects.
 - (NSMutableDictionary *)deepMutableCopy; // Mutable counterpart
@@ -585,6 +589,8 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property (weak) id <ViewControllerDataSource> dataSource; // View controller data source. Setting automatically during the segue transition if source view controller conforms to <ViewControllerDataSource> protocol.
 @property IBInspectable NSString *segueViewControllerKeyPath; // Key path for segue final destination view controller. If you want to specify the root view controller of navigation controller, the key path will be viewControllers.@index.0.
 @property (readonly) __kindof UIViewController *segueViewController; // View controller accessible at @ segueViewControllerKeyPath
+
+@property NSDictionary *segueDictionary;
 
 - (NSString *)localize:(NSString *)string; // Programmatic localization of the string from storyboard strings file. If specified key is not found, the value is taken from Localizable.strings file. If there are no localizations found in both files, argument is returned.
 - (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType; // Present image picker controller for Camera or Photo library. Shows Open Settings alert controller if access to source is denied.
