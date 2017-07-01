@@ -637,7 +637,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface NSError (Helpers)
 
-- (void)setUserInfoValue:(id)value forKey:(NSString *)key;
+- (void)setUserInfoValue:(id)value forKey:(NSString *)key; // Set user info dynamic values for staticly deserialized NSError objects
 
 @end
 
