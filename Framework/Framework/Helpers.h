@@ -604,10 +604,10 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface UITableView (Helpers)
 
-@property (readonly) NSInteger numberOfRows;
-@property (readonly) NSArray<NSIndexPath *> *indexPaths;
+@property (readonly) NSInteger numberOfRows; // Get the total number of rows in table view
+@property (readonly) NSArray<NSIndexPath *> *indexPaths; // Get index paths for all table view rows
 
-- (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath;
+- (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath; // Set accessory type for cell at the specified index path
 
 @end
 
@@ -622,7 +622,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface NSBundle (Helpers)
 
-- (NSError *)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code;
+- (NSError *)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code; // Initialize NSError object from serialized Errors.plist table located in bundle. Error serialization format - domain.code.userInfo.
 
 @end
 
