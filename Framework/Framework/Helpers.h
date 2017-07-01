@@ -860,3 +860,18 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 + (instancetype)traitCollectionWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems;
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface NSURLComponents (Helpers)
+
+@property NSDictionary<NSString *, NSString *> *queryDictionary;
+
+@end

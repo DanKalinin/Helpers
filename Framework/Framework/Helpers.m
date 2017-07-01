@@ -2401,3 +2401,34 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+@implementation NSURLComponents (Helpers)
+
+- (void)setQueryDictionary:(NSDictionary<NSString *,NSString *> *)queryDictionary {
+    NSMutableArray *queryItems = [NSMutableArray array];
+    for (NSString *name in queryDictionary.allKeys) {
+        NSString *value = queryDictionary[name];
+        NSURLQueryItem *queryItem = [NSURLQueryItem queryItemWithName:name value:value];
+        [queryItems addObject:queryItem];
+    }
+    self.queryItems = queryItems;
+}
+
+- (NSDictionary<NSString *,NSString *> *)queryDictionary {
+    NSMutableDictionary *queryDictionary = [NSMutableDictionary dictionary];
+    for (NSURLQueryItem *queryItem in self.queryItems) {
+        queryDictionary[queryItem.name] = queryItem.value;
+    }
+    return queryDictionary;
+}
+
+@end
