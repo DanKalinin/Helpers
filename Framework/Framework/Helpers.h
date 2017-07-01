@@ -481,9 +481,6 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 + (instancetype)objectNamed:(NSString *)name; // Unarchive object from asset catalog located in the main bundle
 
 + (instancetype)objectWithComponents:(NSURLComponents *)components; // Deserialize object from NSURLComponents. For example - Person?name=John&age=18.
-- (void)setValuesForKeysWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems;
-- (void)setValuesForKeyPathsWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems; // Import object properties from NSURLQueryItem objects
-- (NSArray<NSURLQueryItem *> *)queryItemsForKeyPaths:(NSArray<NSString *> *)keyPaths; // Export object properties to NSURLQueryItem objects
 
 - (void)setValuesForKeyPathsWithDictionary:(NSDictionary<NSString *,id> *)keyedValues; // - setValuesForKeysWithDictionary: counterpart for key paths
 - (NSDictionary<NSString *, id> *)dictionaryWithValuesForKeyPaths:(NSArray<NSString *> *)keyPaths; // - dictionaryWithValuesForKeys: counterpart for key paths
@@ -508,8 +505,6 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 @interface NSDictionary (Helpers)
-
-+ (instancetype)dictionaryWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems;
 
 - (NSDictionary *)deepCopy; // Immutable copy of the dictionary and all nested objects. The nested objects can be only property list objects.
 - (NSMutableDictionary *)deepMutableCopy; // Mutable counterpart

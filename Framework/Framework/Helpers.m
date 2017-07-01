@@ -1243,31 +1243,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 + (instancetype)objectWithComponents:(NSURLComponents *)components {
     Class class = NSClassFromString(components.host);
     id object = [class new];
-    [object setValuesForKeyPathsWithQueryItems:components.queryItems];
+    [object setValuesForKeyPathsWithDictionary:components.queryDictionary];
     return object;
-}
-
-- (void)setValuesForKeysWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems {
-    for (NSURLQueryItem *queryItem in queryItems) {
-        [self setValue:queryItem.value forKey:queryItem.name];
-    }
-}
-
-- (void)setValuesForKeyPathsWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems {
-    for (NSURLQueryItem *queryItem in queryItems) {
-        [self setValue:queryItem.value forKeyPath:queryItem.name];
-    }
-}
-
-- (NSArray<NSURLQueryItem *> *)queryItemsForKeyPaths:(NSArray<NSString *> *)keyPaths {
-    NSMutableArray *queryItems = [NSMutableArray array];
-    for (NSString *keyPath in keyPaths) {
-        NSString *name = keyPath;
-        NSString *value = [self valueForKeyPath:keyPath];
-        NSURLQueryItem *queryItem = [NSURLQueryItem queryItemWithName:name value:value];
-        [queryItems addObject:queryItem];
-    }
-    return queryItems;
 }
 
 - (void)setValuesForKeyPathsWithDictionary:(NSDictionary<NSString *,id> *)keyedValues {
@@ -1332,7 +1309,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
             value = [NSObject objectWithComponents:components];
         } else if ([components.scheme isEqualToString:SchemeSegue]) {
             NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-            dictionary[components.host] = [NSDictionary dictionaryWithQueryItems:components.queryItems];
+            dictionary[components.host] = components.queryDictionary;
             value = dictionary;
         }
     }
@@ -1392,12 +1369,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         object = nil;
     }
     return object;
-}
-
-+ (instancetype)dictionaryWithQueryItems:(NSArray<NSURLQueryItem *> *)queryItems {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [dictionary setValuesForKeysWithQueryItems:queryItems];
-    return dictionary;
 }
 
 - (NSDictionary *)deepCopy {
