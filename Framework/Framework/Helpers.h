@@ -38,6 +38,7 @@ extern Table const TableLocalizable;
 typedef NSString * Scheme NS_STRING_ENUM;
 extern Scheme const SchemeTraitCollection;
 extern Scheme const SchemeKeyPath;
+extern Scheme const SchemeSegue;
 
 typedef NSString * QueryItem NS_STRING_ENUM;
 extern QueryItem const QueryItemDisplayScale;

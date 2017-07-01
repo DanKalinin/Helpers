@@ -36,6 +36,7 @@ Table const TableLocalizable = @"Localizable";
 
 Scheme const SchemeTraitCollection = @"tc";
 Scheme const SchemeKeyPath = @"kp";
+Scheme const SchemeSegue = @"sg";
 
 QueryItem const QueryItemDisplayScale = @"ds";
 QueryItem const QueryItemHorizontalSizeClass = @"hsc";
@@ -1316,6 +1317,13 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 - (void)Helpers_NSObject_swizzledSetValue:(id)value forKeyPath:(NSString *)keyPath {
+    
+    if ([value isKindOfClass:NSString.class] && [value containsString:@"://"]) {
+        NSString *string = value;
+        NSURLComponents *components = [NSURLComponents componentsWithString:string];
+        value = [NSObject objectWithComponents:components];
+    }
+    
     if ([keyPath containsString:@"://"]) {
         NSURLComponents *components = [NSURLComponents componentsWithString:keyPath];
         if ([components.scheme isEqualToString:SchemeTraitCollection]) {
