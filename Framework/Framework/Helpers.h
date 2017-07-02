@@ -38,8 +38,8 @@ extern Table const TableLocalizable;
 typedef NSString * Scheme NS_STRING_ENUM;
 extern Scheme const SchemeTraitCollection;
 extern Scheme const SchemeKeyPath;
+extern Scheme const SchemeDictionary;
 extern Scheme const SchemeObject;
-extern Scheme const SchemeSegue;
 
 typedef NSString * QueryItem NS_STRING_ENUM;
 extern QueryItem const QueryItemDisplayScale;
@@ -584,8 +584,6 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property (weak) id <ViewControllerDataSource> dataSource; // View controller data source. Setting automatically during the segue transition if source view controller conforms to <ViewControllerDataSource> protocol.
 @property IBInspectable NSString *segueViewControllerKeyPath; // Key path for segue final destination view controller. If you want to specify the root view controller of navigation controller, the key path will be viewControllers.@index.0.
 @property (readonly) __kindof UIViewController *segueViewController; // View controller accessible at @ segueViewControllerKeyPath
-
-@property NSDictionary *segueDictionary;
 
 - (NSString *)localize:(NSString *)string; // Programmatic localization of the string from storyboard strings file. If specified key is not found, the value is taken from Localizable.strings file. If there are no localizations found in both files, argument is returned.
 - (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType; // Present image picker controller for Camera or Photo library. Shows Open Settings alert controller if access to source is denied.

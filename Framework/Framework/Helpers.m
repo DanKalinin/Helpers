@@ -30,14 +30,15 @@ Extension const ExtensionJSON = @"json";
 
 Key const KeyError = @"error";
 Key const KeyObject = @"object";
+Key const KeySegue = @"segue";
 
 Table const TableErrors = @"Errors";
 Table const TableLocalizable = @"Localizable";
 
 Scheme const SchemeTraitCollection = @"tc";
 Scheme const SchemeKeyPath = @"kp";
-Scheme const SchemeObject = @"object";
-Scheme const SchemeSegue = @"segue";
+Scheme const SchemeDictionary = @"dict";
+Scheme const SchemeObject = @"obj";
 
 QueryItem const QueryItemDisplayScale = @"ds";
 QueryItem const QueryItemHorizontalSizeClass = @"hsc";
@@ -1305,12 +1306,10 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     if ([value isKindOfClass:NSString.class] && [value containsString:@"://"]) {
         NSString *string = value;
         NSURLComponents *components = [NSURLComponents componentsWithString:string];
-        if ([components.scheme isEqualToString:SchemeObject]) {
+        if ([components.scheme isEqualToString:SchemeDictionary]) {
+            value = components.queryDictionary;
+        } else if ([components.scheme isEqualToString:SchemeObject]) {
             value = [NSObject objectWithComponents:components];
-        } else if ([components.scheme isEqualToString:SchemeSegue]) {
-            NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-            dictionary[components.host] = components.queryDictionary;
-            value = dictionary;
         }
     }
     
@@ -1523,7 +1522,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 - (void)Helpers_UIViewController_swizzledPrepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if (segue.identifier.length > 0) {
-        NSDictionary *dictionary = self.segueDictionary[segue.identifier];
+        NSDictionary *dictionary = self.kvs[KeySegue][segue.identifier];
         [segue setValuesForKeyPathsWithDictionary:dictionary];
     }
     
@@ -1590,14 +1589,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     
     vc = self.segueViewControllerKeyPath ? [self valueForKeyPath:self.segueViewControllerKeyPath] : self;
     return vc;
-}
-
-- (void)setSegueDictionary:(NSDictionary *)segueDictionary {
-    objc_setAssociatedObject(self, @selector(segueDictionary), segueDictionary, OBJC_ASSOCIATION_RETAIN);
-}
-
-- (NSDictionary *)segueDictionary {
-    return objc_getAssociatedObject(self, @selector(segueDictionary));
 }
 
 #pragma mark - Helpers
