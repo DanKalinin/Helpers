@@ -2394,3 +2394,30 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+@implementation UIPopoverPresentationController (Helpers)
+
+- (void)setSender:(id)sender {
+    if ([sender isKindOfClass:UIBarButtonItem.class]) {
+        self.barButtonItem = sender;
+    } else {
+        self.sourceView = sender;
+        self.sourceRect = self.sourceView.bounds;
+    }
+}
+
+- (id)sender {
+    id sender = self.barButtonItem ? self.barButtonItem : self.sourceView;
+    return sender;
+}
+
+@end
