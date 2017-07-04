@@ -586,7 +586,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property (readonly) __kindof UIViewController *segueViewController; // View controller accessible at @ segueViewControllerKeyPath
 
 @property IBInspectable NSString *popoverDismissSegueIdentifier;
-@property IBInspectable BOOL invokeUnwindAppearanceMethods;
+@property IBInspectable BOOL invokeAppearanceMethods;
 
 - (NSString *)localize:(NSString *)string; // Programmatic localization of the string from storyboard strings file. If specified key is not found, the value is taken from Localizable.strings file. If there are no localizations found in both files, argument is returned.
 - (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType; // Present image picker controller for Camera or Photo library. Shows Open Settings alert controller if access to source is denied.
