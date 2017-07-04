@@ -1488,6 +1488,10 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     original = @selector(awakeFromNib);
     swizzled = @selector(Helpers_UIViewController_swizzledAwakeFromNib);
     [self swizzleInstanceMethod:original with:swizzled];
+    
+    original = @selector(viewDidLoad);
+    swizzled = @selector(Helpers_UIViewController_swizzledViewDidLoad);
+    [self swizzleInstanceMethod:original with:swizzled];
 }
 
 - (UIInterfaceOrientationMask)Helpers_UIViewController_swizzledSupportedInterfaceOrientations {
@@ -1549,6 +1553,23 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [self Helpers_UIViewController_swizzledAwakeFromNib];
 }
 
+- (void)Helpers_UIViewController_swizzledViewDidLoad {
+    [self Helpers_UIViewController_swizzledViewDidLoad];
+    
+    self.presentingViewController.presentedViewController.popoverPresentationController.delegate = self;
+}
+
+#pragma mark - Popover presentation controller
+
+- (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {
+    BOOL shouldDismiss = YES;
+    if (self.popoverDismissSegueIdentifier.length > 0) {
+        [self performSegueWithIdentifier:self.popoverDismissSegueIdentifier sender:self];
+        shouldDismiss = NO;
+    }
+    return shouldDismiss;
+}
+
 #pragma mark - Accessors
 
 - (void)setSupportedInterfaceOrientations:(UIInterfaceOrientationMask)supportedInterfaceOrientations {
@@ -1589,6 +1610,14 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     
     vc = self.segueViewControllerKeyPath ? [self valueForKeyPath:self.segueViewControllerKeyPath] : self;
     return vc;
+}
+
+- (void)setPopoverDismissSegueIdentifier:(NSString *)popoverDismissSegueIdentifier {
+    objc_setAssociatedObject(self, @selector(popoverDismissSegueIdentifier), popoverDismissSegueIdentifier, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (NSString *)popoverDismissSegueIdentifier {
+    return objc_getAssociatedObject(self, @selector(popoverDismissSegueIdentifier));
 }
 
 #pragma mark - Helpers
