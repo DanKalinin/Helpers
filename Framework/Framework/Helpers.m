@@ -1458,6 +1458,14 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
+@interface UIViewController (HelpersSelectors)
+
+@property UIViewController *appearanceViewController;
+
+@end
+
+
+
 @implementation UIViewController (Helpers)
 
 @dynamic dataSource;
@@ -1491,6 +1499,14 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     
     original = @selector(viewDidLoad);
     swizzled = @selector(Helpers_UIViewController_swizzledViewDidLoad);
+    [self swizzleInstanceMethod:original with:swizzled];
+    
+    original = @selector(viewWillDisappear:);
+    swizzled = @selector(Helpers_UIViewController_swizzledViewWillDisappear:);
+    [self swizzleInstanceMethod:original with:swizzled];
+    
+    original = @selector(viewDidDisappear:);
+    swizzled = @selector(Helpers_UIViewController_swizzledViewDidDisappear:);
     [self swizzleInstanceMethod:original with:swizzled];
 }
 
@@ -1535,6 +1551,10 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     } else {
         [self Helpers_UIViewController_swizzledPrepareForSegue:segue sender:sender];
     }
+    
+    if (self.invokeUnwindAppearanceMethods && (segue.sourceViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact) && (segue.destinationViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)) {
+        self.appearanceViewController = segue.destinationViewController;
+    }
 }
 
 - (void)Helpers_UIViewController_swizzledTraitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
@@ -1557,6 +1577,18 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [self Helpers_UIViewController_swizzledViewDidLoad];
     
     self.presentingViewController.presentedViewController.popoverPresentationController.delegate = self;
+}
+
+- (void)Helpers_UIViewController_swizzledViewWillDisappear:(BOOL)animated {
+    [self Helpers_UIViewController_swizzledViewWillDisappear:animated];
+    
+    [self.appearanceViewController viewWillAppear:animated];
+}
+
+- (void)Helpers_UIViewController_swizzledViewDidDisappear:(BOOL)animated {
+    [self Helpers_UIViewController_swizzledViewDidDisappear:animated];
+    
+    [self.appearanceViewController viewDidAppear:animated];
 }
 
 #pragma mark - Popover presentation controller
@@ -1618,6 +1650,24 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 - (NSString *)popoverDismissSegueIdentifier {
     return objc_getAssociatedObject(self, @selector(popoverDismissSegueIdentifier));
+}
+
+- (void)setInvokeUnwindAppearanceMethods:(BOOL)invokeUnwindAppearanceMethods {
+    NSNumber *object = @(invokeUnwindAppearanceMethods);
+    objc_setAssociatedObject(self, @selector(invokeUnwindAppearanceMethods), object, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (BOOL)invokeUnwindAppearanceMethods {
+    NSNumber *object = objc_getAssociatedObject(self, @selector(invokeUnwindAppearanceMethods));
+    return object;
+}
+
+- (void)setAppearanceViewController:(UIViewController *)appearanceViewController {
+    objc_setAssociatedObject(self, @selector(appearanceViewController), appearanceViewController, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (UIViewController *)appearanceViewController {
+    return objc_getAssociatedObject(self, @selector(appearanceViewController));
 }
 
 #pragma mark - Helpers
