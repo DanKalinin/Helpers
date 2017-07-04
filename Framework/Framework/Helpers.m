@@ -2406,12 +2406,25 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 @implementation UIPopoverPresentationController (Helpers)
 
+#pragma mark - Swizzling
+
++ (void)load {
+    SEL original = @selector(setSourceView:);
+    SEL swizzled = @selector(Helpers_UIPopoverPresentationController_swizzledSetSourceView:);
+    [self swizzleInstanceMethod:original with:swizzled];
+}
+
+- (void)Helpers_UIPopoverPresentationController_swizzledSetSourceView:(UIView *)sourceView {
+    [self Helpers_UIPopoverPresentationController_swizzledSetSourceView:sourceView];
+    
+    self.sourceRect = sourceView.bounds;
+}
+
 - (void)setSender:(id)sender {
     if ([sender isKindOfClass:UIBarButtonItem.class]) {
         self.barButtonItem = sender;
     } else {
         self.sourceView = sender;
-        self.sourceRect = self.sourceView.bounds;
     }
 }
 
