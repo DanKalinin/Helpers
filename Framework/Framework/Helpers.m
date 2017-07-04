@@ -1512,9 +1512,9 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 - (UIInterfaceOrientationMask)Helpers_UIViewController_swizzledSupportedInterfaceOrientations {
     UIInterfaceOrientationMask orientations;
-    NSNumber *orientationsValue = objc_getAssociatedObject(self, @selector(supportedInterfaceOrientations));
-    if (orientationsValue) {
-        orientations = orientationsValue.unsignedIntegerValue;
+    NSNumber *object = objc_getAssociatedObject(self, @selector(supportedInterfaceOrientations));
+    if (object) {
+        orientations = object.unsignedIntegerValue;
     } else {
         orientations = [self Helpers_UIViewController_swizzledSupportedInterfaceOrientations];
     }
@@ -1614,13 +1614,13 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 - (void)setEditableByParent:(BOOL)editableByParent {
-    NSNumber *editableByParentValue = @(editableByParent);
-    objc_setAssociatedObject(self, @selector(editableByParent), editableByParentValue, OBJC_ASSOCIATION_RETAIN);
+    NSNumber *object = @(editableByParent);
+    objc_setAssociatedObject(self, @selector(editableByParent), object, OBJC_ASSOCIATION_RETAIN);
 }
 
 - (BOOL)editableByParent {
-    NSNumber *editableByParentValue = objc_getAssociatedObject(self, @selector(editableByParent));
-    BOOL editableByParent = editableByParentValue.boolValue;
+    NSNumber *object = objc_getAssociatedObject(self, @selector(editableByParent));
+    BOOL editableByParent = object.boolValue;
     return editableByParent;
 }
 
@@ -1910,16 +1910,16 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 - (void)setIntrinsicContentSize:(CGSize)intrinsicContentSize {
-    NSValue *sizeValue = [NSValue valueWithCGSize:intrinsicContentSize];
-    objc_setAssociatedObject(self, @selector(intrinsicContentSize), sizeValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    NSValue *object = [NSValue valueWithCGSize:intrinsicContentSize];
+    objc_setAssociatedObject(self, @selector(intrinsicContentSize), object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self invalidateIntrinsicContentSize];
 }
 
 - (CGSize)Helpers_UIView_swizzledIntrinsicContentSize {
     CGSize size;
-    NSValue *sizeValue = objc_getAssociatedObject(self, @selector(intrinsicContentSize));
-    if (sizeValue) {
-        size = sizeValue.CGSizeValue;
+    NSValue *object = objc_getAssociatedObject(self, @selector(intrinsicContentSize));
+    if (object) {
+        size = object.CGSizeValue;
     } else {
         size = [self Helpers_UIView_swizzledIntrinsicContentSize];
     }
