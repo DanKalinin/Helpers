@@ -1460,7 +1460,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 @interface UIViewController (HelpersSelectors)
 
-@property UIViewController *appearanceViewController;
+@property (weak) UIViewController *appearanceViewController;
 
 @end
 
@@ -1663,7 +1663,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 - (void)setAppearanceViewController:(UIViewController *)appearanceViewController {
-    objc_setAssociatedObject(self, @selector(appearanceViewController), appearanceViewController, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, @selector(appearanceViewController), appearanceViewController, OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (UIViewController *)appearanceViewController {
