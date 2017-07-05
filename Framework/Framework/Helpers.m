@@ -1560,8 +1560,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         [self Helpers_UIViewController_swizzledPrepareForSegue:segue sender:sender];
     }
     
-    if (self.invokeAppearanceMethods && (segue.sourceViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact) && (segue.destinationViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)) {
-        self.appearanceViewController = segue.destinationViewController;
+    if (!segue.destinationViewController.segueViewController.isViewLoaded) {
+        segue.destinationViewController.segueViewController.sourceViewController = segue.sourceViewController;
     }
 }
 
@@ -1589,16 +1589,30 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 - (void)Helpers_UIViewController_swizzledViewWillAppear:(BOOL)animated {
     [self Helpers_UIViewController_swizzledViewWillAppear:animated];
+    
+    if (self.invokeAppearanceMethods && (self.sourceViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) && (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)) {
+        self.appearanceViewController = self.sourceViewController;
+        [self.appearanceViewController viewWillDisappear:animated];
+    } else {
+        self.appearanceViewController = nil;
+    }
 }
 
 - (void)Helpers_UIViewController_swizzledViewDidAppear:(BOOL)animated {
     [self Helpers_UIViewController_swizzledViewDidAppear:animated];
+    
+    [self.appearanceViewController viewDidDisappear:animated];
 }
 
 - (void)Helpers_UIViewController_swizzledViewWillDisappear:(BOOL)animated {
     [self Helpers_UIViewController_swizzledViewWillDisappear:animated];
     
-    [self.appearanceViewController viewWillAppear:animated];
+    if (self.invokeAppearanceMethods && (self.sourceViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) && (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)) {
+        self.appearanceViewController = self.sourceViewController;
+        [self.appearanceViewController viewWillAppear:animated];
+    } else {
+        self.appearanceViewController = nil;
+    }
 }
 
 - (void)Helpers_UIViewController_swizzledViewDidDisappear:(BOOL)animated {
@@ -1676,6 +1690,14 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 - (BOOL)invokeAppearanceMethods {
     NSNumber *object = objc_getAssociatedObject(self, @selector(invokeAppearanceMethods));
     return object;
+}
+
+- (void)setSourceViewController:(UIViewController *)sourceViewController {
+    objc_setAssociatedObject(self, @selector(sourceViewController), sourceViewController, OBJC_ASSOCIATION_ASSIGN);
+}
+
+- (UIViewController *)sourceViewController {
+    return objc_getAssociatedObject(self, @selector(sourceViewController));
 }
 
 - (void)setAppearanceViewController:(UIViewController *)appearanceViewController {

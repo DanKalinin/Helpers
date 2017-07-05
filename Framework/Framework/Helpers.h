@@ -584,6 +584,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property (weak) id <ViewControllerDataSource> dataSource; // View controller data source. Setting automatically during the segue transition if source view controller conforms to <ViewControllerDataSource> protocol.
 @property IBInspectable NSString *segueViewControllerKeyPath; // Key path for segue final destination view controller. If you want to specify the root view controller of navigation controller, the key path will be viewControllers.@index.0.
 @property (readonly) __kindof UIViewController *segueViewController; // View controller accessible at @ segueViewControllerKeyPath
+@property (weak, readonly) UIViewController *sourceViewController;
 
 @property IBInspectable NSString *popoverDismissSegueIdentifier;
 @property IBInspectable BOOL invokeAppearanceMethods;
