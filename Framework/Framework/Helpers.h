@@ -586,7 +586,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property (readonly) __kindof UIViewController *segueViewController; // View controller accessible at @ segueViewControllerKeyPath
 @property (weak, readonly) UIViewController *sourceViewController;
 
-@property IBInspectable NSString *popoverDismissSegueIdentifier;
+@property IBInspectable NSString *popoverDismissSegueIdentifier; // Unwind segue to perform instead popover dismissal
 @property IBInspectable BOOL invokeAppearanceMethods;
 
 - (NSString *)localize:(NSString *)string; // Programmatic localization of the string from storyboard strings file. If specified key is not found, the value is taken from Localizable.strings file. If there are no localizations found in both files, argument is returned.
