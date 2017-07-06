@@ -1319,6 +1319,22 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
             UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithQueryItems:components.queryItems];
             self.kvs[SchemeTraitCollection][traitCollection][components.host] = value;
         }
+    } else if ([keyPath hasPrefix:@"("]) {
+        NSUInteger index = 1;
+        NSString *key = [keyPath substringFromIndex:index];
+        NSRange range = [key rangeOfString:@")"];
+        if (range.location == NSNotFound) return;
+        index = range.location;
+        key = [key substringToIndex:index];
+        range = [keyPath rangeOfString:@")."];
+        if (range.location == NSNotFound) {
+            [self setValue:value forKey:key];
+        } else {
+            index = NSMaxRange(range);
+            keyPath = [keyPath substringFromIndex:index];
+            NSObject *object = [self valueForKey:key];
+            [object setValue:value forKeyPath:keyPath];
+        }
     } else {
         [self Helpers_NSObject_swizzledSetValue:value forKeyPath:keyPath];
     }
