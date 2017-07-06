@@ -873,18 +873,3 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property NSDictionary<NSString *, NSString *> *queryDictionary;
 
 @end
-
-
-
-
-
-
-
-
-
-
-@interface UIPopoverPresentationController (Helpers)
-
-@property id sender;
-
-@end
