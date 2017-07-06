@@ -568,12 +568,6 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
-@protocol ViewControllerDataSource <NSObject>
-
-@end
-
-
-
 @interface UIViewController (Helpers) <UINavigationControllerDelegate, UIImagePickerControllerDelegate, ActionDelegate, UIPopoverPresentationControllerDelegate>
 
 @property (nonatomic) IBInspectable UIInterfaceOrientationMask supportedInterfaceOrientations; // Orientations, supported by current container
@@ -582,7 +576,6 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property (readonly) UIAlertController *imagePickerAlertController; // Action sheet alert controller to pick image from Camera or Photo library. Additional actions can be added.
 @property (nonatomic) NSArray<id<UIPreviewActionItem>> *previewActionItems; // Set peek and pop actions for target view controller
 
-@property (weak) id <ViewControllerDataSource> dataSource; // View controller data source. Setting automatically during the segue transition if source view controller conforms to <ViewControllerDataSource> protocol.
 @property IBInspectable NSString *segueViewControllerKeyPath; // Key path for segue final destination view controller. If you want to specify the root view controller of navigation controller, the key path will be viewControllers.@index.0.
 @property (readonly) __kindof UIViewController *segueViewController; // View controller accessible at @ segueViewControllerKeyPath
 @property (weak, readonly) UIViewController *sourceViewController; // Segue source view controller

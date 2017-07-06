@@ -1468,8 +1468,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 @implementation UIViewController (Helpers)
 
-@dynamic dataSource;
-
 #pragma mark - Swizzling
 
 + (void)load {
@@ -1548,16 +1546,11 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 - (void)Helpers_UIViewController_swizzledPrepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    [self Helpers_UIViewController_swizzledPrepareForSegue:segue sender:sender];
     
     if (segue.identifier.length > 0) {
         NSDictionary *dictionary = self.kvs[KeySegue][segue.identifier];
         [segue setValuesForKeyPathsWithDictionary:dictionary];
-    }
-    
-    if ([self conformsToProtocol:@protocol(ViewControllerDataSource)] && [segue.destinationViewController.segueViewController respondsToSelector:@selector(setDataSource:)]) {
-        segue.destinationViewController.segueViewController.dataSource = (id)self;
-    } else {
-        [self Helpers_UIViewController_swizzledPrepareForSegue:segue sender:sender];
     }
     
     if (!segue.destinationViewController.segueViewController.isViewLoaded) {
