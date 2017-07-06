@@ -2532,17 +2532,16 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 - (void)Helpers_UIPopoverPresentationController_swizzledSetSourceView:(UIView *)sourceView {
+    SEL selector = @selector(Helpers_UIPopoverPresentationController_swizzledSetSourceView:);
+    if (![self respondsToSelector:selector]) return;
+    
     [self Helpers_UIPopoverPresentationController_swizzledSetSourceView:sourceView];
     
     self.sourceRect = sourceView.bounds;
 }
 
 - (void)setSender:(id)sender {
-    if ([sender isKindOfClass:UIBarButtonItem.class]) {
-        self.barButtonItem = sender;
-    } else {
-        self.sourceView = sender;
-    }
+    [sender isKindOfClass:UIBarButtonItem.class] ? (self.barButtonItem = sender) : (self.sourceView = sender);
 }
 
 - (id)sender {
