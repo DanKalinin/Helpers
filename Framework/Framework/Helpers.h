@@ -171,7 +171,7 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface TextField : UITextField
+@interface TextField : UITextField // Customized text field
 
 @property IBInspectable NSUInteger maxLength;
 
@@ -186,7 +186,7 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface Button : UIButton
+@interface Button : UIButton // Customized button
 
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *subbuttons;
 

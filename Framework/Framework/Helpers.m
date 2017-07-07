@@ -1314,7 +1314,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
             value = components.queryDictionary;
         } else if ([components.scheme isEqualToString:SchemeObject]) {
             value = [NSObject objectWithComponents:components];
-        } else if ([components.scheme isEqualToString:SchemeKeyPath] && ![keyPath hasPrefix:NSStringFromSelector(@selector(kvs))] && ![self isKindOfClass:MutableDictionary.class]) {
+        } else if ([components.scheme isEqualToString:SchemeKeyPath] && ![self isKindOfClass:MutableDictionary.class] && ![keyPath hasPrefix:[NSString stringWithFormat:@"%@://", SchemeTraitCollection]] && ![keyPath hasPrefix:[NSString stringWithFormat:@"%@.", NSStringFromSelector(@selector(kvs))]]) {
             value = [self valueForKeyPath:components.host];
         }
     }
@@ -1325,7 +1325,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
             UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithQueryItems:components.queryItems];
             self.kvs[SchemeTraitCollection][traitCollection][components.host] = value;
         }
-    } else if ([keyPath hasPrefix:@"("] && [self isKindOfClass:MutableDictionary.class]) {
+    } else if ([keyPath hasPrefix:@"("]) {
         NSUInteger index = 1;
         NSString *key = [keyPath substringFromIndex:index];
         NSRange range = [key rangeOfString:@")"];
