@@ -137,7 +137,7 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface Keychain : NSObject
+@interface Keychain : NSObject // Convenient wrapper around Security.framework keychain services
 
 @property NSString *account;
 @property NSString *service;
