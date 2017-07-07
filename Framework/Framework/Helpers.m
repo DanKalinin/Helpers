@@ -1296,6 +1296,10 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     SEL swizzled = @selector(Helpers_NSObject_swizzledSetValue:forKeyPath:);
     [self swizzleInstanceMethod:original with:swizzled];
     
+    original = @selector(setValue:forKey:);
+    swizzled = @selector(Helpers_NSObject_swizzledSetValue:forKey:);
+    [self swizzleInstanceMethod:original with:swizzled];
+    
     original = @selector(awakeFromNib);
     swizzled = @selector(Helpers_NSObject_swizzledAwakeFromNib);
     [self swizzleInstanceMethod:original with:swizzled];
@@ -1310,6 +1314,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
             value = components.queryDictionary;
         } else if ([components.scheme isEqualToString:SchemeObject]) {
             value = [NSObject objectWithComponents:components];
+        } else if ([components.scheme isEqualToString:SchemeKeyPath] && ![keyPath hasPrefix:NSStringFromSelector(@selector(kvs))] && ![self isKindOfClass:MutableDictionary.class]) {
+            value = [self valueForKeyPath:components.host];
         }
     }
     
@@ -1319,7 +1325,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
             UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithQueryItems:components.queryItems];
             self.kvs[SchemeTraitCollection][traitCollection][components.host] = value;
         }
-    } else if ([keyPath hasPrefix:@"("]) {
+    } else if ([keyPath hasPrefix:@"("] && [self isKindOfClass:MutableDictionary.class]) {
         NSUInteger index = 1;
         NSString *key = [keyPath substringFromIndex:index];
         NSRange range = [key rangeOfString:@")"];
@@ -1338,6 +1344,10 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     } else {
         [self Helpers_NSObject_swizzledSetValue:value forKeyPath:keyPath];
     }
+}
+
+- (void)Helpers_NSObject_swizzledSetValue:(id)value forKey:(NSString *)key {
+    [self Helpers_NSObject_swizzledSetValue:value forKey:key];
 }
 
 - (void)Helpers_NSObject_swizzledAwakeFromNib {
