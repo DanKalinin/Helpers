@@ -2000,12 +2000,12 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return view;
 }
 
-- (void)removeSubviews:(NSArray<UIView *> *)views {
++ (void)removeSubviews:(NSArray<UIView *> *)views {
     [views makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
 - (void)removeAllSubviews {
-    [self removeSubviews:self.subviews];
+    [self.class removeSubviews:self.subviews];
 }
 
 @end

@@ -650,15 +650,15 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface UIView (Helpers) <NSCopying>
 
-@property IBInspectable UIColor *borderColor;
-@property IBInspectable UIColor *shadowColor;
-@property (nonatomic) IBInspectable CGSize intrinsicContentSize;
-@property (readonly) UIImage *renderedLayer;
-- (id)copyWithZone:(NSZone *)zone;
-- (void)moveToView:(UIView *)view;
-- (__kindof UIView *)subviewWithTag:(NSInteger)tag;
-- (void)removeSubviews:(NSArray<UIView *> *)views;
-- (void)removeAllSubviews;
+@property IBInspectable UIColor *borderColor; // @ layer.borderColor wrapper. Uses UIColor instead CGColor.
+@property IBInspectable UIColor *shadowColor; // @ layer.shadowColor wrapper. Uses UIColor instead CGColor.
+@property (nonatomic) IBInspectable CGSize intrinsicContentSize; // Setter used to provide intrinsic content size using Interface builder of external implementation instead overriding - intrinsicContentSize
+@property (readonly) UIImage *renderedLayer; // Capture the layer shapshot into UIImage object
+- (id)copyWithZone:(NSZone *)zone; // Copy the view into new object
+- (void)moveToView:(UIView *)view; // Add the receiver to specified view as subview and center it
+- (__kindof UIView *)subviewWithTag:(NSInteger)tag; // - viewWithTag: behavior excluding returning the receiver
++ (void)removeSubviews:(NSArray<UIView *> *)views; // Remove multiple subviews from their superviews
+- (void)removeAllSubviews; // Remove all subviews from receiver
 
 @end
 
@@ -673,9 +673,9 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface UIStackView (Helpers)
 
-@property (readonly) NSArray<UIView *> *visibleArrangedSubviews;
-- (void)removeArrangedSubviews:(NSArray<UIView *> *)views;
-- (void)removeAllArrangedSubviews;
+@property (readonly) NSArray<UIView *> *visibleArrangedSubviews; // Get not hidden arranged subviews
+- (void)removeArrangedSubviews:(NSArray<UIView *> *)views; // Remove multiple arranged subviews from receiver
+- (void)removeAllArrangedSubviews; // Remove all arranged subviews from receiver
 
 @end
 
@@ -690,7 +690,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface NSNetService (Helpers)
 
-+ (NSString *)stringFromAddressData:(NSData *)data;
++ (NSString *)stringFromAddressData:(NSData *)data; // Get the IP address string representation
 
 @end
 
