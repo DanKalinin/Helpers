@@ -80,6 +80,7 @@ typedef void (^ErrorBlock)(NSError *);
 typedef void (^ArrayBlock)(NSArray *);
 typedef void (^DataBlock)(NSData *);
 typedef void (^ImageBlock)(UIImage *);
+typedef void (^StoryboardSegueBlock)(UIStoryboardSegue *);
 typedef void (^BackgroundFetchResultBlock)(UIBackgroundFetchResult);
 
 typedef NS_ENUM(NSUInteger, Digest) {
@@ -588,6 +589,8 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 - (void)embedViewController:(UIViewController *)vc toView:(UIView *)view; // Add child view controller to receiver restricting the size with specified view bounds
 - (void)removeEmbeddedViewController:(UIViewController *)vc; // Remove child view controller from the receiver
+
+- (void)performSegueWithIdentifier:(NSString *)identifier sender:(id)sender preparation:(StoryboardSegueBlock)preparation;
 
 @end
 

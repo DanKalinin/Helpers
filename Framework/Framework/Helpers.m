@@ -1575,6 +1575,11 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [self Helpers_UIViewController_swizzledPrepareForSegue:segue sender:sender];
     
     if (segue.identifier.length > 0) {
+        NSString *key = NSStringFromSelector(@selector(performSegueWithIdentifier:sender:preparation:));
+        ObjectBlock preparation = self.kvs[KeySegue][segue.identifier][key];
+        [self invokeHandler:preparation object:segue];
+        self.kvs[KeySegue][segue.identifier][key] = nil;
+        
         NSDictionary *dictionary = self.kvs[KeySegue][segue.identifier];
         [segue setValuesForKeyPathsWithDictionary:dictionary];
     }
@@ -1750,6 +1755,12 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [vc willMoveToParentViewController:nil];
     [vc.view removeFromSuperview];
     [vc removeFromParentViewController];
+}
+
+- (void)performSegueWithIdentifier:(NSString *)identifier sender:(id)sender preparation:(StoryboardSegueBlock)preparation {
+    NSString *key = NSStringFromSelector(_cmd);
+    self.kvs[KeySegue][identifier][key] = preparation;
+    [self performSegueWithIdentifier:identifier sender:sender];
 }
 
 #pragma mark - Image picker controller
