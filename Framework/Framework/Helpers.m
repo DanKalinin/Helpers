@@ -1575,7 +1575,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         NSDictionary *dictionary = self.kvs[SchemeSegue][segue.identifier];
         [segue setValuesForKeyPathsWithDictionary:dictionary];
         
-        NSString *key = NSStringFromSelector(@selector(performSegueWithIdentifier:sender:preparation:));
+        NSString *key = NSStringFromSelector(@selector(performSegueWithIdentifier:preparation:));
         ObjectBlock preparation = self.kvs[key];
         if ([preparation isKindOfClass:MutableDictionary.class]) {
         } else {
@@ -1757,10 +1757,10 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [vc removeFromParentViewController];
 }
 
-- (void)performSegueWithIdentifier:(NSString *)identifier sender:(id)sender preparation:(StoryboardSegueBlock)preparation {
+- (void)performSegueWithIdentifier:(NSString *)identifier preparation:(StoryboardSegueBlock)preparation {
     NSString *key = NSStringFromSelector(_cmd);
     self.kvs[key] = preparation;
-    [self performSegueWithIdentifier:identifier sender:sender];
+    [self performSegueWithIdentifier:identifier sender:self];
 }
 
 #pragma mark - Image picker controller
