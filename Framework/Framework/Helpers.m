@@ -30,15 +30,13 @@ Extension const ExtensionJSON = @"json";
 
 Key const KeyError = @"error";
 Key const KeyObject = @"object";
-Key const KeySegue = @"segue";
 
 Table const TableErrors = @"Errors";
 Table const TableLocalizable = @"Localizable";
 
 Scheme const SchemeTraitCollection = @"tc";
+Scheme const SchemeSegue = @"sg";
 Scheme const SchemeKeyPath = @"kp";
-Scheme const SchemeDictionary = @"dict";
-Scheme const SchemeObject = @"obj";
 
 QueryItem const QueryItemDisplayScale = @"ds";
 QueryItem const QueryItemHorizontalSizeClass = @"hsc";
@@ -49,6 +47,7 @@ QueryItem const QueryItemDisplayGamut = @"dg";
 QueryItem const QueryItemLayoutDirection = @"ld";
 QueryItem const QueryItemPreferredContentSizeCategory = @"pcsc";
 QueryItem const QueryItemUserInterfaceStyle = @"uis";
+QueryItem const QueryItemIdentifier = @"id";
 
 bool CGFloatInRange(CGFloat value, UIFloatRange range) {
     bool inRange = ((value >= range.minimum) && (value <= range.maximum));
@@ -1306,40 +1305,38 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 - (void)Helpers_NSObject_swizzledSetValue:(id)value forKeyPath:(NSString *)keyPath {
-    
-    if ([value isKindOfClass:NSString.class] && [value containsString:@"://"]) {
-        NSString *string = value;
-        NSURLComponents *components = [NSURLComponents componentsWithString:string];
-        if ([components.scheme isEqualToString:SchemeDictionary]) {
-            value = components.queryDictionary;
-        } else if ([components.scheme isEqualToString:SchemeObject]) {
-            value = [NSObject objectWithComponents:components];
-        } else if ([components.scheme isEqualToString:SchemeKeyPath] && ![self isKindOfClass:MutableDictionary.class] && ![keyPath hasPrefix:[NSString stringWithFormat:@"%@://", SchemeTraitCollection]] && ![keyPath hasPrefix:[NSString stringWithFormat:@"%@.", NSStringFromSelector(@selector(kvs))]]) {
-            value = [self valueForKeyPath:components.host];
-        }
-    }
-    
     if ([keyPath containsString:@"://"]) {
         NSURLComponents *components = [NSURLComponents componentsWithString:keyPath];
+        
+        keyPath = components.host;
+        
+        NSMutableDictionary *queryDictionary = components.queryDictionary.mutableCopy;
+        NSString *sg = queryDictionary[SchemeSegue];
+        NSNumber *kp = queryDictionary[SchemeKeyPath];
+        if (sg.length > 0) {
+            NSURLComponents *newComponents = components.copy;
+            newComponents.scheme = SchemeSegue;
+            queryDictionary[QueryItemIdentifier] = queryDictionary[SchemeSegue];
+            queryDictionary[SchemeSegue] = nil;
+            newComponents.queryDictionary = queryDictionary;
+            keyPath = newComponents.string;
+        } else if (kp.boolValue) {
+            NSURLComponents *newComponents = components.copy;
+            newComponents.scheme = SchemeKeyPath;
+            queryDictionary[SchemeKeyPath] = nil;
+            newComponents.queryDictionary = queryDictionary;
+            keyPath = newComponents.string;
+        }
+        
         if ([components.scheme isEqualToString:SchemeTraitCollection]) {
             UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithQueryItems:components.queryItems];
-            self.kvs[SchemeTraitCollection][traitCollection][components.host] = value;
-        }
-    } else if ([keyPath hasPrefix:@"("]) {
-        NSUInteger index = 1;
-        NSString *key = [keyPath substringFromIndex:index];
-        NSRange range = [key rangeOfString:@")"];
-        if (range.location == NSNotFound) return;
-        index = range.location;
-        key = [key substringToIndex:index];
-        range = [keyPath rangeOfString:@")."];
-        if (range.location == NSNotFound) {
-            [self setValue:value forKey:key];
-        } else {
-            index = NSMaxRange(range);
-            keyPath = [keyPath substringFromIndex:index];
-            NSObject *object = [self valueForKey:key];
-            [object setValue:value forKeyPath:keyPath];
+            self.kvs[SchemeTraitCollection][traitCollection][keyPath] = value;
+        } else if ([components.scheme isEqualToString:SchemeSegue]) {
+            NSString *identifier = components.queryDictionary[QueryItemIdentifier];
+            self.kvs[SchemeSegue][identifier][keyPath] = value;
+        } else if ([components.scheme isEqualToString:SchemeKeyPath]) {
+            value = [self valueForKeyPath:value];
+            [self Helpers_NSObject_swizzledSetValue:value forKeyPath:keyPath];
         }
     } else {
         [self Helpers_NSObject_swizzledSetValue:value forKeyPath:keyPath];
@@ -1575,13 +1572,16 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [self Helpers_UIViewController_swizzledPrepareForSegue:segue sender:sender];
     
     if (segue.identifier.length > 0) {
-        NSString *key = NSStringFromSelector(@selector(performSegueWithIdentifier:sender:preparation:));
-        ObjectBlock preparation = self.kvs[KeySegue][segue.identifier][key];
-        [self invokeHandler:preparation object:segue];
-        self.kvs[KeySegue][segue.identifier][key] = nil;
-        
-        NSDictionary *dictionary = self.kvs[KeySegue][segue.identifier];
+        NSDictionary *dictionary = self.kvs[SchemeSegue][segue.identifier];
         [segue setValuesForKeyPathsWithDictionary:dictionary];
+        
+        NSString *key = NSStringFromSelector(@selector(performSegueWithIdentifier:sender:preparation:));
+        ObjectBlock preparation = self.kvs[key];
+        if ([preparation isKindOfClass:MutableDictionary.class]) {
+        } else {
+            self.kvs[key] = nil;
+            [self invokeHandler:preparation object:segue];
+        }
     }
     
     if (!segue.destinationViewController.segueViewController.isViewLoaded) {
@@ -1759,7 +1759,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 - (void)performSegueWithIdentifier:(NSString *)identifier sender:(id)sender preparation:(StoryboardSegueBlock)preparation {
     NSString *key = NSStringFromSelector(_cmd);
-    self.kvs[KeySegue][identifier][key] = preparation;
+    self.kvs[key] = preparation;
     [self performSegueWithIdentifier:identifier sender:sender];
 }
 

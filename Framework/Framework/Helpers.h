@@ -30,7 +30,6 @@ extern Extension const ExtensionJSON;
 typedef NSString * Key NS_STRING_ENUM;
 extern Key const KeyError;
 extern Key const KeyObject;
-extern Key const KeySegue;
 
 typedef NSString * Table NS_STRING_ENUM;
 extern Table const TableErrors;
@@ -38,9 +37,8 @@ extern Table const TableLocalizable;
 
 typedef NSString * Scheme NS_STRING_ENUM;
 extern Scheme const SchemeTraitCollection;
+extern Scheme const SchemeSegue;
 extern Scheme const SchemeKeyPath;
-extern Scheme const SchemeDictionary;
-extern Scheme const SchemeObject;
 
 typedef NSString * QueryItem NS_STRING_ENUM;
 extern QueryItem const QueryItemDisplayScale;
@@ -52,6 +50,7 @@ extern QueryItem const QueryItemDisplayGamut;
 extern QueryItem const QueryItemLayoutDirection;
 extern QueryItem const QueryItemPreferredContentSizeCategory;
 extern QueryItem const QueryItemUserInterfaceStyle;
+extern QueryItem const QueryItemIdentifier;
 
 extern bool CGFloatInRange(CGFloat value, UIFloatRange range);
 extern CGFloat CGFloatClampToRange(CGFloat value, UIFloatRange range);
@@ -590,7 +589,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 - (void)embedViewController:(UIViewController *)vc toView:(UIView *)view; // Add child view controller to receiver restricting the size with specified view bounds
 - (void)removeEmbeddedViewController:(UIViewController *)vc; // Remove child view controller from the receiver
 
-- (void)performSegueWithIdentifier:(NSString *)identifier sender:(id)sender preparation:(StoryboardSegueBlock)preparation;
+- (void)performSegueWithIdentifier:(NSString *)identifier sender:(id)sender preparation:(StoryboardSegueBlock)preparation; // - prepareForSegue:sender: inline implementation
 
 @end
 
@@ -836,7 +835,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface UILabel (Helpers)
 
-@property (readonly) CGSize textSize;
+@property (readonly) CGSize textSize; // Receiver's text bounding size
 
 @end
 
