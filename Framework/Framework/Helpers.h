@@ -35,6 +35,16 @@ typedef NSString * Table NS_STRING_ENUM;
 extern Table const TableErrors;
 extern Table const TableLocalizable;
 
+// Runtime attributes
+// | Key path | Type | Value |
+// ---------------------------
+// | tc://lblTitle.text?hsc=2 | String | Regular |
+// | sg://destinationViewController.btnDone.hidden?id=Settings | Boolean | YES |
+// | kp://btnDone.enabled | String | parentViewController.itemSelected |
+
+// | sg://sourceViewController.vcSettings?id=Settings&kp=1 | String | destinationViewController |
+
+// | tc://destinationViewController.modalTransitionStyle?hsc=2&sg=Settings | Number | 0 |
 typedef NSString * Scheme NS_STRING_ENUM;
 extern Scheme const SchemeTraitCollection;
 extern Scheme const SchemeSegue;

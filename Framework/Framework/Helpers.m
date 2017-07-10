@@ -1514,6 +1514,10 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     swizzled = @selector(Helpers_UIViewController_swizzledTraitCollectionDidChange:);
     [self swizzleInstanceMethod:original with:swizzled];
     
+    original = @selector(initWithCoder:);
+    swizzled = @selector(initSwizzledWithCoder_Helpers_UIViewController:);
+    [self swizzleInstanceMethod:original with:swizzled];
+    
     original = @selector(awakeFromNib);
     swizzled = @selector(Helpers_UIViewController_swizzledAwakeFromNib);
     [self swizzleInstanceMethod:original with:swizzled];
@@ -1599,6 +1603,13 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
             [self setValuesForKeyPathsWithDictionary:dictionary];
         }
     }
+}
+
+- (instancetype)initSwizzledWithCoder_Helpers_UIViewController:(NSCoder *)aDecoder {
+    self = [self initSwizzledWithCoder_Helpers_UIViewController:aDecoder];
+    if (self) {
+    }
+    return self;
 }
 
 - (void)Helpers_UIViewController_swizzledAwakeFromNib {
