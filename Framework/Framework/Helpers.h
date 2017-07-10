@@ -36,15 +36,18 @@ extern Table const TableErrors;
 extern Table const TableLocalizable;
 
 // Runtime attributes
-// | Key path | Type | Value |
-// ---------------------------
-// | tc://lblTitle.text?hsc=2 | String | Regular |
-// | sg://destinationViewController.btnDone.hidden?id=Settings | Boolean | YES |
-// | kp://btnDone.enabled | String | parentViewController.itemSelected |
-
-// | sg://sourceViewController.vcSettings?id=Settings&kp=1 | String | destinationViewController |
-
-// | tc://destinationViewController.modalTransitionStyle?hsc=2&sg=Settings | Number | 0 |
+// ------------------------------------------------------------------------------------------------------------------------------------
+// | Key path                                                                   | Type    | Value                                     |
+// ------------------------------------------------------------------------------------------------------------------------------------
+// | tc://lblTitle.text?hsc=2                                                   | String  | Regular                                   |
+// | sg://destinationViewController.btnDone.hidden?id=Settings                  | Boolean | YES                                       |
+// | kp://btnDone.enabled                                                       | String  | parentViewController.itemSelected         |
+// ------------------------------------------------------------------------------------------------------------------------------------
+// | sg://sourceViewController.vcSettings?id=Settings&kp=1                      | String  | destinationViewController                 |
+// ------------------------------------------------------------------------------------------------------------------------------------
+// | tc://destinationViewController.modalTransitionStyle?hsc=2&sg=Settings      | Number  | 0                                         |
+// | tc://destinationViewController.view.backgroundColor?hsc=2&sg=Settings&kp=1 | String  | sourceViewController.vRed.backgroundColor |
+// ------------------------------------------------------------------------------------------------------------------------------------
 typedef NSString * Scheme NS_STRING_ENUM;
 extern Scheme const SchemeTraitCollection;
 extern Scheme const SchemeSegue;
