@@ -201,24 +201,24 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 @interface Button : UIButton // Customized button
 
-@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *subbuttons;
+@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *subbuttons; // Subbuttons changing their state together with receiver
 
-@property (weak, nonatomic) IBOutlet Button *button1;
+@property (weak, nonatomic) IBOutlet Button *button1; // Convenience outlet connections
 @property (weak, nonatomic) IBOutlet Button *button2;
 @property (weak, nonatomic) IBOutlet UILabel *label1;
 @property (weak, nonatomic) IBOutlet ImageView *imageView1;
 
-@property IBInspectable UIColor *defaultBackgroundColor;
+@property IBInspectable UIColor *defaultBackgroundColor; // Background color for different states
 @property IBInspectable UIColor *highlightedBackgroundColor;
 @property IBInspectable UIColor *selectedBackgroundColor;
 @property IBInspectable UIColor *disabledBackgroundColor;
 
-@property IBInspectable UIColor *defaultBorderColor;
+@property IBInspectable UIColor *defaultBorderColor; // Layer's border color for different states
 @property IBInspectable UIColor *highlightedBorderColor;
 @property IBInspectable UIColor *selectedBorderColor;
 @property IBInspectable UIColor *disabledBorderColor;
 
-@property IBInspectable BOOL toggle;
+@property IBInspectable BOOL toggle; // Should the receiver to invert @ selected property on tap
 
 @end
 
@@ -231,9 +231,9 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface KeyboardContainerView : UIView
+@interface KeyboardContainerView : UIView // Content container view, which size is changing based on keyboard apperance
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomConstraint; // Constraint which constant is changing based on keyboard appearance
 
 @end
 

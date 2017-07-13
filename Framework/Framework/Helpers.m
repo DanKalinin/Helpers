@@ -583,7 +583,6 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 #pragma mark - Helpers
 
 - (void)updateState {
-    
     if (self.state == UIControlStateHighlighted) {
         self.backgroundColor = self.highlightedBackgroundColor;
         self.borderColor = self.highlightedBorderColor;
