@@ -586,7 +586,6 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property (nonatomic) IBInspectable UIInterfaceOrientationMask supportedInterfaceOrientations; // Orientations, supported by current container
 @property IBInspectable BOOL editableByParent; // YES - child view controller enters to edit mode with it's parent. - setEditing:animated: will be called. NO - otherwise.
 
-@property (readonly) UIAlertController *imagePickerAlertController; // Action sheet alert controller to pick image from Camera or Photo library. Additional actions can be added.
 @property (nonatomic) NSArray<id<UIPreviewActionItem>> *previewActionItems; // Set peek and pop actions for target view controller
 
 @property IBInspectable NSString *segueViewControllerKeyPath; // Key path for segue final destination view controller. If you want to specify the root view controller of navigation controller, the key path will be viewControllers.@index.0.
@@ -597,12 +596,14 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property IBInspectable BOOL invokeAppearanceMethods; // Should the current view controller to invoke appearance methods of presenting view controller in popover presentation
 
 - (NSString *)localize:(NSString *)string; // Programmatic localization of the string from storyboard strings file. If specified key is not found, the value is taken from Localizable.strings file. If there are no localizations found in both files, argument is returned.
-- (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType; // Present image picker controller for Camera or Photo library. Shows Open Settings alert controller if access to source is denied.
 
 - (void)embedViewController:(UIViewController *)vc toView:(UIView *)view; // Add child view controller to receiver restricting the size with specified view bounds
 - (void)removeEmbeddedViewController:(UIViewController *)vc; // Remove child view controller from the receiver
 
 - (void)performSegueWithIdentifier:(NSString *)identifier preparation:(StoryboardSegueBlock)preparation; // - prepareForSegue:sender: inline implementation
+
+- (UIAlertController *)alertControllerImagePicker; // Action sheet alert controller to pick image from Camera or Photo library. Additional actions can be added.
+- (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType; // Present image picker controller for Camera or Photo library. Shows Open Settings alert controller if access to source is denied.
 
 @end
 

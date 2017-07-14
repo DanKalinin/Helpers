@@ -1775,7 +1775,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 #pragma mark - Image picker controller
 
-- (UIAlertController *)imagePickerAlertController {
+- (UIAlertController *)alertControllerImagePicker {
     
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
