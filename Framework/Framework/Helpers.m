@@ -1723,7 +1723,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 - (BOOL)invokeAppearanceMethods {
     NSNumber *object = objc_getAssociatedObject(self, @selector(invokeAppearanceMethods));
-    return object.boolValue;
+    BOOL invokeAppearanceMethods = object.boolValue;
+    return invokeAppearanceMethods;
 }
 
 - (void)setSourceViewController:(UIViewController *)sourceViewController {
