@@ -1885,6 +1885,20 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return indexPaths;
 }
 
+- (NSArray<UITableViewCell *> *)cellsForSection:(NSInteger)section {
+    NSMutableArray *cells = [NSMutableArray array];
+    
+    NSInteger rows = [self numberOfRowsInSection:section];
+    for (NSInteger row = 0; row < rows; row++) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+        UITableViewCell *cell = [self cellForRowAtIndexPath:indexPath];
+        if (!cell) continue;
+        [cells addObject:cell];
+    }
+    
+    return cells;
+}
+
 - (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self cellForRowAtIndexPath:indexPath];
     cell.accessoryType = accessoryType;

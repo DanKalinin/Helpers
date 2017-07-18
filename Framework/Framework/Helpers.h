@@ -621,6 +621,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property (readonly) NSInteger numberOfRows; // Get the total number of rows in table view
 @property (readonly) NSArray<NSIndexPath *> *indexPaths; // Get index paths for all table view rows
 
+- (NSArray<UITableViewCell *> *)cellsForSection:(NSInteger)section;
 - (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath; // Set accessory type for cell at the specified index path
 
 @end
