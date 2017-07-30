@@ -531,15 +531,23 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     self = [super initWithCoder:aDecoder];
     if (self) {
         self.textFieldDelegate = TextFieldDelegate.new;
-        
-        self.delegates = (id)SurrogateArray.new;
-        [self.delegates addObject:self.textFieldDelegate];
-        self.delegate = self.delegates;
+        super.delegate = self.textFieldDelegate;
     }
     return self;
 }
 
 #pragma mark - Accessors
+
+- (void)setDelegate:(id<UITextFieldDelegate>)delegate {
+    if (delegate) {
+        self.delegates = (id)SurrogateArray.new;
+        [self.delegates addObject:delegate];
+        [self.delegates addObject:self.textFieldDelegate];
+        [super setDelegate:self.delegates];
+    } else {
+        [super setDelegate:delegate];
+    }
+}
 
 - (void)setRightView:(UIButton *)btnEye {
     [super setRightView:btnEye];

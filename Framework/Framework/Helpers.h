@@ -184,7 +184,6 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 @interface TextField : UITextField // Customized text field
 
-@property (readonly) SurrogateArray<UITextFieldDelegate> *delegates;
 @property IBInspectable NSUInteger maxLength;
 
 @end
