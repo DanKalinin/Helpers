@@ -169,9 +169,7 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface SurrogateContainer : NSObject
-
-@property NSArray *objects;
+@interface SurrogateArray : NSMutableArray
 
 @end
 
@@ -186,6 +184,7 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 @interface TextField : UITextField // Customized text field
 
+@property (readonly) SurrogateArray<UITextFieldDelegate> *delegates;
 @property IBInspectable NSUInteger maxLength;
 
 @end
@@ -359,8 +358,6 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface StreamPair : NSObject <NSInputStreamDelegate, NSOutputStreamDelegate> { // Convenience wrapper for I/O stream pair. In order to receive stream events and write the data to output stream, subclass and override needed methods defined by protocols listed above.
     @private
-    SurrogateContainer *_inputStreamDelegates;
-    SurrogateContainer *_outputStreamDelegates;
     NSMutableData *_inputStreamData;
 }
 
@@ -370,10 +367,10 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property (nonatomic) NSInputStream *inputStream;
 @property (nonatomic) NSOutputStream *outputStream;
 
-@property (weak, nonatomic) id<NSInputStreamDelegate> inputStreamDelegate;
-@property (weak, nonatomic) id<NSOutputStreamDelegate> outputStreamDelegate;
+@property (readonly) SurrogateArray<NSInputStreamDelegate> *inputStreamDelegates;
+@property (readonly) SurrogateArray<NSOutputStreamDelegate> *outputStreamDelegates;
 
-+ (instancetype)streamPairWithHost:(NSString *)host port:(NSUInteger)port;
+- (instancetype)initWithHost:(NSString *)host port:(NSUInteger)port;
 
 - (void)inputStreamOpenCompleted:(NSInputStream *)inputStream;
 - (void)inputStreamHasBytesAvailable:(NSInputStream *)inputStream;
@@ -506,6 +503,9 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 + (void)invokeHandler:(ObjectBlock)handler object:(id)object; // Check the passed block for existence and invoke it with the passed object as argument
 - (void)invokeHandler:(ObjectBlock)handler object:(id)object; // Same for instances
+
++ (void)setPointer:(id *)pointer toObject:(id)object;
+- (void)setPointer:(id *)pointer toObject:(id)object;
 
 @end
 

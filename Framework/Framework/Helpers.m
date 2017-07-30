@@ -371,7 +371,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 
 
-@interface SurrogateContainer ()
+@interface SurrogateArray ()
 
 @property NSPointerArray *pointers;
 
@@ -379,35 +379,72 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 
 
-@implementation SurrogateContainer
+@implementation SurrogateArray
 
 - (instancetype)init {
-    self = [super init];
+    self = super.init;
     if (self) {
-        self.pointers = [NSPointerArray weakObjectsPointerArray];
+        self.pointers = NSPointerArray.weakObjectsPointerArray;
     }
     return self;
 }
 
-#pragma mark - Accessors
+#pragma mark - Array
 
-- (void)setObjects:(NSArray *)objects {
-    self.pointers.count = 0;
-    for (id object in objects) {
-        void *pointer = (__bridge void *)object;
-        [self.pointers addPointer:pointer];
-    }
+- (NSUInteger)count {
+    [self.pointers compact];
+    
+    NSUInteger count = self.pointers.count;
+    return count;
 }
 
-- (NSArray *)objects {
-    return self.pointers.allObjects;
+- (id)objectAtIndex:(NSUInteger)index {
+    [self.pointers compact];
+    
+    id object = [self.pointers pointerAtIndex:index];
+    return object;
+}
+
+#pragma mark - Mutable array
+
+- (void)insertObject:(id)anObject atIndex:(NSUInteger)index {
+    [self.pointers compact];
+    
+    void *pointer = (__bridge void *)anObject;
+    [self.pointers insertPointer:pointer atIndex:index];
+}
+
+- (void)removeObjectAtIndex:(NSUInteger)index {
+    [self.pointers compact];
+    
+    [self.pointers removePointerAtIndex:index];
+}
+
+- (void)addObject:(id)anObject {
+    [self.pointers compact];
+    
+    void *pointer = (__bridge void *)anObject;
+    [self.pointers addPointer:pointer];
+}
+
+- (void)removeLastObject {
+    [self.pointers compact];
+    
+    NSUInteger index = self.pointers.count - 1;
+    [self.pointers removePointerAtIndex:index];
+}
+
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject {
+    [self.pointers compact];
+    
+    void *pointer = (__bridge void *)anObject;
+    [self.pointers replacePointerAtIndex:index withPointer:pointer];
 }
 
 #pragma mark - Message forwarding
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
-    [self.pointers compact];
-    for (id object in self.pointers) {
+    for (id object in self) {
         if ([object respondsToSelector:anInvocation.selector]) {
             [anInvocation invokeWithTarget:object];
         }
@@ -417,8 +454,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
     NSMethodSignature *signature = [super methodSignatureForSelector:aSelector];
     if (!signature) {
-        [self.pointers compact];
-        for (id object in self.pointers) {
+        for (id object in self) {
             signature = [object methodSignatureForSelector:aSelector];
             if (signature) break;
         }
@@ -431,8 +467,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
         return YES;
     }
     
-    [self.pointers compact];
-    for (id object in self.pointers) {
+    for (id object in self) {
         if ([object respondsToSelector:aSelector]) {
             return YES;
         }
@@ -483,8 +518,8 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 @interface TextField ()
 
-@property SurrogateContainer *delegates;
-@property TextFieldDelegate *selfDelegate;
+@property TextFieldDelegate *textFieldDelegate;
+@property SurrogateArray<UITextFieldDelegate> *delegates;
 
 @end
 
@@ -495,23 +530,16 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        self.selfDelegate = [TextFieldDelegate new];
-        [super setDelegate:self.selfDelegate];
+        self.textFieldDelegate = TextFieldDelegate.new;
+        
+        self.delegates = (id)SurrogateArray.new;
+        [self.delegates addObject:self.textFieldDelegate];
+        self.delegate = self.delegates;
     }
     return self;
 }
 
 #pragma mark - Accessors
-
-- (void)setDelegate:(id<UITextFieldDelegate>)delegate {
-    if (delegate) {
-        self.delegates = [SurrogateContainer new];
-        self.delegates.objects = @[self.selfDelegate, delegate];
-        [super setDelegate:(id)self.delegates];
-    } else {
-        [super setDelegate:self.selfDelegate];
-    }
-}
 
 - (void)setRightView:(UIButton *)btnEye {
     [super setRightView:btnEye];
@@ -857,31 +885,33 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 @property NSString *host;
 @property NSUInteger port;
 
+@property SurrogateArray<NSInputStreamDelegate> *inputStreamDelegates;
+@property SurrogateArray<NSOutputStreamDelegate> *outputStreamDelegates;
+
 @end
 
 
 
 @implementation StreamPair
 
-- (instancetype)init {
-    self = [super init];
+- (instancetype)initWithHost:(NSString *)host port:(NSUInteger)port {
+    self = super.init;
     if (self) {
-        _inputStreamDelegate = self;
-        _outputStreamDelegate = self;
+        CFReadStreamRef readStream;
+        CFWriteStreamRef writeStream;
+        CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)host, (UInt32)port, &readStream, &writeStream);
+        self.host = host;
+        self.port = port;
+        self.inputStream = (__bridge_transfer NSInputStream *)readStream;
+        self.outputStream = (__bridge_transfer NSOutputStream *)writeStream;
+        
+        self.inputStreamDelegates = (id)SurrogateArray.new;
+        [self.inputStreamDelegates addObject:self];
+        
+        self.outputStreamDelegates = (id)SurrogateArray.new;
+        [self.outputStreamDelegates addObject:self];
     }
     return self;
-}
-
-+ (instancetype)streamPairWithHost:(NSString *)host port:(NSUInteger)port {
-    CFReadStreamRef readStream;
-    CFWriteStreamRef writeStream;
-    CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)host, (UInt32)port, &readStream, &writeStream);
-    StreamPair *streamPair = [self new];
-    streamPair.host = host;
-    streamPair.port = port;
-    streamPair.inputStream = (__bridge_transfer NSInputStream *)readStream;
-    streamPair.outputStream = (__bridge_transfer NSOutputStream *)writeStream;
-    return streamPair;
 }
 
 - (void)dealloc {
@@ -911,51 +941,31 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     _outputStream = outputStream;
 }
 
-- (void)setInputStreamDelegate:(id<NSInputStreamDelegate>)inputStreamDelegate {
-    if (inputStreamDelegate) {
-        _inputStreamDelegates = [SurrogateContainer new];
-        _inputStreamDelegates.objects = @[self, inputStreamDelegate];
-        _inputStreamDelegate = (id)_inputStreamDelegates;
-    } else {
-        _inputStreamDelegate = inputStreamDelegate;
-    }
-}
-
-- (void)setOutputStreamDelegate:(id<NSOutputStreamDelegate>)outputStreamDelegate {
-    if (outputStreamDelegate) {
-        _outputStreamDelegates = [SurrogateContainer new];
-        _outputStreamDelegates.objects = @[self, outputStreamDelegate];
-        _outputStreamDelegate = (id)_inputStreamDelegates;
-    } else {
-        _outputStreamDelegate = outputStreamDelegate;
-    }
-}
-
 #pragma mark - Stream
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
     if ([aStream isEqual:self.inputStream]) {
         
         if (eventCode == NSStreamEventOpenCompleted) {
-            [self.inputStreamDelegate inputStreamOpenCompleted:self.inputStream];
+            [self.inputStreamDelegates inputStreamOpenCompleted:self.inputStream];
         } else if (eventCode == NSStreamEventHasBytesAvailable) {
-            [self.inputStreamDelegate inputStreamHasBytesAvailable:self.inputStream];
+            [self.inputStreamDelegates inputStreamHasBytesAvailable:self.inputStream];
         } else if (eventCode == NSStreamEventEndEncountered) {
-            [self.inputStreamDelegate inputStreamEndEncountered:self.inputStream];
+            [self.inputStreamDelegates inputStreamEndEncountered:self.inputStream];
         } else if (eventCode == NSStreamEventErrorOccurred) {
-            [self.inputStreamDelegate inputStreamErrorOccurred:self.inputStream];
+            [self.inputStreamDelegates inputStreamErrorOccurred:self.inputStream];
         }
         
     } else if ([aStream isEqual:self.outputStream]) {
         
         if (eventCode == NSStreamEventOpenCompleted) {
-            [self.outputStreamDelegate outputStreamOpenCompleted:self.outputStream];
+            [self.outputStreamDelegates outputStreamOpenCompleted:self.outputStream];
         } else if (eventCode == NSStreamEventHasSpaceAvailable) {
-            [self.outputStreamDelegate outputStreamHasSpaceAvailable:self.outputStream];
+            [self.outputStreamDelegates outputStreamHasSpaceAvailable:self.outputStream];
         } else if (eventCode == NSStreamEventEndEncountered) {
-            [self.outputStreamDelegate outputStreamEndEncountered:self.outputStream];
+            [self.outputStreamDelegates outputStreamEndEncountered:self.outputStream];
         } else if (eventCode == NSStreamEventErrorOccurred) {
-            [self.outputStreamDelegate outputStreamErrorOccurred:self.outputStream];
+            [self.outputStreamDelegates outputStreamErrorOccurred:self.outputStream];
         }
         
     }
@@ -1285,6 +1295,16 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 - (void)invokeHandler:(ObjectBlock)handler object:(id)object {
     [self.class invokeHandler:handler object:object];
+}
+
++ (void)setPointer:(id *)pointer toObject:(id)object {
+    if (pointer) {
+        *pointer = object;
+    }
+}
+
+- (void)setPointer:(id *)pointer toObject:(id)object {
+    [self.class setPointer:pointer toObject:object];
 }
 
 #pragma mark - Swizzling
