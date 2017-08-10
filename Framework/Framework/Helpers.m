@@ -915,9 +915,11 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         
         self.inputStreamDelegates = (id)SurrogateArray.new;
         [self.inputStreamDelegates addObject:self];
+        self.inputStream.delegate = self.inputStreamDelegates;
         
         self.outputStreamDelegates = (id)SurrogateArray.new;
         [self.outputStreamDelegates addObject:self];
+        self.outputStream.delegate = self.outputStreamDelegates;
     }
     return self;
 }
@@ -933,7 +935,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     if (inputStream) {
         [self createStream:inputStream];
     } else {
-        [self disposeStream:inputStream];
+        [self disposeStream:self.inputStream];
     }
     
     _inputStream = inputStream;
@@ -943,7 +945,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     if (outputStream) {
         [self createStream:outputStream];
     } else {
-        [self disposeStream:outputStream];
+        [self disposeStream:self.outputStream];
     }
     
     _outputStream = outputStream;
@@ -1031,7 +1033,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 #pragma mark - Helpers
 
 - (void)createStream:(NSStream *)stream {
-    stream.delegate = self;
     [stream scheduleInRunLoop:NSRunLoop.currentRunLoop forMode:NSDefaultRunLoopMode];
     [stream open];
 }
