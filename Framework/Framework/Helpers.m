@@ -15,6 +15,7 @@
 #import <CommonCrypto/CommonCrypto.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
+DateFormat const DateFormatISO8601 = @"yyyy-MM-dd'T'HH:mm:ss";
 DateFormat const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
 DateFormat const DateFormatRFC850 = @"EEEE, dd-MMM-yy HH:mm:ss 'GMT'";
 DateFormat const DateFormatAsctime = @"E MMM dd HH:mm:ss yyyy";
