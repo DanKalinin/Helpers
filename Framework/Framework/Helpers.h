@@ -461,6 +461,8 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 + (UIColor *)colorWithRGBAString:(NSString *)rgbaString; // Create the color with human-readable RGBA string. For example - 123,13,255,255.
 + (UIColor *)colorWithHexString:(NSString *)hexString; // Create the color with human-readable HEX string. For example - af5a1b.
 
++ (UIColor *)colorWithColors:(NSArray<UIColor *> *)colors;
+
 @end
 
 
@@ -881,5 +883,20 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @interface NSURLComponents (Helpers)
 
 @property NSDictionary<NSString *, NSString *> *queryDictionary;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface CAGradientLayer (Helpers)
+
+@property NSArray<UIColor *> *uiColors;
 
 @end

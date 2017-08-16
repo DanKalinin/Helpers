@@ -1176,6 +1176,30 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return color;
 }
 
++ (UIColor *)colorWithColors:(NSArray<UIColor *> *)colors {
+    UIColor *color;
+    
+    CGFloat red, green, blue, alpha;
+    CGFloat r, g, b, a;
+    
+    r = g = b = a = 0.0;
+    for (color in colors) {
+        [color getRed:&red green:&green blue:&blue alpha:&alpha];
+        r += red;
+        g += green;
+        b += blue;
+        a += alpha;
+    }
+    
+    r /= colors.count;
+    g /= colors.count;
+    b /= colors.count;
+    a /= colors.count;
+    
+    color = [UIColor colorWithRed:r green:g blue:b alpha:a];
+    return color;
+}
+
 @end
 
 
@@ -2593,6 +2617,37 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         queryDictionary[queryItem.name] = queryItem.value;
     }
     return queryDictionary;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation CAGradientLayer (Helpers)
+
+- (void)setUiColors:(NSArray<UIColor *> *)uiColors {
+    NSMutableArray *colors = NSMutableArray.array;
+    for (UIColor *uiColor in uiColors) {
+        [colors addObject:(id)uiColor.CGColor];
+    }
+    self.colors = colors;
+}
+
+- (NSArray<UIColor *> *)uiColors {
+    UIColor *uiColor;
+    NSMutableArray *uiColors = NSMutableArray.array;
+    for (id color in self.colors) {
+        uiColor = [UIColor colorWithCGColor:(CGColorRef)color];
+        [uiColors addObject:uiColor];
+    }
+    return uiColors;
 }
 
 @end
