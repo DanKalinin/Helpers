@@ -6,10 +6,12 @@
 //  Copyright © 2016 Dan Kalinin. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 FOUNDATION_EXPORT double HelpersVersionNumber;
 FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
+
+#import <UIKit/UIKit.h>
 
 typedef NSString * DateFormat NS_STRING_ENUM;
 extern DateFormat const DateFormatISO8601;
