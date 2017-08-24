@@ -172,7 +172,20 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface SurrogateArray : NSMutableArray
+@interface WeakArray : NSMutableArray
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface SurrogateArray : WeakArray
 
 @end
 

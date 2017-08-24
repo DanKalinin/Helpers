@@ -372,7 +372,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 
 
-@interface SurrogateArray ()
+@interface WeakArray ()
 
 @property NSPointerArray *pointers;
 
@@ -380,7 +380,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 
 
-@implementation SurrogateArray
+@implementation WeakArray
 
 - (instancetype)init {
     self = super.init;
@@ -441,6 +441,25 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     void *pointer = (__bridge void *)anObject;
     [self.pointers replacePointerAtIndex:index withPointer:pointer];
 }
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface SurrogateArray ()
+
+@end
+
+
+
+@implementation SurrogateArray
 
 #pragma mark - Message forwarding
 
