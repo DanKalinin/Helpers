@@ -455,6 +455,8 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 @interface SurrogateArray ()
 
+@property id lastReturnValue;
+
 @end
 
 
@@ -464,9 +466,11 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 #pragma mark - Message forwarding
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
+    self.lastReturnValue = nil;
     for (id object in self) {
         if ([object respondsToSelector:anInvocation.selector]) {
             [anInvocation invokeWithTarget:object];
+            self.lastReturnValue = anInvocation.returnValue;
         }
     }
 }
@@ -2667,6 +2671,91 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         [uiColors addObject:uiColor];
     }
     return uiColors;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSInvocation (Helpers)
+
+- (id)returnValue {
+    __autoreleasing id value;
+    
+    if (strcmp(self.methodSignature.methodReturnType, @encode(char)) == 0) {
+        char v;
+        [self getReturnValue:&v];
+        value = @(v);
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(int)) == 0) {
+        int v;
+        [self getReturnValue:&v];
+        value = @(v);
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(short)) == 0) {
+        short v;
+        [self getReturnValue:&v];
+        value = @(v);
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(long)) == 0) {
+        long v;
+        [self getReturnValue:&v];
+        value = @(v);
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(long long)) == 0) {
+        long long v;
+        [self getReturnValue:&v];
+        value = @(v);
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(unsigned char)) == 0) {
+        unsigned char v;
+        [self getReturnValue:&v];
+        value = @(v);
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(unsigned int)) == 0) {
+        unsigned int v;
+        [self getReturnValue:&v];
+        value = @(v);
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(unsigned short)) == 0) {
+        unsigned short v;
+        [self getReturnValue:&v];
+        value = @(v);
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(unsigned long)) == 0) {
+        unsigned long v;
+        [self getReturnValue:&v];
+        value = @(v);
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(unsigned long long)) == 0) {
+        unsigned long long v;
+        [self getReturnValue:&v];
+        value = @(v);
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(float)) == 0) {
+        float v;
+        [self getReturnValue:&v];
+        value = @(v);
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(double)) == 0) {
+        double v;
+        [self getReturnValue:&v];
+        value = @(v);
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(bool)) == 0) {
+        bool v;
+        [self getReturnValue:&v];
+        value = @(v);
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(void)) == 0) {
+        value = nil;
+    } else if ((strcmp(self.methodSignature.methodReturnType, @encode(id)) == 0) || (strcmp(self.methodSignature.methodReturnType, @encode(Class)) == 0)) {
+        [self getReturnValue:&value];
+    } else if (strcmp(self.methodSignature.methodReturnType, @encode(SEL)) == 0) {
+        SEL v;
+        [self getReturnValue:&v];
+        value = NSStringFromSelector(v);
+    } else {
+        void *v = malloc(self.methodSignature.methodReturnLength);
+        [self getReturnValue:v];
+        value = [NSValue.alloc initWithBytes:v objCType:self.methodSignature.methodReturnType];
+    }
+    
+    return value;
 }
 
 @end

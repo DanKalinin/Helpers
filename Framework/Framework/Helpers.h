@@ -187,6 +187,8 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 @interface SurrogateArray : WeakArray
 
+@property (readonly) id lastReturnValue;
+
 @end
 
 
@@ -913,5 +915,20 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @interface CAGradientLayer (Helpers)
 
 @property NSArray<UIColor *> *uiColors;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSInvocation (Helpers)
+
+@property (readonly) id returnValue;
 
 @end
