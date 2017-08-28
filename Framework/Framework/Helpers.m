@@ -598,79 +598,6 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 
 
-@interface Button ()
-
-@end
-
-
-
-@implementation Button
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    [self updateState];
-    
-    if (self.toggle) {
-        [self addTarget:self action:@selector(onToggle) forControlEvents:UIControlEventTouchUpInside];
-    }
-}
-
-- (void)setHighlighted:(BOOL)highlighted {
-    [super setHighlighted:highlighted];
-    [self.subbuttons setValue:@(highlighted) forKey:@"highlighted"];
-    [self updateState];
-}
-
-- (void)setSelected:(BOOL)selected {
-    [super setSelected:selected];
-    [self.subbuttons setValue:@(selected) forKey:@"selected"];
-    [self updateState];
-}
-
-- (void)setEnabled:(BOOL)enabled {
-    [super setEnabled:enabled];
-    [self.subbuttons setValue:@(enabled) forKey:@"enabled"];
-    [self updateState];
-}
-
-#pragma mark - Actions
-
-- (void)onToggle {
-    self.selected = !self.selected;
-    [self sendActionsForControlEvents:UIControlEventValueChanged];
-}
-
-#pragma mark - Helpers
-
-- (void)updateState {
-    if (self.state == UIControlStateHighlighted) {
-        self.backgroundColor = self.highlightedBackgroundColor;
-        self.borderColor = self.highlightedBorderColor;
-    } else if (self.state == UIControlStateDisabled) {
-        self.backgroundColor = self.disabledBackgroundColor;
-        self.borderColor = self.disabledBorderColor;
-    } else if (self.state == UIControlStateSelected) {
-        self.backgroundColor = self.selectedBackgroundColor;
-        self.borderColor = self.selectedBorderColor;
-    } else {
-        self.backgroundColor = self.defaultBackgroundColor;
-        self.borderColor = self.defaultBorderColor;
-    }
-    
-    [self setNeedsDisplay];
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface KeyboardContainerView ()
 
 @end
@@ -731,6 +658,26 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 + (Class)layerClass {
     return CAShapeLayer.class;
+}
+
+#pragma mark - Accessors
+
+- (void)setFillColor:(UIColor *)fillColor {
+    self.layer.fillColor = fillColor.CGColor;
+}
+
+- (UIColor *)fillColor {
+    UIColor *color = [UIColor colorWithCGColor:self.layer.fillColor];
+    return color;
+}
+
+- (void)setStrokeColor:(UIColor *)strokeColor {
+    self.layer.strokeColor = strokeColor.CGColor;
+}
+
+- (UIColor *)strokeColor {
+    UIColor *color = [UIColor colorWithCGColor:self.layer.strokeColor];
+    return color;
 }
 
 @end
@@ -808,6 +755,79 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.layer.emitterCells = [self.cells valueForKey:@"cell"];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface Button ()
+
+@end
+
+
+
+@implementation Button
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    [self updateState];
+    
+    if (self.toggle) {
+        [self addTarget:self action:@selector(onToggle) forControlEvents:UIControlEventTouchUpInside];
+    }
+}
+
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    [self.subbuttons setValue:@(highlighted) forKey:@"highlighted"];
+    [self updateState];
+}
+
+- (void)setSelected:(BOOL)selected {
+    [super setSelected:selected];
+    [self.subbuttons setValue:@(selected) forKey:@"selected"];
+    [self updateState];
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    [super setEnabled:enabled];
+    [self.subbuttons setValue:@(enabled) forKey:@"enabled"];
+    [self updateState];
+}
+
+#pragma mark - Actions
+
+- (void)onToggle {
+    self.selected = !self.selected;
+    [self sendActionsForControlEvents:UIControlEventValueChanged];
+}
+
+#pragma mark - Helpers
+
+- (void)updateState {
+    if (self.state == UIControlStateHighlighted) {
+        self.backgroundColor = self.highlightedBackgroundColor;
+        self.borderColor = self.highlightedBorderColor;
+    } else if (self.state == UIControlStateDisabled) {
+        self.backgroundColor = self.disabledBackgroundColor;
+        self.borderColor = self.disabledBorderColor;
+    } else if (self.state == UIControlStateSelected) {
+        self.backgroundColor = self.selectedBackgroundColor;
+        self.borderColor = self.selectedBorderColor;
+    } else {
+        self.backgroundColor = self.defaultBackgroundColor;
+        self.borderColor = self.defaultBorderColor;
+    }
+    
+    [self setNeedsDisplay];
 }
 
 @end
