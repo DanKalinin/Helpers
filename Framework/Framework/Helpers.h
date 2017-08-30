@@ -658,6 +658,34 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
+@interface UICollectionView (Helpers)
+
+@property UICollectionViewFlowLayout *flowLayout;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface UICollectionViewController (Helpers) <UICollectionViewDelegateFlowLayout>
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface NSBundle (Helpers)
 
 - (NSError *)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code; // Initialize NSError object from serialized Errors.plist table located in bundle. Error serialization format - domain.code.userInfo.

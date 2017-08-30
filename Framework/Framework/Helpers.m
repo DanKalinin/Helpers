@@ -2012,6 +2012,41 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
+@implementation UICollectionView (Helpers)
+
+- (void)setFlowLayout:(UICollectionViewFlowLayout *)flowLayout {
+    self.collectionViewLayout = flowLayout;
+}
+
+- (UICollectionViewFlowLayout *)flowLayout {
+    UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.collectionViewLayout;
+    return flowLayout;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation UICollectionViewController (Helpers)
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface NSBundle (HelpersSelectors)
 
 @property NSDictionary *errorUserInfos;
