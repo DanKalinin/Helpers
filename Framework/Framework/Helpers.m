@@ -232,31 +232,6 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 
 
-@interface ImageView ()
-
-@end
-
-
-
-@implementation ImageView
-
-- (void)setHighlighted:(BOOL)highlighted {
-    [super setHighlighted:highlighted];
-    
-    self.backgroundColor = highlighted ? self.highlightedBackgroundColor : self.defaultBackgroundColor;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface Keychain ()
 
 @property NSMutableDictionary *query;
@@ -498,336 +473,6 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     }
     
     return NO;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface TextFieldDelegate : NSObject <UITextFieldDelegate>
-
-@end
-
-
-
-@implementation TextFieldDelegate
-
-- (BOOL)textField:(TextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    NSString *text = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    if (textField.maxLength > 0 && text.length > textField.maxLength) {
-        text = [text substringToIndex:textField.maxLength];
-    }
-    textField.text = text;
-    [textField sendActionsForControlEvents:UIControlEventEditingChanged];
-    return NO;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface TextField ()
-
-@property TextFieldDelegate *textFieldDelegate;
-@property SurrogateArray<UITextFieldDelegate> *delegates;
-
-@end
-
-
-
-@implementation TextField
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        self.textFieldDelegate = TextFieldDelegate.new;
-        super.delegate = self.textFieldDelegate;
-    }
-    return self;
-}
-
-#pragma mark - Accessors
-
-- (void)setDelegate:(id<UITextFieldDelegate>)delegate {
-    if (delegate) {
-        self.delegates = (id)SurrogateArray.new;
-        [self.delegates addObject:delegate];
-        [self.delegates addObject:self.textFieldDelegate];
-        [super setDelegate:self.delegates];
-    } else {
-        [super setDelegate:delegate];
-    }
-}
-
-- (void)setRightView:(UIButton *)btnEye {
-    [super setRightView:btnEye];
-    if (self.secureTextEntry) {
-        [btnEye addTarget:self action:@selector(onEye:) forControlEvents:UIControlEventTouchUpInside];
-    }
-}
-
-#pragma mark - Actions
-
-- (void)onEye:(UIButton *)sender {
-    sender.selected = !sender.selected;
-    self.secureTextEntry = !sender.selected;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface KeyboardContainerView ()
-
-@end
-
-
-
-@implementation KeyboardContainerView
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(willChangeKeyboardFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
-        
-        UITapGestureRecognizer *tgr = [UITapGestureRecognizer.alloc initWithTarget:self action:@selector(onTap:)];
-        tgr.cancelsTouchesInView = NO;
-        [self addGestureRecognizer:tgr];
-    }
-    return self;
-}
-
-- (void)dealloc {
-    [NSNotificationCenter.defaultCenter removeObserver:self];
-}
-
-- (void)willChangeKeyboardFrame:(NSNotification *)note {
-    BOOL isLocalKeyboard = [note.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue];
-    if (isLocalKeyboard) {
-        NSTimeInterval duration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-        CGRect endFrame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-        UIViewAnimationCurve curve = [note.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
-        BOOL shown = endFrame.origin.y < self.window.frame.size.height;
-        [self.superview layoutIfNeeded];
-        [UIView animateWithDuration:duration delay:0.0 options:(curve << 16) animations:^{
-            self.bottomConstraint.constant = shown ? endFrame.size.height : 0.0;
-            [self.superview layoutIfNeeded];
-        } completion:nil];
-    }
-}
-
-- (void)onTap:(UITapGestureRecognizer *)tgr {
-    [self endEditing:YES];
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@implementation ShapeLayerView
-
-@dynamic layer;
-
-+ (Class)layerClass {
-    return CAShapeLayer.class;
-}
-
-#pragma mark - Accessors
-
-- (void)setFillColor:(UIColor *)fillColor {
-    self.layer.fillColor = fillColor.CGColor;
-}
-
-- (UIColor *)fillColor {
-    UIColor *color = [UIColor colorWithCGColor:self.layer.fillColor];
-    return color;
-}
-
-- (void)setStrokeColor:(UIColor *)strokeColor {
-    self.layer.strokeColor = strokeColor.CGColor;
-}
-
-- (UIColor *)strokeColor {
-    UIColor *color = [UIColor colorWithCGColor:self.layer.strokeColor];
-    return color;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@implementation GradientLayerView
-
-@dynamic layer;
-
-+ (Class)layerClass {
-    return CAGradientLayer.class;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface EmitterCellImageView ()
-
-@property CAEmitterCell *cell;
-
-@end
-
-
-
-@implementation EmitterCellImageView
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        self.cell = [CAEmitterCell emitterCell];
-    }
-    return self;
-}
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    self.cell.contents = (id)self.image.CGImage;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@implementation EmitterLayerView
-
-@dynamic layer;
-
-+ (Class)layerClass {
-    return CAEmitterLayer.class;
-}
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    self.layer.emitterCells = [self.cells valueForKey:@"cell"];
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface Button ()
-
-@end
-
-
-
-@implementation Button
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    [self updateState];
-    
-    if (self.toggle) {
-        [self addTarget:self action:@selector(onToggle) forControlEvents:UIControlEventTouchUpInside];
-    }
-}
-
-- (void)setHighlighted:(BOOL)highlighted {
-    [super setHighlighted:highlighted];
-    [self.subbuttons setValue:@(highlighted) forKey:@"highlighted"];
-    [self updateState];
-}
-
-- (void)setSelected:(BOOL)selected {
-    [super setSelected:selected];
-    [self.subbuttons setValue:@(selected) forKey:@"selected"];
-    [self updateState];
-}
-
-- (void)setEnabled:(BOOL)enabled {
-    [super setEnabled:enabled];
-    [self.subbuttons setValue:@(enabled) forKey:@"enabled"];
-    [self updateState];
-}
-
-#pragma mark - Actions
-
-- (void)onToggle {
-    self.selected = !self.selected;
-    [self sendActionsForControlEvents:UIControlEventValueChanged];
-}
-
-#pragma mark - Helpers
-
-- (void)updateState {
-    if (self.state == UIControlStateHighlighted) {
-        self.backgroundColor = self.highlightedBackgroundColor;
-        self.borderColor = self.highlightedBorderColor;
-    } else if (self.state == UIControlStateDisabled) {
-        self.backgroundColor = self.disabledBackgroundColor;
-        self.borderColor = self.disabledBorderColor;
-    } else if (self.state == UIControlStateSelected) {
-        self.backgroundColor = self.selectedBackgroundColor;
-        self.borderColor = self.selectedBorderColor;
-    } else {
-        self.backgroundColor = self.defaultBackgroundColor;
-        self.borderColor = self.defaultBorderColor;
-    }
-    
-    [self setNeedsDisplay];
 }
 
 @end
@@ -1084,6 +729,380 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 - (void)disposeStream:(NSStream *)stream {
     [stream close];
     [stream removeFromRunLoop:NSRunLoop.currentRunLoop forMode:NSDefaultRunLoopMode];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface View ()
+
+@end
+
+
+
+@implementation View
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface ImageView ()
+
+@end
+
+
+
+@implementation ImageView
+
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    
+    self.backgroundColor = highlighted ? self.highlightedBackgroundColor : self.defaultBackgroundColor;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface TextFieldDelegate : NSObject <UITextFieldDelegate>
+
+@end
+
+
+
+@implementation TextFieldDelegate
+
+- (BOOL)textField:(TextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString *text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if (textField.maxLength > 0 && text.length > textField.maxLength) {
+        text = [text substringToIndex:textField.maxLength];
+    }
+    textField.text = text;
+    [textField sendActionsForControlEvents:UIControlEventEditingChanged];
+    return NO;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface TextField ()
+
+@property TextFieldDelegate *textFieldDelegate;
+@property SurrogateArray<UITextFieldDelegate> *delegates;
+
+@end
+
+
+
+@implementation TextField
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.textFieldDelegate = TextFieldDelegate.new;
+        super.delegate = self.textFieldDelegate;
+    }
+    return self;
+}
+
+#pragma mark - Accessors
+
+- (void)setDelegate:(id<UITextFieldDelegate>)delegate {
+    if (delegate) {
+        self.delegates = (id)SurrogateArray.new;
+        [self.delegates addObject:delegate];
+        [self.delegates addObject:self.textFieldDelegate];
+        [super setDelegate:self.delegates];
+    } else {
+        [super setDelegate:delegate];
+    }
+}
+
+- (void)setRightView:(UIButton *)btnEye {
+    [super setRightView:btnEye];
+    if (self.secureTextEntry) {
+        [btnEye addTarget:self action:@selector(onEye:) forControlEvents:UIControlEventTouchUpInside];
+    }
+}
+
+#pragma mark - Actions
+
+- (void)onEye:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    self.secureTextEntry = !sender.selected;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface Button ()
+
+@end
+
+
+
+@implementation Button
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    [self updateState];
+    
+    if (self.toggle) {
+        [self addTarget:self action:@selector(onToggle) forControlEvents:UIControlEventTouchUpInside];
+    }
+}
+
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    [self.subbuttons setValue:@(highlighted) forKey:@"highlighted"];
+    [self updateState];
+}
+
+- (void)setSelected:(BOOL)selected {
+    [super setSelected:selected];
+    [self.subbuttons setValue:@(selected) forKey:@"selected"];
+    [self updateState];
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    [super setEnabled:enabled];
+    [self.subbuttons setValue:@(enabled) forKey:@"enabled"];
+    [self updateState];
+}
+
+#pragma mark - Actions
+
+- (void)onToggle {
+    self.selected = !self.selected;
+    [self sendActionsForControlEvents:UIControlEventValueChanged];
+}
+
+#pragma mark - Helpers
+
+- (void)updateState {
+    if (self.state == UIControlStateHighlighted) {
+        self.backgroundColor = self.highlightedBackgroundColor;
+        self.borderColor = self.highlightedBorderColor;
+    } else if (self.state == UIControlStateDisabled) {
+        self.backgroundColor = self.disabledBackgroundColor;
+        self.borderColor = self.disabledBorderColor;
+    } else if (self.state == UIControlStateSelected) {
+        self.backgroundColor = self.selectedBackgroundColor;
+        self.borderColor = self.selectedBorderColor;
+    } else {
+        self.backgroundColor = self.defaultBackgroundColor;
+        self.borderColor = self.defaultBorderColor;
+    }
+    
+    [self setNeedsDisplay];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface KeyboardContainerView ()
+
+@end
+
+
+
+@implementation KeyboardContainerView
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(willChangeKeyboardFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
+        
+        UITapGestureRecognizer *tgr = [UITapGestureRecognizer.alloc initWithTarget:self action:@selector(onTap:)];
+        tgr.cancelsTouchesInView = NO;
+        [self addGestureRecognizer:tgr];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [NSNotificationCenter.defaultCenter removeObserver:self];
+}
+
+- (void)willChangeKeyboardFrame:(NSNotification *)note {
+    BOOL isLocalKeyboard = [note.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue];
+    if (isLocalKeyboard) {
+        NSTimeInterval duration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+        CGRect endFrame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+        UIViewAnimationCurve curve = [note.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
+        BOOL shown = endFrame.origin.y < self.window.frame.size.height;
+        [self.superview layoutIfNeeded];
+        [UIView animateWithDuration:duration delay:0.0 options:(curve << 16) animations:^{
+            self.bottomConstraint.constant = shown ? endFrame.size.height : 0.0;
+            [self.superview layoutIfNeeded];
+        } completion:nil];
+    }
+}
+
+- (void)onTap:(UITapGestureRecognizer *)tgr {
+    [self endEditing:YES];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation ShapeLayerView
+
+@dynamic layer;
+
++ (Class)layerClass {
+    return CAShapeLayer.class;
+}
+
+#pragma mark - Accessors
+
+- (void)setFillColor:(UIColor *)fillColor {
+    self.layer.fillColor = fillColor.CGColor;
+}
+
+- (UIColor *)fillColor {
+    UIColor *color = [UIColor colorWithCGColor:self.layer.fillColor];
+    return color;
+}
+
+- (void)setStrokeColor:(UIColor *)strokeColor {
+    self.layer.strokeColor = strokeColor.CGColor;
+}
+
+- (UIColor *)strokeColor {
+    UIColor *color = [UIColor colorWithCGColor:self.layer.strokeColor];
+    return color;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation GradientLayerView
+
+@dynamic layer;
+
++ (Class)layerClass {
+    return CAGradientLayer.class;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface EmitterCellImageView ()
+
+@property CAEmitterCell *cell;
+
+@end
+
+
+
+@implementation EmitterCellImageView
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.cell = [CAEmitterCell emitterCell];
+    }
+    return self;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.cell.contents = (id)self.image.CGImage;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation EmitterLayerView
+
+@dynamic layer;
+
++ (Class)layerClass {
+    return CAEmitterLayer.class;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.layer.emitterCells = [self.cells valueForKey:@"cell"];
 }
 
 @end

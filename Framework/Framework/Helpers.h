@@ -13,6 +13,8 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 
 #import <UIKit/UIKit.h>
 
+@class View, ImageView, TextField, Button, KeyboardContainerView, ShapeLayerView, GradientLayerView, EmitterLayerView;
+
 typedef NSString * DateFormat NS_STRING_ENUM;
 extern DateFormat const DateFormatISO8601;
 extern DateFormat const DateFormatRFC1123;
@@ -137,22 +139,6 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface ImageView : UIImageView
-
-@property IBInspectable UIColor *defaultBackgroundColor;
-@property IBInspectable UIColor *highlightedBackgroundColor;
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface Keychain : NSObject // Convenient wrapper around Security.framework keychain services
 
 @property NSString *account;
@@ -188,137 +174,6 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 @interface SurrogateArray : WeakArray
 
 @property (readonly) id lastReturnValue;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface TextField : UITextField // Customized text field
-
-@property IBInspectable NSUInteger maxLength;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface KeyboardContainerView : UIView // Content container view, which size is changing based on keyboard apperance
-
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomConstraint; // Constraint which constant is changing based on keyboard appearance
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface ShapeLayerView : UIView
-
-@property (class, readonly) Class layerClass;
-@property (readonly) CAShapeLayer *layer;
-
-@property IBInspectable UIColor *fillColor;
-@property IBInspectable UIColor *strokeColor;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface GradientLayerView : UIView
-
-@property (class, readonly) Class layerClass;
-@property (readonly) CAGradientLayer *layer;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface EmitterCellImageView : UIImageView
-
-@property (readonly) CAEmitterCell *cell;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface EmitterLayerView : UIView
-
-@property (strong, nonatomic) IBOutletCollection(EmitterCellImageView) NSArray *cells;
-
-@property (class, readonly) Class layerClass;
-@property (readonly) CAEmitterLayer *layer;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface Button : UIButton // Customized button
-
-@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *subbuttons; // Subbuttons changing their state together with receiver
-
-@property (weak, nonatomic) IBOutlet Button *button1; // Convenience outlet connections
-@property (weak, nonatomic) IBOutlet Button *button2;
-@property (weak, nonatomic) IBOutlet UILabel *label1;
-@property (weak, nonatomic) IBOutlet ImageView *imageView1;
-@property (weak, nonatomic) IBOutlet ShapeLayerView *shapeLayerView;
-
-@property IBInspectable UIColor *defaultBackgroundColor; // Background color for different states
-@property IBInspectable UIColor *highlightedBackgroundColor;
-@property IBInspectable UIColor *selectedBackgroundColor;
-@property IBInspectable UIColor *disabledBackgroundColor;
-
-@property IBInspectable UIColor *defaultBorderColor; // Layer's border color for different states
-@property IBInspectable UIColor *highlightedBorderColor;
-@property IBInspectable UIColor *selectedBorderColor;
-@property IBInspectable UIColor *disabledBorderColor;
-
-@property IBInspectable BOOL toggle; // Should the receiver to invert @ selected property on tap
 
 @end
 
@@ -403,6 +258,166 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 - (void)outputStreamHasSpaceAvailable:(NSOutputStream *)outputStream;
 - (void)outputStreamErrorOccurred:(NSOutputStream *)outputStream;
 - (void)outputStreamEndEncountered:(NSOutputStream *)outputStream;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface View : UIView // Customized view
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface ImageView : UIImageView // Customized image view
+
+@property IBInspectable UIColor *defaultBackgroundColor;
+@property IBInspectable UIColor *highlightedBackgroundColor;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface TextField : UITextField // Customized text field
+
+@property IBInspectable NSUInteger maxLength;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface Button : UIButton // Customized button
+
+@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *subbuttons; // Subbuttons changing their state together with receiver
+
+@property (weak, nonatomic) IBOutlet Button *button1; // Convenience outlet connections
+@property (weak, nonatomic) IBOutlet Button *button2;
+@property (weak, nonatomic) IBOutlet UILabel *label1;
+@property (weak, nonatomic) IBOutlet ImageView *imageView1;
+@property (weak, nonatomic) IBOutlet ShapeLayerView *shapeLayerView;
+
+@property IBInspectable UIColor *defaultBackgroundColor; // Background color for different states
+@property IBInspectable UIColor *highlightedBackgroundColor;
+@property IBInspectable UIColor *selectedBackgroundColor;
+@property IBInspectable UIColor *disabledBackgroundColor;
+
+@property IBInspectable UIColor *defaultBorderColor; // Layer's border color for different states
+@property IBInspectable UIColor *highlightedBorderColor;
+@property IBInspectable UIColor *selectedBorderColor;
+@property IBInspectable UIColor *disabledBorderColor;
+
+@property IBInspectable BOOL toggle; // Should the receiver to invert @ selected property on tap
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface KeyboardContainerView : View // Content container view, which size is changing based on keyboard apperance
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomConstraint; // Constraint which constant is changing based on keyboard appearance
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface ShapeLayerView : View
+
+@property (class, readonly) Class layerClass;
+@property (readonly) CAShapeLayer *layer;
+
+@property IBInspectable UIColor *fillColor;
+@property IBInspectable UIColor *strokeColor;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface GradientLayerView : View
+
+@property (class, readonly) Class layerClass;
+@property (readonly) CAGradientLayer *layer;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface EmitterCellImageView : ImageView
+
+@property (readonly) CAEmitterCell *cell;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface EmitterLayerView : View
+
+@property (strong, nonatomic) IBOutletCollection(EmitterCellImageView) NSArray *cells;
+
+@property (class, readonly) Class layerClass;
+@property (readonly) CAEmitterLayer *layer;
 
 @end
 
