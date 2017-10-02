@@ -272,6 +272,12 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface View : UIView // Customized view
 
+@property (weak, nonatomic) IBOutlet ImageView *imageView1;
+
+@property (weak, nonatomic) IBOutlet UILabel *label1;
+@property (weak, nonatomic) IBOutlet UILabel *label2;
+@property (weak, nonatomic) IBOutlet UILabel *label3;
+
 @end
 
 
