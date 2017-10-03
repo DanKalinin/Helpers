@@ -328,6 +328,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property (weak, nonatomic) IBOutlet Button *button2;
 @property (weak, nonatomic) IBOutlet UILabel *label1;
 @property (weak, nonatomic) IBOutlet ImageView *imageView1;
+@property (weak, nonatomic) IBOutlet ImageView *imageView2;
 @property (weak, nonatomic) IBOutlet ShapeLayerView *shapeLayerView;
 
 @property IBInspectable UIColor *defaultBackgroundColor; // Background color for different states
