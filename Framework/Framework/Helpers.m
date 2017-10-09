@@ -810,11 +810,21 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 - (BOOL)textField:(TextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString *text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
     if (textField.maxLength > 0 && text.length > textField.maxLength) {
         text = [text substringToIndex:textField.maxLength];
     }
+    
+    if (textField.pattern) {
+        NSRange range = [text rangeOfString:textField.pattern options:NSRegularExpressionSearch];
+        if (range.location == NSNotFound) {
+            text = textField.text;
+        }
+    }
+    
     textField.text = text;
     [textField sendActionsForControlEvents:UIControlEventEditingChanged];
+    
     return NO;
 }
 

@@ -311,6 +311,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @interface TextField : UITextField // Customized text field
 
 @property IBInspectable NSUInteger maxLength;
+@property IBInspectable NSString *pattern;
 
 @end
 
