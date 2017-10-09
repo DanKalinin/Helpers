@@ -26,6 +26,9 @@ extern DateFormat const DateFormatGCCTime;
 typedef NSString * LocaleIdentifier NS_STRING_ENUM;
 extern LocaleIdentifier const LocaleIdentifierPosix;
 
+typedef NSString * Pattern NS_STRING_ENUM;
+extern Pattern const PatternIP;
+
 typedef NSString * Extension NS_STRING_ENUM;
 extern Extension const ExtensionPlist;
 extern Extension const ExtensionStrings;

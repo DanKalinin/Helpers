@@ -24,6 +24,8 @@ DateFormat const DateFormatGCCTime = @"HH:mm:ss";
 
 LocaleIdentifier const LocaleIdentifierPosix = @"en_US_POSIX";
 
+Pattern const PatternIP = @"^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
+
 Extension const ExtensionPlist = @"plist";
 Extension const ExtensionStrings = @"strings";
 Extension const ExtensionXML = @"xml";
@@ -815,7 +817,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         text = [text substringToIndex:textField.maxLength];
     }
     
-    if (textField.pattern) {
+    if ((textField.pattern.length > 0) && (text.length > 0)) {
         NSRange range = [text rangeOfString:textField.pattern options:NSRegularExpressionSearch];
         if (range.location == NSNotFound) {
             text = textField.text;
