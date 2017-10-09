@@ -124,6 +124,20 @@ CGPoint CGRectGetMidXMidY(CGRect rect) {
     return point;
 }
 
+UIEdgeInsets UIEdgeInsetsInvert(UIEdgeInsets insets) {
+    insets.top = -insets.top;
+    insets.left = -insets.left;
+    insets.bottom = -insets.bottom;
+    insets.right = -insets.right;
+    return insets;
+}
+
+CGRect UIEdgeInsetsOutsetRect(CGRect rect, UIEdgeInsets insets) {
+    insets = UIEdgeInsetsInvert(insets);
+    rect = UIEdgeInsetsInsetRect(rect, insets);
+    return rect;
+}
+
 NSUInteger DateToMinutes(NSDate *date) {
     NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
     NSUInteger hours = [calendar component:NSCalendarUnitHour fromDate:date];

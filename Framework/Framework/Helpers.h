@@ -83,6 +83,9 @@ extern CGPoint CGPointClampToRect(CGPoint point, CGRect rect);
 
 extern CGPoint CGRectGetMidXMidY(CGRect rect);
 
+extern UIEdgeInsets UIEdgeInsetsInvert(UIEdgeInsets insets);
+extern CGRect UIEdgeInsetsOutsetRect(CGRect rect, UIEdgeInsets insets);
+
 extern NSUInteger DateToMinutes(NSDate *date);
 extern NSString *MinutesToHHmm(NSUInteger minutes, NSString *separator);
 extern NSUInteger HHmmToMinutes(NSString *HHmm, NSString *separator);
