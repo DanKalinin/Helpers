@@ -808,20 +808,34 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
+@interface TextField ()
+
+@property TextFieldDelegate *textFieldDelegate;
+@property SurrogateArray<UITextFieldDelegate> *delegates;
+
+@property BOOL valid;
+
+@end
+
+
+
 @implementation TextFieldDelegate
 
 - (BOOL)textField:(TextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString *text = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
-    if (textField.maxLength > 0 && text.length > textField.maxLength) {
-        text = [text substringToIndex:textField.maxLength];
+    BOOL empty = (text.length == 0);
+    if (textField.checkMode == TextCheckModeLength) {
+        textField.valid = (!empty && NSLocationInRange(text.length, textField.length));
+    } else if (textField.checkMode == TextCheckModeRange) {
+        textField.valid = (!empty && CGFloatInRange(text.doubleValue, textField.range));
+    } else if (textField.checkMode == TextCheckModePattern) {
+        NSRange range = [text rangeOfString:textField.pattern options:NSRegularExpressionSearch];
+        textField.valid = (!empty && (range.location != NSNotFound));
     }
     
-    if ((textField.pattern.length > 0) && (text.length > 0)) {
-        NSRange range = [text rangeOfString:textField.pattern options:NSRegularExpressionSearch];
-        if (range.location == NSNotFound) {
-            text = textField.text;
-        }
+    if (textField.validateOnEditing && !empty && !textField.valid) {
+        text = textField.text;
     }
     
     textField.text = text;
@@ -829,22 +843,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     
     return NO;
 }
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface TextField ()
-
-@property TextFieldDelegate *textFieldDelegate;
-@property SurrogateArray<UITextFieldDelegate> *delegates;
 
 @end
 
@@ -870,7 +868,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         [self.delegates addObject:self.textFieldDelegate];
         [super setDelegate:self.delegates];
     } else {
-        [super setDelegate:delegate];
+        [super setDelegate:self.textFieldDelegate];
     }
 }
 
