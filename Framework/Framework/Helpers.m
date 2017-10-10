@@ -972,7 +972,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(willChangeKeyboardFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
+        self.keyboardWillChangeFrameNotification = YES;
         
         UITapGestureRecognizer *tgr = [UITapGestureRecognizer.alloc initWithTarget:self action:@selector(onTap:)];
         tgr.cancelsTouchesInView = NO;
@@ -981,11 +981,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return self;
 }
 
-- (void)dealloc {
-    [NSNotificationCenter.defaultCenter removeObserver:self];
-}
-
-- (void)willChangeKeyboardFrame:(NSNotification *)note {
+- (void)keyboardWillChangeFrameNotification:(NSNotification *)note {
     BOOL isLocalKeyboard = [note.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue];
     if (isLocalKeyboard) {
         NSTimeInterval duration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
@@ -1494,6 +1490,42 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         self.kvs = kvs;
     }
     return kvs;
+}
+
+- (void)setKeyboardWillShowNotification:(BOOL)keyboardWillShowNotification {
+    if (keyboardWillShowNotification) {
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(keyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
+    }
+}
+
+- (void)setKeyboardDidShowNotification:(BOOL)keyboardDidShowNotification {
+    if (keyboardDidShowNotification) {
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(keyboardDidShowNotification:) name:UIKeyboardDidShowNotification object:nil];
+    }
+}
+
+- (void)setKeyboardWillHideNotification:(BOOL)keyboardWillHideNotification {
+    if (keyboardWillHideNotification) {
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(keyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
+    }
+}
+
+- (void)setKeyboardDidHideNotification:(BOOL)keyboardDidHideNotification {
+    if (keyboardDidHideNotification) {
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(keyboardDidHideNotification:) name:UIKeyboardDidHideNotification object:nil];
+    }
+}
+
+- (void)setKeyboardWillChangeFrameNotification:(BOOL)keyboardWillChangeFrameNotification {
+    if (keyboardWillChangeFrameNotification) {
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(keyboardWillChangeFrameNotification:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    }
+}
+
+- (void)setKeyboardDidChangeFrameNotification:(BOOL)keyboardDidChangeFrameNotification {
+    if (keyboardDidChangeFrameNotification) {
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(keyboardDidChangeFrameNotification:) name:UIKeyboardDidChangeFrameNotification object:nil];
+    }
 }
 
 @end

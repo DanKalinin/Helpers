@@ -526,10 +526,36 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
-@interface NSObject (Helpers)
+@protocol NotificationDelegate <NSObject>
+
+@optional
+
+#pragma mark - Keyboard
+
+- (void)keyboardWillShowNotification:(NSNotification *)note;
+- (void)keyboardDidShowNotification:(NSNotification *)note;
+- (void)keyboardWillHideNotification:(NSNotification *)note;
+- (void)keyboardDidHideNotification:(NSNotification *)note;
+
+- (void)keyboardWillChangeFrameNotification:(NSNotification *)note;
+- (void)keyboardDidChangeFrameNotification:(NSNotification *)note;
+
+@end
+
+
+
+@interface NSObject (Helpers) <NotificationDelegate>
 
 + (void)swizzleClassMethod:(SEL)original with:(SEL)swizzled; // Exchange implementations for class methods
 + (void)swizzleInstanceMethod:(SEL)original with:(SEL)swizzled; // Exchange implentations for instance methods
+
+@property (nonatomic) IBInspectable BOOL keyboardWillShowNotification;
+@property (nonatomic) IBInspectable BOOL keyboardDidShowNotification;
+@property (nonatomic) IBInspectable BOOL keyboardWillHideNotification;
+@property (nonatomic) IBInspectable BOOL keyboardDidHideNotification;
+
+@property (nonatomic) IBInspectable BOOL keyboardWillChangeFrameNotification;
+@property (nonatomic) IBInspectable BOOL keyboardDidChangeFrameNotification;
 
 @property (class, readonly) NSArray<NSString *> *propertyKeys; // Get keys for properties of the class
 @property (readonly) NSArray<NSString *> *propertyKeys; // Same for instances
