@@ -824,22 +824,13 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 - (BOOL)textField:(TextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString *text = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
-    BOOL empty = (text.length == 0);
-    if (textField.checkMode == TextCheckModeLength) {
-        textField.valid = (!empty && NSLocationInRange(text.length, textField.length));
-    } else if (textField.checkMode == TextCheckModeRange) {
-        textField.valid = (!empty && CGFloatInRange(text.doubleValue, textField.range));
-    } else if (textField.checkMode == TextCheckModePattern) {
-        NSRange range = [text rangeOfString:textField.pattern options:NSRegularExpressionSearch];
-        textField.valid = (!empty && (range.location != NSNotFound));
-    }
+    range = [text rangeOfString:textField.pattern options:NSRegularExpressionSearch];
+    textField.valid = (range.location != NSNotFound);
     
-    if (textField.validateOnEditing && !empty && !textField.valid) {
-        text = textField.text;
+    if ((text.length == 0) || !textField.validateOnEditing || textField.valid) {
+        textField.text = text;
+        [textField sendActionsForControlEvents:UIControlEventEditingChanged];
     }
-    
-    textField.text = text;
-    [textField sendActionsForControlEvents:UIControlEventEditingChanged];
     
     return NO;
 }

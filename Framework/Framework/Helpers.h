@@ -121,13 +121,6 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
     ReachabilityStatusWWAN
 };
 
-typedef NS_ENUM(NSUInteger, TextCheckMode) {
-    TextCheckModeNone,
-    TextCheckModeLength,
-    TextCheckModeRange,
-    TextCheckModePattern
-};
-
 
 
 
@@ -320,11 +313,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface TextField : UITextField // Customized text field
 
-@property IBInspectable TextCheckMode checkMode;
 @property IBInspectable BOOL validateOnEditing;
-
-@property IBInspectable NSRange length;
-@property IBInspectable UIFloatRange range;
 @property IBInspectable NSString *pattern;
 
 @property (readonly) BOOL valid;
