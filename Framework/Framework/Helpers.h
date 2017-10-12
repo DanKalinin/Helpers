@@ -513,7 +513,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 + (UIColor *)colorWithRGBAString:(NSString *)rgbaString; // Create the color with human-readable RGBA string. For example - 123,13,255,255.
 + (UIColor *)colorWithHexString:(NSString *)hexString; // Create the color with human-readable HEX string. For example - af5a1b.
 
-+ (UIColor *)colorWithColors:(NSArray<UIColor *> *)colors;
++ (UIColor *)colorWithColors:(NSArray<UIColor *> *)colors; // Mix multiple colors into single average color
 
 @end
 
@@ -549,7 +549,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 + (void)swizzleClassMethod:(SEL)original with:(SEL)swizzled; // Exchange implementations for class methods
 + (void)swizzleInstanceMethod:(SEL)original with:(SEL)swizzled; // Exchange implentations for instance methods
 
-@property (nonatomic) IBInspectable BOOL keyboardWillShowNotification;
+@property (nonatomic) IBInspectable BOOL keyboardWillShowNotification; // Notification observing
 @property (nonatomic) IBInspectable BOOL keyboardDidShowNotification;
 @property (nonatomic) IBInspectable BOOL keyboardWillHideNotification;
 @property (nonatomic) IBInspectable BOOL keyboardDidHideNotification;
@@ -905,7 +905,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @interface NSArray (Helpers)
 
 - (void)setValues:(NSArray *)values forKey:(NSString *)key;
-- (void)setValues:(NSArray *)values forKeyPath:(NSString *)keyPath;
+- (void)setValues:(NSArray *)values forKeyPath:(NSString *)keyPath; // Set values for key paths for corresponding objects of receiver
 
 @end
 
