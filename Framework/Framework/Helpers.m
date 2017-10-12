@@ -846,6 +846,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     if (self) {
         self.textFieldDelegate = TextFieldDelegate.new;
         super.delegate = self.textFieldDelegate;
+        self.pattern = @"*";
     }
     return self;
 }
