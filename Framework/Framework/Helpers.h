@@ -904,6 +904,9 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface NSArray (Helpers)
 
+- (void)setValues:(NSArray *)values forKey:(NSString *)key;
+- (void)setValues:(NSArray *)values forKeyPath:(NSString *)keyPath;
+
 @end
 
 

@@ -2492,6 +2492,20 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return object;
 }
 
+- (void)setValues:(NSArray *)values forKey:(NSString *)key {
+    [self setValues:values forKeyPath:key];
+}
+
+- (void)setValues:(NSArray *)values forKeyPath:(NSString *)keyPath {
+    for (NSUInteger index = 0; index < self.count; index++) {
+        if (index < values.count) {
+            id object = self[index];
+            id value = values[index];
+            [object setValue:value forKeyPath:keyPath];
+        }
+    }
+}
+
 @end
 
 
