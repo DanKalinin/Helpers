@@ -808,32 +808,36 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
-@interface TextField ()
-
-@property TextFieldDelegate *textFieldDelegate;
-@property SurrogateArray<UITextFieldDelegate> *delegates;
-
-@property BOOL valid;
-
-@end
-
-
-
 @implementation TextFieldDelegate
 
 - (BOOL)textField:(TextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    NSString *text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    NSString *text = textField.text;
+    textField.text = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
-    range = [text rangeOfString:textField.pattern options:NSRegularExpressionSearch];
-    textField.valid = (range.location != NSNotFound);
-    
-    if ((text.length == 0) || !textField.validateOnEditing || textField.valid) {
+    if (textField.validateOnEditing && !textField.valid && (textField.text.length > 0)) {
         textField.text = text;
+    } else {
         [textField sendActionsForControlEvents:UIControlEventEditingChanged];
     }
     
     return NO;
 }
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface TextField ()
+
+@property TextFieldDelegate *textFieldDelegate;
+@property SurrogateArray<UITextFieldDelegate> *delegates;
 
 @end
 
@@ -869,6 +873,12 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     if (self.secureTextEntry) {
         [btnEye addTarget:self action:@selector(onEye:) forControlEvents:UIControlEventTouchUpInside];
     }
+}
+
+- (BOOL)valid {
+    NSRange range = [self.text rangeOfString:self.pattern options:NSRegularExpressionSearch];
+    BOOL valid = (range.location != NSNotFound);
+    return valid;
 }
 
 #pragma mark - Actions
