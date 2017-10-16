@@ -1061,12 +1061,52 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
+@interface GradientLayerView ()
+
+@end
+
+
+
 @implementation GradientLayerView
 
 @dynamic layer;
 
 + (Class)layerClass {
     return CAGradientLayer.class;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface GradientLayerView2 ()
+
+@end
+
+
+
+@implementation GradientLayerView2
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.startColor = UIColor.blackColor;
+        self.endColor = UIColor.whiteColor;
+    }
+    return self;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    
+    self.layer.uiColors = @[self.startColor, self.endColor];
 }
 
 @end

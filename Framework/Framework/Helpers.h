@@ -13,7 +13,7 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 
 #import <UIKit/UIKit.h>
 
-@class View, ImageView, TextField, Button, KeyboardContainerView, ShapeLayerView, GradientLayerView, EmitterLayerView;
+@class View, ImageView, TextField, Button, KeyboardContainerView, ShapeLayerView, GradientLayerView, GradientLayerView2, EmitterLayerView;
 
 typedef NSString * DateFormat NS_STRING_ENUM;
 extern DateFormat const DateFormatISO8601;
@@ -401,6 +401,22 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @property (class, readonly) Class layerClass;
 @property (readonly) CAGradientLayer *layer;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface GradientLayerView2 : GradientLayerView
+
+@property IBInspectable UIColor *startColor;
+@property IBInspectable UIColor *endColor;
 
 @end
 
