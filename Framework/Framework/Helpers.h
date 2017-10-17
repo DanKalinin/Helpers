@@ -145,12 +145,39 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
+@interface Codable : NSObject <NSCoding>
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface Credential : Codable
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface Keychain : NSObject // Convenient wrapper around Security.framework keychain services
 
 @property NSString *account;
 @property NSString *service;
 @property NSData *credential;
 @property NSString *password;
+@property id <NSCoding> object;
 @property OSStatus status;
 
 @end

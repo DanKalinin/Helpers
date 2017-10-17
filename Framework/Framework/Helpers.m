@@ -203,7 +203,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 @implementation MutableDictionary
 
 - (instancetype)initWithCapacity:(NSUInteger)numItems {
-    self = [super init];
+    self = super.init;
     if (self) {
         self.dictionary = [NSMutableDictionary.alloc initWithCapacity:numItems];
     }
@@ -248,6 +248,75 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 
 
+@interface Codable ()
+
+@end
+
+
+
+@implementation Codable {
+    NSArray *_keys;
+}
+
+- (instancetype)init {
+    self = super.init;
+    if (self) {
+        _keys = self.propertyKeys;
+    }
+    return self;
+}
+
+#pragma mark - Coding
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = super.init;
+    if (self) {
+        _keys = self.propertyKeys;
+        for (NSString *key in _keys) {
+            id object = [aDecoder decodeObjectForKey:key];
+            [self setValue:object forKey:key];
+        }
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    for (NSString *key in _keys) {
+        id object = [self valueForKey:key];
+        [aCoder encodeObject:object forKey:key];
+    }
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface Credential ()
+
+@end
+
+
+
+@implementation Credential
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface Keychain ()
 
 @property NSMutableDictionary *query;
@@ -261,7 +330,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 #pragma mark - Setup
 
 - (instancetype)init {
-    self = [super init];
+    self = super.init;
     if (self) {
         self.query = [NSMutableDictionary dictionary];
         self.query[(id)kSecClass] = (id)kSecClassGenericPassword;
@@ -328,6 +397,17 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     NSData *credential = [self credential];
     NSString *password = [NSString.alloc initWithData:credential encoding:NSUTF8StringEncoding];
     return password;
+}
+
+- (void)setObject:(id<NSCoding>)object {
+    NSData *credential = [NSKeyedArchiver archivedDataWithRootObject:object];
+    [self setCredential:credential];
+}
+
+- (id<NSCoding>)object {
+    NSData *credential = [self credential];
+    id object = [NSKeyedUnarchiver unarchiveObjectWithData:credential];
+    return object;
 }
 
 #pragma mark - Helpers
@@ -527,7 +607,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 - (instancetype)initWithHost:(NSString *)host {
-    self = [super init];
+    self = super.init;
     if (self) {
         if (!host) host = @"0.0.0.0";
         self.target = SCNetworkReachabilityCreateWithName(NULL, host.UTF8String);
