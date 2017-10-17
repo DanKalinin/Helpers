@@ -158,7 +158,7 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface Credential : Codable
+@interface Credential : Codable // Base for credentials can be stored in keychain
 
 @end
 
