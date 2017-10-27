@@ -52,6 +52,8 @@ QueryItem const QueryItemPreferredContentSizeCategory = @"pcsc";
 QueryItem const QueryItemUserInterfaceStyle = @"uis";
 QueryItem const QueryItemIdentifier = @"id";
 
+Interface const InterfaceEn0 = @"en0";
+
 bool CGFloatInRange(CGFloat value, UIFloatRange range) {
     bool inRange = ((value >= range.minimum) && (value <= range.maximum));
     return inRange;

@@ -73,6 +73,9 @@ extern QueryItem const QueryItemPreferredContentSizeCategory;
 extern QueryItem const QueryItemUserInterfaceStyle;
 extern QueryItem const QueryItemIdentifier;
 
+typedef NSString * Interface NS_STRING_ENUM;
+extern Interface const InterfaceEn0;
+
 extern bool CGFloatInRange(CGFloat value, UIFloatRange range);
 extern CGFloat CGFloatClampToRange(CGFloat value, UIFloatRange range);
 extern CGFloat CGFloatRound(CGFloat value, NSInteger precision);
