@@ -592,6 +592,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 @property SCNetworkReachabilityRef target;
 @property ReachabilityStatus status;
+@property SurrogateArray<ReachabilityDelegate> *delegates;
 
 @end
 
@@ -626,6 +627,9 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         SCNetworkReachabilityFlags flags;
         SCNetworkReachabilityGetFlags(self.target, &flags);
         self.status = [self statusForFlags:flags];
+        
+        self.delegates = (id)SurrogateArray.new;
+        [self.delegates addObject:self];
     }
     return self;
 }
@@ -634,6 +638,12 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     SCNetworkReachabilitySetCallback(self.target, NULL, NULL);
     SCNetworkReachabilityUnscheduleFromRunLoop(self.target, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     CFRelease(self.target);
+}
+
+#pragma mark - Reachability
+
+- (void)reachabilityDidUpdateStatus:(Reachability *)reachability {
+    [self invokeHandler:self.handler object:self];
 }
 
 #pragma mark - Helpers
@@ -662,7 +672,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     ReachabilityStatus status = [reachability statusForFlags:flags];
     if (status != reachability.status) {
         reachability.status = status;
-        [reachability invokeHandler:reachability.handler object:reachability];
+        [reachability.delegates reachabilityDidUpdateStatus:reachability];
     }
 }
 

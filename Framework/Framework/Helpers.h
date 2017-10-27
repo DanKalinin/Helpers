@@ -13,6 +13,7 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 
 #import <UIKit/UIKit.h>
 
+@class Reachability;
 @class View, ImageView, TextField, Button, KeyboardContainerView, ShapeLayerView, GradientLayerView, GradientLayerView2, EmitterLayerView;
 
 typedef NSString * DateFormat NS_STRING_ENUM;
@@ -222,7 +223,16 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface Reachability : NSObject // Network configuration and host reachability monitor
+@protocol ReachabilityDelegate
+
+@required
+- (void)reachabilityDidUpdateStatus:(Reachability *)reachability;
+
+@end
+
+
+
+@interface Reachability : NSObject <ReachabilityDelegate> // Network configuration and host reachability monitor
 
 typedef void (^ReachabilityHandler)(Reachability *reachability);
 
@@ -230,6 +240,8 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 - (instancetype)initWithHost:(NSString *)host; // Create reachability object for specified host name
 
 @property (readonly) ReachabilityStatus status; // Reachability current status - None | WiFi | WWAN
+
+@property (readonly) SurrogateArray<ReachabilityDelegate> *delegates;
 @property (copy) ReachabilityHandler handler; // Reachability status change handler
 
 @end
