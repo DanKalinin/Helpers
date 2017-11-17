@@ -54,6 +54,14 @@ QueryItem const QueryItemIdentifier = @"id";
 
 Interface const InterfaceEn0 = @"en0";
 
+NSInteger NSIntegerCarry(NSInteger value, NSInteger max) {
+    value %= max;
+    if (value < 0) {
+        value += max;
+    }
+    return value;
+}
+
 bool CGFloatInRange(CGFloat value, UIFloatRange range) {
     bool inRange = ((value >= range.minimum) && (value <= range.maximum));
     return inRange;
@@ -2226,6 +2234,22 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
             [object setValue:value forKeyPath:keyPath];
         }
     }
+}
+
+- (id)objectWithOffset:(NSInteger)offset fromObject:(id)object recursively:(BOOL)recursively {
+    NSInteger index = [self indexOfObject:object];
+    
+    index += offset;
+    if ((index < 0) || (index >= self.count)) {
+        if (recursively) {
+            index = NSIntegerCarry(index, self.count);
+        } else {
+            return nil;
+        }
+    }
+    
+    object = self[index];
+    return object;
 }
 
 @end
