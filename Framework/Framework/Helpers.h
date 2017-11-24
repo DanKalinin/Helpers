@@ -76,6 +76,9 @@ extern QueryItem const QueryItemIdentifier;
 typedef NSString * Interface NS_STRING_ENUM;
 extern Interface const InterfaceEn0;
 
+typedef NSString * String NS_STRING_ENUM;
+extern String const StringRN;
+
 extern NSInteger NSIntegerCarry(NSInteger value, NSInteger max);
 
 extern bool CGFloatInRange(CGFloat value, UIFloatRange range);
