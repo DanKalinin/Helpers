@@ -1642,11 +1642,12 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 #pragma mark - Helpers
 
 - (NSString *)localize:(NSString *)string {
+    NSBundle *bundle = NSBundle.mainBundle;
     NSString *notFoundValue = @(NSNotFound).stringValue;
     NSString *table = [self.storyboard valueForKey:@"name"];
-    NSString *localizedString = [self.bundle localizedStringForKey:string value:notFoundValue table:table];
+    NSString *localizedString = [bundle localizedStringForKey:string value:notFoundValue table:table];
     if ([localizedString isEqualToString:notFoundValue]) {
-        localizedString = [NSBundle.mainBundle localizedStringForKey:string value:string table:TableLocalizable];
+        localizedString = [bundle localizedStringForKey:string value:string table:TableLocalizable];
     }
     return localizedString;
 }
