@@ -1137,6 +1137,16 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [self.class invokeHandler:handler object:object];
 }
 
++ (void)invokeHandler:(Object2Block)handler object:(id)object1 object:(id)object2 {
+    if (handler) {
+        handler(object1, object2);
+    }
+}
+
+- (void)invokeHandler:(Object2Block)handler object:(id)object1 object:(id)object2 {
+    [self.class invokeHandler:handler object:object1 object:object2];
+}
+
 + (void)setPointer:(id *)pointer toObject:(id)object {
     if (pointer) {
         *pointer = object;

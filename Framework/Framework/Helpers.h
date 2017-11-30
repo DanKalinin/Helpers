@@ -107,6 +107,7 @@ typedef void (^BoolBlock)(BOOL);
 typedef void (^FloatBlock)(float);
 typedef void (^DoubleBlock)(double);
 typedef void (^ObjectBlock)(id);
+typedef void (^Object2Block)(id, id);
 typedef void (^ErrorBlock)(NSError *);
 typedef void (^ArrayBlock)(NSArray *);
 typedef void (^DataBlock)(NSData *);
@@ -459,6 +460,9 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 + (void)invokeHandler:(ObjectBlock)handler object:(id)object; // Check the passed block for existence and invoke it with the passed object as argument
 - (void)invokeHandler:(ObjectBlock)handler object:(id)object; // Same for instances
+
++ (void)invokeHandler:(Object2Block)handler object:(id)object1 object:(id)object2;
+- (void)invokeHandler:(Object2Block)handler object:(id)object1 object:(id)object2;
 
 + (void)setPointer:(id *)pointer toObject:(id)object;
 - (void)setPointer:(id *)pointer toObject:(id)object;
