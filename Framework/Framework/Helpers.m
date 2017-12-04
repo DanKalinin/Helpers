@@ -54,6 +54,7 @@ QueryItem const QueryItemIdentifier = @"id";
 
 Interface const InterfaceEn0 = @"en0";
 
+String const StringEmpty = @"";
 String const StringRN = @"\r\n";
 
 NSInteger NSIntegerCarry(NSInteger value, NSInteger max) {
