@@ -1812,6 +1812,11 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     cell.accessoryType = accessoryType;
 }
 
+- (void)selectCell:(UITableViewCell *)cell animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition {
+    NSIndexPath *indexPath = [self indexPathForCell:cell];
+    [self selectRowAtIndexPath:indexPath animated:animated scrollPosition:scrollPosition];
+}
+
 @end
 
 

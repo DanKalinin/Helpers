@@ -584,6 +584,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 - (NSArray<UITableViewCell *> *)cellsForSection:(NSInteger)section; // Visible cells in specified section
 - (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType forCellAtIndexPath:(NSIndexPath *)indexPath; // Set accessory type for cell at the specified index path
+- (void)selectCell:(UITableViewCell *)cell animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition;
 
 @end
 
