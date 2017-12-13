@@ -801,7 +801,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     if (length > 0) {
         [_inputStreamData appendBytes:(const void *)buffer length:length];
         if (!self.inputStream.hasBytesAvailable) {
-            [self inputStream:self.inputStream didReceiveData:_inputStreamData.copy];
+            [self.inputStreamDelegates inputStream:self.inputStream didReceiveData:_inputStreamData.copy];
             _inputStreamData.length = 0;
         }
     } else if (length == 0) {
