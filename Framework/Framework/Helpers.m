@@ -57,6 +57,10 @@ Interface const InterfaceEn0 = @"en0";
 String const StringEmpty = @"";
 String const StringRN = @"\r\n";
 
+Host const HostAny = @"0.0.0.0";
+Host const HostLoopback = @"127.0.0.1";
+Host const HostBroadcast = @"255.255.255.255";
+
 NSInteger NSIntegerCarry(NSInteger value, NSInteger max) {
     value %= max;
     if (value < 0) {
@@ -623,7 +627,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 - (instancetype)initWithHost:(NSString *)host {
     self = super.init;
     if (self) {
-        if (!host) host = @"0.0.0.0";
+        if (!host) host = HostAny;
         self.target = SCNetworkReachabilityCreateWithName(NULL, host.UTF8String);
         SCNetworkReachabilityScheduleWithRunLoop(self.target, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
         

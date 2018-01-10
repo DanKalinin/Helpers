@@ -80,6 +80,11 @@ typedef NSString * String NS_STRING_ENUM;
 extern String const StringEmpty;
 extern String const StringRN;
 
+typedef NSString * Host NS_STRING_ENUM;
+extern Host const HostAny;
+extern Host const HostLoopback;
+extern Host const HostBroadcast;
+
 extern NSInteger NSIntegerCarry(NSInteger value, NSInteger max);
 
 extern bool CGFloatInRange(CGFloat value, UIFloatRange range);
