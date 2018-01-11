@@ -14,6 +14,7 @@
 #import <GLKit/GLKit.h>
 #import <CommonCrypto/CommonCrypto.h>
 #import <SystemConfiguration/SystemConfiguration.h>
+#import <SystemConfiguration/CaptiveNetwork.h>
 
 DateFormat const DateFormatISO8601 = @"yyyy-MM-dd'T'HH:mm:ss";
 DateFormat const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
@@ -603,6 +604,34 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
+@interface NetworkInfo ()
+
+@property NSDictionary *dictionary;
+@property NSString *bssid;
+@property NSString *ssid;
+@property NSData *ssidData;
+
+@end
+
+
+
+@implementation NetworkInfo
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary {
+    self = super.init;
+    if (self) {
+        self.dictionary = dictionary;
+        self.bssid = dictionary[(__bridge NSString *)kCNNetworkInfoKeyBSSID];
+        self.ssid = dictionary[(__bridge NSString *)kCNNetworkInfoKeySSID];
+        self.ssidData = dictionary[(__bridge NSString *)kCNNetworkInfoKeySSIDData];
+    }
+    return self;
+}
+
+@end
+
+
+
 @interface Reachability ()
 
 @property SCNetworkReachabilityRef target;
@@ -653,6 +682,19 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     SCNetworkReachabilitySetCallback(self.target, NULL, NULL);
     SCNetworkReachabilityUnscheduleFromRunLoop(self.target, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     CFRelease(self.target);
+}
+
+#pragma mark - Accessors
+
+- (NetworkInfo *)networkInfo {
+    NetworkInfo *info;
+    NSDictionary *dictionary = (__bridge_transfer NSDictionary *)CNCopyCurrentNetworkInfo((__bridge CFStringRef)InterfaceEn0);
+    if (dictionary) {
+        info = [NetworkInfo.alloc initWithDictionary:dictionary];
+    } else {
+        info = nil;
+    }
+    return info;
 }
 
 #pragma mark - Reachability
