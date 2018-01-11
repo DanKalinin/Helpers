@@ -633,7 +633,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         
         SCNetworkReachabilityContext ctx;
         ctx.version = 0;
-        ctx.info = (__bridge void *)(self);
+        ctx.info = (__bridge void *)self;
         ctx.retain = NULL;
         ctx.release = NULL;
         ctx.copyDescription = NULL;
