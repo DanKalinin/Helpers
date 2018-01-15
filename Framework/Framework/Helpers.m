@@ -604,34 +604,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
-@interface NetworkInfo ()
-
-@property NSDictionary *dictionary;
-@property NSString *bssid;
-@property NSString *ssid;
-@property NSData *ssidData;
-
-@end
-
-
-
-@implementation NetworkInfo
-
-- (instancetype)initWithDictionary:(NSDictionary *)dictionary {
-    self = super.init;
-    if (self) {
-        self.dictionary = dictionary;
-        self.bssid = dictionary[(__bridge NSString *)kCNNetworkInfoKeyBSSID];
-        self.ssid = dictionary[(__bridge NSString *)kCNNetworkInfoKeySSID];
-        self.ssidData = dictionary[(__bridge NSString *)kCNNetworkInfoKeySSIDData];
-    }
-    return self;
-}
-
-@end
-
-
-
 @interface Reachability ()
 
 @property SCNetworkReachabilityRef target;
@@ -684,19 +656,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     CFRelease(self.target);
 }
 
-#pragma mark - Accessors
-
-- (NetworkInfo *)networkInfo {
-    NetworkInfo *info;
-    NSDictionary *dictionary = (__bridge_transfer NSDictionary *)CNCopyCurrentNetworkInfo((__bridge CFStringRef)InterfaceEn0);
-    if (dictionary) {
-        info = [NetworkInfo.alloc initWithDictionary:dictionary];
-    } else {
-        info = nil;
-    }
-    return info;
-}
-
 #pragma mark - Reachability
 
 - (void)reachabilityDidUpdateStatus:(Reachability *)reachability {
@@ -732,6 +691,47 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         [reachability.delegates reachabilityDidUpdateStatus:reachability];
     }
 }
+
+
+
+
+
+
+
+
+
+
+@interface NetworkInfo ()
+
+@property NSDictionary *dictionary;
+@property NSString *bssid;
+@property NSString *ssid;
+@property NSData *ssidData;
+
+@end
+
+
+
+@implementation NetworkInfo
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary {
+    self = super.init;
+    if (self) {
+        self.dictionary = dictionary;
+        self.bssid = dictionary[(__bridge NSString *)kCNNetworkInfoKeyBSSID];
+        self.ssid = dictionary[(__bridge NSString *)kCNNetworkInfoKeySSID];
+        self.ssidData = dictionary[(__bridge NSString *)kCNNetworkInfoKeySSIDData];
+    }
+    return self;
+}
+
++ (instancetype)infoForInterface:(Interface)interface {
+    NSDictionary *dictionary = (__bridge_transfer NSDictionary *)CNCopyCurrentNetworkInfo((__bridge CFStringRef)interface);
+    NetworkInfo *info = (dictionary == nil) ? nil : [self.alloc initWithDictionary:dictionary];
+    return info;
+}
+
+@end
 
 
 

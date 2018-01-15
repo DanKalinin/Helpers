@@ -243,19 +243,6 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface NetworkInfo : NSObject
-
-@property (readonly) NSDictionary *dictionary;
-@property (readonly) NSString *bssid;
-@property (readonly) NSString *ssid;
-@property (readonly) NSData *ssidData;
-
-- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
-
-@end
-
-
-
 @interface Reachability : NSObject <ReachabilityDelegate> // Network configuration and host reachability monitor
 
 typedef void (^ReachabilityHandler)(Reachability *reachability);
@@ -264,10 +251,30 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 - (instancetype)initWithHost:(NSString *)host; // Create reachability object for specified host name
 
 @property (readonly) ReachabilityStatus status; // Reachability current status - None | WiFi | WWAN
-@property (readonly) NetworkInfo *networkInfo;
 
 @property (readonly) SurrogateArray<ReachabilityDelegate> *delegates;
 @property (copy) ReachabilityHandler handler; // Reachability status change handler
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NetworkInfo : NSObject
+
+@property (readonly) NSDictionary *dictionary;
+@property (readonly) NSString *bssid;
+@property (readonly) NSString *ssid;
+@property (readonly) NSData *ssidData;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
++ (instancetype)infoForInterface:(Interface)interface;
 
 @end
 
