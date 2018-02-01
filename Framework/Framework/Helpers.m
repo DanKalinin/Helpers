@@ -1970,6 +1970,30 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
+@implementation UIWindow (Helpers)
+
++ (void)load {
+    SEL original = @selector(setRootViewController:);
+    SEL swizzled = @selector(Helpers_UIWindow_swizzledSetRootViewController:);
+    [self swizzleInstanceMethod:original with:swizzled];
+}
+
+- (void)Helpers_UIWindow_swizzledSetRootViewController:(UIViewController *)rootViewController {
+    [self removeAllSubviews];
+    [self Helpers_UIWindow_swizzledSetRootViewController:rootViewController];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @implementation UIView (Helpers)
 
 + (void)load {

@@ -681,6 +681,19 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
+@interface UIWindow (Helpers)
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface UIView (Helpers) <NSCopying>
 
 @property IBInspectable UIColor *borderColor; // @ layer.borderColor wrapper. Uses UIColor instead CGColor.
