@@ -810,25 +810,31 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
     if ([aStream isEqual:self.inputStream]) {
         
-        if (eventCode == NSStreamEventOpenCompleted) {
+        if (eventCode & NSStreamEventOpenCompleted) {
             [self.inputStreamDelegates inputStreamOpenCompleted:self.inputStream];
-        } else if (eventCode == NSStreamEventHasBytesAvailable) {
+        }
+        if (eventCode & NSStreamEventHasBytesAvailable) {
             [self.inputStreamDelegates inputStreamHasBytesAvailable:self.inputStream];
-        } else if (eventCode == NSStreamEventEndEncountered) {
+        }
+        if (eventCode & NSStreamEventEndEncountered) {
             [self.inputStreamDelegates inputStreamEndEncountered:self.inputStream];
-        } else if (eventCode == NSStreamEventErrorOccurred) {
+        }
+        if (eventCode & NSStreamEventErrorOccurred) {
             [self.inputStreamDelegates inputStreamErrorOccurred:self.inputStream];
         }
         
     } else if ([aStream isEqual:self.outputStream]) {
         
-        if (eventCode == NSStreamEventOpenCompleted) {
+        if (eventCode & NSStreamEventOpenCompleted) {
             [self.outputStreamDelegates outputStreamOpenCompleted:self.outputStream];
-        } else if (eventCode == NSStreamEventHasSpaceAvailable) {
+        }
+        if (eventCode & NSStreamEventHasSpaceAvailable) {
             [self.outputStreamDelegates outputStreamHasSpaceAvailable:self.outputStream];
-        } else if (eventCode == NSStreamEventEndEncountered) {
+        }
+        if (eventCode & NSStreamEventEndEncountered) {
             [self.outputStreamDelegates outputStreamEndEncountered:self.outputStream];
-        } else if (eventCode == NSStreamEventErrorOccurred) {
+        }
+        if (eventCode & NSStreamEventErrorOccurred) {
             [self.outputStreamDelegates outputStreamErrorOccurred:self.outputStream];
         }
         
