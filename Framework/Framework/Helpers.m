@@ -1734,6 +1734,11 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [self performSegueWithIdentifier:identifier sender:self];
 }
 
+- (void)performSegueWithIdentifier:(NSString *)identifier animated:(BOOL)animated preparation:(StoryboardSegueBlock)preparation {
+    identifier = [NSString stringWithFormat:@"%@%i", identifier, animated];
+    [self performSegueWithIdentifier:identifier preparation:preparation];
+}
+
 #pragma mark - Image picker controller
 
 - (UIAlertController *)alertControllerImagePicker {
