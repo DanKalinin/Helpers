@@ -588,7 +588,6 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 - (void)removeEmbeddedViewController:(UIViewController *)vc; // Remove child view controller from the receiver
 
 - (void)performSegueWithIdentifier:(NSString *)identifier preparation:(StoryboardSegueBlock)preparation; // - prepareForSegue:sender: inline implementation
-- (void)performSegueWithIdentifier:(NSString *)identifier animated:(BOOL)animated preparation:(StoryboardSegueBlock)preparation;
 
 - (UIAlertController *)alertControllerImagePicker; // Action sheet alert controller to pick image from Camera or Photo library. Additional actions can be added.
 - (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType; // Present image picker controller for Camera or Photo library. Shows Open Settings alert controller if access to source is denied.
