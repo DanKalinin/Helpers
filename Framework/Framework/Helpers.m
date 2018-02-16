@@ -1702,6 +1702,16 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return objc_getAssociatedObject(self, @selector(appearanceViewController));
 }
 
+- (BOOL)beingLoaded {
+    BOOL beingLoaded = (self.beingPresented || self.movingToParentViewController);
+    return beingLoaded;
+}
+
+- (BOOL)beingUnloaded {
+    BOOL beingUnloaded = (self.beingDismissed || self.movingFromParentViewController);
+    return beingUnloaded;
+}
+
 #pragma mark - Helpers
 
 - (NSString *)localize:(NSString *)string {

@@ -582,6 +582,9 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @property IBInspectable NSString *popoverDismissSegueIdentifier; // Unwind segue to perform instead popover dismissal
 @property IBInspectable BOOL invokeAppearanceMethods; // Should the current view controller to invoke appearance methods of presenting view controller in popover presentation
 
+@property (readonly) BOOL beingLoaded;
+@property (readonly) BOOL beingUnloaded;
+
 - (NSString *)localize:(NSString *)string; // Programmatic localization of the string from storyboard strings file. If specified key is not found, the value is taken from Localizable.strings file. If there are no localizations found in both files, argument is returned.
 
 - (void)embedViewController:(UIViewController *)vc toView:(UIView *)view; // Add child view controller to receiver restricting the size with specified view bounds
