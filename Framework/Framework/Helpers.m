@@ -56,6 +56,7 @@ QueryItem const QueryItemIdentifier = @"id";
 Interface const InterfaceEn0 = @"en0";
 
 String const StringEmpty = @"";
+String const StringSpace = @" ";
 String const StringRN = @"\r\n";
 
 Host const HostAny = @"0.0.0.0";

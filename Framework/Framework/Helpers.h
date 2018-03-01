@@ -78,6 +78,7 @@ extern Interface const InterfaceEn0;
 
 typedef NSString * String NS_STRING_ENUM;
 extern String const StringEmpty;
+extern String const StringSpace;
 extern String const StringRN;
 
 typedef NSString * Host NS_STRING_ENUM;
