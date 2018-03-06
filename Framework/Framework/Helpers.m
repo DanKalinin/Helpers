@@ -633,12 +633,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         self.target = SCNetworkReachabilityCreateWithName(NULL, host.UTF8String);
         SCNetworkReachabilityScheduleWithRunLoop(self.target, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
         
-        SCNetworkReachabilityContext ctx;
-        ctx.version = 0;
+        SCNetworkReachabilityContext ctx = {0};
         ctx.info = (__bridge void *)self;
-        ctx.retain = NULL;
-        ctx.release = NULL;
-        ctx.copyDescription = NULL;
         SCNetworkReachabilitySetCallback(self.target, Callback, &ctx);
         
         SCNetworkReachabilityFlags flags;
