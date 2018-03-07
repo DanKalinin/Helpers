@@ -547,6 +547,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 @interface SurrogateArray ()
 
 @property id lastReturnValue;
+@property BOOL addToOperationQueue;
 
 @end
 
@@ -554,13 +555,34 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 @implementation SurrogateArray
 
+- (instancetype)init {
+    self = super.init;
+    if (self) {
+        self.addToOperationQueue = YES;
+    }
+    return self;
+}
+
 #pragma mark - Message forwarding
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     self.lastReturnValue = nil;
     for (id object in self) {
         if ([object respondsToSelector:anInvocation.selector]) {
-            [anInvocation invokeWithTarget:object];
+            if (self.operationQueue && self.addToOperationQueue) {
+                if ([object isKindOfClass:self.class]) {
+                    SurrogateArray *array = object;
+                    if ([array.operationQueue isEqual:self.operationQueue]) {
+                        array.addToOperationQueue = NO;
+                    }
+                }
+                [self.operationQueue addOperationWithBlock:^{
+                    [anInvocation invokeWithTarget:object];
+                }];
+                [self.operationQueue waitUntilAllOperationsAreFinished];
+            } else {
+                [anInvocation invokeWithTarget:object];
+            }
             self.lastReturnValue = anInvocation.returnValue;
         }
     }
