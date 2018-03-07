@@ -34,6 +34,7 @@ Extension const ExtensionJSON = @"json";
 
 Key const KeyError = @"error";
 Key const KeyObject = @"object";
+Key const kCFBundleShortVersionStringKey = @"CFBundleShortVersionString";
 
 Table const TableErrors = @"Errors";
 Table const TableLocalizable = @"Localizable";
