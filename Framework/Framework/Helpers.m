@@ -1407,6 +1407,12 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [self setDictionary:dictionary];
 }
 
+- (id)popObjectForKey:(id)key {
+    id object = [self objectForKey:key];
+    [self removeObjectForKey:key];
+    return object;
+}
+
 @end
 
 

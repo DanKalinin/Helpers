@@ -531,6 +531,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 @interface NSMutableDictionary (Helpers)
 
 - (void)swap; // @ swappedDictionary mutable counterpart
+- (id)popObjectForKey:(id)key;
 
 @end
 
