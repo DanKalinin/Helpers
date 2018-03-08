@@ -81,6 +81,7 @@ typedef NSString * String NS_STRING_ENUM;
 extern String const StringEmpty;
 extern String const StringSpace;
 extern String const StringRN;
+extern String const StringN;
 
 typedef NSString * Host NS_STRING_ENUM;
 extern Host const HostAny;

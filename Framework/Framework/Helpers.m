@@ -59,6 +59,7 @@ Interface const InterfaceEn0 = @"en0";
 String const StringEmpty = @"";
 String const StringSpace = @" ";
 String const StringRN = @"\r\n";
+String const StringN = @"\n";
 
 Host const HostAny = @"0.0.0.0";
 Host const HostLoopback = @"127.0.0.1";
