@@ -510,7 +510,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
-@interface NSDictionary (Helpers)
+@interface NSDictionary<KeyType, ObjectType> (Helpers)
 
 - (NSDictionary *)deepCopy; // Immutable copy of the dictionary and all nested objects. The nested objects can be only property list objects.
 - (NSMutableDictionary *)deepMutableCopy; // Mutable counterpart
@@ -528,10 +528,10 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
-@interface NSMutableDictionary (Helpers)
+@interface NSMutableDictionary<KeyType, ObjectType> (Helpers)
 
 - (void)swap; // @ swappedDictionary mutable counterpart
-- (id)popObjectForKey:(id)key;
+- (ObjectType)popObjectForKey:(KeyType)key;
 
 @end
 
