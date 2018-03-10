@@ -32,6 +32,8 @@ Extension const ExtensionStrings = @"strings";
 Extension const ExtensionXML = @"xml";
 Extension const ExtensionJSON = @"json";
 
+Key const KeyRet = @"ret";
+Key const KeyPair = @"pair";
 Key const KeyError = @"error";
 Key const KeyObject = @"object";
 Key const KeyCompletion = @"completion";

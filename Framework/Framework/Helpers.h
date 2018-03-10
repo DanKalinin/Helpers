@@ -36,6 +36,8 @@ extern Extension const ExtensionXML;
 extern Extension const ExtensionJSON;
 
 typedef NSString * Key NS_STRING_ENUM;
+extern Key const KeyRet;
+extern Key const KeyPair;
 extern Key const KeyError;
 extern Key const KeyObject;
 extern Key const KeyCompletion;
