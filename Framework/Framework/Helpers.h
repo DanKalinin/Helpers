@@ -227,7 +227,6 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 @property NSOperationQueue *operationQueue;
 
 @property (readonly) id lastReturnValue;
-@property (readonly) NSMutableArray *returnValues;
 
 @end
 
