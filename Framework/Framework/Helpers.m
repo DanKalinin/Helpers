@@ -548,6 +548,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 @interface SurrogateArray ()
 
 @property id lastReturnValue;
+@property NSMutableArray *returnValues;
 @property BOOL addToOperationQueue;
 
 @end
@@ -568,6 +569,7 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     self.lastReturnValue = nil;
+    self.returnValues = NSMutableArray.array;
     for (id object in self) {
         if ([object respondsToSelector:anInvocation.selector]) {
             if (self.operationQueue && self.addToOperationQueue) {
@@ -585,6 +587,11 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
                 [anInvocation invokeWithTarget:object];
             }
             self.lastReturnValue = anInvocation.returnValue;
+            if (self.lastReturnValue) {
+                [self.returnValues addObject:self.lastReturnValue];
+            } else {
+                [self.returnValues addObject:NSNull.null];
+            }
         }
     }
 }
