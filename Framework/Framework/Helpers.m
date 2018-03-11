@@ -1194,6 +1194,19 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return image;
 }
 
+- (id)performSelector:(SEL)selector withObjects:(NSArray<id> *)objects {
+    NSMethodSignature *signature = [self methodSignatureForSelector:selector];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+    invocation.target = self;
+    invocation.selector = selector;
+    for (NSUInteger index = 0; index < objects.count; index++) {
+        id object = objects[index];
+        [invocation setArgument:&object atIndex:(index + 2)];
+    }
+    [invocation invoke];
+    return invocation.returnValue;
+}
+
 + (void)invokeHandler:(VoidBlock)handler {
     if (handler) {
         handler();

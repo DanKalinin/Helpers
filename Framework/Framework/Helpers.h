@@ -490,6 +490,8 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 - (UIImage *)imageNamed:(NSString *)name; // Load the image from class bundle for object's trait collection. The object must conform to <UITraitEnvironment> protocol. Useful for loading images for view controllers located outside the main bundle.
 
+- (id)performSelector:(SEL)selector withObjects:(NSArray<id> *)objects;
+
 + (void)invokeHandler:(VoidBlock)handler; // Check the passed block for existence and invoke it
 - (void)invokeHandler:(VoidBlock)handler; // Same for instances
 
