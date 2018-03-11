@@ -6,7 +6,7 @@
 //  Copyright © 2016 Dan Kalinin. All rights reserved.
 //
 
-#import "Helpers.h"
+#import "Main.h"
 #import <objc/runtime.h>
 #import <arpa/inet.h>
 #import <AVFoundation/AVFoundation.h>
@@ -766,7 +766,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
-@interface StreamPair ()
+@interface AsyncStreamPair ()
 
 @property NSString *host;
 @property NSUInteger port;
@@ -778,7 +778,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
-@implementation StreamPair
+@implementation AsyncStreamPair
 
 - (instancetype)initWithHost:(NSString *)host port:(NSUInteger)port {
     self = super.init;
