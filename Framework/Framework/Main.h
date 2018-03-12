@@ -497,6 +497,15 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 + (void)invokeHandler:(Object2Block)handler object:(id)object1 object:(id)object2;
 - (void)invokeHandler:(Object2Block)handler object:(id)object1 object:(id)object2;
 
++ (void)invokeHandler:(VoidBlock)handler queue:(NSOperationQueue *)queue;
+- (void)invokeHandler:(VoidBlock)handler queue:(NSOperationQueue *)queue;
+
++ (void)invokeHandler:(ObjectBlock)handler object:(id)object queue:(NSOperationQueue *)queue;
+- (void)invokeHandler:(ObjectBlock)handler object:(id)object queue:(NSOperationQueue *)queue;
+
++ (void)invokeHandler:(Object2Block)handler object:(id)object1 object:(id)object2 queue:(NSOperationQueue *)queue;
+- (void)invokeHandler:(Object2Block)handler object:(id)object1 object:(id)object2 queue:(NSOperationQueue *)queue;
+
 + (void)setPointer:(id *)pointer toObject:(id)object;
 - (void)setPointer:(id *)pointer toObject:(id)object;
 

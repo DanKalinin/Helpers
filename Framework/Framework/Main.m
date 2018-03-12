@@ -1227,6 +1227,36 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [self.class invokeHandler:handler object:object1 object:object2];
 }
 
++ (void)invokeHandler:(VoidBlock)handler queue:(NSOperationQueue *)queue {
+    [queue addOperationWithBlockAndWait:^{
+        [self invokeHandler:handler];
+    }];
+}
+
+- (void)invokeHandler:(VoidBlock)handler queue:(NSOperationQueue *)queue {
+    [self.class invokeHandler:handler queue:queue];
+}
+
++ (void)invokeHandler:(ObjectBlock)handler object:(id)object queue:(NSOperationQueue *)queue {
+    [queue addOperationWithBlockAndWait:^{
+        [self invokeHandler:handler object:object];
+    }];
+}
+
+- (void)invokeHandler:(ObjectBlock)handler object:(id)object queue:(NSOperationQueue *)queue {
+    [self.class invokeHandler:handler object:object queue:queue];
+}
+
++ (void)invokeHandler:(Object2Block)handler object:(id)object1 object:(id)object2 queue:(NSOperationQueue *)queue {
+    [queue addOperationWithBlockAndWait:^{
+        [self invokeHandler:handler object:object1 object:object2];
+    }];
+}
+
+- (void)invokeHandler:(Object2Block)handler object:(id)object1 object:(id)object2 queue:(NSOperationQueue *)queue {
+    [self.class invokeHandler:handler object:object1 object:object2 queue:queue];
+}
+
 + (void)setPointer:(id *)pointer toObject:(id)object {
     if (pointer) {
         *pointer = object;
