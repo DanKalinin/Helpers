@@ -108,7 +108,7 @@ extern NSString *MinutesToHHmm(NSUInteger minutes, NSString *separator);
 extern NSUInteger HHmmToMinutes(NSString *HHmm, NSString *separator);
 extern NSString *DaysToEE(NSArray *days, NSString *separator);
 
-extern SecCertificateRef SecCertificateCreateWithString(CFAllocatorRef allocator, NSString *string);
+OBJC_EXTERN SecCertificateRef SecCertificateCreateWithString(CFAllocatorRef allocator, NSString *string);
 
 typedef void (^VoidBlock)(void);
 typedef void (^BoolBlock)(BOOL);
