@@ -575,6 +575,22 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
+@interface NSOperationQueue (Helpers)
+
+- (void)addOperationAndWait:(NSOperation *)operation;
+- (void)addOperationWithBlockAndWait:(VoidBlock)block;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface UIViewController (Helpers) <UINavigationControllerDelegate, UIImagePickerControllerDelegate, ActionDelegate, UIPopoverPresentationControllerDelegate>
 
 @property (nonatomic) IBInspectable UIInterfaceOrientationMask supportedInterfaceOrientations; // Orientations, supported by current container

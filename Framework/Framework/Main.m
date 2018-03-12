@@ -1486,6 +1486,58 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
+@implementation NSOperationQueue (Helpers)
+
++ (void)load {
+    SEL original = @selector(waitUntilAllOperationsAreFinished);
+    SEL swizzled = @selector(Helpers_NSOperationQueue_waitUntilAllOperationsAreFinished);
+    [self swizzleInstanceMethod:original with:swizzled];
+    
+    original = @selector(addOperations:waitUntilFinished:);
+    swizzled = @selector(Helpers_NSOperationQueue_addOperations:waitUntilFinished:);
+    [self swizzleInstanceMethod:original with:swizzled];
+}
+
+- (void)Helpers_NSOperationQueue_waitUntilAllOperationsAreFinished {
+    if ([NSOperationQueue.currentQueue isEqual:self]) {
+    } else {
+        [self Helpers_NSOperationQueue_waitUntilAllOperationsAreFinished];
+    }
+}
+
+- (void)Helpers_NSOperationQueue_addOperations:(NSArray<NSOperation *> *)operations waitUntilFinished:(BOOL)wait {
+    if (wait) {
+        if ([NSOperationQueue.currentQueue isEqual:self]) {
+            [self Helpers_NSOperationQueue_addOperations:operations waitUntilFinished:NO];
+        } else {
+            [self Helpers_NSOperationQueue_addOperations:operations waitUntilFinished:YES];
+        }
+    } else {
+        [self Helpers_NSOperationQueue_addOperations:operations waitUntilFinished:NO];
+    }
+}
+
+- (void)addOperationAndWait:(NSOperation *)operation {
+    [self addOperation:operation];
+    [self waitUntilAllOperationsAreFinished];
+}
+
+- (void)addOperationWithBlockAndWait:(VoidBlock)block {
+    [self addOperationWithBlock:block];
+    [self waitUntilAllOperationsAreFinished];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface UIViewController (HelpersSelectors)
 
 @property (weak) UIViewController *appearanceViewController;
