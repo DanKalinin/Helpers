@@ -175,9 +175,8 @@
         self.inputStream = inputStream;
         self.outputStream = outputStream;
         
-        self.delegates.operationQueue = NSOperationQueue.mainQueue;
-        
         self.delegates = (id)SurrogateArray.new;
+        self.delegates.operationQueue = NSOperationQueue.mainQueue;
         [self.delegates addObject:self];
         
         self.messages = NSMutableDictionary.dictionary;
@@ -324,9 +323,8 @@
         self.pairClass = pair;
         
         self.delegates = (id)SurrogateArray.new;
-        [self.delegates addObject:self];
-        
         self.delegates.operationQueue = NSOperationQueue.mainQueue;
+        [self.delegates addObject:self];
     }
     return self;
 }
