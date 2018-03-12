@@ -581,17 +581,15 @@ SecCertificateRef SecCertificateCreateWithString(CFAllocatorRef allocator, NSStr
     self.lastReturnValue = nil;
     for (id object in self) {
         if ([object respondsToSelector:anInvocation.selector]) {
-            if (self.operationQueue && self.addToOperationQueue) {
-                if ([object isKindOfClass:self.class]) {
-                    SurrogateArray *array = object;
-                    if ([array.operationQueue isEqual:self.operationQueue]) {
-                        array.addToOperationQueue = NO;
-                    }
-                }
-                [self.operationQueue addOperationWithBlock:^{
+            if (self.operationQueue) {
+                if ([NSOperationQueue.currentQueue isEqual:self.operationQueue]) {
                     [anInvocation invokeWithTarget:object];
-                }];
-                [self.operationQueue waitUntilAllOperationsAreFinished];
+                } else {
+                    [self.operationQueue addOperationWithBlock:^{
+                        [anInvocation invokeWithTarget:object];
+                    }];
+                    [self.operationQueue waitUntilAllOperationsAreFinished];
+                }
             } else {
                 [anInvocation invokeWithTarget:object];
             }
