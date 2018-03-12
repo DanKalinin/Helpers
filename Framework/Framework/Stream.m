@@ -449,9 +449,8 @@ static void StreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType 
     address.sin_port = htons(port);
     address.sin_addr.s_addr = INADDR_ANY;
     
-    CFDataRef data = CFDataCreate(NULL, (UInt8 *)&address, sizeof(address));
-    CFSocketSetAddress(socket, data);
-    CFRelease(data);
+    NSData *data = [NSData dataWithBytes:&address length:sizeof(address)];
+    CFSocketSetAddress(socket, (__bridge CFDataRef)data);
     
     // Listen
     
