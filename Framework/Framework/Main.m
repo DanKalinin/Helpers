@@ -205,6 +205,14 @@ NSString *DaysToEE(NSArray *days, NSString *separator) {
     return EE;
 }
 
+SecCertificateRef SecCertificateCreateWithString(CFAllocatorRef allocator, NSString *string) {
+    string = [string componentsSeparatedByString:@"-----BEGIN CERTIFICATE-----\n"].lastObject;
+    string = [string componentsSeparatedByString:@"\n-----END CERTIFICATE-----"].firstObject;
+    NSData *data = [NSData.alloc initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    SecCertificateRef certificate = SecCertificateCreateWithData(allocator, (__bridge CFDataRef)data);
+    return certificate;
+}
+
 
 
 
