@@ -882,8 +882,6 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 - (BOOL)isGreaterThanOrEqualToVersion:(NSString *)version;
 - (BOOL)isLessThanOrEqualToVersion:(NSString *)version;
 
-- (NSArray<NSString *> *)componentsSeparatedByStrings:(NSArray<NSString *> *)separators;
-
 @end
 
 
