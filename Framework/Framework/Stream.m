@@ -204,7 +204,9 @@
             message.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeout repeats:NO block:^(NSTimer *timer) {
                 self.messages[@(message.serial)] = nil;
                 NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorTimedOut userInfo:nil];
-                [self invokeHandler:completion object:nil object:error];
+                [self.delegates.operationQueue addOperationWithBlockAndWait:^{
+                    [self invokeHandler:completion object:nil object:error];
+                }];
             }];
         } else {
             [self invokeHandler:completion object:message object:nil];
@@ -247,7 +249,9 @@
                             if (message.replySerial > 0) {
                                 StreamMessage *msg = [self.messages popObjectForKey:@(message.replySerial)];
                                 [msg.timer invalidate];
-                                [self invokeHandler:msg.completion object:message object:nil];
+                                [self.delegates.operationQueue addOperationWithBlockAndWait:^{
+                                    [self invokeHandler:msg.completion object:message object:nil];
+                                }];
                             } else {
                                 [self.delegates pair:self didReceiveMessage:message];
                             }
