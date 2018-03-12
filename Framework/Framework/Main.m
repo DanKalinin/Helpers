@@ -559,21 +559,12 @@ SecCertificateRef SecCertificateCreateWithString(CFAllocatorRef allocator, NSStr
 @interface SurrogateArray ()
 
 @property id lastReturnValue;
-@property BOOL addToOperationQueue;
 
 @end
 
 
 
 @implementation SurrogateArray
-
-- (instancetype)init {
-    self = super.init;
-    if (self) {
-        self.addToOperationQueue = YES;
-    }
-    return self;
-}
 
 #pragma mark - Message forwarding
 
@@ -582,14 +573,9 @@ SecCertificateRef SecCertificateCreateWithString(CFAllocatorRef allocator, NSStr
     for (id object in self) {
         if ([object respondsToSelector:anInvocation.selector]) {
             if (self.operationQueue) {
-                if ([NSOperationQueue.currentQueue isEqual:self.operationQueue]) {
+                [self.operationQueue addOperationWithBlockAndWait:^{
                     [anInvocation invokeWithTarget:object];
-                } else {
-                    [self.operationQueue addOperationWithBlock:^{
-                        [anInvocation invokeWithTarget:object];
-                    }];
-                    [self.operationQueue waitUntilAllOperationsAreFinished];
-                }
+                }];
             } else {
                 [anInvocation invokeWithTarget:object];
             }
