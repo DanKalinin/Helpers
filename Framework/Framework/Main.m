@@ -2001,6 +2001,15 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return error;
 }
 
+#pragma mark - Accessors
+
+- (NSString *)version {
+    NSString *release = [self objectForInfoDictionaryKey:kCFBundleShortVersionStringKey];
+    NSString *build = [self objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+    NSString *version = [NSString stringWithFormat:@"%@.%@", release, build];
+    return version;
+}
+
 @end
 
 

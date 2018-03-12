@@ -662,6 +662,8 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface NSBundle (Helpers)
 
+@property (readonly) NSString *version;
+
 - (NSError *)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code; // Initialize NSError object from serialized Errors.plist table located in bundle. Error serialization format - domain.code.userInfo.
 
 @end
