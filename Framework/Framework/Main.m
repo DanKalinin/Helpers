@@ -213,6 +213,16 @@ SecCertificateRef SecCertificateCreateWithString(CFAllocatorRef allocator, NSStr
     return certificate;
 }
 
+SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> *attributes) {
+    string = [string componentsSeparatedByString:@"-----BEGIN PRIVATE KEY-----\n"].lastObject;
+    string = [string componentsSeparatedByString:@"\n-----END PRIVATE KEY-----"].firstObject;
+    NSMutableData *data = [NSMutableData.alloc initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSRange range = NSMakeRange(0, 26);
+    [data replaceBytesInRange:range withBytes:NULL length:0];
+    SecKeyRef key = SecKeyCreateWithData((__bridge CFDataRef)data, (__bridge CFDictionaryRef)attributes, NULL);
+    return key;
+}
+
 
 
 
