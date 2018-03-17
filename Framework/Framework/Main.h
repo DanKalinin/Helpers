@@ -77,6 +77,7 @@ extern Interface const InterfaceEn0;
 typedef NSString * String NS_STRING_ENUM;
 extern String const StringEmpty;
 extern String const StringSpace;
+extern String const StringColon;
 extern String const StringRN;
 extern String const StringN;
 
@@ -901,6 +902,8 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 @interface NSString (Helpers)
+
+@property (readonly) NSString *normalizedAddress;
 
 - (NSData *)digest:(Digest)digest;
 

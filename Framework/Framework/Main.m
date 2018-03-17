@@ -61,6 +61,7 @@ Interface const InterfaceEn0 = @"en0";
 
 String const StringEmpty = @"";
 String const StringSpace = @" ";
+String const StringColon = @":";
 String const StringRN = @"\r\n";
 String const StringN = @"\n";
 
@@ -2624,6 +2625,19 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 @implementation NSString (Helpers)
+
+- (NSString *)normalizedAddress {
+    NSMutableArray *components = [self componentsSeparatedByString:StringColon].mutableCopy;
+    for (NSUInteger index = 0; index < components.count; index++) {
+        NSString *component = components[index];
+        if (component.length == 1) {
+            component = [NSString stringWithFormat:@"0%@", component];
+        }
+        components[index] = component.uppercaseString;
+    }
+    NSString *address = [components componentsJoinedByString:StringColon];
+    return address;
+}
 
 - (NSData *)digest:(Digest)digest {
     NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
