@@ -96,6 +96,7 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 
 @property Class messageClass;
 @property NSTimeInterval timeout;
+@property Proto protocol;
 
 @property (readonly) NSInputStream *inputStream;
 @property (readonly) NSOutputStream *outputStream;
