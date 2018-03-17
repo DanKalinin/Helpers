@@ -69,6 +69,9 @@ Host const HostAny = @"0.0.0.0";
 Host const HostLoopback = @"127.0.0.1";
 Host const HostBroadcast = @"255.255.255.255";
 
+Proto const ProtoBT = @"bt";
+Proto const ProtoTCP = @"tcp";
+
 NSInteger NSIntegerCarry(NSInteger value, NSInteger max) {
     value %= max;
     if (value < 0) {

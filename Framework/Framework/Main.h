@@ -86,6 +86,10 @@ extern Host const HostAny;
 extern Host const HostLoopback;
 extern Host const HostBroadcast;
 
+typedef NSString * Proto NS_STRING_ENUM;
+extern Proto const ProtoBT;
+extern Proto const ProtoTCP;
+
 extern NSInteger NSIntegerCarry(NSInteger value, NSInteger max);
 
 extern bool CGFloatInRange(CGFloat value, UIFloatRange range);
