@@ -630,6 +630,25 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 
 
 
+@interface Operation ()
+
+@end
+
+
+
+@implementation Operation
+
+@end
+
+
+
+
+
+
+
+
+
+
 static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
 
 

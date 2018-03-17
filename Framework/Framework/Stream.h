@@ -91,7 +91,7 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 
 
 
-@interface StreamPair : NSOperation <StreamPairDelegate>
+@interface StreamPair : Operation <StreamPairDelegate>
 
 @property Class messageClass;
 @property NSTimeInterval timeout;

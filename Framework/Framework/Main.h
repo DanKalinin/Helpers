@@ -239,6 +239,25 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
+@interface Operation : NSOperation
+
+@property NSInteger tag1;
+@property NSInteger tag2;
+
+@property id object1;
+@property id object2;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol ReachabilityDelegate
 
 @required
