@@ -269,7 +269,7 @@
             }
             break;
         } else {
-            [self.delegates pairDidClose:self];
+            [self.delegates pairDidFailToOpen:self];
             break;
         }
     }

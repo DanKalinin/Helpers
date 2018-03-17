@@ -83,6 +83,7 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 @protocol StreamPairDelegate <NSObject>
 
 - (void)pairDidOpen:(StreamPair *)pair;
+- (void)pairDidFailToOpen:(StreamPair *)pair;
 - (void)pairDidClose:(StreamPair *)pair;
 - (void)pair:(StreamPair *)pair didReceiveData:(NSData *)data;
 - (void)pair:(StreamPair *)pair didReceiveMessage:(StreamMessage *)message;
@@ -91,7 +92,7 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 
 
 
-@interface StreamPair : Operation <StreamPairDelegate>
+@interface StreamPair : NSOperation <StreamPairDelegate>
 
 @property Class messageClass;
 @property NSTimeInterval timeout;
