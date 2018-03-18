@@ -780,6 +780,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @interface NSNetService (Helpers)
 
++ (NSError *)errorFromErrorDict:(NSDictionary<NSString *, NSNumber *> *)errorDict;
 + (NSString *)stringFromAddressData:(NSData *)data; // Get the IP address string representation
 
 @end

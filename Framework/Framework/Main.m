@@ -2273,6 +2273,13 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 @implementation NSNetService (Helpers)
 
++ (NSError *)errorFromErrorDict:(NSDictionary<NSString *,NSNumber *> *)errorDict {
+    NSErrorDomain domain = errorDict[NSNetServicesErrorDomain].stringValue;
+    NSInteger code = errorDict[NSNetServicesErrorCode].integerValue;
+    NSError *error = [NSError errorWithDomain:domain code:code userInfo:nil];
+    return error;
+}
+
 + (NSString *)stringFromAddressData:(NSData *)data {
     struct sockaddr_in *addressStruct = (struct sockaddr_in *)data.bytes;
     char *addressChars = inet_ntoa(addressStruct->sin_addr);
