@@ -37,6 +37,11 @@ Key const KeyPair = @"pair";
 Key const KeyError = @"error";
 Key const KeyObject = @"object";
 Key const KeyCompletion = @"completion";
+Key const KeyScheme = @"scheme";
+Key const KeyHost = @"host";
+Key const KeyPort = @"port";
+Key const KeyUser = @"user";
+Key const KeyPassword = @"password";
 Key const kCFBundleShortVersionStringKey = @"CFBundleShortVersionString";
 
 Table const TableErrors = @"Errors";
@@ -2773,6 +2778,26 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 @implementation NSURLComponents (Helpers)
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = self.init;
+    if (self) {
+        self.scheme = [aDecoder decodeObjectForKey:KeyScheme];
+        self.host = [aDecoder decodeObjectForKey:KeyHost];
+        self.port = [aDecoder decodeObjectForKey:KeyPort];
+        self.user = [aDecoder decodeObjectForKey:KeyUser];
+        self.password = [aDecoder decodeObjectForKey:KeyPassword];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.scheme forKey:KeyScheme];
+    [aCoder encodeObject:self.host forKey:KeyHost];
+    [aCoder encodeObject:self.port forKey:KeyPort];
+    [aCoder encodeObject:self.user forKey:KeyUser];
+    [aCoder encodeObject:self.password forKey:KeyPassword];
+}
 
 - (void)setQueryDictionary:(NSDictionary<NSString *,NSString *> *)queryDictionary {
     NSMutableArray *queryItems = [NSMutableArray array];

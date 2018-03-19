@@ -35,6 +35,11 @@ extern Key const KeyPair;
 extern Key const KeyError;
 extern Key const KeyObject;
 extern Key const KeyCompletion;
+extern Key const KeyScheme;
+extern Key const KeyHost;
+extern Key const KeyPort;
+extern Key const KeyUser;
+extern Key const KeyPassword;
 extern Key const kCFBundleShortVersionStringKey;
 
 typedef NSString * Table NS_STRING_ENUM;
@@ -959,7 +964,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
-@interface NSURLComponents (Helpers)
+@interface NSURLComponents (Helpers) <NSCoding>
 
 @property NSDictionary<NSString *, NSString *> *queryDictionary;
 
