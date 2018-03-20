@@ -42,6 +42,7 @@ Key const KeyHost = @"host";
 Key const KeyPort = @"port";
 Key const KeyUser = @"user";
 Key const KeyPassword = @"password";
+Key const KeyFragment = @"fragment";
 Key const kCFBundleShortVersionStringKey = @"CFBundleShortVersionString";
 
 Table const TableErrors = @"Errors";
@@ -2787,6 +2788,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         self.port = [aDecoder decodeObjectForKey:KeyPort];
         self.user = [aDecoder decodeObjectForKey:KeyUser];
         self.password = [aDecoder decodeObjectForKey:KeyPassword];
+        self.fragment = [aDecoder decodeObjectForKey:KeyFragment];
     }
     return self;
 }
@@ -2797,6 +2799,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [aCoder encodeObject:self.port forKey:KeyPort];
     [aCoder encodeObject:self.user forKey:KeyUser];
     [aCoder encodeObject:self.password forKey:KeyPassword];
+    [aCoder encodeObject:self.fragment forKey:KeyFragment];
 }
 
 - (void)setQueryDictionary:(NSDictionary<NSString *,NSString *> *)queryDictionary {

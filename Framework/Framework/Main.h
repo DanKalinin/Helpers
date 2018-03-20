@@ -40,6 +40,7 @@ extern Key const KeyHost;
 extern Key const KeyPort;
 extern Key const KeyUser;
 extern Key const KeyPassword;
+extern Key const KeyFragment;
 extern Key const kCFBundleShortVersionStringKey;
 
 typedef NSString * Table NS_STRING_ENUM;
