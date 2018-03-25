@@ -1563,6 +1563,15 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [self waitUntilAllOperationsAreFinished];
 }
 
+- (NSOperation *)operationWithName:(NSString *)name {
+    for (NSOperation *operation in self.operations) {
+        if ([operation.name isEqualToString:name]) {
+            return operation;
+        }
+    }
+    return nil;
+}
+
 @end
 
 

@@ -601,6 +601,8 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 - (void)addOperationAndWait:(NSOperation *)operation;
 - (void)addOperationWithBlockAndWait:(VoidBlock)block;
 
+- (__kindof NSOperation *)operationWithName:(NSString *)name;
+
 @end
 
 
