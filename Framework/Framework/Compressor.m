@@ -6,7 +6,7 @@
 //  Copyright © 2018 Dan Kalinin. All rights reserved.
 //
 
-#import "Compression.h"
+#import "Compressor.h"
 
 NSErrorDomain const CompressionErrorDomain = @"Compression";
 
