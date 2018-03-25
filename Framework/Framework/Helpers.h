@@ -13,3 +13,4 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 
 #import <Helpers/Main.h>
 #import <Helpers/Stream.h>
+#import <Helpers/Compression.h>
