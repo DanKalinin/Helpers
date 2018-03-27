@@ -640,6 +640,53 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 
 
 
+@interface Sequence ()
+
+@end
+
+
+
+@implementation Sequence
+
+- (instancetype)init {
+    self = super.init;
+    if (self) {
+        self.minimum = 1;
+        self.maximum = pow(2.0, 32.0) - 1.0;
+        self.value = self.minimum;
+    }
+    return self;
+}
+
+- (NSUInteger)increment {
+    if (self.value == self.maximum) {
+        self.value = self.minimum;
+    } else {
+        self.value++;
+    }
+    return self.value;
+}
+
+- (NSUInteger)decrement {
+    if (self.value == self.minimum) {
+        self.value = self.maximum;
+    } else {
+        self.value--;
+    }
+    return self.value;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
 
 

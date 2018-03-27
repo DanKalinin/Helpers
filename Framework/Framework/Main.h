@@ -250,6 +250,26 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
+@interface Sequence : NSObject
+
+@property NSUInteger minimum;
+@property NSUInteger maximum;
+@property NSUInteger value;
+
+- (NSUInteger)increment;
+- (NSUInteger)decrement;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol ReachabilityDelegate
 
 @required

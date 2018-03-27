@@ -161,7 +161,7 @@
 @property NSOutputStream *outputStream;
 @property SurrogateArray<StreamPairDelegate> *delegates;
 @property NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
-@property NSUInteger serial;
+@property Sequence *sequence;
 
 @end
 
@@ -181,7 +181,7 @@
         
         self.messages = NSMutableDictionary.dictionary;
         
-        self.serial = 1;
+        self.sequence = Sequence.new;
         
         self.timeout = 60.0;
     }
@@ -189,12 +189,7 @@
 }
 
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion {
-    message.serial = self.serial;
-    self.serial++;
-    
-    if (self.serial == 0) {
-        self.serial = 1;
-    }
+    message.serial = self.sequence.increment;
     
     NSInteger result = [message writeToStream:self.outputStream];
     if (result > 0) {

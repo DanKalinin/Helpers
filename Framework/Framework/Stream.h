@@ -106,7 +106,7 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 @property (readonly) StreamClient *client;
 @property (readonly) StreamServer *server;
 @property (readonly) NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
-@property (readonly) NSUInteger serial;
+@property (readonly) Sequence *sequence;
 
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion;
