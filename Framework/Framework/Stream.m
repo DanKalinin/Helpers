@@ -189,7 +189,8 @@
 }
 
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion {
-    message.serial = self.sequence.increment;
+    message.serial = self.sequence.value;
+    [self.sequence increment];
     
     NSInteger result = [message writeToStream:self.outputStream];
     if (result > 0) {
