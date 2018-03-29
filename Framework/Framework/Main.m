@@ -687,6 +687,66 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 
 
 
+@interface Operation ()
+
+@end
+
+
+
+@implementation Operation
+
+- (instancetype)init {
+    self = super.init;
+    if (self) {
+        
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface Task ()
+
+@property BOOL cancelled;
+
+@end
+
+
+
+@implementation Task
+
+- (instancetype)init {
+    self = super.init;
+    if (self) {
+        
+    }
+    return self;
+}
+
+- (void)cancel {
+    self.cancelled = YES;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
 
 

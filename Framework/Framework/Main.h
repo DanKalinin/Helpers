@@ -270,6 +270,36 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
+@interface Operation : NSOperation
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface Task : NSObject
+
+@property (readonly) BOOL cancelled;
+
+- (void)cancel;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol ReachabilityDelegate
 
 @required
