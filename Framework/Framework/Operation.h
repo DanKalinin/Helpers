@@ -13,8 +13,7 @@
 typedef NS_ENUM(NSUInteger, OperationState) {
     OperationStateBegin,
     OperationStateProcess,
-    OperationStateEnd,
-    OperationStateError
+    OperationStateEnd
 };
 
 
