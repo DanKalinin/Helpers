@@ -43,7 +43,7 @@ typedef NS_ENUM(NSUInteger, CompressionStatus) {
 
 
 
-@interface Compression : NSOperation
+@interface Compression : Operation
 
 @property (readonly) Compressor *compressor;
 @property (readonly) NSMutableData *srcData;
@@ -51,7 +51,6 @@ typedef NS_ENUM(NSUInteger, CompressionStatus) {
 @property (readonly) size_t chunk;
 @property (readonly) SurrogateArray<CompressionDelegate> *delegates;
 @property (readonly) CompressionStatus status;
-@property (readonly) CGFloat progress;
 @property (readonly) NSError *error;
 
 - (instancetype)initWithOperation:(compression_stream_operation)operation algorithm:(compression_algorithm)algorithm srcData:(NSMutableData *)srcData dstData:(NSMutableData *)dstData chunk:(size_t)chunk;

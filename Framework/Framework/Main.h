@@ -270,7 +270,9 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface Operation : NSOperation
+@interface Operation : NSOperation <NSProgressReporting>
+
+@property (readonly) NSProgress *progress;
 
 @end
 
@@ -283,8 +285,9 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface Task : NSObject
+@interface Task : NSObject <NSProgressReporting>
 
+@property (readonly) NSProgress *progress;
 @property (readonly) BOOL cancelled;
 
 - (void)cancel;

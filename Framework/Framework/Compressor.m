@@ -26,7 +26,6 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 @property size_t chunk;
 @property SurrogateArray<CompressionDelegate> *delegates;
 @property CompressionStatus status;
-@property CGFloat progress;
 @property NSError *error;
 
 @end
@@ -45,13 +44,15 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
         self.delegates = (id)SurrogateArray.new;
         self.delegates.operationQueue = NSOperationQueue.mainQueue;
         [self.delegates addObject:self];
+        
+        self.progress.totalUnitCount = srcData.length;
     }
     return self;
 }
 
 - (void)main {
     [self updateStatus:CompressionStatusInit];
-    [self updateProgress:0.0];
+    [self updateProgress:0];
     
     compression_stream stream;
     compression_status status = compression_stream_init(&stream, self.compressor.operation, self.compressor.algorithm);
@@ -61,11 +62,9 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
         size_t dstSize = 2 * self.chunk;
         uint8_t *dstBuffer = malloc(dstSize);
         
-        NSUInteger srcDataLength = self.srcData.length;
-        
         while (!self.cancelled) {
             if ((self.srcData.length == 0) && (stream.dst_size == dstSize)) {
-                [self updateProgress:1.0];
+                [self updateProgress:self.progress.totalUnitCount];
                 break;
             } else {
                 size_t srcSize = (self.srcData.length > self.chunk) ? self.chunk : self.srcData.length;
@@ -85,8 +84,8 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
                     NSUInteger producedLength = dstSize - stream.dst_size;
                     [self.dstData appendBytes:dstBuffer length:producedLength];
                     
-                    CGFloat progress = 1.0 - ((CGFloat)self.srcData.length / srcDataLength);
-                    [self updateProgress:progress];
+                    int64_t completedUnitCount = self.progress.totalUnitCount - self.srcData.length;
+                    [self updateProgress:completedUnitCount];
                 } else {
                     self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
                     [self updateStatus:CompressionStatusError];
@@ -123,8 +122,8 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
     [self.delegates compressionDidUpdateStatus:self];
 }
 
-- (void)updateProgress:(CGFloat)progress {
-    self.progress = progress;
+- (void)updateProgress:(int64_t)completedUnitCount {
+    self.progress.completedUnitCount = completedUnitCount;
     [self.delegates compressionDidUpdateProgress:self];
 }
 

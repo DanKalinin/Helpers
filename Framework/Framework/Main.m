@@ -689,6 +689,8 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 
 @interface Operation ()
 
+@property NSProgress *progress;
+
 @end
 
 
@@ -698,7 +700,7 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 - (instancetype)init {
     self = super.init;
     if (self) {
-        
+        self.progress = NSProgress.new;
     }
     return self;
 }
@@ -716,6 +718,7 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 
 @interface Task ()
 
+@property NSProgress *progress;
 @property BOOL cancelled;
 
 @end
@@ -727,7 +730,7 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 - (instancetype)init {
     self = super.init;
     if (self) {
-        
+        self.progress = NSProgress.new;
     }
     return self;
 }
