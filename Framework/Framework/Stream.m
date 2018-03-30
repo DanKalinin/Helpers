@@ -176,20 +176,20 @@
 
 @interface StreamPair ()
 
+@property SurrogateArray<StreamPairDelegate> *delegates;
 @property NSInputStream *inputStream;
 @property NSOutputStream *outputStream;
-@property SurrogateArray<StreamPairDelegate> *delegates;
-@property NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
 @property Sequence *sequence;
-
-@property Sequence *loadSequence;
-@property NSMutableDictionary<NSNumber *, StreamLoadOperation *> *loadOperations;
+@property NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
 
 @end
 
 
 
 @implementation StreamPair
+
+@dynamic parent;
+@dynamic delegates;
 
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream {
     self = super.init;
@@ -239,10 +239,6 @@
 }
 
 #pragma mark - Accessors
-
-- (StreamEndpoint *)endpoint {
-    return self.delegates[1][0];
-}
 
 - (StreamClient *)client {
     return self.delegates[1][0];

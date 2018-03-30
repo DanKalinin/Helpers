@@ -139,6 +139,8 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 
 @implementation Compressor
 
+@dynamic delegates;
+
 - (instancetype)initWithOperation:(compression_stream_operation)operation algorithm:(compression_algorithm)algorithm {
     self = super.init;
     if (self) {

@@ -112,20 +112,17 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 @property Proto protocol;
 @property id object;
 
-@property (readonly) NSInputStream *inputStream;
-@property (readonly) NSOutputStream *outputStream;
-@property (readonly) SurrogateArray<StreamPairDelegate> *delegates;
-@property (readonly) StreamEndpoint *endpoint;
+@property (readonly) StreamEndpoint *parent;
 @property (readonly) StreamClient *client;
 @property (readonly) StreamServer *server;
-@property (readonly) NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
+@property (readonly) SurrogateArray<StreamPairDelegate> *delegates;
+@property (readonly) NSInputStream *inputStream;
+@property (readonly) NSOutputStream *outputStream;
 @property (readonly) Sequence *sequence;
+@property (readonly) NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
 
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion;
-
-- (StreamLoadOperation *)uploadData:(NSMutableData *)data toPath:(NSString *)path;
-- (StreamLoadOperation *)downloadData:(NSMutableData *)data fromPath:(NSString *)path;
 
 @end
 
