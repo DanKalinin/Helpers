@@ -208,41 +208,6 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     return self;
 }
 
-- (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion {
-    message.serial = self.sequence.value;
-    [self.sequence increment];
-    
-    NSInteger result = [message writeToStream:self.outputStream];
-    if (result > 0) {
-        if (message.reply) {
-            message.completion = completion;
-            self.messages[@(message.serial)] = message;
-            message.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeout repeats:NO block:^(NSTimer *timer) {
-                self.messages[@(message.serial)] = nil;
-                NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorTimedOut userInfo:nil];
-                [self invokeHandler:completion object:nil object:error queue:self.delegates.operationQueue];
-            }];
-        } else {
-            [self invokeHandler:completion object:message object:nil queue:self.delegates.operationQueue];
-        }
-    } else if (result == 0) {
-        NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
-        [self invokeHandler:completion object:nil object:error queue:self.delegates.operationQueue];
-    } else {
-        [self invokeHandler:completion object:nil object:self.outputStream.streamError queue:self.delegates.operationQueue];
-    }
-}
-
-#pragma mark - Accessors
-
-- (StreamClient *)client {
-    return self.delegates[1][0];
-}
-
-- (StreamServer *)server {
-    return self.delegates[1][0];
-}
-
 - (void)main {
     [self updateState:OperationStateBegin];
     
@@ -292,6 +257,48 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     
     [self.inputStream close];
     [self.outputStream close];
+}
+
+- (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion {
+    message.serial = self.sequence.value;
+    [self.sequence increment];
+    
+    NSInteger result = [message writeToStream:self.outputStream];
+    if (result > 0) {
+        if (message.reply) {
+            message.completion = completion;
+            self.messages[@(message.serial)] = message;
+            message.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeout repeats:NO block:^(NSTimer *timer) {
+                self.messages[@(message.serial)] = nil;
+                NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorTimedOut userInfo:nil];
+                [self invokeHandler:completion object:nil object:error queue:self.delegates.operationQueue];
+            }];
+        } else {
+            [self invokeHandler:completion object:message object:nil queue:self.delegates.operationQueue];
+        }
+    } else if (result == 0) {
+        NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+        [self invokeHandler:completion object:nil object:error queue:self.delegates.operationQueue];
+    } else {
+        [self invokeHandler:completion object:nil object:self.outputStream.streamError queue:self.delegates.operationQueue];
+    }
+}
+
+#pragma mark - Accessors
+
+- (StreamClient *)client {
+    return self.delegates[1][0];
+}
+
+- (StreamServer *)server {
+    return self.delegates[1][0];
+}
+
+#pragma mark - Helpers
+
+- (void)updateState:(OperationState)state {
+    [super updateState:state];
+    [self.delegates pairDidUpdateState:self];
 }
 
 @end
