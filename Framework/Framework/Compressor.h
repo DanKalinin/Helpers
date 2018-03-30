@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <compression.h>
 #import "Main.h"
+#import "Operation.h"
 
 @class Compression, Compressor;
 
