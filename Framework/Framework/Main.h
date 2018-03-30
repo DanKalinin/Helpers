@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class Reachability;
+@class Operation, OperationQueue, Reachability;
 
 typedef NSString * DateFormat NS_STRING_ENUM;
 extern DateFormat const DateFormatISO8601;
@@ -144,6 +144,13 @@ typedef NS_ENUM(NSUInteger, Digest) {
     DigestSHA512
 };
 
+typedef NS_ENUM(NSUInteger, OperationState) {
+    OperationStateBegin,
+    OperationStateProcess,
+    OperationStateEnd,
+    OperationStateError
+};
+
 typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
     ReachabilityStatusNone,
     ReachabilityStatusWiFi,
@@ -270,9 +277,42 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@interface Operation : NSOperation <NSProgressReporting>
+@protocol OperationDelegate <NSObject>
 
+@optional
+- (void)operationDidUpdateState:(Operation *)operation;
+- (void)opertionDidUpdateProgress:(Operation *)operation;
+
+@end
+
+
+
+@interface Operation : NSOperation <OperationDelegate, NSProgressReporting>
+
+@property NSError *error;
+
+@property (readonly) SurrogateArray<OperationDelegate> *delegates;
+@property (readonly) OperationState state;
 @property (readonly) NSProgress *progress;
+@property (readonly) OperationQueue *queue;
+
+- (void)updateState:(OperationState)state;
+- (void)updateProgress:(uint64_t)completedUnitCount;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface OperationQueue : NSOperationQueue <OperationDelegate>
+
+@property (readonly) SurrogateArray<OperationDelegate> *delegates;
 
 @end
 

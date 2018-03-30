@@ -24,15 +24,14 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 @property NSMutableData *srcData;
 @property NSMutableData *dstData;
 @property size_t chunk;
-@property SurrogateArray<CompressionDelegate> *delegates;
-@property CompressionStatus status;
-@property NSError *error;
 
 @end
 
 
 
 @implementation Compression
+
+@dynamic queue;
 
 - (instancetype)initWithOperation:(compression_stream_operation)operation algorithm:(compression_algorithm)algorithm srcData:(NSMutableData *)srcData dstData:(NSMutableData *)dstData chunk:(size_t)chunk {
     self = super.init;
@@ -41,23 +40,18 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
         self.dstData = dstData;
         self.chunk = chunk;
         
-        self.delegates = (id)SurrogateArray.new;
-        self.delegates.operationQueue = NSOperationQueue.mainQueue;
-        [self.delegates addObject:self];
-        
         self.progress.totalUnitCount = srcData.length;
     }
     return self;
 }
 
 - (void)main {
-    [self updateStatus:CompressionStatusInit];
-    [self updateProgress:0];
+    [super main];
     
     compression_stream stream;
-    compression_status status = compression_stream_init(&stream, self.compressor.operation, self.compressor.algorithm);
+    compression_status status = compression_stream_init(&stream, self.queue.operation, self.queue.algorithm);
     if (status == COMPRESSION_STATUS_OK) {
-        [self updateStatus:CompressionStatusProcess];
+        [self updateState:OperationStateProcess];
         
         size_t dstSize = 2 * self.chunk;
         uint8_t *dstBuffer = malloc(dstSize);
@@ -88,7 +82,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
                     [self updateProgress:completedUnitCount];
                 } else {
                     self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
-                    [self updateStatus:CompressionStatusError];
+                    [self updateState:OperationStateError];
                     break;
                 }
             }
@@ -98,33 +92,15 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
         
         status = compression_stream_destroy(&stream);
         if (status == COMPRESSION_STATUS_OK) {
-            [self updateStatus:CompressionStatusDestroy];
-        } else if (self.status != CompressionStatusError) {
+            [self updateState:OperationStateEnd];
+        } else if (self.state != OperationStateError) {
             self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
-            [self updateStatus:CompressionStatusError];
+            [self updateState:OperationStateError];
         }
     } else {
         self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
-        [self updateStatus:CompressionStatusError];
+        [self updateState:OperationStateError];
     }
-}
-
-#pragma mark - Accessors
-
-- (Compressor *)compressor {
-    return self.delegates[1][0];
-}
-
-#pragma mark - Helpers
-
-- (void)updateStatus:(CompressionStatus)status {
-    self.status = status;
-    [self.delegates compressionDidUpdateStatus:self];
-}
-
-- (void)updateProgress:(int64_t)completedUnitCount {
-    self.progress.completedUnitCount = completedUnitCount;
-    [self.delegates compressionDidUpdateProgress:self];
 }
 
 @end
@@ -142,7 +118,6 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 
 @property compression_stream_operation operation;
 @property compression_algorithm algorithm;
-@property SurrogateArray<CompressionDelegate> *delegates;
 
 @end
 
@@ -155,10 +130,6 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
     if (self) {
         self.operation = operation;
         self.algorithm = algorithm;
-        
-        self.delegates = (id)SurrogateArray.new;
-        self.delegates.operationQueue = NSOperationQueue.mainQueue;
-        [self.delegates addObject:self];
         
         self.maxConcurrentOperationCount = 1;
     }
