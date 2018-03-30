@@ -226,6 +226,8 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
             [self invokeHandler:completion object:message object:nil queue:self.delegates.operationQueue];
         }
     } else if (result == 0) {
+        NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+        [self invokeHandler:completion object:nil object:error queue:self.delegates.operationQueue];
     } else {
         [self invokeHandler:completion object:nil object:self.outputStream.streamError queue:self.delegates.operationQueue];
     }

@@ -18,7 +18,8 @@ extern NSErrorDomain const StreamErrorDomain;
 
 NS_ERROR_ENUM(StreamErrorDomain) {
     StreamErrorUnknown = 0,
-    StreamErrorTimedOut = 1
+    StreamErrorTimedOut = 1,
+    StreamErrorClosed = 2
 };
 
 
