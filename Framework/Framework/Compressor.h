@@ -29,7 +29,6 @@ NS_ERROR_ENUM(CompressionErrorDomain) {
 
 @interface Compression : Operation
 
-@property (readonly) Compressor *queue;
 @property (readonly) NSMutableData *srcData;
 @property (readonly) NSMutableData *dstData;
 @property (readonly) size_t chunk;

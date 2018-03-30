@@ -31,8 +31,6 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 
 @implementation Compression
 
-@dynamic queue;
-
 - (instancetype)initWithOperation:(compression_stream_operation)operation algorithm:(compression_algorithm)algorithm srcData:(NSMutableData *)srcData dstData:(NSMutableData *)dstData chunk:(size_t)chunk {
     self = super.init;
     if (self) {
@@ -49,7 +47,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
     [super main];
     
     compression_stream stream;
-    compression_status status = compression_stream_init(&stream, self.queue.operation, self.queue.algorithm);
+    compression_status status = compression_stream_init(&stream, [self.queue operation], [self.queue algorithm]);
     if (status == COMPRESSION_STATUS_OK) {
         [self updateState:OperationStateProcess];
         

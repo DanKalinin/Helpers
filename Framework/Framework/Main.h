@@ -294,7 +294,7 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 @property (readonly) SurrogateArray<OperationDelegate> *delegates;
 @property (readonly) OperationState state;
 @property (readonly) NSProgress *progress;
-@property (readonly) OperationQueue *queue;
+@property (readonly) __kindof OperationQueue *queue;
 
 - (void)updateState:(OperationState)state;
 - (void)updateProgress:(uint64_t)completedUnitCount;
