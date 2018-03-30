@@ -200,9 +200,9 @@
         self.sequence = Sequence.new;
         self.messages = NSMutableDictionary.dictionary;
         
-        
-        
         self.timeout = 60.0;
+        
+        self.progress.totalUnitCount = -1;
     }
     return self;
 }
@@ -230,14 +230,6 @@
     }
 }
 
-- (StreamLoadOperation *)uploadData:(NSMutableData *)data toPath:(NSString *)path {
-    return nil;
-}
-
-- (StreamLoadOperation *)downloadData:(NSMutableData *)data fromPath:(NSString *)path {
-    return nil;
-}
-
 #pragma mark - Accessors
 
 - (StreamClient *)client {
@@ -249,6 +241,8 @@
 }
 
 - (void)main {
+    [self updateState:OperationStateBegin];
+    
     [self.inputStream open];
     [self.outputStream open];
     
@@ -256,7 +250,7 @@
         if (self.inputStream.streamStatus == NSStreamStatusOpening) {
             continue;
         } else if (self.inputStream.streamStatus == NSStreamStatusOpen) {
-            [self.delegates pairDidOpen:self];
+            [self updateState:OperationStateProcess];
             while (!self.cancelled) {
                 if (self.inputStream.hasBytesAvailable) {
                     if (self.messageClass) {
@@ -271,7 +265,6 @@
                                 [self.delegates pair:self didReceiveMessage:message];
                             }
                         } else {
-                            [self.delegates pairDidClose:self];
                             break;
                         }
                     } else {
@@ -280,7 +273,6 @@
                         if (result > 0) {
                             [self.delegates pair:self didReceiveData:data];
                         } else {
-                            [self.delegates pairDidClose:self];
                             break;
                         }
                     }
@@ -288,31 +280,14 @@
             }
             break;
         } else {
-            [self.delegates pairDidFailToOpen:self];
             break;
         }
     }
     
     [self.inputStream close];
     [self.outputStream close];
-}
-
-#pragma mark - Pair
-
-- (void)pairDidOpen:(StreamPair *)pair {
     
-}
-
-- (void)pairDidClose:(StreamPair *)pair {
-    
-}
-
-- (void)pair:(StreamPair *)pair didReceiveData:(NSData *)data {
-    
-}
-
-- (void)pair:(StreamPair *)pair didReceiveMessage:(StreamMessage *)message {
-    
+    [self updateState:OperationStateEnd];
 }
 
 @end
@@ -335,6 +310,8 @@
 
 
 @implementation StreamEndpoint
+
+@dynamic delegates;
 
 - (instancetype)initWithPair:(Class)pair {
     self = super.init;
