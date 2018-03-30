@@ -283,6 +283,7 @@
         }
     }
     
+    self.error = self.inputStream.streamError;
     [self updateState:OperationStateEnd];
     
     [self.inputStream close];
