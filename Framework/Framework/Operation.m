@@ -20,6 +20,7 @@
 
 @property SurrogateArray<OperationDelegate> *delegates;
 @property OperationState state;
+@property OperationState previousState;
 @property NSProgress *progress;
 
 @end
@@ -49,6 +50,7 @@
 #pragma mark - Helpers
 
 - (void)updateState:(OperationState)state {
+    self.previousState = self.state;
     self.state = state;
     [self.delegates operationDidUpdateState:self];
 }
