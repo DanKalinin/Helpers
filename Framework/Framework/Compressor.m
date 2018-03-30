@@ -31,6 +31,9 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 
 @implementation Compression
 
+@dynamic parent;
+@dynamic delegates;
+
 - (instancetype)initWithOperation:(compression_stream_operation)operation algorithm:(compression_algorithm)algorithm srcData:(NSMutableData *)srcData dstData:(NSMutableData *)dstData chunk:(size_t)chunk {
     self = super.init;
     if (self) {
@@ -44,10 +47,11 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 }
 
 - (void)main {
-    [super main];
+    [self updateState:OperationStateBegin];
+    [self updateProgress:0];
     
     compression_stream stream;
-    compression_status status = compression_stream_init(&stream, [self.queue operation], [self.queue algorithm]);
+    compression_status status = compression_stream_init(&stream, self.parent.operation, self.parent.algorithm);
     if (status == COMPRESSION_STATUS_OK) {
         [self updateState:OperationStateProcess];
         
@@ -99,6 +103,18 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
         self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
         [self updateState:OperationStateEnd];
     }
+}
+
+#pragma mark - Helpers
+
+- (void)updateState:(OperationState)state {
+    [super updateState:state];
+    [self.delegates compressionDidUpdateState:self];
+}
+
+- (void)updateProgress:(uint64_t)completedUnitCount {
+    [super updateProgress:completedUnitCount];
+    [self.delegates compressionDidUpdateProgress:self];
 }
 
 @end

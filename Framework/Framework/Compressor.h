@@ -28,8 +28,20 @@ NS_ERROR_ENUM(CompressionErrorDomain) {
 
 
 
-@interface Compression : Operation
+@protocol CompressionDelegate <OperationDelegate>
 
+@optional
+- (void)compressionDidUpdateState:(Compression *)compression;
+- (void)compressionDidUpdateProgress:(Compression *)compression;
+
+@end
+
+
+
+@interface Compression : Operation <CompressionDelegate>
+
+@property (readonly) Compressor *parent;
+@property (readonly) SurrogateArray<CompressionDelegate> *delegates;
 @property (readonly) NSMutableData *srcData;
 @property (readonly) NSMutableData *dstData;
 @property (readonly) size_t chunk;
@@ -47,7 +59,7 @@ NS_ERROR_ENUM(CompressionErrorDomain) {
 
 
 
-@interface Compressor : OperationQueue
+@interface Compressor : OperationQueue <CompressionDelegate>
 
 @property (readonly) compression_stream_operation operation;
 @property (readonly) compression_algorithm algorithm;

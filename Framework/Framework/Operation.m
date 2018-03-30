@@ -40,14 +40,9 @@
     return self;
 }
 
-- (void)main {
-    [self updateState:OperationStateBegin];
-    [self updateProgress:0];
-}
-
 #pragma mark - Accessors
 
-- (OperationQueue *)queue {
+- (id)parent {
     return self.delegates[1][0];
 }
 
@@ -92,40 +87,6 @@
         [self.delegates addObject:self];
     }
     return self;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface OperationTask ()
-
-@property NSProgress *progress;
-@property BOOL cancelled;
-
-@end
-
-
-
-@implementation OperationTask
-
-- (instancetype)init {
-    self = super.init;
-    if (self) {
-        self.progress = NSProgress.new;
-    }
-    return self;
-}
-
-- (void)cancel {
-    self.cancelled = YES;
 }
 
 @end

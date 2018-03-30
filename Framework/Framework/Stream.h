@@ -81,7 +81,7 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 
 
 
-@interface StreamLoadTask : OperationTask
+@interface StreamLoadOperation : Operation
 
 @end
 

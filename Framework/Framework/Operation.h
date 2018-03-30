@@ -39,10 +39,10 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 
 @property NSError *error;
 
+@property (readonly) id parent;
 @property (readonly) SurrogateArray<OperationDelegate> *delegates;
 @property (readonly) OperationState state;
 @property (readonly) NSProgress *progress;
-@property (readonly) __kindof OperationQueue *queue;
 
 - (void)updateState:(OperationState)state;
 - (void)updateProgress:(uint64_t)completedUnitCount;
@@ -61,23 +61,5 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 @interface OperationQueue : NSOperationQueue <OperationDelegate>
 
 @property (readonly) SurrogateArray<OperationDelegate> *delegates;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface OperationTask : NSObject <NSProgressReporting>
-
-@property (readonly) BOOL cancelled;
-@property (readonly) NSProgress *progress;
-
-- (void)cancel;
 
 @end

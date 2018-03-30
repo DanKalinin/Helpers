@@ -155,13 +155,13 @@
 
 
 
-@interface StreamLoadTask ()
+@interface StreamLoadOperation ()
 
 @end
 
 
 
-@implementation StreamLoadTask
+@implementation StreamLoadOperation
 
 @end
 
