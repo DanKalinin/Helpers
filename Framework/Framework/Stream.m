@@ -9,6 +9,8 @@
 #import "Stream.h"
 #import <netinet/in.h>
 
+NSErrorDomain const StreamErrorDomain = @"Stream";
+
 
 
 
@@ -217,7 +219,7 @@
             self.messages[@(message.serial)] = message;
             message.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeout repeats:NO block:^(NSTimer *timer) {
                 self.messages[@(message.serial)] = nil;
-                NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorTimedOut userInfo:nil];
+                NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorTimedOut userInfo:nil];
                 [self invokeHandler:completion object:nil object:error queue:self.delegates.operationQueue];
             }];
         } else {

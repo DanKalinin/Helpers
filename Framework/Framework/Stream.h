@@ -14,6 +14,13 @@
 
 typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError *error);
 
+extern NSErrorDomain const StreamErrorDomain;
+
+NS_ERROR_ENUM(StreamErrorDomain) {
+    StreamErrorUnknown = 0,
+    StreamErrorTimedOut = 1
+};
+
 
 
 
