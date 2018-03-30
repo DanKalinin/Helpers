@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "Main.h"
+#import "Operation.h"
 
-@class StreamMessage, StreamPair, StreamEndpoint, StreamClient, StreamServer;
+@class StreamMessage, StreamLoadTask, StreamPair, StreamEndpoint, StreamClient, StreamServer;
 
 typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError *error);
 
@@ -80,8 +81,22 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 
 
 
+@interface StreamLoadTask : OperationTask
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol StreamPairDelegate <NSObject>
 
+@optional
 - (void)pairDidOpen:(StreamPair *)pair;
 - (void)pairDidFailToOpen:(StreamPair *)pair;
 - (void)pairDidClose:(StreamPair *)pair;
@@ -110,6 +125,9 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion;
+
+- (StreamLoadTask *)uploadData:(NSMutableData *)data toPath:(NSString *)path;
+- (StreamLoadTask *)downloadData:(NSMutableData *)data fromPath:(NSString *)path;
 
 @end
 

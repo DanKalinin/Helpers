@@ -155,6 +155,25 @@
 
 
 
+@interface StreamLoadTask ()
+
+@end
+
+
+
+@implementation StreamLoadTask
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface StreamPair ()
 
 @property NSInputStream *inputStream;
@@ -209,6 +228,14 @@
     } else {
         [self invokeHandler:completion object:nil object:self.outputStream.streamError queue:self.delegates.operationQueue];
     }
+}
+
+- (StreamLoadTask *)uploadData:(NSMutableData *)data toPath:(NSString *)path {
+    return nil;
+}
+
+- (StreamLoadTask *)downloadData:(NSMutableData *)data fromPath:(NSString *)path {
+    return nil;
 }
 
 #pragma mark - Accessors
