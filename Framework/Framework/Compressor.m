@@ -34,7 +34,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 @dynamic parent;
 @dynamic delegates;
 
-- (instancetype)initWithOperation:(compression_stream_operation)operation algorithm:(compression_algorithm)algorithm srcData:(NSMutableData *)srcData dstData:(NSMutableData *)dstData chunk:(size_t)chunk {
+- (instancetype)initWithSrcData:(NSMutableData *)srcData dstData:(NSMutableData *)dstData chunk:(size_t)chunk {
     self = super.init;
     if (self) {
         self.srcData = srcData;
@@ -151,7 +151,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 }
 
 - (Compression *)compress:(NSMutableData *)srcData to:(NSMutableData *)dstData chunk:(size_t)chunk {
-    Compression *compression = [Compression.alloc initWithOperation:self.operation algorithm:self.algorithm srcData:srcData dstData:dstData chunk:chunk];
+    Compression *compression = [Compression.alloc initWithSrcData:srcData dstData:dstData chunk:chunk];
     compression.delegates.operationQueue = self.delegates.operationQueue;
     [compression.delegates addObject:self.delegates];
     [self addOperation:compression];

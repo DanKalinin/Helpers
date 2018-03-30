@@ -46,7 +46,7 @@ NS_ERROR_ENUM(CompressionErrorDomain) {
 @property (readonly) NSMutableData *dstData;
 @property (readonly) size_t chunk;
 
-- (instancetype)initWithOperation:(compression_stream_operation)operation algorithm:(compression_algorithm)algorithm srcData:(NSMutableData *)srcData dstData:(NSMutableData *)dstData chunk:(size_t)chunk;
+- (instancetype)initWithSrcData:(NSMutableData *)srcData dstData:(NSMutableData *)dstData chunk:(size_t)chunk;
 
 @end
 

@@ -94,12 +94,10 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 
 
 
-@protocol StreamPairDelegate <NSObject>
+@protocol StreamPairDelegate <OperationDelegate>
 
 @optional
-- (void)pairDidOpen:(StreamPair *)pair;
-- (void)pairDidFailToOpen:(StreamPair *)pair;
-- (void)pairDidClose:(StreamPair *)pair;
+- (void)pairDidUpdateState:(StreamPair *)pair;
 - (void)pair:(StreamPair *)pair didReceiveData:(NSData *)data;
 - (void)pair:(StreamPair *)pair didReceiveMessage:(StreamMessage *)message;
 
@@ -107,7 +105,7 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 
 
 
-@interface StreamPair : NSOperation <StreamPairDelegate>
+@interface StreamPair : Operation <StreamPairDelegate>
 
 @property Class messageClass;
 @property NSTimeInterval timeout;
@@ -122,9 +120,6 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 @property (readonly) StreamServer *server;
 @property (readonly) NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
 @property (readonly) Sequence *sequence;
-
-@property (readonly) Sequence *loadSequence;
-@property (readonly) NSMutableDictionary<NSNumber *, StreamLoadOperation *> *loadOperations;
 
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion;
@@ -143,7 +138,7 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 
 
 
-@interface StreamEndpoint : NSOperationQueue <StreamPairDelegate>
+@interface StreamEndpoint : OperationQueue <StreamPairDelegate>
 
 @property Class pairClass;
 

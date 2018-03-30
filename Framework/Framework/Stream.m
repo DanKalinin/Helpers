@@ -197,18 +197,12 @@
         self.inputStream = inputStream;
         self.outputStream = outputStream;
         
-        self.delegates = (id)SurrogateArray.new;
-        self.delegates.operationQueue = NSOperationQueue.mainQueue;
-        [self.delegates addObject:self];
-        
+        self.sequence = Sequence.new;
         self.messages = NSMutableDictionary.dictionary;
         
-        self.sequence = Sequence.new;
+        
         
         self.timeout = 60.0;
-        
-        self.loadSequence = Sequence.new;
-        self.loadOperations = NSMutableDictionary.dictionary;
     }
     return self;
 }
