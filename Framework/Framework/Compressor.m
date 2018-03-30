@@ -146,8 +146,6 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
     if (self) {
         self.operation = operation;
         self.algorithm = algorithm;
-        
-        self.maxConcurrentOperationCount = 1;
     }
     return self;
 }

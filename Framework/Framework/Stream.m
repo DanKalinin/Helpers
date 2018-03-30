@@ -176,7 +176,6 @@
 
 @interface StreamPair ()
 
-@property SurrogateArray<StreamPairDelegate> *delegates;
 @property NSInputStream *inputStream;
 @property NSOutputStream *outputStream;
 @property Sequence *sequence;
@@ -303,8 +302,6 @@
 
 @interface StreamEndpoint ()
 
-@property SurrogateArray<StreamPairDelegate> *delegates;
-
 @end
 
 
@@ -317,30 +314,8 @@
     self = super.init;
     if (self) {
         self.pairClass = pair;
-        
-        self.delegates = (id)SurrogateArray.new;
-        self.delegates.operationQueue = NSOperationQueue.mainQueue;
-        [self.delegates addObject:self];
     }
     return self;
-}
-
-#pragma mark - Pair
-
-- (void)pairDidOpen:(StreamPair *)pair {
-    
-}
-
-- (void)pairDidClose:(StreamPair *)pair {
-    
-}
-
-- (void)pair:(StreamPair *)pair didReceiveData:(NSData *)data {
-    
-}
-
-- (void)pair:(StreamPair *)pair didReceiveMessage:(StreamMessage *)message {
-    
 }
 
 #pragma mark - Helpers
