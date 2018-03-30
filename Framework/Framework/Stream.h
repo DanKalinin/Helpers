@@ -10,7 +10,7 @@
 #import "Main.h"
 #import "Operation.h"
 
-@class StreamMessage, StreamLoadTask, StreamPair, StreamEndpoint, StreamClient, StreamServer;
+@class StreamMessage, StreamLoadOperation, StreamPair, StreamEndpoint, StreamClient, StreamServer;
 
 typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError *error);
 
@@ -123,11 +123,14 @@ typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError
 @property (readonly) NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
 @property (readonly) Sequence *sequence;
 
+@property (readonly) Sequence *loadSequence;
+@property (readonly) NSMutableDictionary<NSNumber *, StreamLoadOperation *> *loadOperations;
+
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion;
 
-- (StreamLoadTask *)uploadData:(NSMutableData *)data toPath:(NSString *)path;
-- (StreamLoadTask *)downloadData:(NSMutableData *)data fromPath:(NSString *)path;
+- (StreamLoadOperation *)uploadData:(NSMutableData *)data toPath:(NSString *)path;
+- (StreamLoadOperation *)downloadData:(NSMutableData *)data fromPath:(NSString *)path;
 
 @end
 

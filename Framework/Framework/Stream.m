@@ -182,6 +182,9 @@
 @property NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
 @property Sequence *sequence;
 
+@property Sequence *loadSequence;
+@property NSMutableDictionary<NSNumber *, StreamLoadOperation *> *loadOperations;
+
 @end
 
 
@@ -203,6 +206,9 @@
         self.sequence = Sequence.new;
         
         self.timeout = 60.0;
+        
+        self.loadSequence = Sequence.new;
+        self.loadOperations = NSMutableDictionary.dictionary;
     }
     return self;
 }
@@ -230,11 +236,11 @@
     }
 }
 
-- (StreamLoadTask *)uploadData:(NSMutableData *)data toPath:(NSString *)path {
+- (StreamLoadOperation *)uploadData:(NSMutableData *)data toPath:(NSString *)path {
     return nil;
 }
 
-- (StreamLoadTask *)downloadData:(NSMutableData *)data fromPath:(NSString *)path {
+- (StreamLoadOperation *)downloadData:(NSMutableData *)data fromPath:(NSString *)path {
     return nil;
 }
 
