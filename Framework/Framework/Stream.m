@@ -284,10 +284,10 @@
         }
     }
     
+    [self updateState:OperationStateEnd];
+    
     [self.inputStream close];
     [self.outputStream close];
-    
-    [self updateState:OperationStateEnd];
 }
 
 @end
