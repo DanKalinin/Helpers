@@ -10,7 +10,7 @@
 #import "Main.h"
 #import "Operation.h"
 
-@class StreamMessage, StreamLoadOperation, StreamPair, StreamEndpoint, StreamClient, StreamServer;
+@class StreamMessage, StreamLoad, StreamPair, StreamEndpoint, StreamClient, StreamServer;
 
 typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError *error);
 
@@ -20,6 +20,11 @@ NS_ERROR_ENUM(StreamErrorDomain) {
     StreamErrorUnknown = 0,
     StreamErrorTimedOut = 1,
     StreamErrorClosed = 2
+};
+
+typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
+    StreamLoadOperationUp = 1,
+    StreamLoadOperationDown = 2
 };
 
 
@@ -89,7 +94,13 @@ NS_ERROR_ENUM(StreamErrorDomain) {
 
 
 
-@interface StreamLoadOperation : Operation
+@protocol StreamLoadDelegate <OperationDelegate>
+
+@end
+
+
+
+@interface StreamLoad : Operation
 
 @end
 
@@ -131,6 +142,12 @@ NS_ERROR_ENUM(StreamErrorDomain) {
 
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion;
+
+- (void)load:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path;
+- (void)upload:(NSMutableData *)data toPath:(NSString *)path;
+- (void)download:(NSMutableData *)data fromPath:(NSString *)path;
+- (void)uploadFile:(NSURL *)url toPath:(NSString *)path;
+- (void)downloadFile:(NSURL *)url fromPath:(NSString *)path;
 
 @end
 

@@ -157,13 +157,13 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 
 
-@interface StreamLoadOperation ()
+@interface StreamLoad ()
 
 @end
 
 
 
-@implementation StreamLoadOperation
+@implementation StreamLoad
 
 @end
 
