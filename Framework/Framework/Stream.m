@@ -284,18 +284,6 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     }
 }
 
-- (void)load:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path {
-    
-}
-
-- (void)upload:(NSMutableData *)data toPath:(NSString *)path {
-    [self load:StreamLoadOperationUp data:data path:path];
-}
-
-- (void)download:(NSMutableData *)data fromPath:(NSString *)path {
-    [self load:StreamLoadOperationDown data:data path:path];
-}
-
 #pragma mark - Accessors
 
 - (StreamClient *)client {

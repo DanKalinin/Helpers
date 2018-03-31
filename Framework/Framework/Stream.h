@@ -94,17 +94,7 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 
 
 
-@protocol StreamLoadDelegate <OperationDelegate>
-
-@optional
-- (void)loadDidUpdateState:(StreamLoad *)load;
-- (void)loadDidUpdateProgress:(StreamLoad *)load;
-
-@end
-
-
-
-@interface StreamLoad : Operation <StreamLoadDelegate>
+@interface StreamLoad : Operation
 
 @end
 
@@ -117,7 +107,7 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 
 
 
-@protocol StreamPairDelegate <StreamLoadDelegate>
+@protocol StreamPairDelegate <OperationDelegate>
 
 @optional
 - (void)pairDidUpdateState:(StreamPair *)pair;
@@ -146,10 +136,6 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion;
-
-- (void)load:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path;
-- (void)upload:(NSMutableData *)data toPath:(NSString *)path;
-- (void)download:(NSMutableData *)data fromPath:(NSString *)path;
 
 @end
 
