@@ -150,8 +150,6 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 - (void)load:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path;
 - (void)upload:(NSMutableData *)data toPath:(NSString *)path;
 - (void)download:(NSMutableData *)data fromPath:(NSString *)path;
-- (void)uploadFile:(NSURL *)url toPath:(NSString *)path;
-- (void)downloadFile:(NSURL *)url fromPath:(NSString *)path;
 
 @end
 
