@@ -94,6 +94,16 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 
 
 
+@protocol StreamLoadDelegate <OperationDelegate>
+
+@optional
+- (void)loadDidUpdateState:(StreamLoad *)load;
+- (void)loadDidUpdateProgress:(StreamLoad *)load;
+
+@end
+
+
+
 @interface StreamLoad : Operation
 
 @end
