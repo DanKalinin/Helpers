@@ -8,7 +8,8 @@
 
 #import "Compressor.h"
 
-const OperationState OperationState
+const OperationState CompressionStateProcessing = 2;
+const OperationState CompressionStateDestroying = 3;
 
 NSErrorDomain const CompressionErrorDomain = @"Compression";
 
@@ -55,6 +56,8 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
     compression_stream stream;
     compression_status status = compression_stream_init(&stream, self.parent.operation, self.parent.algorithm);
     if (status == COMPRESSION_STATUS_OK) {
+        [self updateState:CompressionStateProcessing];
+        
         size_t dstSize = 2 * self.chunk;
         uint8_t *dstBuffer = malloc(dstSize);
         
@@ -91,9 +94,12 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
         
         free(dstBuffer);
         
+        [self updateState:CompressionStateDestroying];
+        
         compression_stream_destroy(&stream);
         if (status == COMPRESSION_STATUS_OK) {
         } else {
+            self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
         }
     } else {
         self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];

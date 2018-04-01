@@ -13,6 +13,9 @@
 
 @class Compression, Compressor;
 
+extern const OperationState CompressionStateProcessing;
+extern const OperationState CompressionStateDestroying;
+
 extern NSErrorDomain const CompressionErrorDomain;
 
 NS_ERROR_ENUM(CompressionErrorDomain) {

@@ -20,7 +20,8 @@
 
 @property SurrogateArray<OperationDelegate> *delegates;
 @property OperationState state;
-@property NSMutableArray<NSNumber *> *states;
+@property OperationState state1;
+@property OperationState state2;
 @property NSProgress *progress;
 @property NSOperationQueue *queue;
 
@@ -36,8 +37,6 @@
         self.delegates = (id)SurrogateArray.new;
         self.delegates.operationQueue = NSOperationQueue.mainQueue;
         [self.delegates addObject:self];
-        
-        self.states = NSMutableArray.array;
         
         self.progress = NSProgress.new;
     }
@@ -58,8 +57,9 @@
 #pragma mark - Helpers
 
 - (void)updateState:(OperationState)state {
+    self.state2 = self.state1;
+    self.state1 = self.state;
     self.state = state;
-    [self.states addObject:@(state)];
     [self.delegates operationDidUpdateState:self];
 }
 
