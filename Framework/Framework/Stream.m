@@ -301,6 +301,20 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     [self.delegates pairDidUpdateState:self];
 }
 
+#pragma mark - Operation
+
+- (void)operationDidBegin:(Operation *)operation {
+    [self.delegates pairDidBegin:self];
+}
+
+- (void)operationDidProcess:(Operation *)operation {
+    [self.delegates pairDidProcess:self];
+}
+
+- (void)operationDidEnd:(Operation *)operation {
+    [self.delegates pairDidEnd:self];
+}
+
 @end
 
 

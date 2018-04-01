@@ -117,6 +117,20 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
     [self.delegates compressionDidUpdateProgress:self];
 }
 
+#pragma mark - Operation
+
+- (void)operationDidBegin:(Operation *)operation {
+    [self.delegates compressionDidBegin:self];
+}
+
+- (void)operationDidProcess:(Operation *)operation {
+    [self.delegates compressionDidProcess:self];
+}
+
+- (void)operationDidEnd:(Operation *)operation {
+    [self.delegates compressionDidEnd:self];
+}
+
 @end
 
 

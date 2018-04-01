@@ -22,6 +22,7 @@
 @property OperationState state;
 @property OperationState previousState;
 @property NSProgress *progress;
+@property NSOperationQueue *queue;
 
 @end
 
@@ -41,6 +42,11 @@
     return self;
 }
 
+- (void)start {
+    self.queue = NSOperationQueue.new;
+    [self.queue addOperation:self];
+}
+
 #pragma mark - Accessors
 
 - (id)parent {
@@ -53,6 +59,14 @@
     self.previousState = self.state;
     self.state = state;
     [self.delegates operationDidUpdateState:self];
+    
+    if (state == OperationStateBegin) {
+        [self.delegates operationDidBegin:self];
+    } else if (state == OperationStateProcess) {
+        [self.delegates operationDidProcess:self];
+    } else {
+        [self.delegates operationDidEnd:self];
+    }
 }
 
 - (void)updateProgress:(uint64_t)completedUnitCount {

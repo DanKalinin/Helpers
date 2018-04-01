@@ -121,6 +121,10 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 
 @optional
 - (void)pairDidUpdateState:(StreamPair *)pair;
+- (void)pairDidBegin:(StreamPair *)pair;
+- (void)pairDidProcess:(StreamPair *)pair;
+- (void)pairDidEnd:(StreamPair *)pair;
+
 - (void)pair:(StreamPair *)pair didReceiveData:(NSData *)data;
 - (void)pair:(StreamPair *)pair didReceiveMessage:(StreamMessage *)message;
 
