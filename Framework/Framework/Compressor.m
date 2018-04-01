@@ -53,8 +53,6 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
     compression_stream stream;
     compression_status status = compression_stream_init(&stream, self.parent.operation, self.parent.algorithm);
     if (status == COMPRESSION_STATUS_OK) {
-        [self updateState:OperationStateProcess];
-        
         size_t dstSize = 2 * self.chunk;
         uint8_t *dstBuffer = malloc(dstSize);
         
@@ -84,7 +82,6 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
                     [self updateProgress:completedUnitCount];
                 } else {
                     self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
-                    [self updateState:OperationStateEnd];
                     break;
                 }
             }
@@ -94,41 +91,14 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
         
         status = compression_stream_destroy(&stream);
         if (status == COMPRESSION_STATUS_OK) {
-            [self updateState:OperationStateEnd];
-        } else if (!self.error) {
+        } else {
             self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
-            [self updateState:OperationStateEnd];
         }
     } else {
         self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
-        [self updateState:OperationStateEnd];
     }
-}
-
-#pragma mark - Helpers
-
-- (void)updateState:(OperationState)state {
-    [super updateState:state];
-    [self.delegates compressionDidUpdateState:self];
-}
-
-- (void)updateProgress:(uint64_t)completedUnitCount {
-    [super updateProgress:completedUnitCount];
-    [self.delegates compressionDidUpdateProgress:self];
-}
-
-#pragma mark - Operation
-
-- (void)operationDidBegin:(Operation *)operation {
-    [self.delegates compressionDidBegin:self];
-}
-
-- (void)operationDidProcess:(Operation *)operation {
-    [self.delegates compressionDidProcess:self];
-}
-
-- (void)operationDidEnd:(Operation *)operation {
-    [self.delegates compressionDidEnd:self];
+    
+    [self updateState:OperationStateEnd];
 }
 
 @end

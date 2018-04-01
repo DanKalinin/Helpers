@@ -20,7 +20,6 @@
 
 @property SurrogateArray<OperationDelegate> *delegates;
 @property OperationState state;
-@property OperationState previousState;
 @property NSProgress *progress;
 @property NSOperationQueue *queue;
 
@@ -56,17 +55,8 @@
 #pragma mark - Helpers
 
 - (void)updateState:(OperationState)state {
-    self.previousState = self.state;
     self.state = state;
     [self.delegates operationDidUpdateState:self];
-    
-    if (state == OperationStateBegin) {
-        [self.delegates operationDidBegin:self];
-    } else if (state == OperationStateProcess) {
-        [self.delegates operationDidProcess:self];
-    } else {
-        [self.delegates operationDidEnd:self];
-    }
 }
 
 - (void)updateProgress:(uint64_t)completedUnitCount {

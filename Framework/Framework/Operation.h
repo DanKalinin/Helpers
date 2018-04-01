@@ -11,9 +11,7 @@
 @class Operation, OperationQueue, OperationTask;
 
 typedef NS_ENUM(NSUInteger, OperationState) {
-    OperationStatePossible,
     OperationStateBegin,
-    OperationStateProcess,
     OperationStateEnd
 };
 
@@ -30,9 +28,6 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 
 @optional
 - (void)operationDidUpdateState:(Operation *)operation;
-- (void)operationDidBegin:(Operation *)operation;
-- (void)operationDidProcess:(Operation *)operation;
-- (void)operationDidEnd:(Operation *)operation;
 - (void)opertionDidUpdateProgress:(Operation *)operation;
 
 @end
@@ -46,7 +41,6 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 @property (readonly) id parent;
 @property (readonly) SurrogateArray<OperationDelegate> *delegates;
 @property (readonly) OperationState state;
-@property (readonly) OperationState previousState;
 @property (readonly) NSProgress *progress;
 @property (readonly) NSOperationQueue *queue;
 

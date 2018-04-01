@@ -9,6 +9,8 @@
 #import "Stream.h"
 #import <netinet/in.h>
 
+const OperationState StreamPairStateOpen = OperationStateEnd + 1;
+
 NSErrorDomain const StreamErrorDomain = @"Stream";
 
 
@@ -218,7 +220,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
         if (self.inputStream.streamStatus == NSStreamStatusOpening) {
             continue;
         } else if (self.inputStream.streamStatus == NSStreamStatusOpen) {
-            [self updateState:OperationStateProcess];
+            [self updateState:StreamPairStateOpen];
             while (!self.cancelled) {
                 if (self.inputStream.hasBytesAvailable) {
                     if (self.messageClass) {
@@ -232,7 +234,11 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
                             } else {
                                 [self.delegates pair:self didReceiveMessage:message];
                             }
+                        } else if (result == 0) {
+                            self.error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+                            break;
                         } else {
+                            self.error = self.inputStream.streamError;
                             break;
                         }
                     } else {
@@ -240,7 +246,11 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
                         NSInteger result = [self.inputStream read:data length:1024];
                         if (result > 0) {
                             [self.delegates pair:self didReceiveData:data];
+                        } else if (result == 0) {
+                            self.error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+                            break;
                         } else {
+                            self.error = self.inputStream.streamError;
                             break;
                         }
                     }
@@ -248,15 +258,15 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
             }
             break;
         } else {
+            self.error = self.inputStream.streamError;
             break;
         }
     }
     
-    self.error = self.inputStream.streamError;
-    [self updateState:OperationStateEnd];
-    
     [self.inputStream close];
     [self.outputStream close];
+    
+    [self updateState:OperationStateEnd];
 }
 
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion {
@@ -287,32 +297,11 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 #pragma mark - Accessors
 
 - (StreamClient *)client {
-    return self.delegates[1][0];
+    return (StreamClient *)self.parent;
 }
 
 - (StreamServer *)server {
-    return self.delegates[1][0];
-}
-
-#pragma mark - Helpers
-
-- (void)updateState:(OperationState)state {
-    [super updateState:state];
-    [self.delegates pairDidUpdateState:self];
-}
-
-#pragma mark - Operation
-
-- (void)operationDidBegin:(Operation *)operation {
-    [self.delegates pairDidBegin:self];
-}
-
-- (void)operationDidProcess:(Operation *)operation {
-    [self.delegates pairDidProcess:self];
-}
-
-- (void)operationDidEnd:(Operation *)operation {
-    [self.delegates pairDidEnd:self];
+    return (StreamServer *)self.parent;
 }
 
 @end

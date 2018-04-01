@@ -14,6 +14,8 @@
 
 typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError *error);
 
+extern const OperationState StreamPairStateOpen;
+
 extern NSErrorDomain const StreamErrorDomain;
 
 NS_ERROR_ENUM(StreamErrorDomain) {
@@ -96,15 +98,11 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 
 @protocol StreamLoadDelegate <OperationDelegate>
 
-@optional
-- (void)loadDidUpdateState:(StreamLoad *)load;
-- (void)loadDidUpdateProgress:(StreamLoad *)load;
-
 @end
 
 
 
-@interface StreamLoad : Operation
+@interface StreamLoad : Operation <StreamLoadDelegate>
 
 @end
 
@@ -120,11 +118,6 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 @protocol StreamPairDelegate <OperationDelegate>
 
 @optional
-- (void)pairDidUpdateState:(StreamPair *)pair;
-- (void)pairDidBegin:(StreamPair *)pair;
-- (void)pairDidProcess:(StreamPair *)pair;
-- (void)pairDidEnd:(StreamPair *)pair;
-
 - (void)pair:(StreamPair *)pair didReceiveData:(NSData *)data;
 - (void)pair:(StreamPair *)pair didReceiveMessage:(StreamMessage *)message;
 

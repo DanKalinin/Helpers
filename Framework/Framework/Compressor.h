@@ -30,13 +30,6 @@ NS_ERROR_ENUM(CompressionErrorDomain) {
 
 @protocol CompressionDelegate <OperationDelegate>
 
-@optional
-- (void)compressionDidUpdateState:(Compression *)compression;
-- (void)compressionDidBegin:(Compression *)compression;
-- (void)compressionDidProcess:(Compression *)compression;
-- (void)compressionDidEnd:(Compression *)compression;
-- (void)compressionDidUpdateProgress:(Compression *)compression;
-
 @end
 
 
