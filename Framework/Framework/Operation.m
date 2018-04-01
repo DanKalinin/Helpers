@@ -91,4 +91,11 @@
     return self;
 }
 
+- (void)addOperation:(Operation *)operation {
+    [super addOperation:operation];
+    
+    operation.delegates.operationQueue = self.delegates.operationQueue;
+    [operation.delegates addObject:self.delegates];
+}
+
 @end

@@ -152,8 +152,6 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 
 - (Compression *)compress:(NSMutableData *)srcData to:(NSMutableData *)dstData chunk:(size_t)chunk {
     Compression *compression = [Compression.alloc initWithSrcData:srcData dstData:dstData chunk:chunk];
-    compression.delegates.operationQueue = self.delegates.operationQueue;
-    [compression.delegates addObject:self.delegates];
     [self addOperation:compression];
     return compression;
 }

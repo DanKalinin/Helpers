@@ -334,8 +334,6 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 - (void)startInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream {
     StreamPair *pair = [self.pairClass.alloc initWithInputStream:inputStream outputStream:outputStream];
-    pair.delegates.operationQueue = self.delegates.operationQueue;
-    [pair.delegates addObject:self.delegates];
     [self addOperation:pair];
 }
 
