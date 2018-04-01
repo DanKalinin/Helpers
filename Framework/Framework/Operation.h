@@ -48,7 +48,7 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 @property (readonly) OperationState state;
 @property (readonly) OperationState previousState;
 @property (readonly) NSProgress *progress;
-@property (readonly) NSOperationQueue *queue;
+@property (readonly) OperationQueue *queue;
 
 - (void)resume;
 - (void)updateState:(OperationState)state;

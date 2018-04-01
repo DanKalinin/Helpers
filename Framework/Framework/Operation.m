@@ -22,7 +22,7 @@
 @property OperationState state;
 @property OperationState previousState;
 @property NSProgress *progress;
-@property NSOperationQueue *queue;
+@property OperationQueue *queue;
 
 @end
 
@@ -43,7 +43,7 @@
 }
 
 - (void)resume {
-    self.queue = NSOperationQueue.new;
+    self.queue = OperationQueue.new;
     [self.queue addOperation:self];
 }
 
