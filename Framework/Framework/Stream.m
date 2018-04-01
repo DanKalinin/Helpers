@@ -9,7 +9,7 @@
 #import "Stream.h"
 #import <netinet/in.h>
 
-const OperationState StreamPairStateOpen = OperationStateEnd + 1;
+const OperationState StreamPairStateReading = 2;
 
 NSErrorDomain const StreamErrorDomain = @"Stream";
 
@@ -220,7 +220,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
         if (self.inputStream.streamStatus == NSStreamStatusOpening) {
             continue;
         } else if (self.inputStream.streamStatus == NSStreamStatusOpen) {
-            [self updateState:StreamPairStateOpen];
+            [self updateState:StreamPairStateReading];
             while (!self.cancelled) {
                 if (self.inputStream.hasBytesAvailable) {
                     if (self.messageClass) {

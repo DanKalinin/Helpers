@@ -14,7 +14,7 @@
 
 typedef void (^StreamMessageErrorBlock)(__kindof StreamMessage *message, NSError *error);
 
-extern const OperationState StreamPairStateOpen;
+extern const OperationState StreamPairStateReading;
 
 extern NSErrorDomain const StreamErrorDomain;
 
