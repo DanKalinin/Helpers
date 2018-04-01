@@ -8,6 +8,8 @@
 
 #import "Compressor.h"
 
+const OperationState OperationState
+
 NSErrorDomain const CompressionErrorDomain = @"Compression";
 
 
@@ -89,10 +91,9 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
         
         free(dstBuffer);
         
-        status = compression_stream_destroy(&stream);
+        compression_stream_destroy(&stream);
         if (status == COMPRESSION_STATUS_OK) {
         } else {
-            self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
         }
     } else {
         self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];

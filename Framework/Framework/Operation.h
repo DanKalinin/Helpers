@@ -41,6 +41,7 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 @property (readonly) id parent;
 @property (readonly) SurrogateArray<OperationDelegate> *delegates;
 @property (readonly) OperationState state;
+@property (readonly) NSMutableArray<NSNumber *> *states;
 @property (readonly) NSProgress *progress;
 @property (readonly) NSOperationQueue *queue;
 
