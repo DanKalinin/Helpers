@@ -42,7 +42,7 @@
     return self;
 }
 
-- (void)start {
+- (void)resume {
     self.queue = NSOperationQueue.new;
     [self.queue addOperation:self];
 }
