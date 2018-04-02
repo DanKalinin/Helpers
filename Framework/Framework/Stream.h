@@ -149,7 +149,7 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion;
-- (StreamMessage *)writeMessage:(StreamMessage *)message error:(NSError **)error;
+- (__kindof StreamMessage *)writeMessage:(StreamMessage *)message error:(NSError **)error;
 
 @end
 
