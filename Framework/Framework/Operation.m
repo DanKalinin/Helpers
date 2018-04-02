@@ -67,11 +67,18 @@
 - (void)updateState:(OperationState)state {
     self.state = state;
     [self.states addObject:@(state)];
+    
     [self.delegates operationDidUpdateState:self];
+    if (state == OperationStateDidBegin) {
+        [self.delegates operationDidBegin:self];
+    } else if (state == OperationStateDidEnd) {
+        [self.delegates operationDidEnd:self];
+    }
 }
 
 - (void)updateProgress:(uint64_t)completedUnitCount {
     self.progress.completedUnitCount = completedUnitCount;
+    
     [self.delegates opertionDidUpdateProgress:self];
 }
 

@@ -8,8 +8,8 @@
 
 #import "Compressor.h"
 
-const OperationState CompressionStateProcessing = 2;
-const OperationState CompressionStateDestroying = 3;
+const OperationState CompressionStateDidInit = 2;
+const OperationState CompressionStateDidProcess = 3;
 
 NSErrorDomain const CompressionErrorDomain = @"Compression";
 
@@ -50,13 +50,13 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 }
 
 - (void)main {
-    [self updateState:OperationStateBegin];
+    [self updateState:OperationStateDidBegin];
     [self updateProgress:0];
     
     compression_stream stream;
     compression_status status = compression_stream_init(&stream, self.parent.operation, self.parent.algorithm);
     if (status == COMPRESSION_STATUS_OK) {
-        [self updateState:CompressionStateProcessing];
+        [self updateState:CompressionStateDidInit];
         
         size_t dstSize = 2 * self.chunk;
         uint8_t *dstBuffer = malloc(dstSize);
@@ -94,7 +94,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
         
         free(dstBuffer);
         
-        [self updateState:CompressionStateDestroying];
+        [self updateState:CompressionStateDidProcess];
         
         status = compression_stream_destroy(&stream);
         if (status == COMPRESSION_STATUS_OK) {
@@ -105,7 +105,30 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
         self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
     }
     
-    [self updateState:OperationStateEnd];
+    [self updateState:OperationStateDidEnd];
+}
+
+#pragma mark - Helpers
+
+- (void)updateState:(OperationState)state {
+    [super updateState:state];
+    
+    [self.delegates compressionDidUpdateState:self];
+    if (state == OperationStateDidBegin) {
+        [self.delegates compressionDidBegin:self];
+    } else if (state == CompressionStateDidInit) {
+        [self.delegates compressionDidInit:self];
+    } else if (state == CompressionStateDidProcess) {
+        [self.delegates compressionDidUpdateProgress:self];
+    } else if (state == OperationStateDidEnd) {
+        [self.delegates compressionDidEnd:self];
+    }
+}
+
+- (void)updateProgress:(uint64_t)completedUnitCount {
+    [super updateProgress:completedUnitCount];
+    
+    [self.delegates compressionDidUpdateProgress:self];
 }
 
 @end

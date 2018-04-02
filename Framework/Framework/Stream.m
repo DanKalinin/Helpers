@@ -9,7 +9,7 @@
 #import "Stream.h"
 #import <netinet/in.h>
 
-const OperationState StreamPairStateReading = 2;
+const OperationState StreamPairStateDidOpen = 2;
 
 NSErrorDomain const StreamErrorDomain = @"Stream";
 
@@ -211,7 +211,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 }
 
 - (void)main {
-    [self updateState:OperationStateBegin];
+    [self updateState:OperationStateDidBegin];
     
     [self.inputStream open];
     [self.outputStream open];
@@ -220,7 +220,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
         if (self.inputStream.streamStatus == NSStreamStatusOpening) {
             continue;
         } else if (self.inputStream.streamStatus == NSStreamStatusOpen) {
-            [self updateState:StreamPairStateReading];
+            [self updateState:StreamPairStateDidOpen];
             while (!self.cancelled) {
                 if (self.inputStream.hasBytesAvailable) {
                     if (self.messageClass) {
@@ -266,7 +266,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     [self.inputStream close];
     [self.outputStream close];
     
-    [self updateState:OperationStateEnd];
+    [self updateState:OperationStateDidEnd];
 }
 
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion {
@@ -302,6 +302,21 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 - (StreamServer *)server {
     return (StreamServer *)self.parent;
+}
+
+#pragma mark - Helpers
+
+- (void)updateState:(OperationState)state {
+    [super updateState:state];
+    
+    [self.delegates pairDidUpdateState:self];
+    if (state == OperationStateDidBegin) {
+        [self.delegates pairDidBegin:self];
+    } else if (state == StreamPairStateDidOpen) {
+        [self.delegates pairDidOpen:self];
+    } else if (state == OperationStateDidEnd) {
+        [self.delegates pairDidEnd:self];
+    }
 }
 
 @end

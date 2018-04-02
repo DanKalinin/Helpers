@@ -13,8 +13,8 @@
 
 @class Compression, Compressor;
 
-extern const OperationState CompressionStateProcessing;
-extern const OperationState CompressionStateDestroying;
+extern const OperationState CompressionStateDidInit;
+extern const OperationState CompressionStateDidProcess;
 
 extern NSErrorDomain const CompressionErrorDomain;
 
@@ -32,6 +32,15 @@ NS_ERROR_ENUM(CompressionErrorDomain) {
 
 
 @protocol CompressionDelegate <OperationDelegate>
+
+@optional
+- (void)compressionDidUpdateState:(Compression *)compression;
+- (void)compressionDidUpdateProgress:(Compression *)compression;
+
+- (void)compressionDidBegin:(Compression *)compression;
+- (void)compressionDidInit:(Compression *)compression;
+- (void)compressionDidProcess:(Compression *)compression;
+- (void)compressionDidEnd:(Compression *)compression;
 
 @end
 
