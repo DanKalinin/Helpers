@@ -96,7 +96,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
         
         [self updateState:CompressionStateDestroying];
         
-        compression_stream_destroy(&stream);
+        status = compression_stream_destroy(&stream);
         if (status == COMPRESSION_STATUS_OK) {
         } else {
             self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
