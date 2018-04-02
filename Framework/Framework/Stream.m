@@ -296,6 +296,19 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     }
 }
 
+- (StreamMessage *)writeMessage:(StreamMessage *)message error:(NSError **)error {
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_enter(group);
+    __block StreamMessage *msg;
+    __block NSError *err;
+    [self writeMessage:message completion:^(StreamMessage *message, NSError *error) {
+        msg = message;
+        err = error;
+    }];
+    *error = err;
+    return msg;
+}
+
 #pragma mark - Accessors
 
 - (StreamClient *)client {
