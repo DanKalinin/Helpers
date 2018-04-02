@@ -19,7 +19,6 @@
 @interface Operation ()
 
 @property SurrogateArray<OperationDelegate> *delegates;
-@property OperationState state;
 @property NSMutableArray<NSNumber *> *states;
 @property NSMutableArray<NSError *> *errors;
 @property NSProgress *progress;
@@ -57,15 +56,9 @@
     return self.delegates[1][0];
 }
 
-- (void)setError:(NSError *)error {
-    _error = error;
-    [self.errors addObject:error];
-}
-
 #pragma mark - Helpers
 
 - (void)updateState:(OperationState)state {
-    self.state = state;
     [self.states addObject:@(state)];
     
     [self.delegates operationDidUpdateState:self];

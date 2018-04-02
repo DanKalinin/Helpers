@@ -235,10 +235,11 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
                                 [self.delegates pair:self didReceiveMessage:message];
                             }
                         } else if (result == 0) {
-                            self.error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+                            NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+                            [self.errors addObject:error];
                             break;
                         } else {
-                            self.error = self.inputStream.streamError;
+                            [self.errors addObject:self.inputStream.streamError];
                             break;
                         }
                     } else {
@@ -247,10 +248,11 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
                         if (result > 0) {
                             [self.delegates pair:self didReceiveData:data];
                         } else if (result == 0) {
-                            self.error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+                            NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+                            [self.errors addObject:error];
                             break;
                         } else {
-                            self.error = self.inputStream.streamError;
+                            [self.errors addObject:self.inputStream.streamError];
                             break;
                         }
                     }
@@ -258,7 +260,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
             }
             break;
         } else {
-            self.error = self.inputStream.streamError;
+            [self.errors addObject:self.inputStream.streamError];
             break;
         }
     }

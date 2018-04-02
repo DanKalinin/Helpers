@@ -86,7 +86,8 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
                     int64_t completedUnitCount = self.progress.totalUnitCount - self.srcData.length;
                     [self updateProgress:completedUnitCount];
                 } else {
-                    self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
+                    NSError *error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
+                    [self.errors addObject:error];
                     break;
                 }
             }
@@ -99,10 +100,12 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
         status = compression_stream_destroy(&stream);
         if (status == COMPRESSION_STATUS_OK) {
         } else {
-            self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
+            NSError *error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
+            [self.errors addObject:error];
         }
     } else {
-        self.error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
+        NSError *error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
+        [self.errors addObject:error];
     }
     
     [self updateState:OperationStateDidEnd];
