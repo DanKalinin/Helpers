@@ -304,7 +304,9 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     [self writeMessage:message completion:^(StreamMessage *message, NSError *error) {
         msg = message;
         err = error;
+        dispatch_group_leave(group);
     }];
+    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
     *error = err;
     return msg;
 }
