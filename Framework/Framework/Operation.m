@@ -20,8 +20,8 @@
 
 @property SurrogateArray<OperationDelegate> *delegates;
 @property OperationState state;
-@property OperationState state1;
-@property OperationState state2;
+@property NSMutableArray<NSNumber *> *states;
+@property NSMutableArray<NSError *> *errors;
 @property NSProgress *progress;
 @property NSOperationQueue *queue;
 
@@ -37,6 +37,9 @@
         self.delegates = (id)SurrogateArray.new;
         self.delegates.operationQueue = NSOperationQueue.mainQueue;
         [self.delegates addObject:self];
+        
+        self.states = NSMutableArray.array;
+        self.errors = NSMutableArray.array;
         
         self.progress = NSProgress.new;
     }
@@ -54,12 +57,16 @@
     return self.delegates[1][0];
 }
 
+- (void)setError:(NSError *)error {
+    _error = error;
+    [self.errors addObject:error];
+}
+
 #pragma mark - Helpers
 
 - (void)updateState:(OperationState)state {
-    self.state2 = self.state1;
-    self.state1 = self.state;
     self.state = state;
+    [self.states addObject:@(state)];
     [self.delegates operationDidUpdateState:self];
 }
 
