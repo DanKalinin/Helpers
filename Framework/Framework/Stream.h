@@ -114,7 +114,6 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 @property (readonly) NSURL *path;
 
 - (instancetype)initWithOperation:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path;
-- (instancetype)initWithOperation:(StreamLoadOperation)operation file:(NSURL *)file path:(NSString *)path;
 
 @end
 
@@ -159,9 +158,15 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 @property (readonly) Sequence *sequence;
 @property (readonly) NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
 
+@property Class loadClass;
+
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion;
 - (__kindof StreamMessage *)writeMessage:(StreamMessage *)message error:(NSError **)error;
+
+- (__kindof StreamLoad *)load:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path;
+- (__kindof StreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path;
+- (__kindof StreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path;
 
 @end
 

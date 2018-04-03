@@ -315,6 +315,24 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     return msg;
 }
 
+- (StreamLoad *)load:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path {
+    StreamLoad *load = [self.loadClass.alloc initWithOperation:operation data:data path:path];
+    load.delegates.operationQueue = self.delegates.operationQueue;
+    [load.delegates addObject:self.delegates];
+    [load resume];
+    return load;
+}
+
+- (StreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path {
+    StreamLoad *load = [self load:StreamLoadOperationUp data:data path:path];
+    return load;
+}
+
+- (StreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path {
+    StreamLoad *load = [self load:StreamLoadOperationDown data:data path:path];
+    return load;
+}
+
 #pragma mark - Accessors
 
 - (StreamClient *)client {
