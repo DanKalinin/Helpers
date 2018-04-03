@@ -167,6 +167,10 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 @implementation StreamLoad
 
+- (void)main {
+    
+}
+
 @end
 
 
