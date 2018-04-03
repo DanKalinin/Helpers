@@ -39,6 +39,9 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 
 @interface Operation : NSOperation <OperationDelegate, NSProgressReporting>
 
+@property (copy) VoidBlock stateBlock;
+@property (copy) VoidBlock progressBlock;
+
 @property (readonly) id parent;
 @property (readonly) SurrogateArray<OperationDelegate> *delegates;
 @property (readonly) NSMutableArray<NSNumber *> *states;

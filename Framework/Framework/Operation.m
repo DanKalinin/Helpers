@@ -62,6 +62,7 @@
     [self.states addObject:@(state)];
     
     [self.delegates operationDidUpdateState:self];
+    [self invokeHandler:self.stateBlock queue:self.delegates.operationQueue];
     if (state == OperationStateDidBegin) {
         [self.delegates operationDidBegin:self];
     } else if (state == OperationStateDidEnd) {
@@ -73,6 +74,7 @@
     self.progress.completedUnitCount = completedUnitCount;
     
     [self.delegates opertionDidUpdateProgress:self];
+    [self invokeHandler:self.progressBlock queue:self.delegates.operationQueue];
 }
 
 @end
