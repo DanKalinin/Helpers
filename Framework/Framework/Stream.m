@@ -171,6 +171,8 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 @implementation StreamLoad
 
+@dynamic delegates;
+
 - (instancetype)initWithOperation:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path {
     self = super.init;
     if (self) {
@@ -182,6 +184,17 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 }
 
 #pragma mark - Helpers
+
+- (void)updateState:(OperationState)state {
+    [super updateState:state];
+    
+    [self.delegates loadDidUpdateState:self];
+    if (state == OperationStateDidBegin) {
+        [self.delegates loadDidBegin:self];
+    } else if (state == OperationStateDidEnd) {
+        [self.delegates loadDidEnd:self];
+    }
+}
 
 @end
 

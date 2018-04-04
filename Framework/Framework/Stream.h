@@ -102,12 +102,16 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 - (void)loadDidUpdateState:(StreamLoad *)load;
 - (void)loadDidUpdateProgress:(StreamLoad *)load;
 
+- (void)loadDidBegin:(StreamLoad *)load;
+- (void)loadDidEnd:(StreamLoad *)load;
+
 @end
 
 
 
 @interface StreamLoad : Operation <StreamLoadDelegate>
 
+@property (readonly) SurrogateArray<StreamLoadDelegate> *delegates;
 @property (readonly) StreamLoadOperation operation;
 @property (readonly) NSMutableData *data;
 @property (readonly) NSString *path;
