@@ -317,9 +317,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 - (StreamLoad *)load:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path {
     StreamLoad *load = [self.loadClass.alloc initWithOperation:operation data:data path:path];
-    load.delegates.operationQueue = self.delegates.operationQueue;
-    [load.delegates addObject:self.delegates];
-    [load resume];
+    [self addOperation:load];
     return load;
 }
 

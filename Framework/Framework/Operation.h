@@ -47,11 +47,11 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 @property (readonly) NSMutableArray<NSNumber *> *states;
 @property (readonly) NSMutableArray<NSError *> *errors;
 @property (readonly) NSProgress *progress;
-@property (readonly) NSOperationQueue *queue;
+@property (readonly) NSOperationQueue *operationQueue;
 
-- (void)resume;
 - (void)updateState:(OperationState)state;
 - (void)updateProgress:(uint64_t)completedUnitCount;
+- (void)addOperation:(Operation *)operation;
 
 @end
 

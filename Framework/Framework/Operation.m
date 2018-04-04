@@ -22,7 +22,7 @@
 @property NSMutableArray<NSNumber *> *states;
 @property NSMutableArray<NSError *> *errors;
 @property NSProgress *progress;
-@property NSOperationQueue *queue;
+@property NSOperationQueue *operationQueue;
 
 @end
 
@@ -41,13 +41,10 @@
         self.errors = NSMutableArray.array;
         
         self.progress = NSProgress.new;
+        
+        self.operationQueue = NSOperationQueue.new;
     }
     return self;
-}
-
-- (void)resume {
-    self.queue = NSOperationQueue.new;
-    [self.queue addOperation:self];
 }
 
 #pragma mark - Accessors
@@ -75,6 +72,13 @@
     
     [self.delegates opertionDidUpdateProgress:self];
     [self invokeHandler:self.progressBlock queue:self.delegates.operationQueue];
+}
+
+- (void)addOperation:(Operation *)operation {
+    [self.operationQueue addOperation:operation];
+    
+    operation.delegates.operationQueue = self.delegates.operationQueue;
+    [operation.delegates addObject:self.delegates];
 }
 
 @end
