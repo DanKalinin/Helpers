@@ -171,6 +171,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 @implementation StreamLoad
 
+@dynamic parent;
 @dynamic delegates;
 
 - (instancetype)initWithOperation:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path {
@@ -214,6 +215,8 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 @property Sequence *sequence;
 @property NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
 
+@property Sequence *loadSequence;
+
 @end
 
 
@@ -229,12 +232,13 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
         self.inputStream = inputStream;
         self.outputStream = outputStream;
         
+        self.timeout = 60.0;
+        self.progress.totalUnitCount = -1;
+        
         self.sequence = Sequence.new;
         self.messages = NSMutableDictionary.dictionary;
         
-        self.timeout = 60.0;
-        
-        self.progress.totalUnitCount = -1;
+        self.loadSequence = Sequence.new;
     }
     return self;
 }

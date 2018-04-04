@@ -111,6 +111,7 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 
 @interface StreamLoad : Operation <StreamLoadDelegate>
 
+@property (readonly) __kindof StreamPair *parent;
 @property (readonly) SurrogateArray<StreamLoadDelegate> *delegates;
 @property (readonly) StreamLoadOperation operation;
 @property (readonly) NSMutableData *data;
@@ -162,6 +163,8 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 @property (readonly) NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
 
 @property Class loadClass;
+
+@property (readonly) Sequence *loadSequence;
 
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion;
