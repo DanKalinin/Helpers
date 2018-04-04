@@ -232,12 +232,13 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
         self.inputStream = inputStream;
         self.outputStream = outputStream;
         
-        self.timeout = 60.0;
         self.progress.totalUnitCount = -1;
         
+        self.timeout = 60.0;
         self.sequence = Sequence.new;
         self.messages = NSMutableDictionary.dictionary;
         
+        self.loadChunk = 1024;
         self.loadSequence = Sequence.new;
     }
     return self;
