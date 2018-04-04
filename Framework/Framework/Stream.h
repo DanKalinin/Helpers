@@ -110,8 +110,7 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 
 @property (readonly) StreamLoadOperation operation;
 @property (readonly) NSMutableData *data;
-@property (readonly) NSURL *file;
-@property (readonly) NSURL *path;
+@property (readonly) NSString *path;
 
 - (instancetype)initWithOperation:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path;
 
