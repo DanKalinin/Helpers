@@ -54,7 +54,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
     [self updateProgress:0];
     
     compression_stream stream;
-    compression_status status = compression_stream_init(&stream, self.parent.operation, self.parent.algorithm);
+    compression_status status = compression_stream_init(&stream, self.parent.op, self.parent.algorithm);
     if (status == COMPRESSION_STATUS_OK) {
         [self updateState:CompressionStateDidInit];
         
@@ -147,7 +147,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 
 @interface Compressor ()
 
-@property compression_stream_operation operation;
+@property compression_stream_operation op;
 @property compression_algorithm algorithm;
 
 @end
@@ -161,7 +161,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 - (instancetype)initWithOperation:(compression_stream_operation)operation algorithm:(compression_algorithm)algorithm {
     self = super.init;
     if (self) {
-        self.operation = operation;
+        self.op = operation;
         self.algorithm = algorithm;
     }
     return self;

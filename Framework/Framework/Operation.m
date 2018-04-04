@@ -119,4 +119,10 @@
     [operation.delegates addObject:self.delegates];
 }
 
+#pragma mark - Accessors
+
+- (Operation *)operation {
+    return self.operations.firstObject;
+}
+
 @end

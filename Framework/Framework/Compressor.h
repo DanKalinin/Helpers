@@ -70,7 +70,7 @@ NS_ERROR_ENUM(CompressionErrorDomain) {
 @interface Compressor : OperationQueue <CompressionDelegate>
 
 @property (readonly) SurrogateArray<CompressionDelegate> *delegates;
-@property (readonly) compression_stream_operation operation;
+@property (readonly) compression_stream_operation op;
 @property (readonly) compression_algorithm algorithm;
 
 - (instancetype)initWithOperation:(compression_stream_operation)operation algorithm:(compression_algorithm)algorithm;

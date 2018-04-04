@@ -66,6 +66,7 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 
 @interface OperationQueue : NSOperationQueue <OperationDelegate>
 
+@property (readonly) __kindof Operation *operation;
 @property (readonly) SurrogateArray<OperationDelegate> *delegates;
 
 @end

@@ -414,6 +414,8 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 @implementation StreamClient
 
+@dynamic operation;
+
 - (instancetype)initWithPair:(Class)pair {
     self = [super initWithPair:pair];
     if (self) {
@@ -435,10 +437,6 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     
     self = [self initWithInputStream:inputStream outputStream:outputStream pair:pair];
     return self;
-}
-
-- (StreamPair *)pair {
-    return self.operations.firstObject;
 }
 
 @end
@@ -463,6 +461,8 @@ static void StreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType 
 
 
 @implementation StreamServer
+
+@dynamic operations;
 
 - (instancetype)initWithPair:(Class)pair {
     self = [super initWithPair:pair];
@@ -498,10 +498,6 @@ static void StreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType 
     CFRunLoopAddSource(loop, source, kCFRunLoopDefaultMode);
     
     return self;
-}
-
-- (NSArray<StreamPair *> *)pairs {
-    return self.operations;
 }
 
 @end
