@@ -167,8 +167,11 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 @implementation StreamLoad
 
-- (void)main {
-    
+- (instancetype)initWithOperation:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path {
+    self = super.init;
+    if (self) {
+    }
+    return self;
 }
 
 @end
