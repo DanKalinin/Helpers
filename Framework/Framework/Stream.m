@@ -225,6 +225,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 @property NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
 
 @property Sequence *loadSequence;
+@property NSMutableDictionary<NSNumber *, NSMutableData *> *loadData;
 
 @end
 
@@ -249,6 +250,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
         
         self.loadChunk = 1024;
         self.loadSequence = Sequence.new;
+        self.loadData = NSMutableDictionary.dictionary;
     }
     return self;
 }

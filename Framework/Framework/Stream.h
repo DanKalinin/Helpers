@@ -171,6 +171,7 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 @property NSUInteger loadChunk;
 
 @property (readonly) Sequence *loadSequence;
+@property (readonly) NSMutableDictionary<NSNumber *, NSMutableData *> *loadData;
 
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 - (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion;
