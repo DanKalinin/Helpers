@@ -16,6 +16,8 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <SystemConfiguration/CaptiveNetwork.h>
 
+NSErrorDomain const HelpersErrorDomainDataCorrupted = @"com.helpers.Error.DataCorrupted";
+
 DateFormat const DateFormatISO8601 = @"yyyy-MM-dd'T'HH:mm:ss";
 DateFormat const DateFormatRFC1123 = @"E, dd MMM yyyy HH:mm:ss 'GMT'";
 DateFormat const DateFormatRFC850 = @"EEEE, dd-MMM-yy HH:mm:ss 'GMT'";
