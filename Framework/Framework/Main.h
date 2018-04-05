@@ -934,6 +934,23 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 
 
+@interface NSMutableData (Helpers)
+
+- (NSData *)popRange:(NSRange)range;
+- (NSData *)popLengthFromBegin:(NSUInteger)length;
+- (NSData *)popLengthFromEnd:(NSUInteger)length;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface NSString (Helpers)
 
 @property (readonly) NSString *normalizedAddress;

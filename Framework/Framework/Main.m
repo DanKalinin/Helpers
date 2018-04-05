@@ -2696,6 +2696,38 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
+@implementation NSMutableData (Helpers)
+
+- (NSData *)popRange:(NSRange)range {
+    NSData *data = [self subdataWithRange:range];
+    [self replaceBytesInRange:range withBytes:NULL length:0];
+    return data;
+}
+
+- (NSData *)popLengthFromBegin:(NSUInteger)length {
+    NSRange range = NSMakeRange(0, length);
+    NSData *data = [self popRange:range];
+    return data;
+}
+
+- (NSData *)popLengthFromEnd:(NSUInteger)length {
+    NSUInteger location = self.length - length;
+    NSRange range = NSMakeRange(location, length);
+    NSData *data = [self popRange:range];
+    return data;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @implementation NSString (Helpers)
 
 - (NSString *)normalizedAddress {
