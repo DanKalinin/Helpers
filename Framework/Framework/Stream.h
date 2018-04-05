@@ -169,6 +169,7 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 
 @property Class loadClass;
 @property NSUInteger loadChunk;
+@property NSURL *loadDirectory;
 
 @property (readonly) Sequence *loadSequence;
 @property (readonly) NSMutableDictionary<NSNumber *, NSMutableData *> *loadData;

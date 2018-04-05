@@ -871,6 +871,7 @@ typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 @property (readonly) NSURL *userDocumentsDirectoryURL; // Quick access to user directories
 @property (readonly) NSURL *userCachesDirectoryURL;
+@property (readonly) NSURL *userDownloadsDirectoryURL;
 
 @end
 

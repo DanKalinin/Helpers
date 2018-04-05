@@ -2491,6 +2491,11 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return URLs.firstObject;
 }
 
+- (NSURL *)userDownloadsDirectoryURL {
+    NSArray *URLs = [self URLsForDirectory:NSDownloadsDirectory inDomains:NSUserDomainMask];
+    return URLs.firstObject;
+}
+
 @end
 
 

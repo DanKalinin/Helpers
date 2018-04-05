@@ -249,6 +249,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
         self.messages = NSMutableDictionary.dictionary;
         
         self.loadChunk = 1024;
+        self.loadDirectory = NSFileManager.defaultManager.userDownloadsDirectoryURL;
         self.loadSequence = Sequence.new;
         self.loadData = NSMutableDictionary.dictionary;
     }
