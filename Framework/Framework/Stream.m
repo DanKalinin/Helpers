@@ -11,6 +11,9 @@
 
 const OperationState StreamPairStateDidOpen = 2;
 
+const OperationState StreamLoadStateDidInit = 2;
+const OperationState StreamLoadStateDidProcess = 3;
+
 NSErrorDomain const StreamErrorDomain = @"Stream";
 
 
@@ -180,6 +183,8 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
         self.operation = operation;
         self.data = data;
         self.path = path;
+        
+        self.progress.totalUnitCount = data.length;
     }
     return self;
 }
@@ -192,6 +197,10 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     [self.delegates loadDidUpdateState:self];
     if (state == OperationStateDidBegin) {
         [self.delegates loadDidBegin:self];
+    } else if (state == StreamLoadStateDidInit) {
+        [self.delegates loadDidInit:self];
+    } else if (state == StreamLoadStateDidProcess) {
+        [self.delegates loadDidProcess:self];
     } else if (state == OperationStateDidEnd) {
         [self.delegates loadDidEnd:self];
     }
