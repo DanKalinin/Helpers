@@ -284,9 +284,9 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
                             NSError *error = (result < 0) ? self.inputStream.streamError : [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
                             [self.errors addObject:error];
                             for (NSNumber *serial in self.messages.allKeys) {
-                                StreamMessage *message = [self.messages popObjectForKey:serial];
-                                [message.timer invalidate];
-                                [self invokeHandler:message.completion object:nil object:error queue:self.delegates.operationQueue];
+                                StreamMessage *msg = [self.messages popObjectForKey:serial];
+                                [msg.timer invalidate];
+                                [self invokeHandler:msg.completion object:nil object:error queue:self.delegates.operationQueue];
                             }
                             break;
                         }
