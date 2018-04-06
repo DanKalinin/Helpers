@@ -280,12 +280,14 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
                             } else {
                                 [self.delegates pair:self didReceiveMessage:message];
                             }
-                        } else if (result == 0) {
-                            NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
-                            [self.errors addObject:error];
-                            break;
                         } else {
-                            [self.errors addObject:self.inputStream.streamError];
+                            NSError *error = (result < 0) ? self.inputStream.streamError : [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+                            [self.errors addObject:error];
+                            for (NSNumber *serial in self.messages.allKeys) {
+                                StreamMessage *message = [self.messages popObjectForKey:serial];
+                                [message.timer invalidate];
+                                [self invokeHandler:message.completion object:nil object:error queue:self.delegates.operationQueue];
+                            }
                             break;
                         }
                     } else {
