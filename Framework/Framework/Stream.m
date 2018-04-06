@@ -295,12 +295,9 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
                         NSInteger result = [self.inputStream read:data length:1024];
                         if (result > 0) {
                             [self.delegates pair:self didReceiveData:data];
-                        } else if (result == 0) {
-                            NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
-                            [self.errors addObject:error];
-                            break;
                         } else {
-                            [self.errors addObject:self.inputStream.streamError];
+                            NSError *error = (result < 0) ? self.inputStream.streamError : [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+                            [self.errors addObject:error];
                             break;
                         }
                     }
