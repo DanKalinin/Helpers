@@ -277,6 +277,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
                                 StreamMessage *msg = [self.messages popObjectForKey:@(message.replySerial)];
                                 [msg.timer invalidate];
                                 [self invokeHandler:msg.completion object:message object:nil queue:self.delegates.operationQueue];
+                                msg.completion = nil;
                             } else {
                                 [self.delegates pair:self didReceiveMessage:message];
                             }
@@ -287,6 +288,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
                                 StreamMessage *msg = [self.messages popObjectForKey:serial];
                                 [msg.timer invalidate];
                                 [self invokeHandler:msg.completion object:nil object:error queue:self.delegates.operationQueue];
+                                msg.completion = nil;
                             }
                             break;
                         }
