@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "Main.h"
 
-@class Operation, OperationQueue, OperationTask;
+@class Operation, OperationQueue;
 
 typedef NS_ENUM(NSUInteger, OperationState) {
     OperationStateDidBegin,
