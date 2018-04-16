@@ -32,10 +32,10 @@
 
 @property NSUInteger URLHistorySize;
 
-@property (readonly) NSURLComponents *URL;
-@property (readonly) NSMutableArray<NSURLComponents *> *URLHistory;
-
 @property (readonly) NSMutableArray<NSURLComponents *> *URLs;
 @property (readonly) NSMutableArray<Reachability *> *reachabilities;
+
+@property (readonly) NSURLComponents *URL;
+@property (readonly) NSMutableArray<NSURLComponents *> *URLHistory;
 
 @end
