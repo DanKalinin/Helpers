@@ -77,7 +77,6 @@
 - (void)addOperation:(Operation *)operation {
     [self.operationQueue addOperation:operation];
     
-    operation.delegates.operationQueue = self.delegates.operationQueue;
     [operation.delegates addObject:self.delegates];
 }
 
@@ -115,7 +114,6 @@
 - (void)addOperation:(Operation *)operation {
     [super addOperation:operation];
     
-    operation.delegates.operationQueue = self.delegates.operationQueue;
     [operation.delegates addObject:self.delegates];
 }
 
