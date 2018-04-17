@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Main.h"
+#import "Operation.h"
 
 @class URLConnection;
 
@@ -28,7 +29,7 @@
 
 
 
-@interface URLConnection : NSObject <URLConnectionDelegate>
+@interface URLConnection : OperationQueue <URLConnectionDelegate>
 
 @property NSUInteger URLHistorySize;
 
