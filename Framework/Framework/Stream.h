@@ -24,7 +24,8 @@ extern NSErrorDomain const StreamErrorDomain;
 NS_ERROR_ENUM(StreamErrorDomain) {
     StreamErrorUnknown = 0,
     StreamErrorTimedOut = 1,
-    StreamErrorClosed = 2
+    StreamErrorClosed = 2,
+    StreamErrorCancelled = 3
 };
 
 typedef NS_ENUM(NSUInteger, StreamLoadOperation) {

@@ -281,15 +281,14 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
                             } else {
                                 [self.delegates pair:self didReceiveMessage:message];
                             }
-                        } else {
-                            NSError *error = (result < 0) ? self.inputStream.streamError : [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+                        } else if (result == 0) {
+                            NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
                             [self.errors addObject:error];
-                            for (NSNumber *serial in self.messages.allKeys) {
-                                StreamMessage *msg = [self.messages popObjectForKey:serial];
-                                [msg.timer invalidate];
-                                [self invokeHandler:msg.completion object:nil object:error queue:self.delegates.operationQueue];
-                                msg.completion = nil;
-                            }
+                            [self completeMessagesWithError:error];
+                            break;
+                        } else {
+                            [self.errors addObject:self.inputStream.streamError];
+                            [self completeMessagesWithError:self.inputStream.streamError];
                             break;
                         }
                     } else {
@@ -297,9 +296,12 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
                         NSInteger result = [self.inputStream read:data length:1024];
                         if (result > 0) {
                             [self.delegates pair:self didReceiveData:data];
-                        } else {
-                            NSError *error = (result < 0) ? self.inputStream.streamError : [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+                        } else if (result == 0) {
+                            NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
                             [self.errors addObject:error];
+                            break;
+                        } else {
+                            [self.errors addObject:self.inputStream.streamError];
                             break;
                         }
                     }
@@ -310,6 +312,11 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
             [self.errors addObject:self.inputStream.streamError];
             break;
         }
+    }
+    
+    if (self.cancelled) {
+        NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorCancelled userInfo:nil];
+        [self completeMessagesWithError:error];
     }
     
     [self.inputStream close];
@@ -396,6 +403,15 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
         [self.delegates pairDidOpen:self];
     } else if (state == OperationStateDidEnd) {
         [self.delegates pairDidEnd:self];
+    }
+}
+
+- (void)completeMessagesWithError:(NSError *)error {
+    for (NSNumber *serial in self.messages.allKeys) {
+        StreamMessage *message = [self.messages popObjectForKey:serial];
+        [message.timer invalidate];
+        [self invokeHandler:message.completion object:nil object:error queue:self.delegates.operationQueue];
+        message.completion = nil;
     }
 }
 
