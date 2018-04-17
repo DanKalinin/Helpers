@@ -588,6 +588,14 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 
 @implementation SurrogateArray
 
+- (instancetype)init {
+    self = super.init;
+    if (self) {
+        self.inheritOperationQueue = YES;
+    }
+    return self;
+}
+
 #pragma mark - Message forwarding
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
@@ -654,7 +662,7 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 #pragma mark - Helpers
 
 - (void)inheritOperationQueueFromObject:(id)object {
-    if ([object isKindOfClass:self.class]) {
+    if (self.inheritOperationQueue && [object isKindOfClass:self.class]) {
         typeof(self) array = object;
         self.operationQueue = array.operationQueue;
     }

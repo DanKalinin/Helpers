@@ -238,6 +238,7 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 @interface SurrogateArray : WeakArray
 
 @property NSOperationQueue *operationQueue;
+@property BOOL inheritOperationQueue;
 
 @property (readonly) id lastReturnValue;
 
