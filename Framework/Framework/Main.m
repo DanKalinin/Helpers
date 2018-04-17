@@ -631,6 +631,35 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
     return NO;
 }
 
+#pragma mark - Mutable array
+
+- (void)insertObject:(id)anObject atIndex:(NSUInteger)index {
+    [super insertObject:anObject atIndex:index];
+    
+    [self inheritOperationQueueFromObject:anObject];
+}
+
+- (void)addObject:(id)anObject {
+    [super addObject:anObject];
+    
+    [self inheritOperationQueueFromObject:anObject];
+}
+
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject {
+    [super replaceObjectAtIndex:index withObject:anObject];
+    
+    [self inheritOperationQueueFromObject:anObject];
+}
+
+#pragma mark - Helpers
+
+- (void)inheritOperationQueueFromObject:(id)object {
+    if ([object isKindOfClass:self.class]) {
+        typeof(self) array = object;
+        self.operationQueue = array.operationQueue;
+    }
+}
+
 @end
 
 
