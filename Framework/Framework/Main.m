@@ -662,8 +662,8 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 #pragma mark - Helpers
 
 - (void)inheritOperationQueueFromObject:(id)object {
-    if (self.inheritOperationQueue && [object isKindOfClass:self.class]) {
-        typeof(self) array = object;
+    if (self.inheritOperationQueue && [object isKindOfClass:SurrogateArray.class]) {
+        SurrogateArray *array = object;
         self.operationQueue = array.operationQueue;
     }
 }
