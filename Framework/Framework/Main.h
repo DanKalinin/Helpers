@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class Reachability;
+@class _Reachability;
 
 extern NSErrorDomain const HelpersErrorDomainDataCorrupted;
 
@@ -146,10 +146,10 @@ typedef NS_ENUM(NSUInteger, Digest) {
     DigestSHA512
 };
 
-typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
-    ReachabilityStatusNone,
-    ReachabilityStatusWiFi,
-    ReachabilityStatusWWAN
+typedef NS_ENUM(NSUInteger, _ReachabilityStatus) {
+    _ReachabilityStatusNone,
+    _ReachabilityStatusWiFi,
+    _ReachabilityStatusWWAN
 };
 
 
@@ -272,25 +272,25 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-@protocol ReachabilityDelegate
+@protocol _ReachabilityDelegate
 
 @required
-- (void)reachabilityDidUpdateStatus:(Reachability *)reachability;
+- (void)reachabilityDidUpdateStatus:(_Reachability *)reachability;
 
 @end
 
 
 
-@interface Reachability : NSObject <ReachabilityDelegate> // Network configuration and host reachability monitor
+@interface _Reachability : NSObject <_ReachabilityDelegate> // Network configuration and host reachability monitor
 
-typedef void (^ReachabilityHandler)(Reachability *reachability);
+typedef void (^ReachabilityHandler)(_Reachability *reachability);
 
 + (instancetype)reachability; // Singleton reachability object for zero host name - 0.0.0.0
 - (instancetype)initWithHost:(Host)host; // Create reachability object for specified host name
 
-@property (readonly) ReachabilityStatus status; // Reachability current status - None | WiFi | WWAN
+@property (readonly) _ReachabilityStatus status; // Reachability current status - None | WiFi | WWAN
 
-@property (readonly) SurrogateArray<ReachabilityDelegate> *delegates;
+@property (readonly) SurrogateArray<_ReachabilityDelegate> *delegates;
 @property (copy) ReachabilityHandler handler; // Reachability status change handler
 
 @end

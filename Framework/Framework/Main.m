@@ -722,20 +722,20 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 
-@interface Reachability ()
+@interface _Reachability ()
 
 @property SCNetworkReachabilityRef target;
-@property ReachabilityStatus status;
-@property SurrogateArray<ReachabilityDelegate> *delegates;
+@property _ReachabilityStatus status;
+@property SurrogateArray<_ReachabilityDelegate> *delegates;
 
 @end
 
 
 
-@implementation Reachability
+@implementation _Reachability
 
 + (instancetype)reachability {
-    static Reachability *reachability = nil;
+    static _Reachability *reachability = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         reachability = [self.alloc initWithHost:nil];
@@ -772,21 +772,21 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 #pragma mark - Reachability
 
-- (void)reachabilityDidUpdateStatus:(Reachability *)reachability {
+- (void)reachabilityDidUpdateStatus:(_Reachability *)reachability {
     [self invokeHandler:self.handler object:self];
 }
 
 #pragma mark - Helpers
 
-- (ReachabilityStatus)statusForFlags:(SCNetworkReachabilityFlags)flags {
+- (_ReachabilityStatus)statusForFlags:(SCNetworkReachabilityFlags)flags {
     
-    ReachabilityStatus status = ReachabilityStatusNone;
+    _ReachabilityStatus status = _ReachabilityStatusNone;
     
     if ((flags & kSCNetworkReachabilityFlagsReachable) && !(flags & kSCNetworkReachabilityFlagsConnectionRequired) && !(flags & kSCNetworkReachabilityFlagsInterventionRequired)) {
         if (flags & kSCNetworkReachabilityFlagsIsWWAN) {
-            status = ReachabilityStatusWWAN;
+            status = _ReachabilityStatusWWAN;
         } else {
-            status = ReachabilityStatusWiFi;
+            status = _ReachabilityStatusWiFi;
         }
     }
     
@@ -798,8 +798,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 
 static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
-    Reachability *reachability = (__bridge Reachability *)info;
-    ReachabilityStatus status = [reachability statusForFlags:flags];
+    _Reachability *reachability = (__bridge _Reachability *)info;
+    _ReachabilityStatus status = [reachability statusForFlags:flags];
     if (status != reachability.status) {
         reachability.status = status;
         [reachability.delegates reachabilityDidUpdateStatus:reachability];

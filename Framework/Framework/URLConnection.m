@@ -19,7 +19,7 @@
 @interface URLConnection ()
 
 @property NSMutableArray<NSURLComponents *> *URLs;
-@property NSMutableArray<Reachability *> *reachabilities;
+@property NSMutableArray<_Reachability *> *reachabilities;
 
 @property NSMutableArray<NSURLComponents *> *URLHistory;
 
