@@ -91,6 +91,35 @@
 
 
 
+@interface GroupOperation ()
+
+@property dispatch_group_t group;
+
+@end
+
+
+
+@implementation GroupOperation
+
+- (instancetype)init {
+    self = super.init;
+    if (self) {
+        self.group = dispatch_group_create();
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface OperationQueue ()
 
 @property SurrogateArray<OperationDelegate> *delegates;
