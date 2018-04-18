@@ -109,6 +109,21 @@
     return self;
 }
 
+- (void)main {
+    [self updateState:OperationStateDidBegin];
+    
+    dispatch_group_enter(self.group);
+    dispatch_group_wait(self.group, DISPATCH_TIME_FOREVER);
+    
+    [self updateState:OperationStateDidEnd];
+}
+
+- (void)cancel {
+    [super cancel];
+    
+    dispatch_group_leave(self.group);
+}
+
 @end
 
 
