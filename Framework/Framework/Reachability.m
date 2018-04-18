@@ -12,6 +12,20 @@ const OperationState ReachabilityStateWiFi = 3;
 const OperationState ReachabilityStateWWAN = 4;
 
 
-//@implementation Reachability
-//
-//@end
+
+
+
+
+
+
+
+
+@interface Reachability ()
+
+@end
+
+
+
+@implementation Reachability
+
+@end

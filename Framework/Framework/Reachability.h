@@ -8,10 +8,30 @@
 #import <Foundation/Foundation.h>
 #import "Operation.h"
 
+@class Reachability;
+
 extern const OperationState ReachabilityStateNone;
 extern const OperationState ReachabilityStateWiFi;
 extern const OperationState ReachabilityStateWWAN;
 
-//@interface Reachability : NSObject
-//
-//@end
+
+
+
+
+
+
+
+
+
+@protocol ReachabilityDelegate <OperationDelegate>
+
+@optional
+- (void)reachabilityDidUpdateState:(Reachability *)reachability;
+
+@end
+
+
+
+@interface Reachability : GroupOperation
+
+@end
