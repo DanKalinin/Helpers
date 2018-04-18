@@ -286,7 +286,7 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 typedef void (^ReachabilityHandler)(Reachability *reachability);
 
 + (instancetype)reachability; // Singleton reachability object for zero host name - 0.0.0.0
-- (instancetype)initWithHost:(NSString *)host; // Create reachability object for specified host name
+- (instancetype)initWithHost:(Host)host; // Create reachability object for specified host name
 
 @property (readonly) ReachabilityStatus status; // Reachability current status - None | WiFi | WWAN
 

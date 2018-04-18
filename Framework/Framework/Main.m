@@ -743,7 +743,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return reachability;
 }
 
-- (instancetype)initWithHost:(NSString *)host {
+- (instancetype)initWithHost:(Host)host {
     self = super.init;
     if (self) {
         if (!host) host = HostAny;
