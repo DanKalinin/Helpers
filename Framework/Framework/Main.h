@@ -86,6 +86,7 @@ typedef NSString * String NS_STRING_ENUM;
 extern String const StringEmpty;
 extern String const StringSpace;
 extern String const StringColon;
+extern String const StringDot;
 extern String const StringRN;
 extern String const StringN;
 
@@ -1009,6 +1010,7 @@ typedef void (^ReachabilityHandler)(_Reachability *reachability);
 
 @interface NSURLComponents (Helpers) <NSCoding>
 
+@property struct sockaddr address;
 @property NSDictionary<NSString *, NSString *> *queryDictionary;
 
 @end

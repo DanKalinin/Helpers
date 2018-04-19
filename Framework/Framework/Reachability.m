@@ -22,10 +22,28 @@ const OperationState ReachabilityStateWWAN = 4;
 
 @interface Reachability ()
 
+@property SCNetworkReachabilityRef reachability;
+
 @end
 
 
 
 @implementation Reachability
+
+- (instancetype)initWithLocalHost:(Host)localHost remoteHost:(Host)remoteHost {
+    self = super.init;
+    if (self) {
+        
+    }
+    return self;
+}
+
+- (void)start {
+    
+}
+
+- (void)cancel {
+    
+}
 
 @end

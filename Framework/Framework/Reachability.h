@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <SystemConfiguration/SystemConfiguration.h>
 #import "Operation.h"
 
 @class Reachability;
@@ -32,6 +33,10 @@ extern const OperationState ReachabilityStateWWAN;
 
 
 
-@interface Reachability : GroupOperation
+@interface Reachability : Operation
+
+@property (readonly) SCNetworkReachabilityRef reachability;
+
+- (instancetype)initWithLocalHost:(Host)localHost remoteHost:(Host)remoteHost;
 
 @end
