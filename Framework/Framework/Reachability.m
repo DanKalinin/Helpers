@@ -42,6 +42,7 @@ const OperationState ReachabilityStateWWAN = 4;
         struct sockaddr remoteAddress = remoteComponents.address;
         
         self.reachability = SCNetworkReachabilityCreateWithAddressPair(NULL, &localAddress, &remoteAddress);
+        NSLog(@"Reach - %@", self.reachability);
     }
     return self;
 }
