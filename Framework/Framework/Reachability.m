@@ -22,6 +22,8 @@ const OperationState ReachabilityStateWWAN = 4;
 
 @interface Reachability ()
 
+@property NSURLComponents *localComponents;
+@property NSURLComponents *remoteComponents;
 @property SCNetworkReachabilityRef reachability;
 
 @end
@@ -30,12 +32,19 @@ const OperationState ReachabilityStateWWAN = 4;
 
 @implementation Reachability
 
-- (instancetype)initWithLocalHost:(Host)localHost remoteHost:(Host)remoteHost {
+- (instancetype)initWithLocalComponents:(NSURLComponents *)localComponents remoteComponents:(NSURLComponents *)remoteComponents {
     self = super.init;
     if (self) {
+        self.localComponents = localComponents;
+        self.remoteComponents = remoteComponents;
         
+        self.reachability = 
     }
     return self;
+}
+
+- (void)dealloc {
+    CFRelease(self.reachability);
 }
 
 - (void)start {

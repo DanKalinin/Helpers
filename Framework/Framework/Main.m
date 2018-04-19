@@ -2374,11 +2374,14 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return error;
 }
 
-+ (NSString *)stringFromAddressData:(NSData *)data {
-    struct sockaddr_in *addressStruct = (struct sockaddr_in *)data.bytes;
-    char *addressChars = inet_ntoa(addressStruct->sin_addr);
-    NSString *addressString = [NSString stringWithUTF8String:addressChars];
-    return addressString;
++ (NSURLComponents *)componentsFromAddressData:(NSData *)data {
+    NSURLComponents *components = NSURLComponents.new;
+    components.address = *(struct sockaddr *)data.bytes;
+    return components;
+//    struct sockaddr_in *addressStruct = (struct sockaddr_in *)data.bytes;
+//    char *addressChars = inet_ntoa(addressStruct->sin_addr);
+//    NSString *addressString = [NSString stringWithUTF8String:addressChars];
+//    return addressString;
 }
 
 @end

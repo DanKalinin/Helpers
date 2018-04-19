@@ -35,8 +35,10 @@ extern const OperationState ReachabilityStateWWAN;
 
 @interface Reachability : Operation
 
+@property (readonly) NSURLComponents *localComponents;
+@property (readonly) NSURLComponents *remoteComponents;
 @property (readonly) SCNetworkReachabilityRef reachability;
 
-- (instancetype)initWithLocalHost:(Host)localHost remoteHost:(Host)remoteHost;
+- (instancetype)initWithLocalComponents:(NSURLComponents *)localComponents remoteComponents:(NSURLComponents *)remoteComponents;
 
 @end
