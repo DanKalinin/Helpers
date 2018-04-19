@@ -38,7 +38,10 @@ const OperationState ReachabilityStateWWAN = 4;
         self.localComponents = localComponents;
         self.remoteComponents = remoteComponents;
         
-        self.reachability = 
+        struct sockaddr localAddress = localComponents.address;
+        struct sockaddr remoteAddress = remoteComponents.address;
+        
+        self.reachability = SCNetworkReachabilityCreateWithAddressPair(NULL, &localAddress, &remoteAddress);
     }
     return self;
 }

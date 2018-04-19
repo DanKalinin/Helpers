@@ -2378,10 +2378,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     NSURLComponents *components = NSURLComponents.new;
     components.address = *(struct sockaddr *)data.bytes;
     return components;
-//    struct sockaddr_in *addressStruct = (struct sockaddr_in *)data.bytes;
-//    char *addressChars = inet_ntoa(addressStruct->sin_addr);
-//    NSString *addressString = [NSString stringWithUTF8String:addressChars];
-//    return addressString;
 }
 
 @end
@@ -2948,14 +2944,29 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 - (struct sockaddr)address {
     if ([self.host containsString:StringDot]) {
         struct sockaddr_in address4;
-        inet_aton(self.host.UTF8String, &address4.sin_addr);
+        address4.sin_len = sizeof(address4);
+        address4.sin_family = AF_INET;
         address4.sin_port = self.port.unsignedShortValue;
-        return *(struct sockaddr *)&address4;
+        inet_aton(self.host.UTF8String, &address4.sin_addr);
+        bzero(address4.sin_zero, 8);
+        
+        struct sockaddr address = *(struct sockaddr *)&address4;
+        address.sa_len = sizeof(address4);
+        address.sa_family = AF_INET;
+        return address;
     } else {
         struct sockaddr_in6 address6;
-        inet_pton(AF_INET6, self.host.UTF8String, &address6.sin6_addr);
+        address6.sin6_len = sizeof(address6);
+        address6.sin6_family = AF_INET6;
         address6.sin6_port = self.port.unsignedShortValue;
-        return *(struct sockaddr *)&address6;
+        // TODO: sin6_flowinfo
+        inet_pton(AF_INET6, self.host.UTF8String, &address6.sin6_addr);
+        // TODO: sin6_scope_id
+        
+        struct sockaddr address = *(struct sockaddr *)&address6;
+        address.sa_len = sizeof(address6);
+        address.sa_family = AF_INET6;
+        return address;
     }
 }
 
