@@ -2930,14 +2930,14 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 - (void)setAddress:(struct sockaddr)address {
     if (address.sa_family == AF_INET) {
-        struct sockaddr_in *address4 = (struct sockaddr_in *)&address;
-        self.host = @(inet_ntoa(address4->sin_addr));
-        self.port = @(ntohs(address4->sin_port));
+        struct sockaddr_in address4 = *(struct sockaddr_in *)&address;
+        self.host = @(inet_ntoa(address4.sin_addr));
+        self.port = @(ntohs(address4.sin_port));
     } else {
-        struct sockaddr_in6 *address6 = (struct sockaddr_in6 *)&address;
+        struct sockaddr_in6 address6 = *(struct sockaddr_in6 *)&address;
         char host[INET6_ADDRSTRLEN];
-        self.host = @(inet_ntop(AF_INET6, &address6->sin6_addr, host, INET6_ADDRSTRLEN));
-        self.port = @(ntohs(address6->sin6_port));
+        self.host = @(inet_ntop(AF_INET6, &address6.sin6_addr, host, INET6_ADDRSTRLEN));
+        self.port = @(ntohs(address6.sin6_port));
     }
 }
 
