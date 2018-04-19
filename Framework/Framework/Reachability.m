@@ -38,11 +38,17 @@ const OperationState ReachabilityStateWWAN = 4;
         self.localComponents = localComponents;
         self.remoteComponents = remoteComponents;
         
-        struct sockaddr localAddress = localComponents.address;
-        struct sockaddr remoteAddress = remoteComponents.address;
-        
-        self.reachability = SCNetworkReachabilityCreateWithAddressPair(NULL, &localAddress, &remoteAddress);
-        NSLog(@"Reach - %@", self.reachability);
+        if (localComponents && !remoteComponents) {
+            struct sockaddr address = localComponents.address;
+            self.reachability = SCNetworkReachabilityCreateWithAddressPair(NULL, &address, NULL);
+        } else if (!localComponents && remoteComponents) {
+            struct sockaddr address = remoteComponents.address;
+            self.reachability = SCNetworkReachabilityCreateWithAddressPair(NULL, NULL, &address);
+        } else if (localComponents && remoteComponents) {
+            struct sockaddr localAddress = localComponents.address;
+            struct sockaddr remoteAddress = remoteComponents.address;
+            self.reachability = SCNetworkReachabilityCreateWithAddressPair(NULL, &localAddress, &remoteAddress);
+        }
     }
     return self;
 }
