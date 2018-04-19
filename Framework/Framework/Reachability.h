@@ -28,9 +28,9 @@ extern const OperationState ReachabilityStateWWAN;
 
 @optional
 - (void)reachabilityDidUpdateState:(Reachability *)reachability;
-- (void)reachabilityDidNone:(Reachability *)reachability;
-- (void)reachabilityDidWiFi:(Reachability *)reachability;
-- (void)reachabilityDidWWAN:(Reachability *)reachability;
+- (void)reachabilityStateNone:(Reachability *)reachability;
+- (void)reachabilityStateWiFi:(Reachability *)reachability;
+- (void)reachabilityStateWWAN:(Reachability *)reachability;
 
 @end
 
