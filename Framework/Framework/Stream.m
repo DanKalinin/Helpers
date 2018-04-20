@@ -531,11 +531,8 @@ static void StreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType 
     
     // Bind
     
-    struct sockaddr_in address = {0};
-    address.sin_len = sizeof(address);
-    address.sin_family = AF_INET;
-    address.sin_port = htons(components.port.unsignedShortValue);
-    address.sin_addr.s_addr = INADDR_ANY;
+    components.host = HostAny;
+    struct sockaddr address = components.address;
     
     NSData *data = [NSData dataWithBytes:&address length:sizeof(address)];
     CFSocketSetAddress(socket, (__bridge CFDataRef)data);
