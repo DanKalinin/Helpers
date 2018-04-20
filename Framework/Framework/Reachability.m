@@ -9,13 +9,6 @@
 
 
 
-
-
-
-
-
-
-
 static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
 
 

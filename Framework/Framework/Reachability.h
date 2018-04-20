@@ -19,13 +19,6 @@ typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
 
 
 
-
-
-
-
-
-
-
 @protocol ReachabilityDelegate <OperationDelegate>
 
 @optional
