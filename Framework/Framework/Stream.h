@@ -219,7 +219,7 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 @property (readonly) __kindof StreamPair *operation;
 
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream pair:(Class)pair;
-- (instancetype)initWithHost:(NSString *)host port:(NSUInteger)port pair:(Class)pair;
+- (instancetype)initWithComponents:(NSURLComponents *)components pair:(Class)pair;
 
 @end
 
@@ -236,6 +236,6 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 
 @property (readonly, copy) NSArray<__kindof StreamPair *> *operations;
 
-- (instancetype)initWithHost:(NSString *)host port:(NSUInteger)port pair:(Class)pair;
+- (instancetype)initWithComponents:(NSURLComponents *)components pair:(Class)pair;
 
 @end

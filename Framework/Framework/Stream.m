@@ -479,10 +479,10 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     return self;
 }
 
-- (instancetype)initWithHost:(NSString *)host port:(NSUInteger)port pair:(Class)pair {
+- (instancetype)initWithComponents:(NSURLComponents *)components pair:(Class)pair {
     NSInputStream *inputStream;
     NSOutputStream *outputStream;
-    [NSStream getStreamsToHostWithName:host port:port inputStream:&inputStream outputStream:&outputStream];
+    [NSStream getStreamsToHostWithName:components.host port:components.port.integerValue inputStream:&inputStream outputStream:&outputStream];
     
     self = [self initWithInputStream:inputStream outputStream:outputStream pair:pair];
     return self;
@@ -520,7 +520,7 @@ static void StreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType 
     return self;
 }
 
-- (instancetype)initWithHost:(NSString *)host port:(NSUInteger)port pair:(Class)pair {
+- (instancetype)initWithComponents:(NSURLComponents *)components pair:(Class)pair {
     self = [self initWithPair:pair];
     
     // Create
@@ -534,7 +534,7 @@ static void StreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType 
     struct sockaddr_in address = {0};
     address.sin_len = sizeof(address);
     address.sin_family = AF_INET;
-    address.sin_port = htons(port);
+    address.sin_port = htons(components.port.unsignedShortValue);
     address.sin_addr.s_addr = INADDR_ANY;
     
     NSData *data = [NSData dataWithBytes:&address length:sizeof(address)];
