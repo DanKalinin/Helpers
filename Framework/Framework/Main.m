@@ -2946,20 +2946,16 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         struct sockaddr_in address4 = {0};
         inet_aton(self.host.UTF8String, &address4.sin_addr);
         address4.sin_port = self.port.unsignedShortValue;
-        
-        struct sockaddr address = *(struct sockaddr *)&address4;
-        address.sa_len = sizeof(address4);
-        address.sa_family = AF_INET;
-        return address;
+        address4.sin_len = sizeof(address4);
+        address4.sin_family = AF_INET;
+        return *(struct sockaddr *)&address4;
     } else {
         struct sockaddr_in6 address6 = {0};
         inet_pton(AF_INET6, self.host.UTF8String, &address6.sin6_addr);
         address6.sin6_port = self.port.unsignedShortValue;
-        
-        struct sockaddr address = *(struct sockaddr *)&address6;
-        address.sa_len = sizeof(address6);
-        address.sa_family = AF_INET6;
-        return address;
+        address6.sin6_len = sizeof(address6);
+        address6.sin6_family = AF_INET6;
+        return *(struct sockaddr *)&address6;
     }
 }
 
