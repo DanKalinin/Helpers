@@ -531,9 +531,7 @@ static void StreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType 
     
     // Bind
     
-    components.host = HostAny;
     struct sockaddr address = components.address;
-    
     NSData *data = [NSData dataWithBytes:&address length:sizeof(address)];
     CFSocketSetAddress(socket, (__bridge CFDataRef)data);
     
