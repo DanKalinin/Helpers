@@ -7,10 +7,6 @@
 
 #import "Reachability.h"
 
-const OperationState ReachabilityStateNone = 2;
-const OperationState ReachabilityStateWiFi = 3;
-const OperationState ReachabilityStateWWAN = 4;
-
 
 
 
@@ -79,17 +75,53 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
     SCNetworkReachabilityUnscheduleFromRunLoop(self.reachability, loop, kCFRunLoopDefaultMode);
 }
 
-#pragma mark - Accessors
-
-- (SCNetworkReachabilityFlags)flags {
-    SCNetworkReachabilityFlags flags;
-    SCNetworkReachabilityGetFlags(self.reachability, &flags);
-    return flags;
+- (NSString *)description {
+    SCNetworkReachabilityFlags state = self.state;
+    
+    NSMutableArray *descriptions = NSMutableArray.array;
+    
+    NSString *description = [NSString stringWithFormat:@"TransientConnection - %i", (BOOL)(state & kSCNetworkReachabilityFlagsTransientConnection)];
+    [descriptions addObject:description];
+    
+    description = [NSString stringWithFormat:@"Reachable - %i", (BOOL)(state & kSCNetworkReachabilityFlagsReachable)];
+    [descriptions addObject:description];
+    
+    description = [NSString stringWithFormat:@"ConnectionRequired - %i", (BOOL)(state & kSCNetworkReachabilityFlagsConnectionRequired)];
+    [descriptions addObject:description];
+    
+    description = [NSString stringWithFormat:@"ConnectionOnTraffic - %i", (BOOL)(state & kSCNetworkReachabilityFlagsConnectionOnTraffic)];
+    [descriptions addObject:description];
+    
+    description = [NSString stringWithFormat:@"InterventionRequired - %i", (BOOL)(state & kSCNetworkReachabilityFlagsInterventionRequired)];
+    [descriptions addObject:description];
+    
+    description = [NSString stringWithFormat:@"ConnectionOnDemand - %i", (BOOL)(state & kSCNetworkReachabilityFlagsConnectionOnDemand)];
+    [descriptions addObject:description];
+    
+    description = [NSString stringWithFormat:@"IsLocalAddress - %i", (BOOL)(state & kSCNetworkReachabilityFlagsIsLocalAddress)];
+    [descriptions addObject:description];
+    
+    description = [NSString stringWithFormat:@"IsDirect - %i", (BOOL)(state & kSCNetworkReachabilityFlagsIsDirect)];
+    [descriptions addObject:description];
+    
+    description = [NSString stringWithFormat:@"IsWWAN - %i", (BOOL)(state & kSCNetworkReachabilityFlagsIsWWAN)];
+    [descriptions addObject:description];
+    
+    description = [descriptions componentsJoinedByString:StringRN];
+    return description;
 }
 
-- (OperationState)state {
-    SCNetworkReachabilityFlags flags = self.flags;
-    return ReachabilityStateNone;
+#pragma mark - Accesors
+
+- (SCNetworkReachabilityFlags)state {
+    SCNetworkReachabilityFlags state;
+    SCNetworkReachabilityGetFlags(self.reachability, &state);
+    return state;
+}
+
+- (ReachabilityStatus)status {
+    ReachabilityStatus status = [Reachability statusForState:self.state];
+    return status;
 }
 
 #pragma mark - Helpers
@@ -98,12 +130,17 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
     [super updateState:state];
     
     [self.delegates reachabilityDidUpdateState:self];
-    if (state == ReachabilityStateNone) {
-        [self.delegates reachabilityStateNone:self];
-    } else if (state == ReachabilityStateWiFi) {
-        [self.delegates reachabilityStateWiFi:self];
-    } else if (state == ReachabilityStateWWAN) {
-        [self.delegates reachabilityStateWWAN:self];
+}
+
++ (ReachabilityStatus)statusForState:(SCNetworkReachabilityFlags)state {
+    if ((state & kSCNetworkReachabilityFlagsReachable) && !(state & kSCNetworkReachabilityFlagsConnectionRequired) && !(state & kSCNetworkReachabilityFlagsInterventionRequired)) {
+        if (state & kSCNetworkReachabilityFlagsIsWWAN) {
+            return ReachabilityStatusWWAN;
+        } else {
+            return ReachabilityStatusWiFi;
+        }
+    } else {
+        return ReachabilityStatusNone;
     }
 }
 
@@ -113,8 +150,5 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
 static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
     Reachability *reachability = (__bridge Reachability *)info;
-    OperationState state = reachability.state;
-    if (state != reachability.states.lastObject.unsignedIntValue) {
-        [reachability updateState:state];
-    }
+    [reachability updateState:(OperationState)flags];
 }

@@ -11,9 +11,11 @@
 
 @class Reachability;
 
-extern const OperationState ReachabilityStateNone;
-extern const OperationState ReachabilityStateWiFi;
-extern const OperationState ReachabilityStateWWAN;
+typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
+    ReachabilityStatusNone,
+    ReachabilityStatusWiFi,
+    ReachabilityStatusWWAN
+};
 
 
 
@@ -28,9 +30,6 @@ extern const OperationState ReachabilityStateWWAN;
 
 @optional
 - (void)reachabilityDidUpdateState:(Reachability *)reachability;
-- (void)reachabilityStateNone:(Reachability *)reachability;
-- (void)reachabilityStateWiFi:(Reachability *)reachability;
-- (void)reachabilityStateWWAN:(Reachability *)reachability;
 
 @end
 
@@ -42,9 +41,10 @@ extern const OperationState ReachabilityStateWWAN;
 @property (readonly) NSURLComponents *localComponents;
 @property (readonly) NSURLComponents *remoteComponents;
 @property (readonly) SCNetworkReachabilityRef reachability;
-@property (readonly) SCNetworkReachabilityFlags flags;
-@property (readonly) OperationState state;
+@property (readonly) SCNetworkReachabilityFlags state;
+@property (readonly) ReachabilityStatus status;
 
++ (ReachabilityStatus)statusForState:(SCNetworkReachabilityFlags)state;
 - (instancetype)initWithLocalComponents:(NSURLComponents *)localComponents remoteComponents:(NSURLComponents *)remoteComponents;
 
 @end
