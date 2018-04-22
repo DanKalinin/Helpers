@@ -29,6 +29,8 @@
 
 @interface URLClient : OperationQueue <URLClientDelegate>
 
+@property NSUInteger priority;
+
 @property (readonly) SurrogateArray<URLClientDelegate> *delegates;
 @property (readonly) Reachability *reachability;
 @property (readonly) NSURLSession *defaultSesssion;
