@@ -48,6 +48,7 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 @property (readonly) NSMutableArray<NSError *> *errors;
 @property (readonly) NSProgress *progress;
 @property (readonly) NSOperationQueue *operationQueue;
+@property (readonly) dispatch_group_t group;
 
 - (void)updateState:(OperationState)state;
 - (void)updateProgress:(uint64_t)completedUnitCount;
@@ -64,11 +65,11 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 
 
 
-@interface GroupOperation : Operation
-
-@property (readonly) dispatch_group_t group;
-
-@end
+//@interface GroupOperation : Operation
+//
+//@property (readonly) dispatch_group_t group;
+//
+//@end
 
 
 

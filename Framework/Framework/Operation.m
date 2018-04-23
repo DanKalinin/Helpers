@@ -23,6 +23,7 @@
 @property NSMutableArray<NSError *> *errors;
 @property NSProgress *progress;
 @property NSOperationQueue *operationQueue;
+@property dispatch_group_t group;
 
 @end
 
@@ -43,6 +44,8 @@
         self.progress = NSProgress.new;
         
         self.operationQueue = NSOperationQueue.new;
+        
+        self.group = dispatch_group_create();
     }
     return self;
 }
@@ -91,40 +94,40 @@
 
 
 
-@interface GroupOperation ()
-
-@property dispatch_group_t group;
-
-@end
-
-
-
-@implementation GroupOperation
-
-- (instancetype)init {
-    self = super.init;
-    if (self) {
-        self.group = dispatch_group_create();
-    }
-    return self;
-}
-
-- (void)main {
-    [self updateState:OperationStateDidBegin];
-    
-    dispatch_group_enter(self.group);
-    dispatch_group_wait(self.group, DISPATCH_TIME_FOREVER);
-    
-    [self updateState:OperationStateDidEnd];
-}
-
-- (void)cancel {
-    [super cancel];
-    
-    dispatch_group_leave(self.group);
-}
-
-@end
+//@interface GroupOperation ()
+//
+//@property dispatch_group_t group;
+//
+//@end
+//
+//
+//
+//@implementation GroupOperation
+//
+//- (instancetype)init {
+//    self = super.init;
+//    if (self) {
+//        self.group = dispatch_group_create();
+//    }
+//    return self;
+//}
+//
+//- (void)main {
+//    [self updateState:OperationStateDidBegin];
+//
+//    dispatch_group_enter(self.group);
+//    dispatch_group_wait(self.group, DISPATCH_TIME_FOREVER);
+//
+//    [self updateState:OperationStateDidEnd];
+//}
+//
+//- (void)cancel {
+//    [super cancel];
+//
+//    dispatch_group_leave(self.group);
+//}
+//
+//@end
 
 
 

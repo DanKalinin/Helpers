@@ -10,7 +10,7 @@
 #import "Operation.h"
 #import "Reachability.h"
 
-@class URLClient;
+@class URLLoad, URLClient;
 
 
 
@@ -21,7 +21,31 @@
 
 
 
-@protocol URLClientDelegate <OperationDelegate, ReachabilityDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
+@protocol URLLoadDelegate <OperationDelegate>
+
+@end
+
+
+
+@interface URLLoad : Operation
+
+@property (readonly) NSMutableArray<NSURLSessionTask *> *tasks;
+
+- (instancetype)initWithTasks:(NSMutableArray<NSURLSessionTask *> *)tasks;
+- (void)completeTask:(NSURLSessionTask *)task withError:(NSError *)error;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol URLClientDelegate <ReachabilityDelegate, URLLoadDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
 @end
 
@@ -32,11 +56,15 @@
 @property NSUInteger priority;
 
 @property (readonly) SurrogateArray<URLClientDelegate> *delegates;
+@property (readonly) NSURLComponents *localComponents;
+@property (readonly) NSURLComponents *remoteComponents;
 @property (readonly) Reachability *reachability;
 @property (readonly) NSURLSession *defaultSesssion;
 @property (readonly) NSURLSession *ephemeralSesssion;
 @property (readonly) NSURLSession *backgroundSession;
 
+- (instancetype)initWithLocalComponents:(NSURLComponents *)localComponents remoteComponents:(NSURLComponents *)remoteComponents;
 - (void)session:(NSURLSession *)session setConfiguration:(NSURLSessionConfiguration *)configuration;
+- (URLLoad *)session:(NSURLSession *)session loadWithTasks:(NSMutableArray<NSURLSessionTask *> *)tasks;
 
 @end
