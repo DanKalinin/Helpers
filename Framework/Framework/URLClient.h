@@ -37,6 +37,6 @@
 @property (readonly) NSURLSession *ephemeralSesssion;
 @property (readonly) NSURLSession *backgroundSession;
 
-- (void)setConfiguration:(NSURLSessionConfiguration *)configuration forSession:(NSURLSession *)session;
+- (void)session:(NSURLSession *)session setConfiguration:(NSURLSessionConfiguration *)configuration;
 
 @end

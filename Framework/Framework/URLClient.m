@@ -52,15 +52,15 @@
     [self.backgroundSession invalidateAndCancel];
 }
 
-- (void)setConfiguration:(NSURLSessionConfiguration *)configuration forSession:(NSURLSession *)session {
+- (void)session:(NSURLSession *)session setConfiguration:(NSURLSessionConfiguration *)configuration {
     [session invalidateAndCancel];
     
     if ([session isEqual:self.defaultSesssion]) {
-        self.defaultSesssion = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:self.delegates.operationQueue];
+        self.defaultSesssion = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:nil];
     } else if ([session isEqual:self.ephemeralSesssion]) {
-        self.ephemeralSesssion = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:self.delegates.operationQueue];
+        self.ephemeralSesssion = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:nil];
     } else {
-        self.backgroundSession = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:self.delegates.operationQueue];
+        self.backgroundSession = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:nil];
     }
 }
 
