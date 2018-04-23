@@ -35,13 +35,13 @@
     self = super.init;
     if (self) {
         NSURLSessionConfiguration *configuration = NSURLSessionConfiguration.defaultSessionConfiguration;
-        self.defaultSesssion = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:self.delegates.operationQueue];
+        self.defaultSesssion = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:nil];
         
         configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration;
-        self.ephemeralSesssion = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:self.delegates.operationQueue];
+        self.ephemeralSesssion = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:nil];
         
         configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:self.bundle.bundleIdentifier];
-        self.backgroundSession = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:self.delegates.operationQueue];
+        self.backgroundSession = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:nil];
     }
     return self;
 }
@@ -68,38 +68,20 @@
 
 #pragma mark - Session delegate
 
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
+    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+}
 
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
+    completionHandler(NSURLSessionResponseAllow);
+}
+
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
+    
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+    
+}
 
 @end
-
-//@interface URLConnection ()
-//
-//@property NSMutableArray<NSURLComponents *> *URLs;
-//@property NSMutableArray<_Reachability *> *reachabilities;
-//
-//@property NSMutableArray<NSURLComponents *> *URLHistory;
-//
-//@end
-//
-//
-//
-//@implementation URLConnection
-//
-//- (instancetype)init {
-//    self = super.init;
-//    if (self) {
-//        self.URLHistorySize = 10;
-//        
-//        self.URLs = NSMutableArray.array;
-//        self.reachabilities = NSMutableArray.array;
-//        
-//        self.URLHistory = NSMutableArray.array;
-//    }
-//    return self;
-//}
-//
-//- (NSURLComponents *)URL {
-//    return nil;
-//}
-//
-//@end
