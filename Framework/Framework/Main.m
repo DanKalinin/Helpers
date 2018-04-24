@@ -37,6 +37,7 @@ Extension const ExtensionJSON = @"json";
 Key const KeyRet = @"ret";
 Key const KeyPair = @"pair";
 Key const KeyData = @"data";
+Key const KeyState = @"state";
 Key const KeyError = @"error";
 Key const KeyObject = @"object";
 Key const KeyCompletion = @"completion";

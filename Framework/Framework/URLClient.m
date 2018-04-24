@@ -42,6 +42,8 @@
     [self updateState:OperationStateDidBegin];
     
     for (NSURLSessionTask *task in self.tasks) {
+        [task addObserver:self forKeyPath:KeyState options:0 context:NULL];
+        task.objectDictionary[KeyData] = NSMutableData.data;
         [task resume];
         dispatch_group_enter(self.group);
     }
@@ -49,6 +51,10 @@
     dispatch_group_wait(self.group, DISPATCH_TIME_FOREVER);
     
     [self updateState:OperationStateDidEnd];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(NSURLSessionTask *)task change:(NSDictionary<NSKeyValueChangeKey, id> *)change context:(void *)context {
+    NSLog(@"%@ - %i", task.originalRequest.URL, (int)task.state);
 }
 
 @end
@@ -141,6 +147,15 @@
 //
 //- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
 //    
+//}
+//
+//- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
+//    dataTask.objectDictionary[KeyData] = NSMutableData.data;
+//    completionHandler(NSURLSessionResponseAllow);
+//}
+//
+//- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+//
 //}
 
 @end
