@@ -34,6 +34,7 @@ extern Extension const ExtensionJSON;
 typedef NSString * Key NS_STRING_ENUM;
 extern Key const KeyRet;
 extern Key const KeyPair;
+extern Key const KeyData;
 extern Key const KeyError;
 extern Key const KeyObject;
 extern Key const KeyCompletion;
@@ -164,7 +165,9 @@ typedef NS_ENUM(NSUInteger, _ReachabilityStatus) {
 
 #pragma mark - Classes
 
-@interface MutableDictionary : NSMutableDictionary
+@interface DefaultDictionary : NSMutableDictionary
+
+@property Class factory;
 
 @end
 
@@ -509,7 +512,8 @@ typedef void (^ReachabilityHandler)(_Reachability *reachability);
 @property (class, readonly) UINib *nib; // Instantiate nib object from class bundle matching with class name
 @property (readonly) UINib *nib; // Same for instances
 
-@property (readonly) MutableDictionary *kvs; // Runtime attribute storage
+@property (readonly) NSMutableDictionary *objectDictionary;
+@property (readonly) DefaultDictionary *kvs; // Runtime attribute storage
 
 + (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle; // Unarchive object from assets catalog
 + (instancetype)objectNamed:(NSString *)name; // Unarchive object from asset catalog located in the main bundle

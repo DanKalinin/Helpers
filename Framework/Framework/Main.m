@@ -36,6 +36,7 @@ Extension const ExtensionJSON = @"json";
 
 Key const KeyRet = @"ret";
 Key const KeyPair = @"pair";
+Key const KeyData = @"data";
 Key const KeyError = @"error";
 Key const KeyObject = @"object";
 Key const KeyCompletion = @"completion";
@@ -247,7 +248,7 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 
 #pragma mark - Classes
 
-@interface MutableDictionary ()
+@interface DefaultDictionary ()
 
 @property NSMutableDictionary *dictionary;
 
@@ -255,12 +256,13 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 
 
 
-@implementation MutableDictionary
+@implementation DefaultDictionary
 
 - (instancetype)initWithCapacity:(NSUInteger)numItems {
     self = super.init;
     if (self) {
         self.dictionary = [NSMutableDictionary.alloc initWithCapacity:numItems];
+        self.factory = self.class;
     }
     return self;
 }
@@ -273,7 +275,7 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 - (id)objectForKey:(id)aKey {
     id object = [self.dictionary objectForKey:aKey];
     if (!object) {
-        object = [MutableDictionary dictionary];
+        object = self.factory.new;
         [self setObject:object forKey:aKey];
     }
     return object;
@@ -1187,7 +1189,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 @interface NSObject (HelpersSelectors) <UITraitEnvironment>
 
-@property MutableDictionary *kvs;
+@property DefaultDictionary *kvs;
 
 @end
 
@@ -1431,14 +1433,27 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 #pragma mark - Accessors
 
-- (void)setKvs:(MutableDictionary *)kvs {
+- (void)setObjectDictionary:(NSMutableDictionary *)objectDictionary {
+    objc_setAssociatedObject(self, @selector(objectDictionary), objectDictionary, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (NSMutableDictionary *)objectDictionary {
+    NSMutableDictionary *objectDictionary = objc_getAssociatedObject(self, @selector(objectDictionary));
+    if (!objectDictionary) {
+        objectDictionary = NSMutableDictionary.dictionary;
+        self.objectDictionary = objectDictionary;
+    }
+    return objectDictionary;
+}
+
+- (void)setKvs:(DefaultDictionary *)kvs {
     objc_setAssociatedObject(self, @selector(kvs), kvs, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (MutableDictionary *)kvs {
-    MutableDictionary *kvs = objc_getAssociatedObject(self, @selector(kvs));
+- (DefaultDictionary *)kvs {
+    DefaultDictionary *kvs = objc_getAssociatedObject(self, @selector(kvs));
     if (!kvs) {
-        kvs = [MutableDictionary dictionary];
+        kvs = DefaultDictionary.dictionary;
         self.kvs = kvs;
     }
     return kvs;
@@ -1762,7 +1777,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         
         NSString *key = NSStringFromSelector(@selector(performSegueWithIdentifier:preparation:));
         ObjectBlock preparation = self.kvs[key];
-        if ([preparation isKindOfClass:MutableDictionary.class]) {
+        if ([preparation isKindOfClass:DefaultDictionary.class]) {
         } else {
             self.kvs[key] = nil;
             [self invokeHandler:preparation object:segue];
