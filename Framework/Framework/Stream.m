@@ -206,6 +206,12 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     }
 }
 
+- (void)updateProgress:(uint64_t)completedUnitCount {
+    [super updateProgress:completedUnitCount];
+    
+    [self.delegates loadDidUpdateProgress:self];
+}
+
 @end
 
 

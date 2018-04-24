@@ -23,16 +23,24 @@
 
 @protocol URLLoadDelegate <OperationDelegate>
 
+@optional
+- (void)loadDidUpdateState:(URLLoad *)load;
+- (void)loadDidUpdateProgress:(URLLoad *)load;
+
+- (void)loadDidBegin:(URLLoad *)load;
+- (void)loadDidEnd:(URLLoad *)load;
+
 @end
 
 
 
-@interface URLLoad : Operation
+@interface URLLoad : Operation <URLLoadDelegate>
 
+@property (readonly) SurrogateArray<URLLoadDelegate> *delegates;
 @property (readonly) NSMutableArray<NSURLSessionTask *> *tasks;
 
 - (instancetype)initWithTasks:(NSMutableArray<NSURLSessionTask *> *)tasks;
-- (NSMutableArray<NSURLSessionTask *> *)tasksForState:(NSURLSessionTaskState)state;
+- (void)task:(NSURLSessionTask *)task completeWithError:(NSError *)error;
 
 @end
 
@@ -45,7 +53,7 @@
 
 
 
-@protocol URLClientDelegate <ReachabilityDelegate, URLLoadDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
+@protocol URLClientDelegate <ReachabilityDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
 @end
 

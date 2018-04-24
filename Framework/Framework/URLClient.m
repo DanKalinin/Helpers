@@ -26,60 +26,77 @@
 
 @implementation URLLoad
 
+@dynamic delegates;
+
 - (instancetype)initWithTasks:(NSMutableArray<NSURLSessionTask *> *)tasks {
     self = super.init;
     if (self) {
         self.tasks = tasks;
+        
+        self.progress.totalUnitCount = tasks.count;
     }
     return self;
 }
 
 - (void)main {
     [self updateState:OperationStateDidBegin];
+    [self updateProgress:0];
     
     for (NSURLSessionTask *task in self.tasks) {
         dispatch_group_enter(self.group);
         
-        [task addObserver:self forKeyPath:KeyState options:0 context:NULL];
-        task.objectDictionary[KeyData] = NSMutableData.data;
+        task.weakDictionary[KeyLoad] = self;
+        task.strongDictionary[KeyData] = NSMutableData.data;
         [task resume];
     }
     
     dispatch_group_wait(self.group, DISPATCH_TIME_FOREVER);
     
     [self updateState:OperationStateDidEnd];
-    
-    NSLog(@"error - %@", self.errors.firstObject);
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(NSURLSessionTask *)task change:(NSDictionary<NSKeyValueChangeKey, id> *)change context:(void *)context {
-    if (task.state == NSURLSessionTaskStateRunning) {
-    } else if (task.state == NSURLSessionTaskStateSuspended) {
-    } else if (task.state == NSURLSessionTaskStateCanceling) {
-    } else if (task.state == NSURLSessionTaskStateCompleted) {
-        dispatch_group_leave(self.group);
-        
-        if (task.error && (self.errors.count == 0)) {
-            [self.errors addObject:task.error];
-            
-            NSMutableArray *runningTasks = [self tasksForState:NSURLSessionTaskStateRunning];
-            for (NSURLSessionTask *runningTask in runningTasks) {
-                [runningTask cancel];
-            }
-        }
+- (void)cancel {
+    [super cancel];
+    
+    for (NSURLSessionTask *task in self.tasks) {
+        [task cancel];
     }
 }
 
 #pragma mark - Helpers
 
-- (NSMutableArray<NSURLSessionTask *> *)tasksForState:(NSURLSessionTaskState)state {
-    NSMutableArray *tasks = NSMutableArray.array;
-    for (NSURLSessionTask *task in self.tasks) {
-        if (task.state == state) {
-            [tasks addObject:task];
-        }
+- (void)updateState:(OperationState)state {
+    [super updateState:state];
+    
+    [self.delegates loadDidUpdateState:self];
+    if (state == OperationStateDidBegin) {
+        [self.delegates loadDidBegin:self];
+    } else if (state == OperationStateDidEnd) {
+        [self.delegates loadDidEnd:self];
     }
-    return tasks;
+}
+
+- (void)updateProgress:(uint64_t)completedUnitCount {
+    [super updateProgress:completedUnitCount];
+    
+    [self.delegates loadDidUpdateProgress:self];
+}
+
+- (void)task:(NSURLSessionTask *)task completeWithError:(NSError *)error {
+    dispatch_group_leave(self.group);
+    
+    if (error) {
+        if (self.errors.count == 0) {
+            [self.errors addObject:error];
+            
+            for (NSURLSessionTask *task in self.tasks) {
+                [task cancel];
+            }
+        }
+    } else {
+        uint64_t completedUnitCount = self.progress.completedUnitCount + 1;
+        [self updateProgress:completedUnitCount];
+    }
 }
 
 @end
@@ -186,7 +203,11 @@
 #pragma mark - URL session
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
-    [dataTask.objectDictionary[KeyData] appendData:data];
+    [dataTask.strongDictionary[KeyData] appendData:data];
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+    [task.weakDictionary[KeyLoad] task:task completeWithError:error];
 }
 
 @end

@@ -36,6 +36,7 @@ Extension const ExtensionJSON = @"json";
 
 Key const KeyRet = @"ret";
 Key const KeyPair = @"pair";
+Key const KeyLoad = @"load";
 Key const KeyData = @"data";
 Key const KeyState = @"state";
 Key const KeyError = @"error";
@@ -1434,17 +1435,30 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 #pragma mark - Accessors
 
-- (void)setObjectDictionary:(NSMutableDictionary *)objectDictionary {
-    objc_setAssociatedObject(self, @selector(objectDictionary), objectDictionary, OBJC_ASSOCIATION_RETAIN);
+- (void)setStrongDictionary:(NSMutableDictionary *)strongDictionary {
+    objc_setAssociatedObject(self, @selector(strongDictionary), strongDictionary, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (NSMutableDictionary *)objectDictionary {
-    NSMutableDictionary *objectDictionary = objc_getAssociatedObject(self, @selector(objectDictionary));
-    if (!objectDictionary) {
-        objectDictionary = NSMutableDictionary.dictionary;
-        self.objectDictionary = objectDictionary;
+- (NSMutableDictionary *)strongDictionary {
+    NSMutableDictionary *dictionary = objc_getAssociatedObject(self, @selector(strongDictionary));
+    if (!dictionary) {
+        dictionary = NSMutableDictionary.dictionary;
+        self.strongDictionary = dictionary;
     }
-    return objectDictionary;
+    return dictionary;
+}
+
+- (void)setWeakDictionary:(WeakDictionary *)weakDictionary {
+    objc_setAssociatedObject(self, @selector(weakDictionary), weakDictionary, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (WeakDictionary *)weakDictionary {
+    WeakDictionary *dictionary = objc_getAssociatedObject(self, @selector(weakDictionary));
+    if (!dictionary) {
+        dictionary = WeakDictionary.dictionary;
+        self.weakDictionary = dictionary;
+    }
+    return dictionary;
 }
 
 - (void)setKvs:(DefaultDictionary *)kvs {

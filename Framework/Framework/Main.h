@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Dictionary.h"
 
 @class _Reachability;
 
@@ -34,6 +35,7 @@ extern Extension const ExtensionJSON;
 typedef NSString * Key NS_STRING_ENUM;
 extern Key const KeyRet;
 extern Key const KeyPair;
+extern Key const KeyLoad;
 extern Key const KeyData;
 extern Key const KeyState;
 extern Key const KeyError;
@@ -513,7 +515,8 @@ typedef void (^ReachabilityHandler)(_Reachability *reachability);
 @property (class, readonly) UINib *nib; // Instantiate nib object from class bundle matching with class name
 @property (readonly) UINib *nib; // Same for instances
 
-@property (readonly) NSMutableDictionary *objectDictionary;
+@property (readonly) NSMutableDictionary *strongDictionary;
+@property (readonly) WeakDictionary *weakDictionary;
 @property (readonly) DefaultDictionary *kvs; // Runtime attribute storage
 
 + (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle; // Unarchive object from assets catalog
