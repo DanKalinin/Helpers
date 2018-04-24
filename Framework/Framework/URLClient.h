@@ -36,10 +36,11 @@
 
 @interface URLLoad : Operation <URLLoadDelegate>
 
+@property (readonly) URLClient *parent;
 @property (readonly) SurrogateArray<URLLoadDelegate> *delegates;
-@property (readonly) NSMutableArray<NSURLSessionTask *> *tasks;
+@property (readonly) NSArray<NSURLSessionTask *> *tasks;
 
-- (instancetype)initWithTasks:(NSMutableArray<NSURLSessionTask *> *)tasks;
+- (instancetype)initWithTasks:(NSArray<NSURLSessionTask *> *)tasks;
 - (void)task:(NSURLSessionTask *)task completeWithError:(NSError *)error;
 
 @end
@@ -73,6 +74,6 @@
 
 - (instancetype)initWithLocalComponents:(NSURLComponents *)localComponents remoteComponents:(NSURLComponents *)remoteComponents;
 - (void)session:(NSURLSession *)session setConfiguration:(NSURLSessionConfiguration *)configuration;
-- (URLLoad *)session:(NSURLSession *)session loadWithTasks:(NSMutableArray<NSURLSessionTask *> *)tasks;
+- (URLLoad *)session:(NSURLSession *)session loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks;
 
 @end

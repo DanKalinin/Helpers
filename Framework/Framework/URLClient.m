@@ -18,7 +18,7 @@
 
 @interface URLLoad ()
 
-@property NSMutableArray<NSURLSessionTask *> *tasks;
+@property NSArray<NSURLSessionTask *> *tasks;
 
 @end
 
@@ -26,9 +26,10 @@
 
 @implementation URLLoad
 
+@dynamic parent;
 @dynamic delegates;
 
-- (instancetype)initWithTasks:(NSMutableArray<NSURLSessionTask *> *)tasks {
+- (instancetype)initWithTasks:(NSArray<NSURLSessionTask *> *)tasks {
     self = super.init;
     if (self) {
         self.tasks = tasks;
@@ -165,7 +166,7 @@
     }
 }
 
-- (URLLoad *)session:(NSURLSession *)session loadWithTasks:(NSMutableArray<NSURLSessionTask *> *)tasks {
+- (URLLoad *)session:(NSURLSession *)session loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks {
     URLLoad *load = [URLLoad.alloc initWithTasks:tasks];
     [self addOperation:load];
     return load;
