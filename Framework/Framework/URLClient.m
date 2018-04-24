@@ -42,10 +42,11 @@
     [self updateState:OperationStateDidBegin];
     
     for (NSURLSessionTask *task in self.tasks) {
+        dispatch_group_enter(self.group);
+        
         [task addObserver:self forKeyPath:KeyState options:0 context:NULL];
         task.objectDictionary[KeyData] = NSMutableData.data;
         [task resume];
-        dispatch_group_enter(self.group);
     }
     
     dispatch_group_wait(self.group, DISPATCH_TIME_FOREVER);
@@ -54,7 +55,12 @@
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(NSURLSessionTask *)task change:(NSDictionary<NSKeyValueChangeKey, id> *)change context:(void *)context {
-    NSLog(@"%@ - %i", task.originalRequest.URL, (int)task.state);
+    if (task.state == NSURLSessionTaskStateRunning) {
+    } else if (task.state == NSURLSessionTaskStateSuspended) {
+    } else if (task.state == NSURLSessionTaskStateCanceling) {
+    } else if (task.state == NSURLSessionTaskStateCompleted) {
+        dispatch_group_leave(self.group);
+    }
 }
 
 @end
@@ -157,5 +163,11 @@
 //- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
 //
 //}
+
+#pragma mark - URL session
+
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
+    [dataTask.objectDictionary[KeyData] appendData:data];
+}
 
 @end
