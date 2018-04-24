@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class WeakDictionary;
+
 
 
 @interface WeakDictionary : NSMutableDictionary
