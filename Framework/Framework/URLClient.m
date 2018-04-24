@@ -172,34 +172,7 @@
     return load;
 }
 
-//#pragma mark - Reachability
-//
-//#pragma mark - Session delegate
-//
-//- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
-//    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
-//}
-//
-//- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
-//    completionHandler(NSURLSessionResponseAllow);
-//}
-//
-//- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
-//
-//}
-//
-//- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
-//    
-//}
-//
-//- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
-//    dataTask.objectDictionary[KeyData] = NSMutableData.data;
-//    completionHandler(NSURLSessionResponseAllow);
-//}
-//
-//- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
-//
-//}
+#pragma mark - Reachability
 
 #pragma mark - URL session
 
