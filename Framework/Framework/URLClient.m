@@ -34,10 +34,6 @@
     return self;
 }
 
-- (void)completeTask:(NSURLSessionTask *)task withError:(NSError *)error {
-    
-}
-
 - (void)main {
     [self updateState:OperationStateDidBegin];
     
@@ -52,6 +48,8 @@
     dispatch_group_wait(self.group, DISPATCH_TIME_FOREVER);
     
     [self updateState:OperationStateDidEnd];
+    
+    NSLog(@"error - %@", self.errors.firstObject);
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(NSURLSessionTask *)task change:(NSDictionary<NSKeyValueChangeKey, id> *)change context:(void *)context {
@@ -60,7 +58,28 @@
     } else if (task.state == NSURLSessionTaskStateCanceling) {
     } else if (task.state == NSURLSessionTaskStateCompleted) {
         dispatch_group_leave(self.group);
+        
+        if (task.error && (self.errors.count == 0)) {
+            [self.errors addObject:task.error];
+            
+            NSMutableArray *runningTasks = [self tasksForState:NSURLSessionTaskStateRunning];
+            for (NSURLSessionTask *runningTask in runningTasks) {
+                [runningTask cancel];
+            }
+        }
     }
+}
+
+#pragma mark - Helpers
+
+- (NSMutableArray<NSURLSessionTask *> *)tasksForState:(NSURLSessionTaskState)state {
+    NSMutableArray *tasks = NSMutableArray.array;
+    for (NSURLSessionTask *task in self.tasks) {
+        if (task.state == state) {
+            [tasks addObject:task];
+        }
+    }
+    return tasks;
 }
 
 @end

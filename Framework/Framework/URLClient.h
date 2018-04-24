@@ -32,7 +32,7 @@
 @property (readonly) NSMutableArray<NSURLSessionTask *> *tasks;
 
 - (instancetype)initWithTasks:(NSMutableArray<NSURLSessionTask *> *)tasks;
-- (void)completeTask:(NSURLSessionTask *)task withError:(NSError *)error;
+- (NSMutableArray<NSURLSessionTask *> *)tasksForState:(NSURLSessionTaskState)state;
 
 @end
 
