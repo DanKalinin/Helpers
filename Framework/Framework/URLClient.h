@@ -63,7 +63,6 @@
 
 @interface URLClient : OperationQueue <URLClientDelegate>
 
-@property NSUInteger priority;
 @property NSURLSessionConfiguration *defaultConfiguration;
 @property NSURLSessionConfiguration *ephemeralConfiguration;
 @property NSURLSessionConfiguration *backgroundConfiguration;
