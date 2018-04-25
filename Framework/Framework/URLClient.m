@@ -81,14 +81,14 @@
     [self.delegates loadDidUpdateProgress:self];
 }
 
-- (void)task:(NSURLSessionTask *)task completeWithError:(NSError *)error {
+- (void)completeTask:(NSURLSessionTask *)task {
     dispatch_group_leave(self.group);
     
-    if (error) {
+    if (task.error) {
         if (self.errors.count == 0) {
             if (self.cancelled) {
             } else {
-                [self.errors addObject:error];
+                [self.errors addObject:task.error];
                 [self cancelAllTasks];
             }
         }
@@ -197,7 +197,7 @@
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
-    [task.weakDictionary[KeyLoad] task:task completeWithError:error];
+    [task.weakDictionary[KeyLoad] completeTask:task];
 }
 
 @end

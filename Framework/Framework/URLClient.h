@@ -41,7 +41,7 @@
 @property (readonly) NSArray<NSURLSessionTask *> *tasks;
 
 - (instancetype)initWithTasks:(NSArray<NSURLSessionTask *> *)tasks;
-- (void)task:(NSURLSessionTask *)task completeWithError:(NSError *)error;
+- (void)completeTask:(NSURLSessionTask *)task;
 - (void)cancelAllTasks;
 
 @end
