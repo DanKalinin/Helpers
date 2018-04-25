@@ -9,6 +9,7 @@
 #import "Main.h"
 #import "Operation.h"
 #import "Reachability.h"
+#import "Stream.h"
 
 @class URLLoad, URLClient;
 
@@ -71,6 +72,7 @@
 @property (readonly) NSURLComponents *localComponents;
 @property (readonly) NSURLComponents *remoteComponents;
 @property (readonly) Reachability *reachability;
+@property (readonly) StreamClient *streamClient;
 @property (readonly) NSURLSession *defaultSesssion;
 @property (readonly) NSURLSession *ephemeralSesssion;
 @property (readonly) NSURLSession *backgroundSession;
