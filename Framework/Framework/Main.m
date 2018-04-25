@@ -277,7 +277,7 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 - (id)objectForKey:(id)aKey {
     id object = [self.dictionary objectForKey:aKey];
     if (!object) {
-        object = self.factory.new;
+        object = self.factory.dictionary;
         [self setObject:object forKey:aKey];
     }
     return object;
