@@ -63,6 +63,9 @@
 @interface URLClient : OperationQueue <URLClientDelegate>
 
 @property NSUInteger priority;
+@property NSURLSessionConfiguration *defaultConfiguration;
+@property NSURLSessionConfiguration *ephemeralConfiguration;
+@property NSURLSessionConfiguration *backgroundConfiguration;
 
 @property (readonly) SurrogateArray<URLClientDelegate> *delegates;
 @property (readonly) NSURLComponents *localComponents;
@@ -73,7 +76,6 @@
 @property (readonly) NSURLSession *backgroundSession;
 
 - (instancetype)initWithLocalComponents:(NSURLComponents *)localComponents remoteComponents:(NSURLComponents *)remoteComponents;
-- (void)session:(NSURLSession *)session setConfiguration:(NSURLSessionConfiguration *)configuration;
-- (URLLoad *)session:(NSURLSession *)session loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks;
+- (URLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks;
 
 @end

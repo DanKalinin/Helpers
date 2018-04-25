@@ -46,8 +46,8 @@
     for (NSURLSessionTask *task in self.tasks) {
         dispatch_group_enter(self.group);
         
-        task.weakDictionary[KeyLoad] = self;
         task.strongDictionary[KeyData] = NSMutableData.data;
+        task.weakDictionary[KeyLoad] = self;
         [task resume];
     }
     
@@ -136,16 +136,17 @@
         
         self.reachability = [Reachability.alloc initWithLocalComponents:localComponents remoteComponents:remoteComponents];
         
-        NSURLSessionConfiguration *configuration = NSURLSessionConfiguration.defaultSessionConfiguration;
-        self.defaultSesssion = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:nil];
-        
-        configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration;
-        self.ephemeralSesssion = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:nil];
-        
-        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:self.bundle.bundleIdentifier];
-        self.backgroundSession = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:nil];
+        self.defaultConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration;
+        self.ephemeralConfiguration = NSURLSessionConfiguration.ephemeralSessionConfiguration;
+        self.backgroundConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:self.bundle.bundleIdentifier];
     }
     return self;
+}
+
+- (URLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks {
+    URLLoad *load = [URLLoad.alloc initWithTasks:tasks];
+    [self addOperation:load];
+    return load;
 }
 
 - (void)cancelAllOperations {
@@ -154,22 +155,33 @@
     [self.backgroundSession invalidateAndCancel];
 }
 
-- (void)session:(NSURLSession *)session setConfiguration:(NSURLSessionConfiguration *)configuration {
-    [session invalidateAndCancel];
-    
-    if ([session isEqual:self.defaultSesssion]) {
-        self.defaultSesssion = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:nil];
-    } else if ([session isEqual:self.ephemeralSesssion]) {
-        self.ephemeralSesssion = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:nil];
-    } else {
-        self.backgroundSession = [NSURLSession sessionWithConfiguration:configuration delegate:self.delegates delegateQueue:nil];
-    }
+#pragma mark - Accessors
+
+- (void)setDefaultConfiguration:(NSURLSessionConfiguration *)defaultConfiguration {
+    [self.defaultSesssion invalidateAndCancel];
+    self.defaultSesssion = [NSURLSession sessionWithConfiguration:defaultConfiguration delegate:self.delegates delegateQueue:nil];
 }
 
-- (URLLoad *)session:(NSURLSession *)session loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks {
-    URLLoad *load = [URLLoad.alloc initWithTasks:tasks];
-    [self addOperation:load];
-    return load;
+- (NSURLSessionConfiguration *)defaultConfiguration {
+    return self.defaultSesssion.configuration;
+}
+
+- (void)setEphemeralConfiguration:(NSURLSessionConfiguration *)ephemeralConfiguration {
+    [self.ephemeralSesssion invalidateAndCancel];
+    self.ephemeralSesssion = [NSURLSession sessionWithConfiguration:ephemeralConfiguration delegate:self.delegates delegateQueue:nil];
+}
+
+- (NSURLSessionConfiguration *)ephemeralConfiguration {
+    return self.ephemeralSesssion.configuration;
+}
+
+- (void)setBackgroundConfiguration:(NSURLSessionConfiguration *)backgroundConfiguration {
+    [self.backgroundSession invalidateAndCancel];
+    self.backgroundSession = [NSURLSession sessionWithConfiguration:backgroundConfiguration delegate:self.delegates delegateQueue:nil];
+}
+
+- (NSURLSessionConfiguration *)backgroundConfiguration {
+    return self.backgroundSession.configuration;
 }
 
 #pragma mark - Reachability
