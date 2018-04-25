@@ -42,6 +42,7 @@
 
 - (instancetype)initWithTasks:(NSArray<NSURLSessionTask *> *)tasks;
 - (void)task:(NSURLSessionTask *)task completeWithError:(NSError *)error;
+- (void)cancelAllTasks;
 
 @end
 

@@ -59,9 +59,7 @@
 - (void)cancel {
     [super cancel];
     
-    for (NSURLSessionTask *task in self.tasks) {
-        [task cancel];
-    }
+    [self cancelAllTasks];
 }
 
 #pragma mark - Helpers
@@ -88,15 +86,21 @@
     
     if (error) {
         if (self.errors.count == 0) {
-            [self.errors addObject:error];
-            
-            for (NSURLSessionTask *task in self.tasks) {
-                [task cancel];
+            if (self.cancelled) {
+            } else {
+                [self.errors addObject:error];
+                [self cancelAllTasks];
             }
         }
     } else {
         uint64_t completedUnitCount = self.progress.completedUnitCount + 1;
         [self updateProgress:completedUnitCount];
+    }
+}
+
+- (void)cancelAllTasks {
+    for (NSURLSessionTask *task in self.tasks) {
+        [task cancel];
     }
 }
 
