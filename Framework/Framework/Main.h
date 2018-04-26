@@ -170,8 +170,6 @@ typedef NS_ENUM(NSUInteger, _ReachabilityStatus) {
 
 @interface DefaultDictionary : NSMutableDictionary
 
-@property Class factory;
-
 @end
 
 
