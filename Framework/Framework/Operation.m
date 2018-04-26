@@ -94,50 +94,6 @@
 
 
 
-//@interface GroupOperation ()
-//
-//@property dispatch_group_t group;
-//
-//@end
-//
-//
-//
-//@implementation GroupOperation
-//
-//- (instancetype)init {
-//    self = super.init;
-//    if (self) {
-//        self.group = dispatch_group_create();
-//    }
-//    return self;
-//}
-//
-//- (void)main {
-//    [self updateState:OperationStateDidBegin];
-//
-//    dispatch_group_enter(self.group);
-//    dispatch_group_wait(self.group, DISPATCH_TIME_FOREVER);
-//
-//    [self updateState:OperationStateDidEnd];
-//}
-//
-//- (void)cancel {
-//    [super cancel];
-//
-//    dispatch_group_leave(self.group);
-//}
-//
-//@end
-
-
-
-
-
-
-
-
-
-
 @interface OperationQueue ()
 
 @property SurrogateArray<OperationDelegate> *delegates;

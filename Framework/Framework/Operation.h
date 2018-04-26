@@ -65,21 +65,6 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 
 
 
-//@interface GroupOperation : Operation
-//
-//@property (readonly) dispatch_group_t group;
-//
-//@end
-
-
-
-
-
-
-
-
-
-
 @interface OperationQueue : NSOperationQueue <OperationDelegate>
 
 @property (readonly) __kindof Operation *operation;
