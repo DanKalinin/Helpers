@@ -33,6 +33,7 @@ Extension const ExtensionPlist = @"plist";
 Extension const ExtensionStrings = @"strings";
 Extension const ExtensionXML = @"xml";
 Extension const ExtensionJSON = @"json";
+Extension const ExtensionMOMD = @"momd";
 
 Key const KeyRet = @"ret";
 Key const KeyPair = @"pair";
