@@ -67,7 +67,11 @@
         [self.delegates operationDidBegin:self];
     } else if (state == OperationStateDidEnd) {
         [self.delegates operationDidEnd:self];
-        [self invokeHandler:self.completion queue:self.delegates.operationQueue];
+        [self invokeHandler:self.completionBlock queue:self.delegates.operationQueue];
+        
+        self.stateBlock = nil;
+        self.progressBlock = nil;
+        self.completionBlock = nil;
     }
 }
 
