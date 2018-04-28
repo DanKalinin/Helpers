@@ -173,4 +173,10 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
     return compression;
 }
 
+- (Compression *)compress:(NSMutableData *)srcData to:(NSMutableData *)dstData chunk:(size_t)chunk completion:(VoidBlock)completion {
+    Compression *compression = [self compress:srcData to:dstData chunk:chunk];
+    compression.completionBlock = completion;
+    return compression;
+}
+
 @end
