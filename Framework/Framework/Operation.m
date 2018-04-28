@@ -67,6 +67,7 @@
         [self.delegates operationDidBegin:self];
     } else if (state == OperationStateDidEnd) {
         [self.delegates operationDidEnd:self];
+        [self invokeHandler:self.completion queue:self.delegates.operationQueue];
     }
 }
 

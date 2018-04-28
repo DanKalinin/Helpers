@@ -41,6 +41,7 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 
 @property (copy) VoidBlock stateBlock;
 @property (copy) VoidBlock progressBlock;
+@property (copy) VoidBlock completion;
 
 @property (readonly) id parent;
 @property (readonly) SurrogateArray<OperationDelegate> *delegates;
