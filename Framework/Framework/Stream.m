@@ -380,6 +380,24 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     return load;
 }
 
+- (StreamLoad *)load:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path completion:(VoidBlock)completion {
+    StreamLoad *load = [self load:operation data:data path:path];
+    load.completionBlock = completion;
+    return load;
+}
+
+- (StreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path completion:(VoidBlock)completion {
+    StreamLoad *load = [self uploadData:data toPath:path];
+    load.completionBlock = completion;
+    return load;
+}
+
+- (StreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path completion:(VoidBlock)completion {
+    StreamLoad *load = [self downloadData:data fromPath:path];
+    load.completionBlock = completion;
+    return load;
+}
+
 #pragma mark - Accessors
 
 - (StreamClient *)client {

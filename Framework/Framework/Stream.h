@@ -183,6 +183,10 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 - (__kindof StreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path;
 - (__kindof StreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path;
 
+- (__kindof StreamLoad *)load:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path completion:(VoidBlock)completion;
+- (__kindof StreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path completion:(VoidBlock)completion;
+- (__kindof StreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path completion:(VoidBlock)completion;
+
 @end
 
 
