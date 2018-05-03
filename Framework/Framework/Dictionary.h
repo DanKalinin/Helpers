@@ -11,6 +11,44 @@
 
 
 
+
+
+
+
+
+
+
+@protocol DictionaryEncodable <NSObject>
+
+@optional
+- (void)toDictionary:(NSMutableDictionary *)dictionary;
+
+@end
+
+
+
+@protocol DictionaryDecodable <NSObject>
+
+@optional
+- (void)fromDictionary:(NSMutableDictionary *)dictionary;
+
+@end
+
+
+
+@interface DictionaryCodable <DictionaryEncodable, DictionaryDecodable>
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface WeakDictionary : NSMutableDictionary
 
 @end
