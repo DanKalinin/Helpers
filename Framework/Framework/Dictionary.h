@@ -36,7 +36,7 @@
 
 
 
-@interface DictionaryCodable <DictionaryEncodable, DictionaryDecodable>
+@protocol DictionaryCodable <DictionaryEncodable, DictionaryDecodable>
 
 @end
 
