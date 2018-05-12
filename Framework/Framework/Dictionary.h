@@ -49,6 +49,6 @@
 
 
 
-@interface WeakDictionary : NSMutableDictionary
+@interface WeakDictionary<KeyType, ObjectType> : NSMutableDictionary<KeyType, ObjectType>
 
 @end
