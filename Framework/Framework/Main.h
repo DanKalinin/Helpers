@@ -41,6 +41,7 @@ extern Key const KeyData;
 extern Key const KeyState;
 extern Key const KeyError;
 extern Key const KeyObject;
+extern Key const KeyEntity;
 extern Key const KeyCompletion;
 extern Key const KeyScheme;
 extern Key const KeyHost;

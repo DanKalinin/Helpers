@@ -42,6 +42,7 @@ Key const KeyData = @"data";
 Key const KeyState = @"state";
 Key const KeyError = @"error";
 Key const KeyObject = @"object";
+Key const KeyEntity = @"entity";
 Key const KeyCompletion = @"completion";
 Key const KeyScheme = @"scheme";
 Key const KeyHost = @"host";
