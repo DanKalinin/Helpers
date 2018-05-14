@@ -1442,7 +1442,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 - (NSMutableDictionary *)strongDictionary {
     NSMutableDictionary *dictionary = objc_getAssociatedObject(self, @selector(strongDictionary));
-    if (!dictionary) {
+    if (dictionary) {
+    } else {
         dictionary = NSMutableDictionary.dictionary;
         self.strongDictionary = dictionary;
     }
@@ -1455,7 +1456,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 - (WeakDictionary *)weakDictionary {
     WeakDictionary *dictionary = objc_getAssociatedObject(self, @selector(weakDictionary));
-    if (!dictionary) {
+    if (dictionary) {
+    } else {
         dictionary = WeakDictionary.dictionary;
         self.weakDictionary = dictionary;
     }
@@ -1468,7 +1470,8 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 - (DefaultDictionary *)kvs {
     DefaultDictionary *kvs = objc_getAssociatedObject(self, @selector(kvs));
-    if (!kvs) {
+    if (kvs) {
+    } else {
         kvs = DefaultDictionary.dictionary;
         self.kvs = kvs;
     }
