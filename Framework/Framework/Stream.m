@@ -463,9 +463,10 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 #pragma mark - Helpers
 
-- (void)startInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream {
+- (StreamPair *)pairWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream {
     StreamPair *pair = [self.pairClass.alloc initWithInputStream:inputStream outputStream:outputStream];
     [self addOperation:pair];
+    return pair;
 }
 
 @end
@@ -499,7 +500,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 - (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream pair:(Class)pair {
     self = [self initWithPair:pair];
     
-    [self startInputStream:inputStream outputStream:outputStream];
+    [self pairWithInputStream:inputStream outputStream:outputStream];
     return self;
 }
 
@@ -582,5 +583,5 @@ static void StreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType 
     NSInputStream *inputStream = (__bridge_transfer NSInputStream *)readStream;
     NSOutputStream *outputStream = (__bridge_transfer NSOutputStream *)writeStream;
     StreamServer *server = (__bridge StreamServer *)info;
-    [server startInputStream:inputStream outputStream:outputStream];
+    [server pairWithInputStream:inputStream outputStream:outputStream];
 }

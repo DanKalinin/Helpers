@@ -205,7 +205,7 @@ typedef NS_ENUM(NSUInteger, StreamLoadOperation) {
 @property (readonly) SurrogateArray<StreamPairDelegate> *delegates;
 
 - (instancetype)initWithPair:(Class)pair;
-- (void)startInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
+- (__kindof StreamPair *)pairWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 
 @end
 
