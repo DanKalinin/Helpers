@@ -31,6 +31,15 @@
 
 @implementation Operation
 
++ (instancetype)shared {
+    static Operation *shared = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shared = self.new;
+    });
+    return shared;
+}
+
 - (instancetype)init {
     self = super.init;
     if (self) {
@@ -108,6 +117,15 @@
 
 
 @implementation OperationQueue
+
++ (instancetype)shared {
+    static OperationQueue *shared = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shared = self.new;
+    });
+    return shared;
+}
 
 - (instancetype)init {
     self = super.init;

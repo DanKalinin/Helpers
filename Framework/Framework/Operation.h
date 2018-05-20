@@ -50,6 +50,8 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 @property (readonly) NSOperationQueue *operationQueue;
 @property (readonly) dispatch_group_t group;
 
++ (instancetype)shared;
+
 - (void)updateState:(OperationState)state;
 - (void)updateProgress:(uint64_t)completedUnitCount;
 - (void)addOperation:(Operation *)operation;
@@ -69,5 +71,7 @@ typedef NS_ENUM(NSUInteger, OperationState) {
 
 @property (readonly) __kindof Operation *operation;
 @property (readonly) SurrogateArray<OperationDelegate> *delegates;
+
++ (instancetype)shared;
 
 @end
