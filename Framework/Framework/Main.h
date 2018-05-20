@@ -819,8 +819,8 @@ typedef void (^ReachabilityHandler)(_Reachability *reachability);
 
 @interface NSNetService (Helpers)
 
-+ (NSError *)errorFromErrorDict:(NSDictionary<NSString *, NSNumber *> *)errorDict;
-+ (NSURLComponents *)componentsFromAddressData:(NSData *)data; // Get the IP address URL representation
++ (NSError *)errorFromErrorDictionary:(NSDictionary<NSString *, NSNumber *> *)dictionary;
++ (NSURLComponents *)URLComponentsFromAddressData:(NSData *)data; // Get the IP address URL representation
 
 @end
 

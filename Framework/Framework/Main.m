@@ -2401,14 +2401,14 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 @implementation NSNetService (Helpers)
 
-+ (NSError *)errorFromErrorDict:(NSDictionary<NSString *,NSNumber *> *)errorDict {
-    NSErrorDomain domain = errorDict[NSNetServicesErrorDomain].stringValue;
-    NSInteger code = errorDict[NSNetServicesErrorCode].integerValue;
++ (NSError *)errorFromErrorDictionary:(NSDictionary<NSString *, NSNumber *> *)dictionary {
+    NSErrorDomain domain = dictionary[NSNetServicesErrorDomain].stringValue;
+    NSInteger code = dictionary[NSNetServicesErrorCode].integerValue;
     NSError *error = [NSError errorWithDomain:domain code:code userInfo:nil];
     return error;
 }
 
-+ (NSURLComponents *)componentsFromAddressData:(NSData *)data {
++ (NSURLComponents *)URLComponentsFromAddressData:(NSData *)data {
     NSURLComponents *components = NSURLComponents.new;
     components.address = *(struct sockaddr *)data.bytes;
     return components;
