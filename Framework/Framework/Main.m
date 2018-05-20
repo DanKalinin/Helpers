@@ -1676,6 +1676,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
         block();
     } else {
         [self addOperationWithBlock:block];
+        [self waitUntilAllOperationsAreFinished];
     }
 }
 
