@@ -17,3 +17,4 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 #import <Helpers/Stream.h>
 #import <Helpers/Compressor.h>
 #import <Helpers/Reachability.h>
+#import <Helpers/Timer.h>

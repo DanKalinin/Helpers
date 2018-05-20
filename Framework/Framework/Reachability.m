@@ -53,6 +53,8 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 }
 
 - (void)start {
+    [super start];
+    
     SCNetworkReachabilityContext ctx = {0};
     ctx.info = (__bridge void *)self;
     SCNetworkReachabilitySetCallback(self.reachability, ReachabilityCallback, &ctx);
@@ -62,6 +64,8 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 }
 
 - (void)cancel {
+    [super cancel];
+    
     SCNetworkReachabilitySetCallback(self.reachability, NULL, NULL);
     
     CFRunLoopRef loop = CFRunLoopGetCurrent();
