@@ -1672,8 +1672,11 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 }
 
 - (void)addOperationWithBlockAndWait:(VoidBlock)block {
-    [self addOperationWithBlock:block];
-    [self waitUntilAllOperationsAreFinished];
+    if ([NSOperationQueue.currentQueue isEqual:self]) {
+        block();
+    } else {
+        [self addOperationWithBlock:block];
+    }
 }
 
 - (NSOperation *)operationWithName:(NSString *)name {
