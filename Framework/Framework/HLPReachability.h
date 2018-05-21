@@ -1,5 +1,5 @@
 //
-//  Reachability.h
+//  HLPReachability.h
 //  Helpers
 //
 //  Created by Dan Kalinin on 4/18/18.
@@ -9,35 +9,35 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #import "Operation.h"
 
-@class Reachability;
+@class HLPReachability;
 
-typedef NS_ENUM(NSUInteger, ReachabilityStatus) {
-    ReachabilityStatusNone,
-    ReachabilityStatusWiFi,
-    ReachabilityStatusWWAN
+typedef NS_ENUM(NSUInteger, HLPReachabilityStatus) {
+    HLPReachabilityStatusNone,
+    HLPReachabilityStatusWiFi,
+    HLPReachabilityStatusWWAN
 };
 
 
 
-@protocol ReachabilityDelegate <OperationDelegate>
+@protocol HLPReachabilityDelegate <OperationDelegate>
 
 @optional
-- (void)reachabilityDidUpdateState:(Reachability *)reachability;
+- (void)reachabilityDidUpdateState:(HLPReachability *)reachability;
 
 @end
 
 
 
-@interface Reachability : Operation
+@interface HLPReachability : Operation
 
-@property (readonly) SurrogateArray<ReachabilityDelegate> *delegates;
+@property (readonly) SurrogateArray<HLPReachabilityDelegate> *delegates;
 @property (readonly) NSURLComponents *localComponents;
 @property (readonly) NSURLComponents *remoteComponents;
 @property (readonly) SCNetworkReachabilityRef reachability;
 @property (readonly) SCNetworkReachabilityFlags state;
-@property (readonly) ReachabilityStatus status;
+@property (readonly) HLPReachabilityStatus status;
 
-+ (ReachabilityStatus)statusForState:(SCNetworkReachabilityFlags)state;
++ (HLPReachabilityStatus)statusForState:(SCNetworkReachabilityFlags)state;
 - (instancetype)initWithLocalComponents:(NSURLComponents *)localComponents remoteComponents:(NSURLComponents *)remoteComponents;
 
 @end

@@ -19,7 +19,7 @@ extern const OperationState HLPCompressionStateDidProcess;
 extern NSErrorDomain const HLPCompressionErrorDomain;
 
 NS_ERROR_ENUM(HLPCompressionErrorDomain) {
-    CompressionErrorUnknown = 0
+    HLPCompressionErrorUnknown = 0
 };
 
 

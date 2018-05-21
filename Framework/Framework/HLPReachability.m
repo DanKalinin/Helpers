@@ -1,19 +1,19 @@
 //
-//  Reachability.m
+//  HLPReachability.m
 //  Helpers
 //
 //  Created by Dan Kalinin on 4/18/18.
 //
 
-#import "Reachability.h"
+#import "HLPReachability.h"
 
 
 
-static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
+static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
 
 
 
-@interface Reachability ()
+@interface HLPReachability ()
 
 @property NSURLComponents *localComponents;
 @property NSURLComponents *remoteComponents;
@@ -23,7 +23,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
 
 
-@implementation Reachability
+@implementation HLPReachability
 
 @dynamic delegates;
 
@@ -57,7 +57,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
     
     SCNetworkReachabilityContext ctx = {0};
     ctx.info = (__bridge void *)self;
-    SCNetworkReachabilitySetCallback(self.reachability, ReachabilityCallback, &ctx);
+    SCNetworkReachabilitySetCallback(self.reachability, HLPReachabilityCallback, &ctx);
     
     CFRunLoopRef loop = CFRunLoopGetCurrent();
     SCNetworkReachabilityScheduleWithRunLoop(self.reachability, loop, kCFRunLoopDefaultMode);
@@ -116,8 +116,8 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
     return state;
 }
 
-- (ReachabilityStatus)status {
-    ReachabilityStatus status = [Reachability statusForState:self.state];
+- (HLPReachabilityStatus)status {
+    HLPReachabilityStatus status = [HLPReachability statusForState:self.state];
     return status;
 }
 
@@ -129,15 +129,15 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
     [self.delegates reachabilityDidUpdateState:self];
 }
 
-+ (ReachabilityStatus)statusForState:(SCNetworkReachabilityFlags)state {
++ (HLPReachabilityStatus)statusForState:(SCNetworkReachabilityFlags)state {
     if ((state & kSCNetworkReachabilityFlagsReachable) && !(state & kSCNetworkReachabilityFlagsConnectionRequired) && !(state & kSCNetworkReachabilityFlagsInterventionRequired)) {
         if (state & kSCNetworkReachabilityFlagsIsWWAN) {
-            return ReachabilityStatusWWAN;
+            return HLPReachabilityStatusWWAN;
         } else {
-            return ReachabilityStatusWiFi;
+            return HLPReachabilityStatusWiFi;
         }
     } else {
-        return ReachabilityStatusNone;
+        return HLPReachabilityStatusNone;
     }
 }
 
@@ -145,7 +145,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
 
 
-static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
-    Reachability *reachability = (__bridge Reachability *)info;
+static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
+    HLPReachability *reachability = (__bridge HLPReachability *)info;
     [reachability updateState:(OperationState)flags];
 }

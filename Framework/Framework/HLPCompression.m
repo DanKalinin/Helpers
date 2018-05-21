@@ -86,7 +86,7 @@ NSErrorDomain const HLPCompressionErrorDomain = @"HLPCompression";
                     int64_t completedUnitCount = self.progress.totalUnitCount - self.srcData.length;
                     [self updateProgress:completedUnitCount];
                 } else {
-                    NSError *error = [NSError errorWithDomain:HLPCompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
+                    NSError *error = [NSError errorWithDomain:HLPCompressionErrorDomain code:HLPCompressionErrorUnknown userInfo:nil];
                     [self.errors addObject:error];
                     break;
                 }
@@ -100,11 +100,11 @@ NSErrorDomain const HLPCompressionErrorDomain = @"HLPCompression";
         status = compression_stream_destroy(&stream);
         if (status == COMPRESSION_STATUS_OK) {
         } else {
-            NSError *error = [NSError errorWithDomain:HLPCompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
+            NSError *error = [NSError errorWithDomain:HLPCompressionErrorDomain code:HLPCompressionErrorUnknown userInfo:nil];
             [self.errors addObject:error];
         }
     } else {
-        NSError *error = [NSError errorWithDomain:HLPCompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
+        NSError *error = [NSError errorWithDomain:HLPCompressionErrorDomain code:HLPCompressionErrorUnknown userInfo:nil];
         [self.errors addObject:error];
     }
     
