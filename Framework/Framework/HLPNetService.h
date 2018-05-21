@@ -1,5 +1,5 @@
 //
-//  NetService.h
+//  HLPNetService.h
 //  Helpers
 //
 //  Created by Dan Kalinin on 5/14/18.
