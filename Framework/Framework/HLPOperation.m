@@ -1,11 +1,11 @@
 //
-//  Operation.m
+//  HLPOperation.m
 //  Helpers
 //
 //  Created by Dan Kalinin on 3/30/18.
 //
 
-#import "Operation.h"
+#import "HLPOperation.h"
 
 
 
@@ -16,9 +16,9 @@
 
 
 
-@interface Operation ()
+@interface HLPOperation ()
 
-@property SurrogateArray<OperationDelegate> *delegates;
+@property SurrogateArray<HLPOperationDelegate> *delegates;
 @property NSMutableArray<NSNumber *> *states;
 @property NSMutableArray<NSError *> *errors;
 @property NSProgress *progress;
@@ -29,10 +29,10 @@
 
 
 
-@implementation Operation
+@implementation HLPOperation
 
 + (instancetype)shared {
-    static Operation *shared = nil;
+    static HLPOperation *shared = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         shared = self.new;
@@ -67,14 +67,14 @@
 
 #pragma mark - Helpers
 
-- (void)updateState:(OperationState)state {
+- (void)updateState:(HLPOperationState)state {
     [self.states addObject:@(state)];
     
     [self.delegates operationDidUpdateState:self];
     [self invokeHandler:self.stateBlock queue:self.delegates.operationQueue];
-    if (state == OperationStateDidBegin) {
+    if (state == HLPOperationStateDidBegin) {
         [self.delegates operationDidBegin:self];
-    } else if (state == OperationStateDidEnd) {
+    } else if (state == HLPOperationStateDidEnd) {
         [self.delegates operationDidEnd:self];
         [self invokeHandler:self.completionBlock queue:self.delegates.operationQueue];
         
@@ -91,7 +91,7 @@
     [self invokeHandler:self.progressBlock queue:self.delegates.operationQueue];
 }
 
-- (void)addOperation:(Operation *)operation {
+- (void)addOperation:(HLPOperation *)operation {
     [self.operationQueue addOperation:operation];
     
     [operation.delegates addObject:self.delegates];
@@ -108,18 +108,18 @@
 
 
 
-@interface OperationQueue ()
+@interface HLPOperationQueue ()
 
-@property SurrogateArray<OperationDelegate> *delegates;
+@property SurrogateArray<HLPOperationDelegate> *delegates;
 
 @end
 
 
 
-@implementation OperationQueue
+@implementation HLPOperationQueue
 
 + (instancetype)shared {
-    static OperationQueue *shared = nil;
+    static HLPOperationQueue *shared = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         shared = self.new;
@@ -137,7 +137,7 @@
     return self;
 }
 
-- (void)addOperation:(Operation *)operation {
+- (void)addOperation:(HLPOperation *)operation {
     [super addOperation:operation];
     
     [operation.delegates addObject:self.delegates];
@@ -145,7 +145,7 @@
 
 #pragma mark - Accessors
 
-- (Operation *)operation {
+- (HLPOperation *)operation {
     return self.operations.firstObject;
 }
 

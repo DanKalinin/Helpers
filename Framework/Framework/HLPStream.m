@@ -9,10 +9,10 @@
 #import "HLPStream.h"
 #import <netinet/in.h>
 
-const OperationState HLPStreamPairStateDidOpen = 2;
+const HLPOperationState HLPStreamPairStateDidOpen = 2;
 
-const OperationState HLPStreamLoadStateDidInit = 2;
-const OperationState HLPStreamLoadStateDidProcess = 3;
+const HLPOperationState HLPStreamLoadStateDidInit = 2;
+const HLPOperationState HLPStreamLoadStateDidProcess = 3;
 
 NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
@@ -191,17 +191,17 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 #pragma mark - Helpers
 
-- (void)updateState:(OperationState)state {
+- (void)updateState:(HLPOperationState)state {
     [super updateState:state];
     
     [self.delegates loadDidUpdateState:self];
-    if (state == OperationStateDidBegin) {
+    if (state == HLPOperationStateDidBegin) {
         [self.delegates loadDidBegin:self];
     } else if (state == HLPStreamLoadStateDidInit) {
         [self.delegates loadDidInit:self];
     } else if (state == HLPStreamLoadStateDidProcess) {
         [self.delegates loadDidProcess:self];
-    } else if (state == OperationStateDidEnd) {
+    } else if (state == HLPOperationStateDidEnd) {
         [self.delegates loadDidEnd:self];
     }
 }
@@ -263,7 +263,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 }
 
 - (void)main {
-    [self updateState:OperationStateDidBegin];
+    [self updateState:HLPOperationStateDidBegin];
     
     [self.inputStream open];
     [self.outputStream open];
@@ -321,7 +321,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     [self.inputStream close];
     [self.outputStream close];
     
-    [self updateState:OperationStateDidEnd];
+    [self updateState:HLPOperationStateDidEnd];
 }
 
 - (void)writeMessage:(HLPStreamMessage *)message completion:(HLPStreamMessageErrorBlock)completion {
@@ -410,15 +410,15 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 #pragma mark - Helpers
 
-- (void)updateState:(OperationState)state {
+- (void)updateState:(HLPOperationState)state {
     [super updateState:state];
     
     [self.delegates pairDidUpdateState:self];
-    if (state == OperationStateDidBegin) {
+    if (state == HLPOperationStateDidBegin) {
         [self.delegates pairDidBegin:self];
     } else if (state == HLPStreamPairStateDidOpen) {
         [self.delegates pairDidOpen:self];
-    } else if (state == OperationStateDidEnd) {
+    } else if (state == HLPOperationStateDidEnd) {
         [self.delegates pairDidEnd:self];
     }
 }

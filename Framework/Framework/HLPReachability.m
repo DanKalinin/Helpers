@@ -123,7 +123,7 @@ static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRe
 
 #pragma mark - Helpers
 
-- (void)updateState:(OperationState)state {
+- (void)updateState:(HLPOperationState)state {
     [super updateState:state];
     
     [self.delegates reachabilityDidUpdateState:self];
@@ -147,5 +147,5 @@ static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRe
 
 static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
     HLPReachability *reachability = (__bridge HLPReachability *)info;
-    [reachability updateState:(OperationState)flags];
+    [reachability updateState:(HLPOperationState)flags];
 }

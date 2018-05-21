@@ -8,8 +8,8 @@
 
 #import "HLPCompression.h"
 
-const OperationState HLPCompressionStateDidInit = 2;
-const OperationState HLPCompressionStateDidProcess = 3;
+const HLPOperationState HLPCompressionStateDidInit = 2;
+const HLPOperationState HLPCompressionStateDidProcess = 3;
 
 NSErrorDomain const HLPCompressionErrorDomain = @"HLPCompression";
 
@@ -50,7 +50,7 @@ NSErrorDomain const HLPCompressionErrorDomain = @"HLPCompression";
 }
 
 - (void)main {
-    [self updateState:OperationStateDidBegin];
+    [self updateState:HLPOperationStateDidBegin];
     [self updateProgress:0];
     
     compression_stream stream;
@@ -108,22 +108,22 @@ NSErrorDomain const HLPCompressionErrorDomain = @"HLPCompression";
         [self.errors addObject:error];
     }
     
-    [self updateState:OperationStateDidEnd];
+    [self updateState:HLPOperationStateDidEnd];
 }
 
 #pragma mark - Helpers
 
-- (void)updateState:(OperationState)state {
+- (void)updateState:(HLPOperationState)state {
     [super updateState:state];
     
     [self.delegates compressionDidUpdateState:self];
-    if (state == OperationStateDidBegin) {
+    if (state == HLPOperationStateDidBegin) {
         [self.delegates compressionDidBegin:self];
     } else if (state == HLPCompressionStateDidInit) {
         [self.delegates compressionDidInit:self];
     } else if (state == HLPCompressionStateDidProcess) {
         [self.delegates compressionDidUpdateProgress:self];
-    } else if (state == OperationStateDidEnd) {
+    } else if (state == HLPOperationStateDidEnd) {
         [self.delegates compressionDidEnd:self];
     }
 }

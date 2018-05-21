@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
-#import "Operation.h"
+#import "HLPOperation.h"
 
 @class HLPReachability;
 
@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, HLPReachabilityStatus) {
 
 
 
-@protocol HLPReachabilityDelegate <OperationDelegate>
+@protocol HLPReachabilityDelegate <HLPOperationDelegate>
 
 @optional
 - (void)reachabilityDidUpdateState:(HLPReachability *)reachability;
@@ -28,7 +28,7 @@ typedef NS_ENUM(NSUInteger, HLPReachabilityStatus) {
 
 
 
-@interface HLPReachability : Operation
+@interface HLPReachability : HLPOperation
 
 @property (readonly) SurrogateArray<HLPReachabilityDelegate> *delegates;
 @property (readonly) NSURLComponents *localComponents;

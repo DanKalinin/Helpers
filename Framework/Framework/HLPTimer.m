@@ -37,7 +37,7 @@
 - (void)start {
     [super start];
     
-    [self updateState:OperationStateDidBegin];
+    [self updateState:HLPOperationStateDidBegin];
     [self updateProgress:0];
     
     self.timer = [NSTimer scheduledTimerWithTimeInterval:self.interval repeats:YES block:^(NSTimer *timer) {
@@ -46,7 +46,7 @@
         
         if (completedUnitCount == self.repeats) {
             [timer invalidate];
-            [self updateState:OperationStateDidEnd];
+            [self updateState:HLPOperationStateDidEnd];
         }
     }];
 }
@@ -55,18 +55,18 @@
     [super cancel];
     
     [self.timer invalidate];
-    [self updateState:OperationStateDidEnd];
+    [self updateState:HLPOperationStateDidEnd];
 }
 
 #pragma mark - Helpers
 
-- (void)updateState:(OperationState)state {
+- (void)updateState:(HLPOperationState)state {
     [super updateState:state];
     
     [self.delegates timerDidUpdateState:self];
-    if (state == OperationStateDidBegin) {
+    if (state == HLPOperationStateDidBegin) {
         [self.delegates timerDidBegin:self];
-    } else if (state == OperationStateDidEnd) {
+    } else if (state == HLPOperationStateDidEnd) {
         [self.delegates timerDidEnd:self];
     }
 }

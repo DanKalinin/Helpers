@@ -8,16 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import "HLPMain.h"
-#import "Operation.h"
+#import "HLPOperation.h"
 
 @class HLPStreamMessage, HLPStreamLoad, HLPStreamPair, HLPStreamEndpoint, HLPStreamClient, HLPStreamServer;
 
 typedef void (^HLPStreamMessageErrorBlock)(__kindof HLPStreamMessage *message, NSError *error);
 
-extern const OperationState HLPStreamPairStateDidOpen;
+extern const HLPOperationState HLPStreamPairStateDidOpen;
 
-extern const OperationState HLPStreamLoadStateDidInit;
-extern const OperationState HLPStreamLoadStateDidProcess;
+extern const HLPOperationState HLPStreamLoadStateDidInit;
+extern const HLPOperationState HLPStreamLoadStateDidProcess;
 
 extern NSErrorDomain const HLPStreamErrorDomain;
 
@@ -100,7 +100,7 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 
 
 
-@protocol HLPStreamLoadDelegate <OperationDelegate>
+@protocol HLPStreamLoadDelegate <HLPOperationDelegate>
 
 @optional
 - (void)loadDidUpdateState:(HLPStreamLoad *)load;
@@ -115,7 +115,7 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 
 
 
-@interface HLPStreamLoad : Operation <HLPStreamLoadDelegate>
+@interface HLPStreamLoad : HLPOperation <HLPStreamLoadDelegate>
 
 @property (readonly) __kindof HLPStreamPair *parent;
 @property (readonly) SurrogateArray<HLPStreamLoadDelegate> *delegates;
@@ -136,7 +136,7 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 
 
 
-@protocol HLPStreamPairDelegate <OperationDelegate>
+@protocol HLPStreamPairDelegate <HLPOperationDelegate>
 
 @optional
 - (void)pairDidUpdateState:(HLPStreamPair *)pair;
@@ -152,7 +152,7 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 
 
 
-@interface HLPStreamPair : Operation <HLPStreamPairDelegate>
+@interface HLPStreamPair : HLPOperation <HLPStreamPairDelegate>
 
 @property Class messageClass;
 @property NSTimeInterval timeout;
@@ -198,7 +198,7 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 
 
 
-@interface HLPStreamEndpoint : OperationQueue <HLPStreamPairDelegate>
+@interface HLPStreamEndpoint : HLPOperationQueue <HLPStreamPairDelegate>
 
 @property Class pairClass;
 

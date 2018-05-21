@@ -11,7 +11,7 @@
 
 
 
-@protocol HLPTimerDelegate <OperationDelegate>
+@protocol HLPTimerDelegate <HLPOperationDelegate>
 
 @optional
 - (void)timerDidUpdateState:(HLPTimer *)timer;
@@ -24,7 +24,7 @@
 
 
 
-@interface HLPTimer : Operation <HLPTimerDelegate>
+@interface HLPTimer : HLPOperation <HLPTimerDelegate>
 
 @property (readonly) SurrogateArray<HLPTimerDelegate> *delegates;
 @property (readonly) NSTimeInterval interval;

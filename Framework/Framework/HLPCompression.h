@@ -9,12 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <compression.h>
 #import "HLPMain.h"
-#import "Operation.h"
+#import "HLPOperation.h"
 
 @class HLPCompression, HLPCompressor;
 
-extern const OperationState HLPCompressionStateDidInit;
-extern const OperationState HLPCompressionStateDidProcess;
+extern const HLPOperationState HLPCompressionStateDidInit;
+extern const HLPOperationState HLPCompressionStateDidProcess;
 
 extern NSErrorDomain const HLPCompressionErrorDomain;
 
@@ -31,7 +31,7 @@ NS_ERROR_ENUM(HLPCompressionErrorDomain) {
 
 
 
-@protocol HLPCompressionDelegate <OperationDelegate>
+@protocol HLPCompressionDelegate <HLPOperationDelegate>
 
 @optional
 - (void)compressionDidUpdateState:(HLPCompression *)compression;
@@ -46,7 +46,7 @@ NS_ERROR_ENUM(HLPCompressionErrorDomain) {
 
 
 
-@interface HLPCompression : Operation <HLPCompressionDelegate>
+@interface HLPCompression : HLPOperation <HLPCompressionDelegate>
 
 @property (readonly) HLPCompressor *parent;
 @property (readonly) SurrogateArray<HLPCompressionDelegate> *delegates;
@@ -67,7 +67,7 @@ NS_ERROR_ENUM(HLPCompressionErrorDomain) {
 
 
 
-@interface HLPCompressor : OperationQueue <HLPCompressionDelegate>
+@interface HLPCompressor : HLPOperationQueue <HLPCompressionDelegate>
 
 @property (readonly) SurrogateArray<HLPCompressionDelegate> *delegates;
 @property (readonly) compression_stream_operation op;
