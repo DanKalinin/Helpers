@@ -37,8 +37,6 @@ Extension const ExtensionMOMD = @"momd";
 
 Key const KeyRet = @"ret";
 Key const KeyPair = @"pair";
-Key const KeyLoad = @"load";
-Key const KeyData = @"data";
 Key const KeyState = @"state";
 Key const KeyError = @"error";
 Key const KeyObject = @"object";

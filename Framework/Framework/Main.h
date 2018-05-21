@@ -36,8 +36,6 @@ extern Extension const ExtensionMOMD;
 typedef NSString * Key NS_STRING_ENUM;
 extern Key const KeyRet;
 extern Key const KeyPair;
-extern Key const KeyLoad;
-extern Key const KeyData;
 extern Key const KeyState;
 extern Key const KeyError;
 extern Key const KeyObject;
