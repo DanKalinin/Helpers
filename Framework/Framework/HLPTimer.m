@@ -1,15 +1,15 @@
 //
-//  Timer.m
+//  HLPTimer.m
 //  Helpers
 //
 //  Created by Dan Kalinin on 5/20/18.
 //
 
-#import "Timer.h"
+#import "HLPTimer.h"
 
 
 
-@interface Timer ()
+@interface HLPTimer ()
 
 @property NSTimeInterval interval;
 @property NSUInteger repeats;
@@ -19,7 +19,7 @@
 
 
 
-@implementation Timer
+@implementation HLPTimer
 
 @dynamic delegates;
 

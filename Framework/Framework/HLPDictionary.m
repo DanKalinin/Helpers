@@ -1,15 +1,22 @@
 //
-//  Dictionary.m
+//  HLPDictionary.m
 //  Helpers
 //
 //  Created by Dan Kalinin on 4/24/18.
 //
 
-#import "Dictionary.h"
+#import "HLPDictionary.h"
 
 
 
-@interface WeakDictionary ()
+
+
+
+
+
+
+
+@interface HLPWeakDictionary ()
 
 @property NSMapTable *mapTable;
 
@@ -17,7 +24,7 @@
 
 
 
-@implementation WeakDictionary
+@implementation HLPWeakDictionary
 
 #pragma mark - Dictionary
 

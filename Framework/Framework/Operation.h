@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Main.h"
+#import "HLPMain.h"
 
 @class Operation, GroupOperation, OperationQueue;
 

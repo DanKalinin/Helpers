@@ -1,12 +1,12 @@
 //
-//  Helpers.m
-//  R4S
+//  HLPMain.m
+//  Helpers
 //
 //  Created by Dan Kalinin on 09/09/16.
 //  Copyright © 2016 Dan Kalinin. All rights reserved.
 //
 
-#import "Main.h"
+#import "HLPMain.h"
 #import <objc/runtime.h>
 #import <arpa/inet.h>
 #import <AVFoundation/AVFoundation.h>
@@ -1448,15 +1448,15 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return dictionary;
 }
 
-- (void)setWeakDictionary:(WeakDictionary *)weakDictionary {
+- (void)setWeakDictionary:(HLPWeakDictionary *)weakDictionary {
     objc_setAssociatedObject(self, @selector(weakDictionary), weakDictionary, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (WeakDictionary *)weakDictionary {
-    WeakDictionary *dictionary = objc_getAssociatedObject(self, @selector(weakDictionary));
+- (HLPWeakDictionary *)weakDictionary {
+    HLPWeakDictionary *dictionary = objc_getAssociatedObject(self, @selector(weakDictionary));
     if (dictionary) {
     } else {
-        dictionary = WeakDictionary.dictionary;
+        dictionary = HLPWeakDictionary.dictionary;
         self.weakDictionary = dictionary;
     }
     return dictionary;

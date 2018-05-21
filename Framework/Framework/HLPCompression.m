@@ -1,19 +1,17 @@
 //
-//  Compressor.m
-//  Intercom
+//  HLPCompression.m
+//  Helpers
 //
 //  Created by Dan Kalinin on 3/24/18.
 //  Copyright © 2018 Dan Kalinin. All rights reserved.
 //
 
-#import "Compressor.h"
+#import "HLPCompression.h"
 
-const OperationState CompressionStateDidInit = 2;
-const OperationState CompressionStateDidProcess = 3;
+const OperationState HLPCompressionStateDidInit = 2;
+const OperationState HLPCompressionStateDidProcess = 3;
 
-NSErrorDomain const CompressionErrorDomain = @"Compression";
-
-
+NSErrorDomain const HLPCompressionErrorDomain = @"HLPCompression";
 
 
 
@@ -22,7 +20,9 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 
 
 
-@interface Compression ()
+
+
+@interface HLPCompression ()
 
 @property NSMutableData *srcData;
 @property NSMutableData *dstData;
@@ -32,7 +32,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 
 
 
-@implementation Compression
+@implementation HLPCompression
 
 @dynamic parent;
 @dynamic delegates;
@@ -56,7 +56,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
     compression_stream stream;
     compression_status status = compression_stream_init(&stream, self.parent.op, self.parent.algorithm);
     if (status == COMPRESSION_STATUS_OK) {
-        [self updateState:CompressionStateDidInit];
+        [self updateState:HLPCompressionStateDidInit];
         
         size_t dstSize = 2 * self.chunk;
         uint8_t *dstBuffer = malloc(dstSize);
@@ -86,7 +86,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
                     int64_t completedUnitCount = self.progress.totalUnitCount - self.srcData.length;
                     [self updateProgress:completedUnitCount];
                 } else {
-                    NSError *error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
+                    NSError *error = [NSError errorWithDomain:HLPCompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
                     [self.errors addObject:error];
                     break;
                 }
@@ -95,16 +95,16 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
         
         free(dstBuffer);
         
-        [self updateState:CompressionStateDidProcess];
+        [self updateState:HLPCompressionStateDidProcess];
         
         status = compression_stream_destroy(&stream);
         if (status == COMPRESSION_STATUS_OK) {
         } else {
-            NSError *error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
+            NSError *error = [NSError errorWithDomain:HLPCompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
             [self.errors addObject:error];
         }
     } else {
-        NSError *error = [NSError errorWithDomain:CompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
+        NSError *error = [NSError errorWithDomain:HLPCompressionErrorDomain code:CompressionErrorUnknown userInfo:nil];
         [self.errors addObject:error];
     }
     
@@ -119,9 +119,9 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
     [self.delegates compressionDidUpdateState:self];
     if (state == OperationStateDidBegin) {
         [self.delegates compressionDidBegin:self];
-    } else if (state == CompressionStateDidInit) {
+    } else if (state == HLPCompressionStateDidInit) {
         [self.delegates compressionDidInit:self];
-    } else if (state == CompressionStateDidProcess) {
+    } else if (state == HLPCompressionStateDidProcess) {
         [self.delegates compressionDidUpdateProgress:self];
     } else if (state == OperationStateDidEnd) {
         [self.delegates compressionDidEnd:self];
@@ -145,7 +145,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 
 
 
-@interface Compressor ()
+@interface HLPCompressor ()
 
 @property compression_stream_operation op;
 @property compression_algorithm algorithm;
@@ -154,7 +154,7 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
 
 
 
-@implementation Compressor
+@implementation HLPCompressor
 
 @dynamic delegates;
 
@@ -167,14 +167,14 @@ NSErrorDomain const CompressionErrorDomain = @"Compression";
     return self;
 }
 
-- (Compression *)compress:(NSMutableData *)srcData to:(NSMutableData *)dstData chunk:(size_t)chunk {
-    Compression *compression = [Compression.alloc initWithSrcData:srcData dstData:dstData chunk:chunk];
+- (HLPCompression *)compress:(NSMutableData *)srcData to:(NSMutableData *)dstData chunk:(size_t)chunk {
+    HLPCompression *compression = [HLPCompression.alloc initWithSrcData:srcData dstData:dstData chunk:chunk];
     [self addOperation:compression];
     return compression;
 }
 
-- (Compression *)compress:(NSMutableData *)srcData to:(NSMutableData *)dstData chunk:(size_t)chunk completion:(VoidBlock)completion {
-    Compression *compression = [self compress:srcData to:dstData chunk:chunk];
+- (HLPCompression *)compress:(NSMutableData *)srcData to:(NSMutableData *)dstData chunk:(size_t)chunk completion:(VoidBlock)completion {
+    HLPCompression *compression = [self compress:srcData to:dstData chunk:chunk];
     compression.completionBlock = completion;
     return compression;
 }

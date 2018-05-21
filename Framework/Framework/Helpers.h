@@ -11,10 +11,10 @@
 FOUNDATION_EXPORT double HelpersVersionNumber;
 FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 
-#import <Helpers/Main.h>
-#import <Helpers/Dictionary.h>
+#import <Helpers/HLPMain.h>
+#import <Helpers/HLPDictionary.h>
 #import <Helpers/Operation.h>
 #import <Helpers/Stream.h>
-#import <Helpers/Compressor.h>
+#import <Helpers/HLPCompression.h>
 #import <Helpers/Reachability.h>
-#import <Helpers/Timer.h>
+#import <Helpers/HLPTimer.h>

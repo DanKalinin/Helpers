@@ -1,12 +1,12 @@
 //
-//  Main.h
+//  HLPMain.h
 //  Helpers
 //
 //  Created by Dan Kalinin on 3/11/18.
 //
 
 #import <UIKit/UIKit.h>
-#import "Dictionary.h"
+#import "HLPDictionary.h"
 
 @class _Reachability;
 
@@ -514,7 +514,7 @@ typedef void (^ReachabilityHandler)(_Reachability *reachability);
 @property (readonly) UINib *nib; // Same for instances
 
 @property (readonly) NSMutableDictionary *strongDictionary;
-@property (readonly) WeakDictionary *weakDictionary;
+@property (readonly) HLPWeakDictionary *weakDictionary;
 @property (readonly) DefaultDictionary *kvs; // Runtime attribute storage
 
 + (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle; // Unarchive object from assets catalog

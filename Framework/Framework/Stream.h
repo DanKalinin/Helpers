@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Main.h"
+#import "HLPMain.h"
 #import "Operation.h"
 
 @class StreamMessage, StreamLoad, StreamPair, StreamEndpoint, StreamClient, StreamServer;
