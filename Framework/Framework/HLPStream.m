@@ -1,22 +1,20 @@
 //
-//  Stream.m
-//  Intercom
+//  HLPStream.m
+//  Helpers
 //
 //  Created by Dan Kalinin on 3/5/18.
 //  Copyright © 2018 Dan Kalinin. All rights reserved.
 //
 
-#import "Stream.h"
+#import "HLPStream.h"
 #import <netinet/in.h>
 
-const OperationState StreamPairStateDidOpen = 2;
+const OperationState HLPStreamPairStateDidOpen = 2;
 
-const OperationState StreamLoadStateDidInit = 2;
-const OperationState StreamLoadStateDidProcess = 3;
+const OperationState HLPStreamLoadStateDidInit = 2;
+const OperationState HLPStreamLoadStateDidProcess = 3;
 
-NSErrorDomain const StreamErrorDomain = @"Stream";
-
-
+NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 
 
@@ -25,13 +23,15 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 
 
-@implementation NSStream (Helpers)
+
+
+@implementation NSStream (HLP)
 
 @end
 
 
 
-@implementation NSInputStream (Helpers)
+@implementation NSInputStream (HLP)
 
 - (NSInteger)read:(NSMutableData *)data length:(NSUInteger)length {
     uint8_t buffer[length];
@@ -101,7 +101,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 
 
-@implementation NSOutputStream (Helpers)
+@implementation NSOutputStream (HLP)
 
 - (NSInteger)write:(NSMutableData *)data {
     NSInteger result = [self write:data.bytes maxLength:data.length];
@@ -135,13 +135,13 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 
 
-@interface StreamMessage ()
+@interface HLPStreamMessage ()
 
 @end
 
 
 
-@implementation StreamMessage
+@implementation HLPStreamMessage
 
 - (NSInteger)readFromStream:(NSInputStream *)inputStream {
     return 0;
@@ -162,9 +162,9 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 
 
-@interface StreamLoad ()
+@interface HLPStreamLoad ()
 
-@property StreamLoadOperation operation;
+@property HLPStreamLoadOperation operation;
 @property NSMutableData *data;
 @property NSString *path;
 
@@ -172,12 +172,12 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 
 
-@implementation StreamLoad
+@implementation HLPStreamLoad
 
 @dynamic parent;
 @dynamic delegates;
 
-- (instancetype)initWithOperation:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path {
+- (instancetype)initWithOperation:(HLPStreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path {
     self = super.init;
     if (self) {
         self.operation = operation;
@@ -197,9 +197,9 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     [self.delegates loadDidUpdateState:self];
     if (state == OperationStateDidBegin) {
         [self.delegates loadDidBegin:self];
-    } else if (state == StreamLoadStateDidInit) {
+    } else if (state == HLPStreamLoadStateDidInit) {
         [self.delegates loadDidInit:self];
-    } else if (state == StreamLoadStateDidProcess) {
+    } else if (state == HLPStreamLoadStateDidProcess) {
         [self.delegates loadDidProcess:self];
     } else if (state == OperationStateDidEnd) {
         [self.delegates loadDidEnd:self];
@@ -223,12 +223,12 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 
 
-@interface StreamPair ()
+@interface HLPStreamPair ()
 
 @property NSInputStream *inputStream;
 @property NSOutputStream *outputStream;
 @property Sequence *sequence;
-@property NSMutableDictionary<NSNumber *, StreamMessage *> *messages;
+@property NSMutableDictionary<NSNumber *, HLPStreamMessage *> *messages;
 
 @property Sequence *loadSequence;
 @property NSMutableDictionary<NSNumber *, NSMutableData *> *loadData;
@@ -237,7 +237,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 
 
-@implementation StreamPair
+@implementation HLPStreamPair
 
 @dynamic parent;
 @dynamic delegates;
@@ -272,15 +272,15 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
         if (self.inputStream.streamStatus == NSStreamStatusOpening) {
             continue;
         } else if (self.inputStream.streamStatus == NSStreamStatusOpen) {
-            [self updateState:StreamPairStateDidOpen];
+            [self updateState:HLPStreamPairStateDidOpen];
             while (!self.cancelled) {
                 if (self.inputStream.hasBytesAvailable) {
                     if (self.messageClass) {
-                        StreamMessage *message = self.messageClass.new;
+                        HLPStreamMessage *message = self.messageClass.new;
                         NSInteger result = [message readFromStream:self.inputStream];
                         if (result > 0) {
                             if (message.replySerial > 0) {
-                                StreamMessage *msg = [self.messages popObjectForKey:@(message.replySerial)];
+                                HLPStreamMessage *msg = [self.messages popObjectForKey:@(message.replySerial)];
                                 [msg.timer invalidate];
                                 [self invokeHandler:msg.completion object:message object:nil queue:self.delegates.operationQueue];
                                 msg.completion = nil;
@@ -288,7 +288,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
                                 [self.delegates pair:self didReceiveMessage:message];
                             }
                         } else {
-                            NSError *error = (result < 0) ? self.inputStream.streamError : [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+                            NSError *error = (result < 0) ? self.inputStream.streamError : [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorClosed userInfo:nil];
                             [self.errors addObject:error];
                             [self completeMessagesWithError:error];
                             break;
@@ -299,7 +299,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
                         if (result > 0) {
                             [self.delegates pair:self didReceiveData:data];
                         } else {
-                            NSError *error = (result < 0) ? self.inputStream.streamError : [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+                            NSError *error = (result < 0) ? self.inputStream.streamError : [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorClosed userInfo:nil];
                             [self.errors addObject:error];
                             break;
                         }
@@ -314,7 +314,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     }
     
     if (self.cancelled) {
-        NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorCancelled userInfo:nil];
+        NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorCancelled userInfo:nil];
         [self completeMessagesWithError:error];
     }
     
@@ -324,7 +324,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     [self updateState:OperationStateDidEnd];
 }
 
-- (void)writeMessage:(StreamMessage *)message completion:(StreamMessageErrorBlock)completion {
+- (void)writeMessage:(HLPStreamMessage *)message completion:(HLPStreamMessageErrorBlock)completion {
     message.serial = self.sequence.value;
     [self.sequence increment];
     
@@ -335,26 +335,26 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
             self.messages[@(message.serial)] = message;
             message.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeout repeats:NO block:^(NSTimer *timer) {
                 self.messages[@(message.serial)] = nil;
-                NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorTimedOut userInfo:nil];
+                NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimedOut userInfo:nil];
                 [self invokeHandler:completion object:nil object:error queue:self.delegates.operationQueue];
             }];
         } else {
             [self invokeHandler:completion object:message object:nil queue:self.delegates.operationQueue];
         }
     } else if (result == 0) {
-        NSError *error = [NSError errorWithDomain:StreamErrorDomain code:StreamErrorClosed userInfo:nil];
+        NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorClosed userInfo:nil];
         [self invokeHandler:completion object:nil object:error queue:self.delegates.operationQueue];
     } else {
         [self invokeHandler:completion object:nil object:self.outputStream.streamError queue:self.delegates.operationQueue];
     }
 }
 
-- (StreamMessage *)writeMessage:(StreamMessage *)message error:(NSError **)error {
+- (HLPStreamMessage *)writeMessage:(HLPStreamMessage *)message error:(NSError **)error {
     dispatch_group_t group = dispatch_group_create();
     dispatch_group_enter(group);
-    __block StreamMessage *msg;
+    __block HLPStreamMessage *msg;
     __block NSError *err;
-    [self writeMessage:message completion:^(StreamMessage *message, NSError *error) {
+    [self writeMessage:message completion:^(HLPStreamMessage *message, NSError *error) {
         msg = message;
         err = error;
         dispatch_group_leave(group);
@@ -364,48 +364,48 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     return msg;
 }
 
-- (StreamLoad *)load:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path {
-    StreamLoad *load = [self.loadClass.alloc initWithOperation:operation data:data path:path];
+- (HLPStreamLoad *)load:(HLPStreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path {
+    HLPStreamLoad *load = [self.loadClass.alloc initWithOperation:operation data:data path:path];
     [self addOperation:load];
     return load;
 }
 
-- (StreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path {
-    StreamLoad *load = [self load:StreamLoadOperationUp data:data path:path];
+- (HLPStreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path {
+    HLPStreamLoad *load = [self load:HLPStreamLoadOperationUp data:data path:path];
     return load;
 }
 
-- (StreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path {
-    StreamLoad *load = [self load:StreamLoadOperationDown data:data path:path];
+- (HLPStreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path {
+    HLPStreamLoad *load = [self load:HLPStreamLoadOperationDown data:data path:path];
     return load;
 }
 
-- (StreamLoad *)load:(StreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path completion:(VoidBlock)completion {
-    StreamLoad *load = [self load:operation data:data path:path];
+- (HLPStreamLoad *)load:(HLPStreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path completion:(VoidBlock)completion {
+    HLPStreamLoad *load = [self load:operation data:data path:path];
     load.completionBlock = completion;
     return load;
 }
 
-- (StreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path completion:(VoidBlock)completion {
-    StreamLoad *load = [self uploadData:data toPath:path];
+- (HLPStreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path completion:(VoidBlock)completion {
+    HLPStreamLoad *load = [self uploadData:data toPath:path];
     load.completionBlock = completion;
     return load;
 }
 
-- (StreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path completion:(VoidBlock)completion {
-    StreamLoad *load = [self downloadData:data fromPath:path];
+- (HLPStreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path completion:(VoidBlock)completion {
+    HLPStreamLoad *load = [self downloadData:data fromPath:path];
     load.completionBlock = completion;
     return load;
 }
 
 #pragma mark - Accessors
 
-- (StreamClient *)client {
-    return (StreamClient *)self.parent;
+- (HLPStreamClient *)client {
+    return (HLPStreamClient *)self.parent;
 }
 
-- (StreamServer *)server {
-    return (StreamServer *)self.parent;
+- (HLPStreamServer *)server {
+    return (HLPStreamServer *)self.parent;
 }
 
 #pragma mark - Helpers
@@ -416,7 +416,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
     [self.delegates pairDidUpdateState:self];
     if (state == OperationStateDidBegin) {
         [self.delegates pairDidBegin:self];
-    } else if (state == StreamPairStateDidOpen) {
+    } else if (state == HLPStreamPairStateDidOpen) {
         [self.delegates pairDidOpen:self];
     } else if (state == OperationStateDidEnd) {
         [self.delegates pairDidEnd:self];
@@ -425,7 +425,7 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 - (void)completeMessagesWithError:(NSError *)error {
     for (NSNumber *serial in self.messages.allKeys) {
-        StreamMessage *message = [self.messages popObjectForKey:serial];
+        HLPStreamMessage *message = [self.messages popObjectForKey:serial];
         [message.timer invalidate];
         [self invokeHandler:message.completion object:nil object:error queue:self.delegates.operationQueue];
         message.completion = nil;
@@ -443,13 +443,13 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 
 
-@interface StreamEndpoint ()
+@interface HLPStreamEndpoint ()
 
 @end
 
 
 
-@implementation StreamEndpoint
+@implementation HLPStreamEndpoint
 
 @dynamic delegates;
 
@@ -463,8 +463,8 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 #pragma mark - Helpers
 
-- (StreamPair *)pairWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream {
-    StreamPair *pair = [self.pairClass.alloc initWithInputStream:inputStream outputStream:outputStream];
+- (HLPStreamPair *)pairWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream {
+    HLPStreamPair *pair = [self.pairClass.alloc initWithInputStream:inputStream outputStream:outputStream];
     [self addOperation:pair];
     return pair;
 }
@@ -480,13 +480,13 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 
 
-@interface StreamClient ()
+@interface HLPStreamClient ()
 
 @end
 
 
 
-@implementation StreamClient
+@implementation HLPStreamClient
 
 @dynamic operation;
 
@@ -524,17 +524,17 @@ NSErrorDomain const StreamErrorDomain = @"Stream";
 
 
 
-static void StreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void *data, void *info);
+static void HLPStreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void *data, void *info);
 
 
 
-@interface StreamServer ()
+@interface HLPStreamServer ()
 
 @end
 
 
 
-@implementation StreamServer
+@implementation HLPStreamServer
 
 @dynamic operations;
 
@@ -552,7 +552,7 @@ static void StreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType 
     
     CFSocketContext ctx = {0};
     ctx.info = (__bridge void *)self;
-    CFSocketRef socket = CFSocketCreate(NULL, PF_INET, SOCK_STREAM, IPPROTO_TCP, kCFSocketAcceptCallBack, StreamServerAcceptCallback, &ctx);
+    CFSocketRef socket = CFSocketCreate(NULL, PF_INET, SOCK_STREAM, IPPROTO_TCP, kCFSocketAcceptCallBack, HLPStreamServerAcceptCallback, &ctx);
     
     // Bind
     
@@ -573,7 +573,7 @@ static void StreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType 
 
 
 
-static void StreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void *data, void *info) {
+static void HLPStreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void *data, void *info) {
     CFReadStreamRef readStream;
     CFWriteStreamRef writeStream;
     CFSocketNativeHandle handle = CFSocketGetNative(socket);
@@ -582,6 +582,6 @@ static void StreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackType 
     
     NSInputStream *inputStream = (__bridge_transfer NSInputStream *)readStream;
     NSOutputStream *outputStream = (__bridge_transfer NSOutputStream *)writeStream;
-    StreamServer *server = (__bridge StreamServer *)info;
+    HLPStreamServer *server = (__bridge HLPStreamServer *)info;
     [server pairWithInputStream:inputStream outputStream:outputStream];
 }
