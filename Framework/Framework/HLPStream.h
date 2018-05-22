@@ -42,42 +42,6 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 
 
 
-@interface NSStream (HLP)
-
-@end
-
-
-
-@interface NSInputStream (HLP)
-
-- (NSInteger)read:(NSMutableData *)data length:(NSUInteger)length;
-- (NSInteger)readAll:(NSMutableData *)data; // -> + - EOF, -1 - error
-- (NSInteger)readLine:(NSMutableData *)data;
-- (NSInteger)read:(NSMutableData *)data exactly:(NSUInteger)length;
-- (NSInteger)read:(NSMutableData *)data until:(NSData *)separator;
-
-@end
-
-
-
-@interface NSOutputStream (HLP)
-
-- (NSInteger)write:(NSMutableData *)data;
-- (NSInteger)writeAll:(NSMutableData *)data;
-- (NSInteger)writeLines:(NSMutableArray<NSMutableData *> *)lines;
-- (NSInteger)writeChunks:(NSMutableArray<NSMutableData *> *)chunks separator:(NSData *)separator;
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface HLPStreamMessage : NSObject
 
 @property BOOL reply;
@@ -241,5 +205,41 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 @property (readonly, copy) NSArray<__kindof HLPStreamPair *> *operations;
 
 - (instancetype)initWithComponents:(NSURLComponents *)components pair:(Class)pair;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSStream (HLP)
+
+@end
+
+
+
+@interface NSInputStream (HLP)
+
+- (NSInteger)read:(NSMutableData *)data length:(NSUInteger)length;
+- (NSInteger)readAll:(NSMutableData *)data; // -> + - EOF, -1 - error
+- (NSInteger)readLine:(NSMutableData *)data;
+- (NSInteger)read:(NSMutableData *)data exactly:(NSUInteger)length;
+- (NSInteger)read:(NSMutableData *)data until:(NSData *)separator;
+
+@end
+
+
+
+@interface NSOutputStream (HLP)
+
+- (NSInteger)write:(NSMutableData *)data;
+- (NSInteger)writeAll:(NSMutableData *)data;
+- (NSInteger)writeLines:(NSMutableArray<NSMutableData *> *)lines;
+- (NSInteger)writeChunks:(NSMutableArray<NSMutableData *> *)chunks separator:(NSData *)separator;
 
 @end

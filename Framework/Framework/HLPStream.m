@@ -25,116 +25,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 
 
-@implementation NSStream (HLP)
-
-@end
-
-
-
-@implementation NSInputStream (HLP)
-
-- (NSInteger)read:(NSMutableData *)data length:(NSUInteger)length {
-    uint8_t buffer[length];
-    NSInteger result = [self read:buffer maxLength:length];
-    if (result > 0) {
-        [data appendBytes:buffer length:result];
-    }
-    return result;
-}
-
-- (NSInteger)readAll:(NSMutableData *)data {
-    NSInteger length = 0;
-    while (YES) {
-        NSInteger result = [self read:data length:1024];
-        if (result > 0) {
-            length += result;
-        } else if (result == 0) {
-            return length;
-        } else {
-            return result;
-        }
-    }
-}
-
-- (NSInteger)readLine:(NSMutableData *)data {
-    NSData *separator = [StringN dataUsingEncoding:NSUTF8StringEncoding];
-    NSInteger result = [self read:data until:separator];
-    return result;
-}
-
-- (NSInteger)read:(NSMutableData *)data exactly:(NSUInteger)length {
-    NSInteger remaining = length;
-    while (YES) {
-        NSInteger result = [self read:data length:length];
-        if (result > 0) {
-            remaining -= result;
-            if (remaining == 0) {
-                return length;
-            }
-        } else {
-            return result;
-        }
-    }
-}
-
-- (NSInteger)read:(NSMutableData *)data until:(NSData *)separator {
-    NSInteger length = 0;
-    while (YES) {
-        NSInteger result = [self read:data length:1];
-        if (result > 0) {
-            length += result;
-            if (data.length >= separator.length) {
-                NSUInteger location = data.length - separator.length;
-                NSRange range = NSMakeRange(location, separator.length);
-                NSData *suffix = [data subdataWithRange:range];
-                if ([suffix isEqualToData:separator]) {
-                    return length;
-                }
-            }
-        } else {
-            return result;
-        }
-    }
-}
-
-@end
-
-
-
-@implementation NSOutputStream (HLP)
-
-- (NSInteger)write:(NSMutableData *)data {
-    NSInteger result = [self write:data.bytes maxLength:data.length];
-    return result;
-}
-
-- (NSInteger)writeAll:(NSMutableData *)data {
-    NSInteger length = data.length;
-    while (YES) {
-        NSInteger result = [self write:data];
-        if (result > 0) {
-            NSRange range = NSMakeRange(0, result);
-            [data replaceBytesInRange:range withBytes:NULL length:0];
-            if (data.length == 0) {
-                return length;
-            }
-        } else {
-            return result;
-        }
-    }
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface HLPStreamMessage ()
 
 @end
@@ -585,3 +475,113 @@ static void HLPStreamServerAcceptCallback(CFSocketRef socket, CFSocketCallBackTy
     HLPStreamServer *server = (__bridge HLPStreamServer *)info;
     [server pairWithInputStream:inputStream outputStream:outputStream];
 }
+
+
+
+
+
+
+
+
+
+
+@implementation NSStream (HLP)
+
+@end
+
+
+
+@implementation NSInputStream (HLP)
+
+- (NSInteger)read:(NSMutableData *)data length:(NSUInteger)length {
+    uint8_t buffer[length];
+    NSInteger result = [self read:buffer maxLength:length];
+    if (result > 0) {
+        [data appendBytes:buffer length:result];
+    }
+    return result;
+}
+
+- (NSInteger)readAll:(NSMutableData *)data {
+    NSInteger length = 0;
+    while (YES) {
+        NSInteger result = [self read:data length:1024];
+        if (result > 0) {
+            length += result;
+        } else if (result == 0) {
+            return length;
+        } else {
+            return result;
+        }
+    }
+}
+
+- (NSInteger)readLine:(NSMutableData *)data {
+    NSData *separator = [StringN dataUsingEncoding:NSUTF8StringEncoding];
+    NSInteger result = [self read:data until:separator];
+    return result;
+}
+
+- (NSInteger)read:(NSMutableData *)data exactly:(NSUInteger)length {
+    NSInteger remaining = length;
+    while (YES) {
+        NSInteger result = [self read:data length:length];
+        if (result > 0) {
+            remaining -= result;
+            if (remaining == 0) {
+                return length;
+            }
+        } else {
+            return result;
+        }
+    }
+}
+
+- (NSInteger)read:(NSMutableData *)data until:(NSData *)separator {
+    NSInteger length = 0;
+    while (YES) {
+        NSInteger result = [self read:data length:1];
+        if (result > 0) {
+            length += result;
+            if (data.length >= separator.length) {
+                NSUInteger location = data.length - separator.length;
+                NSRange range = NSMakeRange(location, separator.length);
+                NSData *suffix = [data subdataWithRange:range];
+                if ([suffix isEqualToData:separator]) {
+                    return length;
+                }
+            }
+        } else {
+            return result;
+        }
+    }
+}
+
+@end
+
+
+
+@implementation NSOutputStream (HLP)
+
+- (NSInteger)write:(NSMutableData *)data {
+    NSInteger result = [self write:data.bytes maxLength:data.length];
+    return result;
+}
+
+- (NSInteger)writeAll:(NSMutableData *)data {
+    NSInteger length = data.length;
+    while (YES) {
+        NSInteger result = [self write:data];
+        if (result > 0) {
+            NSRange range = NSMakeRange(0, result);
+            [data replaceBytesInRange:range withBytes:NULL length:0];
+            if (data.length == 0) {
+                return length;
+            }
+        } else {
+            return result;
+        }
+    }
+}
+
+@end
