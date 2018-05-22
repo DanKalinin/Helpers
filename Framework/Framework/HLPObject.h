@@ -9,6 +9,26 @@
 
 
 
+
+
+
+
+
+
+
 @interface HLPObject : NSObject
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSObject (HLP)
 
 @end
