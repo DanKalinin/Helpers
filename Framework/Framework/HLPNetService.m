@@ -23,7 +23,6 @@ HLPNetServiceDomain const HLPNetServiceDomainLocal = @"local";
 @property NSNetService *service;
 @property NSTimeInterval timeout;
 @property NSUInteger limit;
-@property NSMutableArray<NSURLComponents *> *addresses;
 
 @end
 
@@ -40,10 +39,9 @@ HLPNetServiceDomain const HLPNetServiceDomainLocal = @"local";
         self.timeout = timeout;
         self.limit = limit;
         
-        self.addresses = NSMutableArray.array;
-        
         self.progress.totalUnitCount = limit;
         
+        service.URLComponents = NSMutableArray.array;
         service.delegate = self.delegates;
     }
     return self;
@@ -77,7 +75,7 @@ HLPNetServiceDomain const HLPNetServiceDomainLocal = @"local";
 
 - (void)netServiceDidResolveAddress:(NSNetService *)sender {
     NSURLComponents *address = [NSNetService URLComponentsFromAddressData:sender.addresses.lastObject];
-    [self.addresses addObject:address];
+    [sender.URLComponents addObject:address];
     
     self.progress.completedUnitCount = sender.addresses.count;
     
@@ -199,6 +197,29 @@ HLPNetServiceDomain const HLPNetServiceDomainLocal = @"local";
 
 - (void)netServiceBrowserDidStopSearch:(NSNetServiceBrowser *)browser {
     [self updateState:HLPOperationStateDidEnd];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSNetService (HLP)
+
+#pragma mark - Accessors
+
+- (NSMutableArray<NSURLComponents *> *)URLComponents {
+    return self.strongDictionary[NSStringFromSelector(@selector(URLComponents))];
+}
+
+- (void)setURLComponents:(NSMutableArray<NSURLComponents *> *)URLComponents {
+    self.strongDictionary[NSStringFromSelector(@selector(URLComponents))] = URLComponents;
 }
 
 @end

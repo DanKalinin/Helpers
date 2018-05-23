@@ -20,22 +20,6 @@
 
 
 
-@interface NSURLSessionTask (HLP)
-
-@property HLPURLLoad *load;
-@property NSMutableData *data;
-
-@end
-
-
-
-
-
-
-
-
-
-
 @protocol HLPURLLoadDelegate <HLPOperationDelegate>
 
 @optional
@@ -93,5 +77,21 @@
 
 - (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks;
 - (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks completion:(VoidBlock)completion;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSURLSessionTask (HLP)
+
+@property HLPURLLoad *load;
+@property NSMutableData *data;
 
 @end

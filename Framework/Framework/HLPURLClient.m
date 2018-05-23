@@ -16,37 +16,6 @@
 
 
 
-@implementation NSURLSessionTask (HLP)
-
-#pragma mark - Accessors
-
-- (HLPURLLoad *)load {
-    return self.weakDictionary[NSStringFromSelector(@selector(load))];
-}
-
-- (void)setLoad:(HLPURLLoad *)load {
-    self.weakDictionary[NSStringFromSelector(@selector(load))] = load;
-}
-
-- (NSMutableData *)data {
-    return self.strongDictionary[NSStringFromSelector(@selector(data))];
-}
-
-- (void)setData:(NSMutableData *)data {
-    self.strongDictionary[NSStringFromSelector(@selector(data))] = data;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface HLPURLLoad ()
 
 @property NSArray<NSURLSessionTask *> *tasks;
@@ -230,6 +199,37 @@
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     [task.load endTask:task];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSURLSessionTask (HLP)
+
+#pragma mark - Accessors
+
+- (HLPURLLoad *)load {
+    return self.weakDictionary[NSStringFromSelector(@selector(load))];
+}
+
+- (void)setLoad:(HLPURLLoad *)load {
+    self.weakDictionary[NSStringFromSelector(@selector(load))] = load;
+}
+
+- (NSMutableData *)data {
+    return self.strongDictionary[NSStringFromSelector(@selector(data))];
+}
+
+- (void)setData:(NSMutableData *)data {
+    self.strongDictionary[NSStringFromSelector(@selector(data))] = data;
 }
 
 @end

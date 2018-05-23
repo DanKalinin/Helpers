@@ -41,7 +41,6 @@ extern HLPNetServiceDomain const HLPNetServiceDomainLocal;
 @property (readonly) NSNetService *service;
 @property (readonly) NSTimeInterval timeout;
 @property (readonly) NSUInteger limit;
-@property (readonly) NSMutableArray<NSURLComponents *> *addresses;
 
 - (instancetype)initWithService:(NSNetService *)service timeout:(NSTimeInterval)timeout limit:(NSUInteger)limit;
 
@@ -71,5 +70,20 @@ extern HLPNetServiceDomain const HLPNetServiceDomainLocal;
 
 - (HLPNetServiceResolution *)resolveService:(NSNetService *)service timeout:(NSTimeInterval)timeout limit:(NSUInteger)limit;
 - (HLPNetServiceResolution *)resolveService:(NSNetService *)service timeout:(NSTimeInterval)timeout limit:(NSUInteger)limit completion:(VoidBlock)completion;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSNetService (HLP)
+
+@property NSMutableArray<NSURLComponents *> *URLComponents;
 
 @end
