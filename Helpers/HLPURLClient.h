@@ -23,13 +23,13 @@
 @protocol HLPURLLoadDelegate <HLPOperationDelegate>
 
 @optional
-- (void)URLLoadDidUpdateState:(HLPURLLoad *)load;
-- (void)URLLoadDidUpdateProgress:(HLPURLLoad *)load;
+- (void)HLPURLLoadDidUpdateState:(HLPURLLoad *)load;
+- (void)HLPURLLoadDidUpdateProgress:(HLPURLLoad *)load;
 
-- (void)URLLoadDidBegin:(HLPURLLoad *)load;
-- (void)URLLoadDidEnd:(HLPURLLoad *)load;
+- (void)HLPURLLoadDidBegin:(HLPURLLoad *)load;
+- (void)HLPURLLoadDidEnd:(HLPURLLoad *)load;
 
-- (void)URLLoad:(HLPURLLoad *)load didEndTask:(NSURLSessionTask *)task;
+- (void)HLPURLLoad:(HLPURLLoad *)load didEndTask:(NSURLSessionTask *)task;
 
 @end
 

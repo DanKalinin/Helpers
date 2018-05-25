@@ -126,7 +126,7 @@ static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRe
 - (void)updateState:(HLPOperationState)state {
     [super updateState:state];
     
-    [self.delegates reachabilityDidUpdateState:self];
+    [self.delegates HLPReachabilityDidUpdateState:self];
 }
 
 + (HLPReachabilityStatus)statusForState:(SCNetworkReachabilityFlags)state {

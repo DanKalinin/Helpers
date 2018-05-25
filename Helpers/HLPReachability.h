@@ -22,7 +22,7 @@ typedef NS_ENUM(NSUInteger, HLPReachabilityStatus) {
 @protocol HLPReachabilityDelegate <HLPOperationDelegate>
 
 @optional
-- (void)reachabilityDidUpdateState:(HLPReachability *)reachability;
+- (void)HLPReachabilityDidUpdateState:(HLPReachability *)reachability;
 
 @end
 

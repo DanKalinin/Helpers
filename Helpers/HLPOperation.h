@@ -27,11 +27,11 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 @protocol HLPOperationDelegate <NSObject>
 
 @optional
-- (void)operationDidUpdateState:(HLPOperation *)operation;
-- (void)opertionDidUpdateProgress:(HLPOperation *)operation;
+- (void)HLPOperationDidUpdateState:(HLPOperation *)operation;
+- (void)HLPOperationDidUpdateProgress:(HLPOperation *)operation;
 
-- (void)operationDidBegin:(HLPOperation *)operation;
-- (void)operationDidEnd:(HLPOperation *)operation;
+- (void)HLPOperationDidBegin:(HLPOperation *)operation;
+- (void)HLPOperationDidEnd:(HLPOperation *)operation;
 
 @end
 

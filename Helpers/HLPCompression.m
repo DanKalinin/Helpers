@@ -116,22 +116,22 @@ NSErrorDomain const HLPCompressionErrorDomain = @"HLPCompression";
 - (void)updateState:(HLPOperationState)state {
     [super updateState:state];
     
-    [self.delegates compressionDidUpdateState:self];
+    [self.delegates HLPCompressionDidUpdateState:self];
     if (state == HLPOperationStateDidBegin) {
-        [self.delegates compressionDidBegin:self];
+        [self.delegates HLPCompressionDidBegin:self];
     } else if (state == HLPCompressionStateDidInit) {
-        [self.delegates compressionDidInit:self];
+        [self.delegates HLPCompressionDidInit:self];
     } else if (state == HLPCompressionStateDidProcess) {
-        [self.delegates compressionDidUpdateProgress:self];
+        [self.delegates HLPCompressionDidUpdateProgress:self];
     } else if (state == HLPOperationStateDidEnd) {
-        [self.delegates compressionDidEnd:self];
+        [self.delegates HLPCompressionDidEnd:self];
     }
 }
 
 - (void)updateProgress:(uint64_t)completedUnitCount {
     [super updateProgress:completedUnitCount];
     
-    [self.delegates compressionDidUpdateProgress:self];
+    [self.delegates HLPCompressionDidUpdateProgress:self];
 }
 
 @end

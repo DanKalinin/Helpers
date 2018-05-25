@@ -70,12 +70,12 @@
 - (void)updateState:(HLPOperationState)state {
     [self.states addObject:@(state)];
     
-    [self.delegates operationDidUpdateState:self];
+    [self.delegates HLPOperationDidUpdateState:self];
     [self invokeHandler:self.stateBlock queue:self.delegates.operationQueue];
     if (state == HLPOperationStateDidBegin) {
-        [self.delegates operationDidBegin:self];
+        [self.delegates HLPOperationDidBegin:self];
     } else if (state == HLPOperationStateDidEnd) {
-        [self.delegates operationDidEnd:self];
+        [self.delegates HLPOperationDidEnd:self];
         [self invokeHandler:self.completionBlock queue:self.delegates.operationQueue];
         
         self.stateBlock = nil;
@@ -87,7 +87,7 @@
 - (void)updateProgress:(uint64_t)completedUnitCount {
     self.progress.completedUnitCount = completedUnitCount;
     
-    [self.delegates opertionDidUpdateProgress:self];
+    [self.delegates HLPOperationDidUpdateProgress:self];
     [self invokeHandler:self.progressBlock queue:self.delegates.operationQueue];
 }
 

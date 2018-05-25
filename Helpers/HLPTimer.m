@@ -63,18 +63,18 @@
 - (void)updateState:(HLPOperationState)state {
     [super updateState:state];
     
-    [self.delegates timerDidUpdateState:self];
+    [self.delegates HLPTimerDidUpdateState:self];
     if (state == HLPOperationStateDidBegin) {
-        [self.delegates timerDidBegin:self];
+        [self.delegates HLPTimerDidBegin:self];
     } else if (state == HLPOperationStateDidEnd) {
-        [self.delegates timerDidEnd:self];
+        [self.delegates HLPTimerDidEnd:self];
     }
 }
 
 - (void)updateProgress:(uint64_t)completedUnitCount {
     [super updateProgress:completedUnitCount];
     
-    [self.delegates timerDidUpdateProgress:self];
+    [self.delegates HLPTimerDidUpdateProgress:self];
 }
 
 @end

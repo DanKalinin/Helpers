@@ -34,13 +34,13 @@ NS_ERROR_ENUM(HLPCompressionErrorDomain) {
 @protocol HLPCompressionDelegate <HLPOperationDelegate>
 
 @optional
-- (void)compressionDidUpdateState:(HLPCompression *)compression;
-- (void)compressionDidUpdateProgress:(HLPCompression *)compression;
+- (void)HLPCompressionDidUpdateState:(HLPCompression *)compression;
+- (void)HLPCompressionDidUpdateProgress:(HLPCompression *)compression;
 
-- (void)compressionDidBegin:(HLPCompression *)compression;
-- (void)compressionDidInit:(HLPCompression *)compression;
-- (void)compressionDidProcess:(HLPCompression *)compression;
-- (void)compressionDidEnd:(HLPCompression *)compression;
+- (void)HLPCompressionDidBegin:(HLPCompression *)compression;
+- (void)HLPCompressionDidInit:(HLPCompression *)compression;
+- (void)HLPCompressionDidProcess:(HLPCompression *)compression;
+- (void)HLPCompressionDidEnd:(HLPCompression *)compression;
 
 @end
 

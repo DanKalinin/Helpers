@@ -25,11 +25,11 @@ extern HLPNetServiceDomain const HLPNetServiceDomainLocal;
 @protocol HLPNetServiceResolutionDelegate <HLPOperationDelegate, NSNetServiceDelegate>
 
 @optional
-- (void)resolutionDidUpdateState:(HLPNetServiceResolution *)resolution;
-- (void)resolutionDidUpdateProgress:(HLPNetServiceResolution *)resolution;
+- (void)HLPNetServiceResolutionDidUpdateState:(HLPNetServiceResolution *)resolution;
+- (void)HLPNetServiceResolutionDidUpdateProgress:(HLPNetServiceResolution *)resolution;
 
-- (void)resolutionDidBegin:(HLPNetServiceResolution *)resolution;
-- (void)resolutionDidEnd:(HLPNetServiceResolution *)resolution;
+- (void)HLPNetServiceResolutionDidBegin:(HLPNetServiceResolution *)resolution;
+- (void)HLPNetServiceResolutionDidEnd:(HLPNetServiceResolution *)resolution;
 
 @end
 

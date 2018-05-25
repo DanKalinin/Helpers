@@ -93,18 +93,18 @@ HLPNetServiceDomain const HLPNetServiceDomainLocal = @"local";
 - (void)updateState:(HLPOperationState)state {
     [super updateState:state];
     
-    [self.delegates resolutionDidUpdateState:self];
+    [self.delegates HLPNetServiceResolutionDidUpdateState:self];
     if (state == HLPOperationStateDidBegin) {
-        [self.delegates resolutionDidBegin:self];
+        [self.delegates HLPNetServiceResolutionDidBegin:self];
     } else if (state == HLPOperationStateDidEnd) {
-        [self.delegates resolutionDidEnd:self];
+        [self.delegates HLPNetServiceResolutionDidEnd:self];
     }
 }
 
 - (void)updateProgress:(uint64_t)completedUnitCount {
     [super updateProgress:completedUnitCount];
     
-    [self.delegates resolutionDidUpdateProgress:self];
+    [self.delegates HLPNetServiceResolutionDidUpdateProgress:self];
 }
 
 @end

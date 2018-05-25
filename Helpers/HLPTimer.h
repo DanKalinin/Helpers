@@ -14,11 +14,11 @@
 @protocol HLPTimerDelegate <HLPOperationDelegate>
 
 @optional
-- (void)timerDidUpdateState:(HLPTimer *)timer;
-- (void)timerDidUpdateProgress:(HLPTimer *)timer;
+- (void)HLPTimerDidUpdateState:(HLPTimer *)timer;
+- (void)HLPTimerDidUpdateProgress:(HLPTimer *)timer;
 
-- (void)timerDidBegin:(HLPTimer *)timer;
-- (void)timerDidEnd:(HLPTimer *)timer;
+- (void)HLPTimerDidBegin:(HLPTimer *)timer;
+- (void)HLPTimerDidEnd:(HLPTimer *)timer;
 
 @end
 

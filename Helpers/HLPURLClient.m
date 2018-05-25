@@ -67,18 +67,18 @@
 - (void)updateState:(HLPOperationState)state {
     [super updateState:state];
     
-    [self.delegates URLLoadDidUpdateState:self];
+    [self.delegates HLPURLLoadDidUpdateState:self];
     if (state == HLPOperationStateDidBegin) {
-        [self.delegates URLLoadDidBegin:self];
+        [self.delegates HLPURLLoadDidBegin:self];
     } else if (state == HLPOperationStateDidEnd) {
-        [self.delegates URLLoadDidEnd:self];
+        [self.delegates HLPURLLoadDidEnd:self];
     }
 }
 
 - (void)updateProgress:(uint64_t)completedUnitCount {
     [super updateProgress:completedUnitCount];
     
-    [self.delegates URLLoadDidUpdateProgress:self];
+    [self.delegates HLPURLLoadDidUpdateProgress:self];
 }
 
 - (void)endTask:(NSURLSessionTask *)task {
@@ -96,7 +96,7 @@
         uint64_t completedUnitCount = self.progress.completedUnitCount + 1;
         [self updateProgress:completedUnitCount];
         
-        [self.delegates URLLoad:self didEndTask:task];
+        [self.delegates HLPURLLoad:self didEndTask:task];
     }
 }
 
