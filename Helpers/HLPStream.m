@@ -84,22 +84,22 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 - (void)updateState:(HLPOperationState)state {
     [super updateState:state];
     
-    [self.delegates loadDidUpdateState:self];
+    [self.delegates HLPStreamLoadDidUpdateState:self];
     if (state == HLPOperationStateDidBegin) {
-        [self.delegates loadDidBegin:self];
+        [self.delegates HLPStreamLoadDidBegin:self];
     } else if (state == HLPStreamLoadStateDidInit) {
-        [self.delegates loadDidInit:self];
+        [self.delegates HLPStreamLoadDidInit:self];
     } else if (state == HLPStreamLoadStateDidProcess) {
-        [self.delegates loadDidProcess:self];
+        [self.delegates HLPStreamLoadDidProcess:self];
     } else if (state == HLPOperationStateDidEnd) {
-        [self.delegates loadDidEnd:self];
+        [self.delegates HLPStreamLoadDidEnd:self];
     }
 }
 
 - (void)updateProgress:(uint64_t)completedUnitCount {
     [super updateProgress:completedUnitCount];
     
-    [self.delegates loadDidUpdateProgress:self];
+    [self.delegates HLPStreamLoadDidUpdateProgress:self];
 }
 
 @end
@@ -175,7 +175,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
                                 [self invokeHandler:msg.completion object:message object:nil queue:self.delegates.operationQueue];
                                 msg.completion = nil;
                             } else {
-                                [self.delegates pair:self didReceiveMessage:message];
+                                [self.delegates HLPStreamPair:self didReceiveMessage:message];
                             }
                         } else {
                             NSError *error = (result < 0) ? self.inputStream.streamError : [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorClosed userInfo:nil];
@@ -187,7 +187,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
                         NSMutableData *data = NSMutableData.data;
                         NSInteger result = [self.inputStream read:data length:1024];
                         if (result > 0) {
-                            [self.delegates pair:self didReceiveData:data];
+                            [self.delegates HLPStreamPair:self didReceiveData:data];
                         } else {
                             NSError *error = (result < 0) ? self.inputStream.streamError : [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorClosed userInfo:nil];
                             [self.errors addObject:error];
@@ -303,13 +303,13 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 - (void)updateState:(HLPOperationState)state {
     [super updateState:state];
     
-    [self.delegates pairDidUpdateState:self];
+    [self.delegates HLPStreamPairDidUpdateState:self];
     if (state == HLPOperationStateDidBegin) {
-        [self.delegates pairDidBegin:self];
+        [self.delegates HLPStreamPairDidBegin:self];
     } else if (state == HLPStreamPairStateDidOpen) {
-        [self.delegates pairDidOpen:self];
+        [self.delegates HLPStreamPairDidOpen:self];
     } else if (state == HLPOperationStateDidEnd) {
-        [self.delegates pairDidEnd:self];
+        [self.delegates HLPStreamPairDidEnd:self];
     }
 }
 

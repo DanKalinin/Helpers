@@ -67,13 +67,13 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 @protocol HLPStreamLoadDelegate <HLPOperationDelegate>
 
 @optional
-- (void)loadDidUpdateState:(HLPStreamLoad *)load;
-- (void)loadDidUpdateProgress:(HLPStreamLoad *)load;
+- (void)HLPStreamLoadDidUpdateState:(HLPStreamLoad *)load;
+- (void)HLPStreamLoadDidUpdateProgress:(HLPStreamLoad *)load;
 
-- (void)loadDidBegin:(HLPStreamLoad *)load;
-- (void)loadDidInit:(HLPStreamLoad *)load;
-- (void)loadDidProcess:(HLPStreamLoad *)load;
-- (void)loadDidEnd:(HLPStreamLoad *)load;
+- (void)HLPStreamLoadDidBegin:(HLPStreamLoad *)load;
+- (void)HLPStreamLoadDidInit:(HLPStreamLoad *)load;
+- (void)HLPStreamLoadDidProcess:(HLPStreamLoad *)load;
+- (void)HLPStreamLoadDidEnd:(HLPStreamLoad *)load;
 
 @end
 
@@ -103,14 +103,14 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 @protocol HLPStreamPairDelegate <HLPOperationDelegate>
 
 @optional
-- (void)pairDidUpdateState:(HLPStreamPair *)pair;
+- (void)HLPStreamPairDidUpdateState:(HLPStreamPair *)pair;
 
-- (void)pairDidBegin:(HLPStreamPair *)pair;
-- (void)pairDidOpen:(HLPStreamPair *)pair;
-- (void)pairDidEnd:(HLPStreamPair *)pair;
+- (void)HLPStreamPairDidBegin:(HLPStreamPair *)pair;
+- (void)HLPStreamPairDidOpen:(HLPStreamPair *)pair;
+- (void)HLPStreamPairDidEnd:(HLPStreamPair *)pair;
 
-- (void)pair:(HLPStreamPair *)pair didReceiveData:(NSData *)data;
-- (void)pair:(HLPStreamPair *)pair didReceiveMessage:(HLPStreamMessage *)message;
+- (void)HLPStreamPair:(HLPStreamPair *)pair didReceiveData:(NSData *)data;
+- (void)HLPStreamPair:(HLPStreamPair *)pair didReceiveMessage:(HLPStreamMessage *)message;
 
 @end
 
