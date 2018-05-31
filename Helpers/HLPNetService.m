@@ -172,10 +172,14 @@ HLPNetServiceDomain const HLPNetServiceDomainLocal = @"local";
 
 - (void)netServiceBrowser:(NSNetServiceBrowser *)browser didFindService:(NSNetService *)service moreComing:(BOOL)moreComing {
     self.services[service.name] = service;
+    
+    service.online = @YES;
 }
 
 - (void)netServiceBrowser:(NSNetServiceBrowser *)browser didRemoveService:(NSNetService *)service moreComing:(BOOL)moreComing {
     self.services[service.name] = nil;
+    
+    service.online = @NO;
 }
 
 - (void)netServiceBrowserWillSearch:(NSNetServiceBrowser *)browser {
@@ -220,6 +224,14 @@ HLPNetServiceDomain const HLPNetServiceDomainLocal = @"local";
 
 - (void)setURLComponents:(NSMutableArray<NSURLComponents *> *)URLComponents {
     self.strongDictionary[NSStringFromSelector(@selector(URLComponents))] = URLComponents;
+}
+
+- (NSNumber *)online {
+    return self.strongDictionary[NSStringFromSelector(@selector(online))];
+}
+
+- (void)setOnline:(NSNumber *)online {
+    self.strongDictionary[NSStringFromSelector(@selector(online))] = online;
 }
 
 @end

@@ -85,5 +85,6 @@ extern HLPNetServiceDomain const HLPNetServiceDomainLocal;
 @interface NSNetService (HLP)
 
 @property NSMutableArray<NSURLComponents *> *URLComponents;
+@property NSNumber *online;
 
 @end
