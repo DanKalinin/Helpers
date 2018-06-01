@@ -20,8 +20,8 @@
 
 @interface HLPURLManager : HLPOperationQueue <HLPURLManagerDelegate>
 
-@property HLPURLClient *client1;
-@property HLPURLClient *client2;
+@property HLPURLClient *localClient;
+@property HLPURLClient *remoteClient;
 
 @property (readonly) SurrogateArray<HLPURLManagerDelegate> *delegates;
 @property (readonly) HLPURLClient *client;
