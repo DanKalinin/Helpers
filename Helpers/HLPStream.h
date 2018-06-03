@@ -100,7 +100,7 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 
 
 
-@protocol HLPStreamPairDelegate <HLPOperationDelegate>
+@protocol HLPStreamPairDelegate <HLPStreamLoadDelegate>
 
 @optional
 - (void)HLPStreamPairDidUpdateState:(HLPStreamPair *)pair;
@@ -162,11 +162,17 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 
 
 
+@protocol HLPStreamEndpointDelegate <HLPStreamPairDelegate>
+
+@end
+
+
+
 @interface HLPStreamEndpoint : HLPOperationQueue <HLPStreamPairDelegate>
 
 @property Class pairClass;
 
-@property (readonly) SurrogateArray<HLPStreamPairDelegate> *delegates;
+@property (readonly) SurrogateArray<HLPStreamEndpointDelegate> *delegates;
 
 - (instancetype)initWithPair:(Class)pair;
 - (__kindof HLPStreamPair *)pairWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
