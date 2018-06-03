@@ -55,7 +55,7 @@ extern HLPNetServiceDomain const HLPNetServiceDomainLocal;
 
 
 
-@protocol HLPNetServiceBrowserDelegate <HLPOperationDelegate, NSNetServiceBrowserDelegate>
+@protocol HLPNetServiceBrowserDelegate <HLPNetServiceResolutionDelegate, NSNetServiceBrowserDelegate>
 
 @end
 
