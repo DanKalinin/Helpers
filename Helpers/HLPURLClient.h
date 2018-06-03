@@ -9,7 +9,7 @@
 #import "HLPStream.h"
 #import "HLPReachability.h"
 
-@class HLPURLLoad, HLPURLClient;
+@class HLPURLLoad, HLPURLClient, HLPURLClientManager;
 
 
 
@@ -77,6 +77,30 @@
 
 - (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks;
 - (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks completion:(VoidBlock)completion;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol HLPURLClientManagerDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPURLClientManager : HLPOperationQueue <HLPURLClientManagerDelegate>
+
+@property HLPURLClient *localClient;
+@property HLPURLClient *remoteClient;
+
+@property (readonly) HLPURLClient *client;
 
 @end
 

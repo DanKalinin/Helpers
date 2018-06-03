@@ -212,6 +212,29 @@
 
 
 
+@interface HLPURLClientManager ()
+
+@end
+
+
+
+@implementation HLPURLClientManager
+
+- (HLPURLClient *)client {
+    return self.localClient;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @implementation NSURLSessionTask (HLP)
 
 #pragma mark - Accessors
