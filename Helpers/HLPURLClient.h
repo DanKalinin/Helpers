@@ -56,7 +56,7 @@
 
 
 
-@protocol HLPURLClientDelegate <HLPOperationDelegate, HLPReachabilityDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
+@protocol HLPURLClientDelegate <HLPURLLoadDelegate, HLPReachabilityDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
 @end
 
@@ -89,7 +89,7 @@
 
 
 
-@protocol HLPURLClientManagerDelegate <HLPOperationDelegate>
+@protocol HLPURLClientManagerDelegate <HLPURLClientDelegate>
 
 @end
 
