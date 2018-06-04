@@ -7,6 +7,8 @@
 
 #import "HLPURLClient.h"
 
+NSErrorDomain const HLPURLHTTPErrorDomain = @"HLPURLHTTP";
+
 
 
 
@@ -84,11 +86,23 @@
 - (void)endTask:(NSURLSessionTask *)task {
     dispatch_group_leave(self.group);
     
+    NSError *error = nil;
     if (task.error) {
+        error = task.error;
+    } else {
+        if ([task.response isKindOfClass:NSHTTPURLResponse.class]) {
+            NSHTTPURLResponse *response = (NSHTTPURLResponse *)task.response;
+            if (response.statusCode >= HLPURLHTTPStatusCodeBadRequest) {
+                error = [NSError errorWithDomain:HLPURLHTTPErrorDomain code:response.statusCode userInfo:nil];
+            }
+        }
+    }
+    
+    if (error) {
         if (self.errors.count == 0) {
             if (self.cancelled) {
             } else {
-                [self.errors addObject:task.error];
+                [self.errors addObject:error];
                 [self cancelAllTasks];
             }
         }

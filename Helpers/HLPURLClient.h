@@ -11,6 +11,16 @@
 
 @class HLPURLLoad, HLPURLClient, HLPURLClientManager;
 
+extern NSErrorDomain const HLPURLHTTPErrorDomain;
+
+NS_ERROR_ENUM(HLPURLHTTPErrorDomain) {
+    HLPURLHTTPStatusCodeContinue = 100,
+    HLPURLHTTPStatusCodeOK = 200,
+    HLPURLHTTPStatusCodeMultipleChoices = 300,
+    HLPURLHTTPStatusCodeBadRequest = 400,
+    HLPURLHTTPStatusCodeInternalServerError = 500
+};
+
 
 
 
