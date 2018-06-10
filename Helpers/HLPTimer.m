@@ -9,11 +9,63 @@
 
 
 
+
+
+
+
+
+
+
+@interface HLPTick ()
+
+@property NSTimeInterval interval;
+
+@end
+
+
+
+@implementation HLPTick
+
+- (instancetype)initWithInterval:(NSTimeInterval)interval {
+    self = super.init;
+    if (self) {
+        self.interval = interval;
+    }
+    return self;
+}
+
+- (void)main {
+    [self updateState:HLPOperationStateDidBegin];
+    
+    dispatch_group_enter(self.group);
+    dispatch_group_wait(self.group, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.interval * NSEC_PER_SEC)));
+    
+    [self updateState:HLPOperationStateDidEnd];
+}
+
+- (void)cancel {
+    [super cancel];
+    
+    dispatch_group_leave(self.group);
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface HLPTimer ()
 
 @property NSTimeInterval interval;
 @property NSUInteger repeats;
-@property NSTimer *timer;
+
+@property (weak) HLPTick *tick;
 
 @end
 
@@ -34,28 +86,36 @@
     return self;
 }
 
-- (void)start {
-    [super start];
-    
+- (void)main {
     [self updateState:HLPOperationStateDidBegin];
-    [self updateProgress:0];
     
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:self.interval repeats:YES block:^(NSTimer *timer) {
-        uint64_t completedUnitCount = self.progress.completedUnitCount + 1;
+    for (uint64_t completedUnitCount = 0; completedUnitCount < self.repeats; completedUnitCount++) {
         [self updateProgress:completedUnitCount];
         
-        if (completedUnitCount == self.repeats) {
-            [timer invalidate];
-            [self updateState:HLPOperationStateDidEnd];
-        }
-    }];
+        self.tick = [self tickWithInterval:self.interval];
+        [self.tick waitUntilFinished];
+    }
+    
+    [self updateProgress:self.repeats];
+    [self updateState:HLPOperationStateDidEnd];
 }
 
 - (void)cancel {
     [super cancel];
     
-    [self.timer invalidate];
-    [self updateState:HLPOperationStateDidEnd];
+    [self.tick cancel];
+}
+
+- (HLPTick *)tickWithInterval:(NSTimeInterval)interval {
+    HLPTick *tick = [HLPTick.alloc initWithInterval:interval];
+    [self addOperation:tick];
+    return tick;
+}
+
+- (HLPTick *)tickWithInterval:(NSTimeInterval)interval completion:(VoidBlock)completion {
+    HLPTick *tick = [self tickWithInterval:interval];
+    tick.completionBlock = completion;
+    return tick;
 }
 
 #pragma mark - Helpers
@@ -75,6 +135,46 @@
     [super updateProgress:completedUnitCount];
     
     [self.delegates HLPTimerDidUpdateProgress:self];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPClock ()
+
+@end
+
+
+
+@implementation HLPClock
+
++ (instancetype)shared {
+    static HLPClock *shared = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shared = self.new;
+    });
+    return shared;
+}
+
+- (HLPTimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats {
+    HLPTimer *timer = [HLPTimer.alloc initWithInterval:interval repeats:repeats];
+    [self addOperation:timer];
+    return timer;
+}
+
+- (HLPTimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats completion:(VoidBlock)completion {
+    HLPTimer *timer = [self timerWithInterval:interval repeats:repeats];
+    timer.completionBlock = completion;
+    return timer;
 }
 
 @end

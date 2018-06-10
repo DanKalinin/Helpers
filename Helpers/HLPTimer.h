@@ -7,7 +7,31 @@
 
 #import <Helpers/Helpers.h>
 
-@class HLPTimer;
+@class HLPTick, HLPTimer, HLPClock;
+
+
+
+
+
+
+
+
+
+
+@interface HLPTick : HLPOperation
+
+@property (readonly) NSTimeInterval interval;
+
+- (instancetype)initWithInterval:(NSTimeInterval)interval;
+
+@end
+
+
+
+
+
+
+
 
 
 
@@ -29,8 +53,34 @@
 @property (readonly) SurrogateArray<HLPTimerDelegate> *delegates;
 @property (readonly) NSTimeInterval interval;
 @property (readonly) NSUInteger repeats;
-@property (readonly) NSTimer *timer;
+
+@property (weak, readonly) HLPTick *tick;
 
 - (instancetype)initWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats;
+
+- (HLPTick *)tickWithInterval:(NSTimeInterval)interval;
+- (HLPTick *)tickWithInterval:(NSTimeInterval)interval completion:(VoidBlock)completion;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol HLPClockDelegate <HLPTimerDelegate>
+
+@end
+
+
+
+@interface HLPClock : HLPOperationQueue <HLPClockDelegate>
+
+- (HLPTimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats;
+- (HLPTimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats completion:(VoidBlock)completion;
 
 @end
