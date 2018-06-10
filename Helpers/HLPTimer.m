@@ -30,6 +30,8 @@
     self = super.init;
     if (self) {
         self.interval = interval;
+        
+        dispatch_group_enter(self.group);
     }
     return self;
 }
@@ -37,7 +39,6 @@
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
     
-    dispatch_group_enter(self.group);
     dispatch_group_wait(self.group, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.interval * NSEC_PER_SEC)));
     
     [self updateState:HLPOperationStateDidEnd];
