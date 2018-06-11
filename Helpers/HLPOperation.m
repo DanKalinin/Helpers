@@ -59,6 +59,12 @@
     return self;
 }
 
+- (void)cancel {
+    [super cancel];
+    
+    [self updateState:HLPOperationStateDidCancel];
+}
+
 #pragma mark - Accessors
 
 - (id)parent {
@@ -74,6 +80,8 @@
     [self invokeHandler:self.stateBlock queue:self.delegates.operationQueue];
     if (state == HLPOperationStateDidBegin) {
         [self.delegates HLPOperationDidBegin:self];
+    } else if (state == HLPOperationStateDidCancel) {
+        [self.delegates HLPOperationDidCancel:self];
     } else if (state == HLPOperationStateDidEnd) {
         [self.delegates HLPOperationDidEnd:self];
         [self invokeHandler:self.completionBlock queue:self.delegates.operationQueue];
