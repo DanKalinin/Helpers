@@ -234,6 +234,8 @@ NSErrorDomain const HLPURLHTTPErrorDomain = @"HLPURLHTTP";
 
 @implementation HLPURLClientManager
 
+@dynamic delegates;
+
 - (HLPURLClient *)client {
     return self.localClient;
 }

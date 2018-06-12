@@ -110,6 +110,7 @@ NS_ERROR_ENUM(HLPURLHTTPErrorDomain) {
 @property HLPURLClient *localClient;
 @property HLPURLClient *remoteClient;
 
+@property (readonly) SurrogateArray<HLPURLClientManagerDelegate> *delegates;
 @property (readonly) HLPURLClient *client;
 
 @end
