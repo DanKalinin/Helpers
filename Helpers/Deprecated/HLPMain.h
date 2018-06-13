@@ -625,14 +625,14 @@ typedef void (^ReachabilityHandler)(_Reachability *reachability);
 
 
 
-@interface NSOperationQueue (Helpers)
-
-- (void)addOperationAndWait:(NSOperation *)operation;
-- (void)addOperationWithBlockAndWait:(VoidBlock)block;
-
-- (__kindof NSOperation *)operationWithName:(NSString *)name;
-
-@end
+//@interface NSOperationQueue (Helpers)
+//
+//- (void)addOperationAndWait:(NSOperation *)operation;
+//- (void)addOperationWithBlockAndWait:(VoidBlock)block;
+//
+//- (__kindof NSOperation *)operationWithName:(NSString *)name;
+//
+//@end
 
 
 

@@ -77,3 +77,18 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 + (instancetype)shared;
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface NSOperationQueue (HLP)
+
+- (void)addOperationWithBlockAndWait:(VoidBlock)block;
+
+@end

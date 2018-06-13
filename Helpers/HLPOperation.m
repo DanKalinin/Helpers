@@ -158,3 +158,26 @@
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+@implementation NSOperationQueue (HLP)
+
+- (void)addOperationWithBlockAndWait:(VoidBlock)block {
+    if ([self isEqual:NSOperationQueue.currentQueue]) {
+        block();
+    } else {
+        NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:block];
+        [self addOperation:operation];
+        [operation waitUntilFinished];
+    }
+}
+
+@end
