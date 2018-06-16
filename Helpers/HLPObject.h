@@ -16,7 +16,13 @@
 
 
 
-@interface HLPObject : NSObject
+@protocol HLPObject <NSObject>
+
+@end
+
+
+
+@interface HLPObject : NSObject <HLPObject>
 
 @end
 

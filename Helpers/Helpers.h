@@ -17,11 +17,12 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 #import <Helpers/HLPOperation.h>
 #import <Helpers/HLPStream.h>
 #import <Helpers/HLPCompression.h>
-#import <Helpers/HLPReachability.h>
 #import <Helpers/HLPTimer.h>
 #import <Helpers/HLPNetService.h>
 #import <Helpers/HLPURL.h>
 #import <Helpers/HLPURLClient.h>
+#import <Helpers/HLPReachability.h>
+#import <Helpers/HLPCaptiveNetwork.h>
 
 // Deprecated
 
