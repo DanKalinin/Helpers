@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "HLPObject.h"
 
 @class HLPWeakDictionary;
 
@@ -19,7 +18,7 @@
 
 
 
-@protocol HLPDictionaryEncodable <HLPObject>
+@protocol HLPDictionaryEncodable <NSObject>
 
 @optional
 - (void)toDictionary:(NSMutableDictionary *)dictionary;

@@ -42,7 +42,7 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 
 
 
-@interface HLPStreamMessage : HLPObject
+@interface HLPStreamMessage : NSObject
 
 @property BOOL reply;
 @property NSUInteger serial;
