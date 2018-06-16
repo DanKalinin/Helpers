@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "HLPObject.h"
 #import "HLPMain.h"
 
 @class HLPOperation, HLPOperationQueue;
@@ -25,7 +26,7 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 
 
 
-@protocol HLPOperationDelegate <NSObject>
+@protocol HLPOperationDelegate <HLPObject>
 
 @optional
 - (void)HLPOperationDidUpdateState:(HLPOperation *)operation;
