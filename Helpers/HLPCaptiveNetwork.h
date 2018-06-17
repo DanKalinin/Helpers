@@ -6,11 +6,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "HLPObject.h"
 
 @class HLPNetworkInfo;
 
 
 
-@interface HLPNetworkInfo : NSObject
+@interface HLPNetworkInfo : HLPObject
 
 @end

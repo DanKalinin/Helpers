@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "HLPMain.h"
+#import "HLPObject.h"
 #import "HLPOperation.h"
 
 @class HLPStreamMessage, HLPStreamLoad, HLPStreamPair, HLPStreamEndpoint, HLPStreamClient, HLPStreamServer;
@@ -42,7 +43,7 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 
 
 
-@interface HLPStreamMessage : NSObject
+@interface HLPStreamMessage : HLPObject
 
 @property BOOL reply;
 @property NSUInteger serial;
