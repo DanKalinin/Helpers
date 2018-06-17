@@ -24,6 +24,12 @@ typedef NS_ENUM(NSUInteger, HLPReachabilityStatus) {
 @optional
 - (void)HLPReachabilityDidUpdateState:(HLPReachability *)reachability;
 
+- (void)HLPReachabilityDidBegin:(HLPReachability *)reachability;
+- (void)HLPReachabilityDidCancel:(HLPReachability *)reachability;
+- (void)HLPReachabilityDidEnd:(HLPReachability *)reachability;
+
+- (void)HLPReachabilityDidUpdateFlags:(HLPReachability *)reachability;
+
 @end
 
 
@@ -34,10 +40,10 @@ typedef NS_ENUM(NSUInteger, HLPReachabilityStatus) {
 @property (readonly) NSURLComponents *localComponents;
 @property (readonly) NSURLComponents *remoteComponents;
 @property (readonly) SCNetworkReachabilityRef reachability;
-@property (readonly) SCNetworkReachabilityFlags state;
+@property (readonly) SCNetworkReachabilityFlags flags;
 @property (readonly) HLPReachabilityStatus status;
 
-+ (HLPReachabilityStatus)statusForState:(SCNetworkReachabilityFlags)state;
++ (HLPReachabilityStatus)statusForFlags:(SCNetworkReachabilityFlags)flags;
 - (instancetype)initWithLocalComponents:(NSURLComponents *)localComponents remoteComponents:(NSURLComponents *)remoteComponents;
 
 @end

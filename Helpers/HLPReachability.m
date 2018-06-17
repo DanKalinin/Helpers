@@ -61,6 +61,8 @@ static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRe
     
     CFRunLoopRef loop = CFRunLoopGetCurrent();
     SCNetworkReachabilityScheduleWithRunLoop(self.reachability, loop, kCFRunLoopDefaultMode);
+    
+    [self updateState:HLPOperationStateDidBegin];
 }
 
 - (void)cancel {
@@ -70,38 +72,40 @@ static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRe
     
     CFRunLoopRef loop = CFRunLoopGetCurrent();
     SCNetworkReachabilityUnscheduleFromRunLoop(self.reachability, loop, kCFRunLoopDefaultMode);
+    
+    [self updateState:HLPOperationStateDidEnd];
 }
 
 - (NSString *)description {
-    SCNetworkReachabilityFlags state = self.state;
+    SCNetworkReachabilityFlags flags = self.flags;
     
     NSMutableArray *descriptions = NSMutableArray.array;
     
-    NSString *description = [NSString stringWithFormat:@"TransientConnection - %i", (BOOL)(state & kSCNetworkReachabilityFlagsTransientConnection)];
+    NSString *description = [NSString stringWithFormat:@"TransientConnection - %i", (BOOL)(flags & kSCNetworkReachabilityFlagsTransientConnection)];
     [descriptions addObject:description];
     
-    description = [NSString stringWithFormat:@"Reachable - %i", (BOOL)(state & kSCNetworkReachabilityFlagsReachable)];
+    description = [NSString stringWithFormat:@"Reachable - %i", (BOOL)(flags & kSCNetworkReachabilityFlagsReachable)];
     [descriptions addObject:description];
     
-    description = [NSString stringWithFormat:@"ConnectionRequired - %i", (BOOL)(state & kSCNetworkReachabilityFlagsConnectionRequired)];
+    description = [NSString stringWithFormat:@"ConnectionRequired - %i", (BOOL)(flags & kSCNetworkReachabilityFlagsConnectionRequired)];
     [descriptions addObject:description];
     
-    description = [NSString stringWithFormat:@"ConnectionOnTraffic - %i", (BOOL)(state & kSCNetworkReachabilityFlagsConnectionOnTraffic)];
+    description = [NSString stringWithFormat:@"ConnectionOnTraffic - %i", (BOOL)(flags & kSCNetworkReachabilityFlagsConnectionOnTraffic)];
     [descriptions addObject:description];
     
-    description = [NSString stringWithFormat:@"InterventionRequired - %i", (BOOL)(state & kSCNetworkReachabilityFlagsInterventionRequired)];
+    description = [NSString stringWithFormat:@"InterventionRequired - %i", (BOOL)(flags & kSCNetworkReachabilityFlagsInterventionRequired)];
     [descriptions addObject:description];
     
-    description = [NSString stringWithFormat:@"ConnectionOnDemand - %i", (BOOL)(state & kSCNetworkReachabilityFlagsConnectionOnDemand)];
+    description = [NSString stringWithFormat:@"ConnectionOnDemand - %i", (BOOL)(flags & kSCNetworkReachabilityFlagsConnectionOnDemand)];
     [descriptions addObject:description];
     
-    description = [NSString stringWithFormat:@"IsLocalAddress - %i", (BOOL)(state & kSCNetworkReachabilityFlagsIsLocalAddress)];
+    description = [NSString stringWithFormat:@"IsLocalAddress - %i", (BOOL)(flags & kSCNetworkReachabilityFlagsIsLocalAddress)];
     [descriptions addObject:description];
     
-    description = [NSString stringWithFormat:@"IsDirect - %i", (BOOL)(state & kSCNetworkReachabilityFlagsIsDirect)];
+    description = [NSString stringWithFormat:@"IsDirect - %i", (BOOL)(flags & kSCNetworkReachabilityFlagsIsDirect)];
     [descriptions addObject:description];
     
-    description = [NSString stringWithFormat:@"IsWWAN - %i", (BOOL)(state & kSCNetworkReachabilityFlagsIsWWAN)];
+    description = [NSString stringWithFormat:@"IsWWAN - %i", (BOOL)(flags & kSCNetworkReachabilityFlagsIsWWAN)];
     [descriptions addObject:description];
     
     description = [descriptions componentsJoinedByString:StringRN];
@@ -110,14 +114,14 @@ static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRe
 
 #pragma mark - Accesors
 
-- (SCNetworkReachabilityFlags)state {
-    SCNetworkReachabilityFlags state;
-    SCNetworkReachabilityGetFlags(self.reachability, &state);
-    return state;
+- (SCNetworkReachabilityFlags)flags {
+    SCNetworkReachabilityFlags flags;
+    SCNetworkReachabilityGetFlags(self.reachability, &flags);
+    return flags;
 }
 
 - (HLPReachabilityStatus)status {
-    HLPReachabilityStatus status = [HLPReachability statusForState:self.state];
+    HLPReachabilityStatus status = [HLPReachability statusForFlags:self.flags];
     return status;
 }
 
@@ -125,13 +129,20 @@ static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRe
 
 - (void)updateState:(HLPOperationState)state {
     [super updateState:state];
-    
+
     [self.delegates HLPReachabilityDidUpdateState:self];
+    if (state == HLPOperationStateDidBegin) {
+        [self.delegates HLPReachabilityDidBegin:self];
+    } else if (state == HLPOperationStateDidCancel) {
+        [self.delegates HLPReachabilityDidCancel:self];
+    } else if (state == HLPOperationStateDidEnd) {
+        [self.delegates HLPReachabilityDidEnd:self];
+    }
 }
 
-+ (HLPReachabilityStatus)statusForState:(SCNetworkReachabilityFlags)state {
-    if ((state & kSCNetworkReachabilityFlagsReachable) && !(state & kSCNetworkReachabilityFlagsConnectionRequired) && !(state & kSCNetworkReachabilityFlagsInterventionRequired)) {
-        if (state & kSCNetworkReachabilityFlagsIsWWAN) {
++ (HLPReachabilityStatus)statusForFlags:(SCNetworkReachabilityFlags)flags {
+    if ((flags & kSCNetworkReachabilityFlagsReachable) && !(flags & kSCNetworkReachabilityFlagsConnectionRequired) && !(flags & kSCNetworkReachabilityFlagsInterventionRequired)) {
+        if (flags & kSCNetworkReachabilityFlagsIsWWAN) {
             return HLPReachabilityStatusWWAN;
         } else {
             return HLPReachabilityStatusWiFi;
@@ -147,5 +158,5 @@ static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRe
 
 static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
     HLPReachability *reachability = (__bridge HLPReachability *)info;
-    [reachability updateState:(HLPOperationState)flags];
+    [reachability.delegates HLPReachabilityDidUpdateFlags:reachability];
 }
