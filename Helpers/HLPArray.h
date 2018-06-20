@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class HLPPointerArray, HLPArray, HLPProxyArray;
+
 
 
 
@@ -31,6 +33,19 @@
 
 @interface HLPArray<ObjectType> : NSMutableArray<ObjectType>
 
-@property (readonly) HLPPointerArray *array;
+@property (readonly) HLPPointerArray *backingStore;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPProxyArray<ObjectType> : HLPArray<ObjectType>
 
 @end

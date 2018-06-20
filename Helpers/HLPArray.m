@@ -37,10 +37,31 @@
 
 @interface HLPArray ()
 
+@property HLPPointerArray *backingStore;
+
 @end
 
 
 
 @implementation HLPArray
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPProxyArray ()
+
+@end
+
+
+
+@implementation HLPProxyArray
 
 @end
