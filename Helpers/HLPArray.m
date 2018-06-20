@@ -16,34 +16,79 @@
 
 
 
-@interface HLPPointerArray ()
-
-@end
-
-
-
-@implementation HLPPointerArray
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface HLPArray ()
 
-@property HLPPointerArray *backingStore;
+@property NSPointerArray *backingStore;
 
 @end
 
 
 
 @implementation HLPArray
+
++ (instancetype)weakArray {
+    HLPArray *array = [self.alloc initWithBackingStore:NSPointerArray.weakObjectsPointerArray];
+    return array;
+}
+
++ (instancetype)strongArray {
+    HLPArray *array = [self.alloc initWithBackingStore:NSPointerArray.strongObjectsPointerArray];
+    return array;
+}
+
+- (instancetype)initWithBackingStore:(NSPointerArray *)backingStore {
+    self = super.init;
+    if (self) {
+        self.backingStore = backingStore;
+    }
+    return self;
+}
+
+#pragma mark - Array
+
+- (instancetype)init {
+    self = [self initWithBackingStore:NSPointerArray.strongObjectsPointerArray];
+    return self;
+}
+
+- (instancetype)initWithCapacity:(NSUInteger)numItems {
+    self = [self initWithBackingStore:NSPointerArray.strongObjectsPointerArray];
+    return self;
+}
+
+- (NSUInteger)count {
+    [self.backingStore compact];
+    
+    return self.backingStore.count;
+}
+
+- (id)objectAtIndex:(NSUInteger)index {
+    [self.backingStore compact];
+    
+    return nil;
+}
+
+#pragma mark - Mutable array
+
+- (void)insertObject:(id)anObject atIndex:(NSUInteger)index {
+    [self.backingStore compact];
+}
+
+- (void)removeObjectAtIndex:(NSUInteger)index {
+    [self.backingStore compact];
+}
+
+- (void)addObject:(id)anObject {
+    [self.backingStore compact];
+}
+
+- (void)removeLastObject {
+    [self.backingStore compact];
+}
+
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject {
+    [self.backingStore compact];
+}
 
 @end
 
