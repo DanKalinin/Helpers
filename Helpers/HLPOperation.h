@@ -47,7 +47,7 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 @property (copy) VoidBlock progressBlock;
 
 @property (readonly) id parent;
-@property (readonly) SurrogateArray<HLPOperationDelegate> *delegates;
+@property (readonly) HLPProxyArray<HLPOperationDelegate> *delegates;
 @property (readonly) NSMutableArray<NSNumber *> *states;
 @property (readonly) NSMutableArray<NSError *> *errors;
 @property (readonly) NSProgress *progress;
@@ -74,7 +74,7 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 @interface HLPOperationQueue : NSOperationQueue <HLPOperationDelegate>
 
 @property (readonly) __kindof HLPOperation *operation;
-@property (readonly) SurrogateArray<HLPOperationDelegate> *delegates;
+@property (readonly) HLPProxyArray<HLPOperationDelegate> *delegates;
 
 + (instancetype)shared;
 
