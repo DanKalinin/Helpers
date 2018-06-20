@@ -9,6 +9,28 @@
 
 
 
-@interface HLPArray : NSArray
+
+
+
+
+
+
+
+@interface HLPPointerArray : NSPointerArray
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPArray<ObjectType> : NSMutableArray<ObjectType>
+
+@property (readonly) HLPPointerArray *array;
 
 @end

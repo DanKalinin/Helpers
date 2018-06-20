@@ -9,6 +9,38 @@
 
 
 
+
+
+
+
+
+
+
+@interface HLPPointerArray ()
+
+@end
+
+
+
+@implementation HLPPointerArray
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPArray ()
+
+@end
+
+
+
 @implementation HLPArray
 
 @end
