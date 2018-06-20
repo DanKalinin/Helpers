@@ -1435,29 +1435,29 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 #pragma mark - Accessors
 
-- (void)setStrongDictionary:(NSMutableDictionary *)strongDictionary {
+- (void)setStrongDictionary:(HLPDictionary *)strongDictionary {
     objc_setAssociatedObject(self, @selector(strongDictionary), strongDictionary, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (NSMutableDictionary *)strongDictionary {
-    NSMutableDictionary *dictionary = objc_getAssociatedObject(self, @selector(strongDictionary));
+- (HLPDictionary *)strongDictionary {
+    HLPDictionary *dictionary = objc_getAssociatedObject(self, @selector(strongDictionary));
     if (dictionary) {
     } else {
-        dictionary = NSMutableDictionary.dictionary;
+        dictionary = HLPDictionary.strongToStrongDictionary;
         self.strongDictionary = dictionary;
     }
     return dictionary;
 }
 
-- (void)setWeakDictionary:(HLPWeakDictionary *)weakDictionary {
+- (void)setWeakDictionary:(HLPDictionary *)weakDictionary {
     objc_setAssociatedObject(self, @selector(weakDictionary), weakDictionary, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (HLPWeakDictionary *)weakDictionary {
-    HLPWeakDictionary *dictionary = objc_getAssociatedObject(self, @selector(weakDictionary));
+- (HLPDictionary *)weakDictionary {
+    HLPDictionary *dictionary = objc_getAssociatedObject(self, @selector(weakDictionary));
     if (dictionary) {
     } else {
-        dictionary = HLPWeakDictionary.dictionary;
+        dictionary = HLPDictionary.strongToWeakDictionary;
         self.weakDictionary = dictionary;
     }
     return dictionary;

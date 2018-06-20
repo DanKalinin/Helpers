@@ -513,8 +513,8 @@ typedef void (^ReachabilityHandler)(_Reachability *reachability);
 @property (class, readonly) UINib *nib; // Instantiate nib object from class bundle matching with class name
 @property (readonly) UINib *nib; // Same for instances
 
-@property (readonly) NSMutableDictionary *strongDictionary;
-@property (readonly) HLPWeakDictionary *weakDictionary;
+@property (readonly) HLPDictionary *strongDictionary;
+@property (readonly) HLPDictionary *weakDictionary;
 @property (readonly) DefaultDictionary *kvs; // Runtime attribute storage
 
 + (instancetype)objectNamed:(NSString *)name inBundle:(NSBundle *)bundle; // Unarchive object from assets catalog

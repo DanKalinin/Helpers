@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "HLPObject.h"
 
-@class HLPWeakDictionary;
+@class HLPDictionary;
 
 
 
@@ -50,6 +50,15 @@
 
 
 
-@interface HLPWeakDictionary<KeyType, ObjectType> : NSMutableDictionary<KeyType, ObjectType>
+@interface HLPDictionary<KeyType, ObjectType> : NSMutableDictionary<KeyType, ObjectType>
+
+@property (readonly) NSMapTable *backingStore;
+
++ (instancetype)weakToWeakDictionary;
++ (instancetype)weakToStrongDictionary;
++ (instancetype)strongToWeakDictionary;
++ (instancetype)strongToStrongDictionary;
+
+- (instancetype)initWithBackingStore:(NSMapTable *)backingStore;
 
 @end

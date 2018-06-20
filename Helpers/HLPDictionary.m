@@ -16,47 +16,77 @@
 
 
 
-@interface HLPWeakDictionary ()
+@interface HLPDictionary ()
 
-@property NSMapTable *mapTable;
+@property NSMapTable *backingStore;
 
 @end
 
 
 
-@implementation HLPWeakDictionary
+@implementation HLPDictionary
 
-#pragma mark - Dictionary
++ (instancetype)weakToWeakDictionary {
+    HLPDictionary *dictionary = [self.alloc initWithBackingStore:NSMapTable.weakToWeakObjectsMapTable];
+    return dictionary;
+}
 
-- (instancetype)initWithCapacity:(NSUInteger)numItems {
++ (instancetype)weakToStrongDictionary {
+    HLPDictionary *dictionary = [self.alloc initWithBackingStore:NSMapTable.weakToStrongObjectsMapTable];
+    return dictionary;
+}
+
++ (instancetype)strongToWeakDictionary {
+    HLPDictionary *dictionary = [self.alloc initWithBackingStore:NSMapTable.strongToWeakObjectsMapTable];
+    return dictionary;
+}
+
++ (instancetype)strongToStrongDictionary {
+    HLPDictionary *dictionary = [self.alloc initWithBackingStore:NSMapTable.strongToStrongObjectsMapTable];
+    return dictionary;
+}
+
+- (instancetype)initWithBackingStore:(NSMapTable *)backingStore {
     self = super.init;
     if (self) {
-        self.mapTable = NSMapTable.strongToWeakObjectsMapTable;
+        self.backingStore = backingStore;
     }
     return self;
 }
 
+#pragma mark - Dictionary
+
+- (instancetype)init {
+    self = [self initWithBackingStore:NSMapTable.strongToStrongObjectsMapTable];
+    return self;
+}
+
+- (instancetype)initWithCapacity:(NSUInteger)numItems {
+    self = [self initWithBackingStore:NSMapTable.strongToStrongObjectsMapTable];
+    return self;
+}
+
 - (NSUInteger)count {
-    return self.mapTable.count;
+    return self.backingStore.count;
 }
 
 - (id)objectForKey:(id)aKey {
-    id object = [self.mapTable objectForKey:aKey];
+    id object = [self.backingStore objectForKey:aKey];
     return object;
 }
 
 - (NSEnumerator *)keyEnumerator {
-    return self.mapTable.keyEnumerator;
+    return self.backingStore.keyEnumerator;
 }
 
 #pragma mark - Mutable dictionary
 
 - (void)setObject:(id)anObject forKey:(id<NSCopying>)aKey {
-    [self.mapTable setObject:anObject forKey:aKey];
+    [self.backingStore setObject:anObject forKey:aKey];
 }
 
 - (void)removeObjectForKey:(id)aKey {
-    [self.mapTable removeObjectForKey:aKey];
+    [self.backingStore removeObjectForKey:aKey];
 }
 
 @end
