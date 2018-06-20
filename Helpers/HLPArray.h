@@ -41,3 +41,21 @@
 @interface HLPProxyArray<ObjectType> : HLPArray<ObjectType>
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface NSArray (HLP)
+
+@property (readonly) HLPArray *weakArray;
+@property (readonly) HLPArray *strongArray;
+@property (readonly) HLPProxyArray *weakProxyArray;
+@property (readonly) HLPProxyArray *strongProxyArray;
+
+@end

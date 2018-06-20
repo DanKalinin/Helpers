@@ -83,3 +83,40 @@
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+@implementation NSDictionary (HLP)
+
+- (HLPDictionary *)weakToWeakDictionary {
+    HLPDictionary *dictionary = HLPDictionary.weakToWeakDictionary;
+    [dictionary addEntriesFromDictionary:self];
+    return dictionary;
+}
+
+- (HLPDictionary *)weakToStrongDictionary {
+    HLPDictionary *dictionary = HLPDictionary.weakToStrongDictionary;
+    [dictionary addEntriesFromDictionary:self];
+    return dictionary;
+}
+
+- (HLPDictionary *)strongToWeakDictionary {
+    HLPDictionary *dictionary = HLPDictionary.strongToWeakDictionary;
+    [dictionary addEntriesFromDictionary:self];
+    return dictionary;
+}
+
+- (HLPDictionary *)strongToStrongDictionary {
+    HLPDictionary *dictionary = HLPDictionary.strongToStrongDictionary;
+    [dictionary addEntriesFromDictionary:self];
+    return dictionary;
+}
+
+@end

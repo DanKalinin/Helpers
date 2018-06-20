@@ -12,6 +12,13 @@
 
 
 
+
+
+
+
+
+
+
 @protocol HLPDictionaryEncodable <HLPObject>
 
 @optional
@@ -36,6 +43,13 @@
 
 
 
+
+
+
+
+
+
+
 @interface HLPDictionary<KeyType, ObjectType> : NSMutableDictionary<KeyType, ObjectType>
 
 @property (readonly) NSMapTable *backingStore;
@@ -46,5 +60,23 @@
 + (instancetype)strongToStrongDictionary;
 
 - (instancetype)initWithBackingStore:(NSMapTable *)backingStore;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSDictionary (HLP)
+
+@property (readonly) HLPDictionary *weakToWeakDictionary;
+@property (readonly) HLPDictionary *weakToStrongDictionary;
+@property (readonly) HLPDictionary *strongToWeakDictionary;
+@property (readonly) HLPDictionary *strongToStrongDictionary;
 
 @end

@@ -125,3 +125,40 @@
 @implementation HLPProxyArray
 
 @end
+
+
+
+
+
+
+
+
+
+
+@implementation NSArray (HLP)
+
+- (HLPArray *)weakArray {
+    HLPArray *array = HLPArray.weakArray;
+    [array addObjectsFromArray:self];
+    return array;
+}
+
+- (HLPArray *)strongArray {
+    HLPArray *array = HLPArray.strongArray;
+    [array addObjectsFromArray:self];
+    return array;
+}
+
+- (HLPProxyArray *)weakProxyArray {
+    HLPProxyArray *array = HLPProxyArray.weakArray;
+    [array addObjectsFromArray:self];
+    return array;
+}
+
+- (HLPProxyArray *)strongProxyArray {
+    HLPProxyArray *array = HLPProxyArray.strongArray;
+    [array addObjectsFromArray:self];
+    return array;
+}
+
+@end
