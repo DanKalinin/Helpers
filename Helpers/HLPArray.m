@@ -124,6 +124,44 @@
 
 @implementation HLPProxyArray
 
+- (void)forwardInvocation:(NSInvocation *)anInvocation {
+    for (id object in self) {
+        if ([object respondsToSelector:anInvocation.selector]) {
+            [anInvocation invokeWithTarget:object];
+        }
+    }
+}
+
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
+    NSMethodSignature *signature = [super methodSignatureForSelector:aSelector];
+    if (signature) {
+        return signature;
+    }
+    
+    for (id object in self) {
+        signature = [object methodSignatureForSelector:aSelector];
+        if (signature) {
+            return signature;
+        }
+    }
+    
+    return nil;
+}
+
+- (BOOL)respondsToSelector:(SEL)aSelector {
+    if ([super respondsToSelector:aSelector]) {
+        return YES;
+    }
+    
+    for (id object in self) {
+        if ([object respondsToSelector:aSelector]) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
 @end
 
 
