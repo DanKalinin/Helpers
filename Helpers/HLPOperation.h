@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "HLPMain.h"
 #import "HLPObject.h"
+#import "HLPArray.h"
 
 @class HLPOperation, HLPOperationQueue;
 
