@@ -40,6 +40,8 @@
 
 @interface HLPProxyArray<ObjectType> : HLPArray<ObjectType>
 
+@property NSOperationQueue *operationQueue;
+
 @end
 
 

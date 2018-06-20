@@ -128,7 +128,13 @@
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     for (id object in self) {
         if ([object respondsToSelector:anInvocation.selector]) {
-            [anInvocation invokeWithTarget:object];
+            if (self.operationQueue) {
+                [self.operationQueue addOperationWithBlockAndWait:^{
+                    [anInvocation invokeWithTarget:object];
+                }];
+            } else {
+                [anInvocation invokeWithTarget:object];
+            }
         }
     }
 }
