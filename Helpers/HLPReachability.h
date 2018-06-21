@@ -36,7 +36,7 @@ typedef NS_ENUM(NSUInteger, HLPReachabilityStatus) {
 
 @interface HLPReachability : HLPOperation
 
-@property (readonly) SurrogateArray<HLPReachabilityDelegate> *delegates;
+@property (readonly) HLPArray<HLPReachabilityDelegate> *delegates;
 @property (readonly) NSURLComponents *localComponents;
 @property (readonly) NSURLComponents *remoteComponents;
 @property (readonly) SCNetworkReachabilityRef reachability;

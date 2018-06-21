@@ -48,7 +48,7 @@ NS_ERROR_ENUM(HLPURLHTTPErrorDomain) {
 @interface HLPURLLoad : HLPOperation <HLPURLLoadDelegate>
 
 @property (readonly) HLPURLClient *parent;
-@property (readonly) SurrogateArray<HLPURLLoadDelegate> *delegates;
+@property (readonly) HLPArray<HLPURLLoadDelegate> *delegates;
 @property (readonly) NSArray<NSURLSessionTask *> *tasks;
 
 - (instancetype)initWithTasks:(NSArray<NSURLSessionTask *> *)tasks;
@@ -78,7 +78,7 @@ NS_ERROR_ENUM(HLPURLHTTPErrorDomain) {
 @property NSURLSessionConfiguration *ephemeralConfiguration;
 @property NSURLSessionConfiguration *backgroundConfiguration;
 
-@property (readonly) SurrogateArray<HLPURLClientDelegate> *delegates;
+@property (readonly) HLPArray<HLPURLClientDelegate> *delegates;
 @property (readonly) NSURLSession *defaultSesssion;
 @property (readonly) NSURLSession *ephemeralSesssion;
 @property (readonly) NSURLSession *backgroundSession;
@@ -110,7 +110,7 @@ NS_ERROR_ENUM(HLPURLHTTPErrorDomain) {
 @property HLPURLClient *localClient;
 @property HLPURLClient *remoteClient;
 
-@property (readonly) SurrogateArray<HLPURLClientManagerDelegate> *delegates;
+@property (readonly) HLPArray<HLPURLClientManagerDelegate> *delegates;
 @property (readonly) HLPURLClient *client;
 
 @end

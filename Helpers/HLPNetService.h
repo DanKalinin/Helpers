@@ -37,7 +37,7 @@ extern HLPNetServiceDomain const HLPNetServiceDomainLocal;
 
 @interface HLPNetServiceResolution : HLPOperation <HLPNetServiceResolutionDelegate>
 
-@property (readonly) SurrogateArray<HLPNetServiceResolutionDelegate> *delegates;
+@property (readonly) HLPArray<HLPNetServiceResolutionDelegate> *delegates;
 @property (readonly) NSNetService *service;
 @property (readonly) NSTimeInterval timeout;
 @property (readonly) NSUInteger limit;
@@ -63,7 +63,7 @@ extern HLPNetServiceDomain const HLPNetServiceDomainLocal;
 
 @interface HLPNetServiceBrowser : HLPOperation <HLPNetServiceBrowserDelegate>
 
-@property (readonly) SurrogateArray<HLPNetServiceBrowserDelegate> *delegates;
+@property (readonly) HLPArray<HLPNetServiceBrowserDelegate> *delegates;
 @property (readonly) NSNetServiceBrowser *browser;
 @property (readonly) NSMutableArray<NSString *> *domains;
 @property (readonly) NSMutableDictionary<NSString *, NSNetService *> *services;

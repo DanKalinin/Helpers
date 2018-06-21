@@ -50,7 +50,7 @@
 
 @interface HLPTimer : HLPOperation <HLPTimerDelegate>
 
-@property (readonly) SurrogateArray<HLPTimerDelegate> *delegates;
+@property (readonly) HLPArray<HLPTimerDelegate> *delegates;
 @property (readonly) NSTimeInterval interval;
 @property (readonly) NSUInteger repeats;
 

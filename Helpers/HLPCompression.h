@@ -49,7 +49,7 @@ NS_ERROR_ENUM(HLPCompressionErrorDomain) {
 @interface HLPCompression : HLPOperation <HLPCompressionDelegate>
 
 @property (readonly) HLPCompressor *parent;
-@property (readonly) SurrogateArray<HLPCompressionDelegate> *delegates;
+@property (readonly) HLPArray<HLPCompressionDelegate> *delegates;
 @property (readonly) NSMutableData *srcData;
 @property (readonly) NSMutableData *dstData;
 @property (readonly) size_t chunk;
@@ -75,7 +75,7 @@ NS_ERROR_ENUM(HLPCompressionErrorDomain) {
 
 @interface HLPCompressor : HLPOperationQueue <HLPCompressorDelegate>
 
-@property (readonly) SurrogateArray<HLPCompressorDelegate> *delegates;
+@property (readonly) HLPArray<HLPCompressorDelegate> *delegates;
 @property (readonly) compression_stream_operation op;
 @property (readonly) compression_algorithm algorithm;
 

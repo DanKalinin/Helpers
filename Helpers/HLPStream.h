@@ -83,7 +83,7 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 @interface HLPStreamLoad : HLPOperation <HLPStreamLoadDelegate>
 
 @property (readonly) __kindof HLPStreamPair *parent;
-@property (readonly) SurrogateArray<HLPStreamLoadDelegate> *delegates;
+@property (readonly) HLPArray<HLPStreamLoadDelegate> *delegates;
 @property (readonly) HLPStreamLoadOperation operation;
 @property (readonly) NSMutableData *data;
 @property (readonly) NSString *path;
@@ -127,7 +127,7 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 @property (readonly) HLPStreamEndpoint *parent;
 @property (readonly) HLPStreamClient *client;
 @property (readonly) HLPStreamServer *server;
-@property (readonly) SurrogateArray<HLPStreamPairDelegate> *delegates;
+@property (readonly) HLPArray<HLPStreamPairDelegate> *delegates;
 @property (readonly) NSInputStream *inputStream;
 @property (readonly) NSOutputStream *outputStream;
 @property (readonly) Sequence *sequence;
@@ -173,7 +173,7 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 
 @property Class pairClass;
 
-@property (readonly) SurrogateArray<HLPStreamEndpointDelegate> *delegates;
+@property (readonly) HLPArray<HLPStreamEndpointDelegate> *delegates;
 
 - (instancetype)initWithPair:(Class)pair;
 - (__kindof HLPStreamPair *)pairWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
