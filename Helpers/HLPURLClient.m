@@ -20,7 +20,7 @@ NSErrorDomain const HLPURLHTTPErrorDomain = @"HLPURLHTTP";
 
 @interface HLPURLLoad ()
 
-@property HLPArray<NSURLSessionTask *> *tasks;
+@property NSArray<NSURLSessionTask *> *tasks;
 
 @end
 
@@ -31,7 +31,7 @@ NSErrorDomain const HLPURLHTTPErrorDomain = @"HLPURLHTTP";
 @dynamic parent;
 @dynamic delegates;
 
-- (instancetype)initWithTasks:(HLPArray<NSURLSessionTask *> *)tasks {
+- (instancetype)initWithTasks:(NSArray<NSURLSessionTask *> *)tasks {
     self = super.init;
     if (self) {
         self.tasks = tasks;
@@ -115,7 +115,9 @@ NSErrorDomain const HLPURLHTTPErrorDomain = @"HLPURLHTTP";
 }
 
 - (void)cancelAllTasks {
-    [(NSURLSessionTask *)self.tasks cancel];
+    for (NSURLSessionTask *task in self.tasks) {
+        [task cancel];
+    }
 }
 
 @end
@@ -154,13 +156,13 @@ NSErrorDomain const HLPURLHTTPErrorDomain = @"HLPURLHTTP";
     return self;
 }
 
-- (HLPURLLoad *)loadWithTasks:(HLPArray<NSURLSessionTask *> *)tasks {
+- (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks {
     HLPURLLoad *load = [HLPURLLoad.alloc initWithTasks:tasks];
     [self addOperation:load];
     return load;
 }
 
-- (HLPURLLoad *)loadWithTasks:(HLPArray<NSURLSessionTask *> *)tasks completion:(VoidBlock)completion {
+- (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks completion:(VoidBlock)completion {
     HLPURLLoad *load = [self loadWithTasks:tasks];
     load.completionBlock = completion;
     return load;

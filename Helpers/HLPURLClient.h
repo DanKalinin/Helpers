@@ -49,9 +49,9 @@ NS_ERROR_ENUM(HLPURLHTTPErrorDomain) {
 
 @property (readonly) HLPURLClient *parent;
 @property (readonly) HLPArray<HLPURLLoadDelegate> *delegates;
-@property (readonly) HLPArray<NSURLSessionTask *> *tasks;
+@property (readonly) NSArray<NSURLSessionTask *> *tasks;
 
-- (instancetype)initWithTasks:(HLPArray<NSURLSessionTask *> *)tasks;
+- (instancetype)initWithTasks:(NSArray<NSURLSessionTask *> *)tasks;
 - (void)endTask:(NSURLSessionTask *)task;
 - (void)cancelAllTasks;
 
@@ -85,8 +85,8 @@ NS_ERROR_ENUM(HLPURLHTTPErrorDomain) {
 @property (readonly) HLPReachability *reachability;
 @property (readonly) HLPStreamClient *streamClient;
 
-- (HLPURLLoad *)loadWithTasks:(HLPArray<NSURLSessionTask *> *)tasks;
-- (HLPURLLoad *)loadWithTasks:(HLPArray<NSURLSessionTask *> *)tasks completion:(VoidBlock)completion;
+- (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks;
+- (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks completion:(VoidBlock)completion;
 
 @end
 
