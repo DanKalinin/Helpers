@@ -72,7 +72,7 @@
 
 
 
-@interface NSDictionary (HLP)
+@interface NSDictionary<KeyType, ObjectType> (HLP)
 
 @property (readonly) HLPDictionary *weakToWeakDictionary;
 @property (readonly) HLPDictionary *weakToStrongDictionary;

@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class HLPSet;
 
 
 
@@ -16,7 +17,8 @@
 
 
 
-@interface HLPSet : NSMutableSet
+
+@interface HLPSet<ObjectType> : NSMutableSet<ObjectType>
 
 @property (readonly) NSHashTable *backingStore;
 
@@ -36,7 +38,7 @@
 
 
 
-@interface NSHashTable (HLP)
+@interface NSHashTable<ObjectType> (HLP)
 
 + (NSHashTable *)strongObjectsHashTable;
 
@@ -51,7 +53,7 @@
 
 
 
-@interface NSSet (HLP)
+@interface NSSet<ObjectType> (HLP)
 
 @property (readonly) HLPSet *weakSet;
 @property (readonly) HLPSet *strongSet;

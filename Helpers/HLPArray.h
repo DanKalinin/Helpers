@@ -40,7 +40,7 @@
 
 
 
-@interface NSArray (HLP)
+@interface NSArray<ObjectType> (HLP)
 
 @property (readonly) HLPArray *weakArray;
 @property (readonly) HLPArray *strongArray;
