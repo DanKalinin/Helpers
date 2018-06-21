@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class HLPArray, HLPProxyArray;
+@class HLPArray;
 
 
 
@@ -19,6 +19,8 @@
 
 
 @interface HLPArray<ObjectType> : NSMutableArray<ObjectType>
+
+@property NSOperationQueue *operationQueue;
 
 @property (readonly) NSPointerArray *backingStore;
 
@@ -38,26 +40,9 @@
 
 
 
-@interface HLPProxyArray<ObjectType> : HLPArray<ObjectType>
-
-@property NSOperationQueue *operationQueue;
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface NSArray (HLP)
 
 @property (readonly) HLPArray *weakArray;
 @property (readonly) HLPArray *strongArray;
-@property (readonly) HLPProxyArray *weakProxyArray;
-@property (readonly) HLPProxyArray *strongProxyArray;
 
 @end

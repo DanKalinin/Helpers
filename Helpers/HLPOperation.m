@@ -18,7 +18,7 @@
 
 @interface HLPOperation ()
 
-@property HLPProxyArray<HLPOperationDelegate> *delegates;
+@property HLPArray<HLPOperationDelegate> *delegates;
 @property NSMutableArray<NSNumber *> *states;
 @property NSMutableArray<NSError *> *errors;
 @property NSProgress *progress;
@@ -43,7 +43,7 @@
 - (instancetype)init {
     self = super.init;
     if (self) {
-        self.delegates = (id)HLPProxyArray.weakArray;
+        self.delegates = (id)HLPArray.weakArray;
         self.delegates.operationQueue = NSOperationQueue.mainQueue;
         [self.delegates addObject:self];
         
@@ -118,7 +118,7 @@
 
 @interface HLPOperationQueue ()
 
-@property HLPProxyArray<HLPOperationDelegate> *delegates;
+@property HLPArray<HLPOperationDelegate> *delegates;
 
 @end
 
@@ -138,7 +138,7 @@
 - (instancetype)init {
     self = super.init;
     if (self) {
-        self.delegates = (id)HLPProxyArray.weakArray;
+        self.delegates = (id)HLPArray.weakArray;
         self.delegates.operationQueue = NSOperationQueue.mainQueue;
         [self.delegates addObject:self];
     }

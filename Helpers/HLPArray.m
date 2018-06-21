@@ -106,24 +106,7 @@
     [self.backingStore replacePointerAtIndex:index withPointer:pointer];
 }
 
-@end
-
-
-
-
-
-
-
-
-
-
-@interface HLPProxyArray ()
-
-@end
-
-
-
-@implementation HLPProxyArray
+#pragma mark - Proxy
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     for (id object in self) {
@@ -190,18 +173,6 @@
 
 - (HLPArray *)strongArray {
     HLPArray *array = HLPArray.strongArray;
-    [array addObjectsFromArray:self];
-    return array;
-}
-
-- (HLPProxyArray *)weakProxyArray {
-    HLPProxyArray *array = HLPProxyArray.weakArray;
-    [array addObjectsFromArray:self];
-    return array;
-}
-
-- (HLPProxyArray *)strongProxyArray {
-    HLPProxyArray *array = HLPProxyArray.strongArray;
     [array addObjectsFromArray:self];
     return array;
 }
