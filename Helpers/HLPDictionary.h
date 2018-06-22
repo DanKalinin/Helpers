@@ -22,7 +22,7 @@
 @protocol HLPDictionaryEncodable <HLPObject>
 
 @optional
-- (void)toDictionary:(HLPDictionary *)dictionary;
+- (void)toDictionary:(NSMutableDictionary *)dictionary;
 
 @end
 
@@ -31,7 +31,7 @@
 @protocol HLPDictionaryDecodable <HLPObject>
 
 @optional
-- (void)fromDictionary:(HLPDictionary *)dictionary;
+- (void)fromDictionary:(NSMutableDictionary *)dictionary;
 
 @end
 
