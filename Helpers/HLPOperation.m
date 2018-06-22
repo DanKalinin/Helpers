@@ -170,7 +170,7 @@
 
 @implementation NSOperationQueue (HLP)
 
-- (void)addOperationWithBlockAndWait:(VoidBlock)block {
+- (void)addOperationWithBlockAndWait:(HLPVoidBlock)block {
     if ([self isEqual:NSOperationQueue.currentQueue]) {
         block();
     } else {

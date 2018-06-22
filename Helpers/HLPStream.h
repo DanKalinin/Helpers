@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "HLPMain.h"
+#import "Main.h"
 #import "HLPObject.h"
 #import "HLPOperation.h"
 

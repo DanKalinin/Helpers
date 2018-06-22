@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <compression.h>
-#import "HLPMain.h"
+#import "Main.h"
 #import "HLPOperation.h"
 
 @class HLPCompression, HLPCompressor;

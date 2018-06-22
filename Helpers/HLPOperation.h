@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Main.h"
 #import "HLPMain.h"
 #import "HLPObject.h"
 #import "HLPArray.h"
@@ -43,8 +44,8 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 
 @interface HLPOperation : NSOperation <HLPOperationDelegate, NSProgressReporting>
 
-@property (copy) VoidBlock stateBlock;
-@property (copy) VoidBlock progressBlock;
+@property (copy) HLPVoidBlock stateBlock;
+@property (copy) HLPVoidBlock progressBlock;
 
 @property (readonly) id parent;
 @property (readonly) HLPArray<HLPOperationDelegate> *delegates;
@@ -91,6 +92,6 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 
 @interface NSOperationQueue (HLP)
 
-- (void)addOperationWithBlockAndWait:(VoidBlock)block;
+- (void)addOperationWithBlockAndWait:(HLPVoidBlock)block;
 
 @end
