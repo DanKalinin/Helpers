@@ -113,7 +113,7 @@
     return tick;
 }
 
-- (HLPTick *)tickWithInterval:(NSTimeInterval)interval completion:(VoidBlock)completion {
+- (HLPTick *)tickWithInterval:(NSTimeInterval)interval completion:(HLPVoidBlock)completion {
     HLPTick *tick = [self tickWithInterval:interval];
     tick.completionBlock = completion;
     return tick;
@@ -172,7 +172,7 @@
     return timer;
 }
 
-- (HLPTimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats completion:(VoidBlock)completion {
+- (HLPTimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats completion:(HLPVoidBlock)completion {
     HLPTimer *timer = [self timerWithInterval:interval repeats:repeats];
     timer.completionBlock = completion;
     return timer;

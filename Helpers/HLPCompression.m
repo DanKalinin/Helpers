@@ -173,7 +173,7 @@ NSErrorDomain const HLPCompressionErrorDomain = @"HLPCompression";
     return compression;
 }
 
-- (HLPCompression *)compress:(NSMutableData *)srcData to:(NSMutableData *)dstData chunk:(size_t)chunk completion:(VoidBlock)completion {
+- (HLPCompression *)compress:(NSMutableData *)srcData to:(NSMutableData *)dstData chunk:(size_t)chunk completion:(HLPVoidBlock)completion {
     HLPCompression *compression = [self compress:srcData to:dstData chunk:chunk];
     compression.completionBlock = completion;
     return compression;

@@ -59,7 +59,7 @@
 - (instancetype)initWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats;
 
 - (HLPTick *)tickWithInterval:(NSTimeInterval)interval;
-- (HLPTick *)tickWithInterval:(NSTimeInterval)interval completion:(VoidBlock)completion;
+- (HLPTick *)tickWithInterval:(NSTimeInterval)interval completion:(HLPVoidBlock)completion;
 
 @end
 
@@ -81,6 +81,6 @@
 @interface HLPClock : HLPOperationQueue <HLPClockDelegate>
 
 - (HLPTimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats;
-- (HLPTimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats completion:(VoidBlock)completion;
+- (HLPTimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats completion:(HLPVoidBlock)completion;
 
 @end

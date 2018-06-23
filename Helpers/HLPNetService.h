@@ -69,7 +69,7 @@ extern HLPNetServiceDomain const HLPNetServiceDomainLocal;
 @property (readonly) NSMutableDictionary<NSString *, NSNetService *> *services;
 
 - (HLPNetServiceResolution *)resolveService:(NSNetService *)service timeout:(NSTimeInterval)timeout limit:(NSUInteger)limit;
-- (HLPNetServiceResolution *)resolveService:(NSNetService *)service timeout:(NSTimeInterval)timeout limit:(NSUInteger)limit completion:(VoidBlock)completion;
+- (HLPNetServiceResolution *)resolveService:(NSNetService *)service timeout:(NSTimeInterval)timeout limit:(NSUInteger)limit completion:(HLPVoidBlock)completion;
 
 @end
 

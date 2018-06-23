@@ -162,7 +162,7 @@ NSErrorDomain const HLPURLHTTPErrorDomain = @"HLPURLHTTP";
     return load;
 }
 
-- (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks completion:(VoidBlock)completion {
+- (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks completion:(HLPVoidBlock)completion {
     HLPURLLoad *load = [self loadWithTasks:tasks];
     load.completionBlock = completion;
     return load;

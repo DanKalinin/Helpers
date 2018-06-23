@@ -154,7 +154,7 @@ HLPNetServiceDomain const HLPNetServiceDomainLocal = @"local";
     return resolution;
 }
 
-- (HLPNetServiceResolution *)resolveService:(NSNetService *)service timeout:(NSTimeInterval)timeout limit:(NSUInteger)limit completion:(VoidBlock)completion {
+- (HLPNetServiceResolution *)resolveService:(NSNetService *)service timeout:(NSTimeInterval)timeout limit:(NSUInteger)limit completion:(HLPVoidBlock)completion {
     HLPNetServiceResolution *resolution = [self resolveService:service timeout:timeout limit:limit];
     resolution.completionBlock = completion;
     return resolution;

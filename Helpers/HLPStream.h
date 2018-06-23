@@ -148,9 +148,9 @@ typedef NS_ENUM(NSUInteger, HLPStreamLoadOperation) {
 - (__kindof HLPStreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path;
 - (__kindof HLPStreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path;
 
-- (__kindof HLPStreamLoad *)load:(HLPStreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path completion:(VoidBlock)completion;
-- (__kindof HLPStreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path completion:(VoidBlock)completion;
-- (__kindof HLPStreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path completion:(VoidBlock)completion;
+- (__kindof HLPStreamLoad *)load:(HLPStreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path completion:(HLPVoidBlock)completion;
+- (__kindof HLPStreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path completion:(HLPVoidBlock)completion;
+- (__kindof HLPStreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path completion:(HLPVoidBlock)completion;
 
 @end
 

@@ -86,7 +86,7 @@ NS_ERROR_ENUM(HLPURLHTTPErrorDomain) {
 @property (readonly) HLPStreamClient *streamClient;
 
 - (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks;
-- (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks completion:(VoidBlock)completion;
+- (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks completion:(HLPVoidBlock)completion;
 
 @end
 

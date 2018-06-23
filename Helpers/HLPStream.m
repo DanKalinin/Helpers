@@ -270,19 +270,19 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     return load;
 }
 
-- (HLPStreamLoad *)load:(HLPStreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path completion:(VoidBlock)completion {
+- (HLPStreamLoad *)load:(HLPStreamLoadOperation)operation data:(NSMutableData *)data path:(NSString *)path completion:(HLPVoidBlock)completion {
     HLPStreamLoad *load = [self load:operation data:data path:path];
     load.completionBlock = completion;
     return load;
 }
 
-- (HLPStreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path completion:(VoidBlock)completion {
+- (HLPStreamLoad *)uploadData:(NSMutableData *)data toPath:(NSString *)path completion:(HLPVoidBlock)completion {
     HLPStreamLoad *load = [self uploadData:data toPath:path];
     load.completionBlock = completion;
     return load;
 }
 
-- (HLPStreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path completion:(VoidBlock)completion {
+- (HLPStreamLoad *)downloadData:(NSMutableData *)data fromPath:(NSString *)path completion:(HLPVoidBlock)completion {
     HLPStreamLoad *load = [self downloadData:data fromPath:path];
     load.completionBlock = completion;
     return load;
