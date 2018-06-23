@@ -7,6 +7,9 @@
 
 #import <Foundation/Foundation.h>
 
+@class HLPObject;
+@class HLPDictionary;
+
 
 
 
@@ -36,5 +39,8 @@
 
 
 @interface NSObject (HLP)
+
+@property (readonly) HLPDictionary *weakDictionary;
+@property (readonly) HLPDictionary *strongDictionary;
 
 @end

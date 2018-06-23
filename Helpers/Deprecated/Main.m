@@ -1435,34 +1435,6 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 
 #pragma mark - Accessors
 
-- (void)setStrongDictionary:(HLPDictionary *)strongDictionary {
-    objc_setAssociatedObject(self, @selector(strongDictionary), strongDictionary, OBJC_ASSOCIATION_RETAIN);
-}
-
-- (HLPDictionary *)strongDictionary {
-    HLPDictionary *dictionary = objc_getAssociatedObject(self, @selector(strongDictionary));
-    if (dictionary) {
-    } else {
-        dictionary = HLPDictionary.strongToStrongDictionary;
-        self.strongDictionary = dictionary;
-    }
-    return dictionary;
-}
-
-- (void)setWeakDictionary:(HLPDictionary *)weakDictionary {
-    objc_setAssociatedObject(self, @selector(weakDictionary), weakDictionary, OBJC_ASSOCIATION_RETAIN);
-}
-
-- (HLPDictionary *)weakDictionary {
-    HLPDictionary *dictionary = objc_getAssociatedObject(self, @selector(weakDictionary));
-    if (dictionary) {
-    } else {
-        dictionary = HLPDictionary.strongToWeakDictionary;
-        self.weakDictionary = dictionary;
-    }
-    return dictionary;
-}
-
 - (void)setKvs:(DefaultDictionary *)kvs {
     objc_setAssociatedObject(self, @selector(kvs), kvs, OBJC_ASSOCIATION_RETAIN);
 }
