@@ -64,7 +64,7 @@ HLPNetServiceDomain const HLPNetServiceDomainLocal = @"local";
     [self.service stop];
 }
 
-#pragma mark - Service
+#pragma mark - Net service
 
 - (void)netService:(NSNetService *)sender didNotResolve:(NSDictionary<NSString *, NSNumber *> *)errorDict {
     NSError *error = [NSNetService errorFromErrorDictionary:errorDict];
@@ -160,7 +160,7 @@ HLPNetServiceDomain const HLPNetServiceDomainLocal = @"local";
     return resolution;
 }
 
-#pragma mark - Service browser
+#pragma mark - Net service browser
 
 - (void)netServiceBrowser:(NSNetServiceBrowser *)browser didFindDomain:(NSString *)domainString moreComing:(BOOL)moreComing {
     [self.domains addObject:domainString];
