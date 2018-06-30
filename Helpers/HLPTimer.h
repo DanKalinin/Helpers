@@ -42,6 +42,7 @@
 - (void)HLPTimerDidUpdateProgress:(HLPTimer *)timer;
 
 - (void)HLPTimerDidBegin:(HLPTimer *)timer;
+- (void)HLPTimerDidCancel:(HLPTimer *)timer;
 - (void)HLPTimerDidEnd:(HLPTimer *)timer;
 
 @end

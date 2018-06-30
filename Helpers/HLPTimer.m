@@ -127,6 +127,8 @@
     [self.delegates HLPTimerDidUpdateState:self];
     if (state == HLPOperationStateDidBegin) {
         [self.delegates HLPTimerDidBegin:self];
+    } else if (state == HLPOperationStateDidCancel) {
+        [self.delegates HLPTimerDidCancel:self];
     } else if (state == HLPOperationStateDidEnd) {
         [self.delegates HLPTimerDidEnd:self];
     }
