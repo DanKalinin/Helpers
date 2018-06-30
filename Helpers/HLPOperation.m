@@ -62,7 +62,10 @@
 - (void)cancel {
     [super cancel];
     
-    [self updateState:HLPOperationStateDidCancel];
+    if (self.cancelled) {
+    } else {
+        [self updateState:HLPOperationStateDidCancel];
+    }
 }
 
 #pragma mark - Accessors
