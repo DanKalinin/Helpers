@@ -65,8 +65,7 @@
 
 @property NSTimeInterval interval;
 @property NSUInteger repeats;
-
-@property (weak) HLPTick *tick;
+@property HLPTick *tick;
 
 @end
 

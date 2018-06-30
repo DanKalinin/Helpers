@@ -54,8 +54,7 @@
 @property (readonly) HLPArray<HLPTimerDelegate> *delegates;
 @property (readonly) NSTimeInterval interval;
 @property (readonly) NSUInteger repeats;
-
-@property (weak, readonly) HLPTick *tick;
+@property (readonly) HLPTick *tick;
 
 - (instancetype)initWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats;
 
