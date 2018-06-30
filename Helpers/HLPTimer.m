@@ -91,13 +91,19 @@
     [self updateState:HLPOperationStateDidBegin];
     
     for (uint64_t completedUnitCount = 0; completedUnitCount < self.repeats; completedUnitCount++) {
+        if (self.cancelled) break;
+        
         [self updateProgress:completedUnitCount];
         
         self.tick = [self tickWithInterval:self.interval];
         [self.tick waitUntilFinished];
     }
     
-    [self updateProgress:self.repeats];
+    if (self.cancelled) {
+    } else {
+        [self updateProgress:self.repeats];
+    }
+    
     [self updateState:HLPOperationStateDidEnd];
 }
 
