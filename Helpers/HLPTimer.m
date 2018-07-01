@@ -45,6 +45,8 @@
 }
 
 - (void)cancel {
+    if (self.cancelled) return;
+    
     [super cancel];
     
     dispatch_group_leave(self.group);

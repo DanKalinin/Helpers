@@ -60,6 +60,8 @@
 }
 
 - (void)cancel {
+    if (self.cancelled) return;
+    
     [super cancel];
     
     [self updateState:HLPOperationStateDidCancel];
