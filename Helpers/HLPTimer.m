@@ -82,13 +82,13 @@
     if (self) {
         self.interval = interval;
         self.repeats = repeats;
-        
-        self.progress.totalUnitCount = repeats;
     }
     return self;
 }
 
 - (void)main {
+    self.progress.totalUnitCount = self.repeats;
+    
     [self updateState:HLPOperationStateDidBegin];
     
     for (uint64_t completedUnitCount = 0; completedUnitCount < self.repeats; completedUnitCount++) {

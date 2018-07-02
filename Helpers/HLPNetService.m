@@ -39,19 +39,19 @@ HLPNetServiceDomain const HLPNetServiceDomainLocal = @"local";
         self.timeout = timeout;
         self.limit = limit;
         
-        self.progress.totalUnitCount = limit;
-        
         service.URLComponents = NSMutableArray.array;
-        service.delegate = self.delegates;
     }
     return self;
 }
 
 - (void)main {
+    self.progress.totalUnitCount = self.limit;
+    
     [self updateState:HLPOperationStateDidBegin];
     [self updateProgress:0];
     
     dispatch_group_enter(self.group);
+    self.service.delegate = self.delegates;
     [self.service resolveWithTimeout:self.timeout];
     dispatch_group_wait(self.group, DISPATCH_TIME_FOREVER);
     

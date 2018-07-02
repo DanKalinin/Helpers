@@ -35,13 +35,13 @@ NSErrorDomain const HLPURLHTTPErrorDomain = @"HLPURLHTTP";
     self = super.init;
     if (self) {
         self.tasks = tasks;
-        
-        self.progress.totalUnitCount = tasks.count;
     }
     return self;
 }
 
 - (void)main {
+    self.progress.totalUnitCount = self.tasks.count;
+    
     [self updateState:HLPOperationStateDidBegin];
     [self updateProgress:0];
     

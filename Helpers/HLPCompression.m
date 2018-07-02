@@ -43,13 +43,13 @@ NSErrorDomain const HLPCompressionErrorDomain = @"HLPCompression";
         self.srcData = srcData;
         self.dstData = dstData;
         self.chunk = chunk;
-        
-        self.progress.totalUnitCount = srcData.length;
     }
     return self;
 }
 
 - (void)main {
+    self.progress.totalUnitCount = self.srcData.length;
+    
     [self updateState:HLPOperationStateDidBegin];
     [self updateProgress:0];
     
