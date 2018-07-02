@@ -397,6 +397,7 @@ typedef void (^ReachabilityHandler)(_Reachability *reachability);
 
 @required
 @property (readonly) NSInteger tag; // Common - action identication tag
+@property (readonly) NSString *title;
 
 @optional
 @property (readonly) UIViewController *previewViewController; // Preview action - view controller to preview
