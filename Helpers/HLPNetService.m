@@ -38,8 +38,6 @@ HLPNetServiceDomain const HLPNetServiceDomainLocal = @"local";
         self.service = service;
         self.timeout = timeout;
         self.limit = limit;
-        
-        service.URLComponents = NSMutableArray.array;
     }
     return self;
 }
@@ -51,6 +49,7 @@ HLPNetServiceDomain const HLPNetServiceDomainLocal = @"local";
     [self updateProgress:0];
     
     dispatch_group_enter(self.group);
+    self.service.URLComponents = NSMutableArray.array;
     self.service.delegate = self.delegates;
     [self.service resolveWithTimeout:self.timeout];
     dispatch_group_wait(self.group, DISPATCH_TIME_FOREVER);
