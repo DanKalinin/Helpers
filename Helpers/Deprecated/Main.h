@@ -14,6 +14,7 @@ extern NSErrorDomain const HelpersErrorDomainDataCorrupted;
 
 typedef NSString * DateFormat NS_STRING_ENUM;
 extern DateFormat const DateFormatISO8601;
+extern DateFormat const DateFormatISO8601Short;
 extern DateFormat const DateFormatRFC1123;
 extern DateFormat const DateFormatRFC850;
 extern DateFormat const DateFormatAsctime;
