@@ -83,7 +83,7 @@ NS_ERROR_ENUM(HLPURLHTTPErrorDomain) {
 @property (readonly) NSURLSession *ephemeralSesssion;
 @property (readonly) NSURLSession *backgroundSession;
 @property (readonly) HLPReachability *reachability;
-@property (readonly) HLPStreamClient *streamClient;
+//@property (readonly) HLPStreamClient *streamClient;
 
 - (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks;
 - (HLPURLLoad *)loadWithTasks:(NSArray<NSURLSessionTask *> *)tasks completion:(HLPVoidBlock)completion;

@@ -17,7 +17,7 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 #import <Helpers/HLPArray.h>
 #import <Helpers/HLPDictionary.h>
 #import <Helpers/HLPOperation.h>
-//#import <Helpers/HLPStream.h>
+#import <Helpers/HLPStream.h>
 #import <Helpers/HLPCompression.h>
 #import <Helpers/HLPTimer.h>
 #import <Helpers/HLPNetService.h>
