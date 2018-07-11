@@ -31,6 +31,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @implementation HLPStreamOpening
 
 @dynamic parent;
+@dynamic delegates;
 
 - (instancetype)initWithStream:(NSStream *)stream {
     self = super.init;

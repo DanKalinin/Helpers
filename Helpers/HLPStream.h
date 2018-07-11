@@ -36,6 +36,7 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 @interface HLPStreamOpening : HLPOperation <HLPStreamOpeningDelegate>
 
 @property (readonly) HLPStreams *parent;
+@property (readonly) HLPArray<HLPStreamOpeningDelegate> *delegates;
 @property (readonly) NSStream *stream;
 @property (readonly) HLPStreamClosing *closing;
 
