@@ -114,6 +114,37 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 
 
+@interface HLPStreamReading ()
+
+@property NSInputStream *input;
+@property HLPStreamMessage *message;
+
+@end
+
+
+
+@implementation HLPStreamReading
+
+- (instancetype)initWithInput:(NSInputStream *)input message:(HLPStreamMessage *)message {
+    self = super.init;
+    if (self) {
+        self.input = input;
+        self.message = message;
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface HLPStreamWriting ()
 
 @property NSOutputStream *output;
@@ -193,6 +224,18 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     return closing;
 }
 
+- (HLPStreamReading *)readMessage:(HLPStreamMessage *)message {
+    HLPStreamReading *reading = [HLPStreamReading.alloc initWithInput:self.input message:message];
+    [self addOperation:reading];
+    return reading;
+}
+
+- (HLPStreamReading *)readMessage:(HLPStreamMessage *)message completion:(HLPVoidBlock)completion {
+    HLPStreamReading *reading = [self readMessage:message];
+    reading.completionBlock = completion;
+    return reading;
+}
+
 - (HLPStreamWriting *)writeMessage:(HLPStreamMessage *)message {
     HLPStreamWriting *writing = [HLPStreamWriting.alloc initWithOutput:self.output message:message];
     [self addOperation:writing];
@@ -218,21 +261,11 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @interface HLPStreamMessage ()
 
-@property NSMutableData *data;
-
 @end
 
 
 
 @implementation HLPStreamMessage
-
-- (instancetype)initWithData:(NSMutableData *)data {
-    self = super.init;
-    if (self) {
-        self.data = data;
-    }
-    return self;
-}
 
 - (NSInteger)readFromInput:(NSInputStream *)input {
     return 0;

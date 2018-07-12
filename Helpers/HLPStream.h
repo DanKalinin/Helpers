@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "HLPOperation.h"
 
-@class HLPStreamOpening, HLPStreamClosing, HLPStreamWriting, HLPStreams, HLPStreamMessage;
+@class HLPStreamOpening, HLPStreamClosing, HLPStreamReading, HLPStreamWriting, HLPStreams, HLPStreamMessage;
 
 extern NSErrorDomain const HLPStreamErrorDomain;
 
@@ -76,13 +76,37 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 
+@protocol HLPStreamReadingDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPStreamReading : HLPOperation <HLPStreamReadingDelegate>
+
+@property (readonly) NSInputStream *input;
+@property (readonly) HLPStreamMessage *message;
+
+- (instancetype)initWithInput:(NSInputStream *)input message:(HLPStreamMessage *)message;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol HLPStreamWritingDelegate <HLPOperationDelegate>
 
 @end
 
 
 
-@interface HLPStreamWriting : HLPOperation
+@interface HLPStreamWriting : HLPOperation <HLPStreamWritingDelegate>
 
 @property (readonly) NSOutputStream *output;
 @property (readonly) HLPStreamMessage *message;
@@ -100,7 +124,7 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 
-@protocol HLPStreamsDelegate <HLPStreamOpeningDelegate, HLPStreamClosingDelegate>
+@protocol HLPStreamsDelegate <HLPStreamOpeningDelegate, HLPStreamClosingDelegate, HLPStreamReadingDelegate, HLPStreamWritingDelegate>
 
 @end
 
@@ -119,6 +143,9 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 - (HLPStreamClosing *)closeStream:(NSStream *)stream;
 - (HLPStreamClosing *)closeStream:(NSStream *)stream completion:(HLPVoidBlock)completion;
 
+- (HLPStreamReading *)readMessage:(HLPStreamMessage *)message;
+- (HLPStreamReading *)readMessage:(HLPStreamMessage *)message completion:(HLPVoidBlock)completion;
+
 - (HLPStreamWriting *)writeMessage:(HLPStreamMessage *)message;
 - (HLPStreamWriting *)writeMessage:(HLPStreamMessage *)message completion:(HLPVoidBlock)completion;
 
@@ -135,9 +162,7 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 @interface HLPStreamMessage : HLPObject
 
-@property (readonly) NSMutableData *data;
-
-- (instancetype)initWithData:(NSMutableData *)data;
+@property NSMutableData *data;
 
 - (NSInteger)readFromInput:(NSInputStream *)input;
 - (NSInteger)writeToOutput:(NSOutputStream *)output;
