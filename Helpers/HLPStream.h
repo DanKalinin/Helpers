@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "HLPOperation.h"
 
-@class HLPStreamOpening, HLPStreamClosing, HLPStreams;
+@class HLPStreamOpening, HLPStreamClosing, HLPStreamWriting, HLPStreams, HLPStreamMessage;
 
 extern NSErrorDomain const HLPStreamErrorDomain;
 
@@ -76,6 +76,30 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 
+@protocol HLPStreamWritingDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPStreamWriting : HLPOperation
+
+@property (readonly) NSOutputStream *output;
+@property (readonly) HLPStreamMessage *message;
+
+- (instancetype)initWithOutput:(NSOutputStream *)output message:(HLPStreamMessage *)message;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol HLPStreamsDelegate <HLPStreamOpeningDelegate, HLPStreamClosingDelegate>
 
 @end
@@ -94,6 +118,29 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 - (HLPStreamClosing *)closeStream:(NSStream *)stream;
 - (HLPStreamClosing *)closeStream:(NSStream *)stream completion:(HLPVoidBlock)completion;
+
+- (HLPStreamWriting *)writeMessage:(HLPStreamMessage *)message;
+- (HLPStreamWriting *)writeMessage:(HLPStreamMessage *)message completion:(HLPVoidBlock)completion;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPStreamMessage : HLPObject
+
+@property (readonly) NSMutableData *data;
+
+- (instancetype)initWithData:(NSMutableData *)data;
+
+- (NSInteger)readFromInput:(NSInputStream *)input;
+- (NSInteger)writeToOutput:(NSOutputStream *)output;
 
 @end
 
