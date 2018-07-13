@@ -178,6 +178,32 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 
+@interface NSInputStream (HLP)
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSOutputStream (HLP)
+
+@end
+
+
+
+
+
+
+
+
+
+
 
 
 

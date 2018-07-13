@@ -134,6 +134,14 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     return self;
 }
 
+- (void)main {
+    [self updateState:HLPOperationStateDidBegin];
+    
+    
+    
+    [self updateState:HLPOperationStateDidEnd];
+}
+
 @end
 
 
@@ -286,7 +294,22 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 
 
+@implementation NSInputStream (HLP)
 
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSOutputStream (HLP)
+
+@end
 
 //#import "HLPStream.h"
 //#import <netinet/in.h>
