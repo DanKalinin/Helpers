@@ -5,7 +5,8 @@
 //  Created by Dan Kalinin on 5/20/18.
 //
 
-#import <Helpers/Helpers.h>
+#import <Foundation/Foundation.h>
+#import "HLPOperation.h"
 
 @class HLPTick, HLPTimer, HLPClock;
 

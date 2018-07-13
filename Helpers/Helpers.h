@@ -25,6 +25,7 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 #import <Helpers/HLPURLClient.h>
 #import <Helpers/HLPReachability.h>
 #import <Helpers/HLPCaptiveNetwork.h>
+#import <Helpers/HLPManager.h>
 
 // Deprecated
 
