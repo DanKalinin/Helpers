@@ -6,8 +6,6 @@
 //
 
 #import "HLPURL.h"
-#import "HLPString.h"
-#import <arpa/inet.h>
 
 
 
@@ -38,6 +36,10 @@
 
 
 @implementation NSURLComponents (HLP)
+
++ (NSString *)hostAny {
+    return @"0.0.0.0";
+}
 
 - (void)setAddress:(struct sockaddr)address {
     if (address.sa_family == AF_INET) {

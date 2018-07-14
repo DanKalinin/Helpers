@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import "HLPOperation.h"
+#import "HLPURL.h"
 
 @class HLPReachability;
 

@@ -6,7 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <netinet/in.h>
+#import <arpa/inet.h>
+#import "HLPString.h"
 
 
 
@@ -31,6 +32,8 @@
 
 
 @interface NSURLComponents (HLP)
+
+@property (class, readonly) NSString *hostAny;
 
 @property struct sockaddr address;
 

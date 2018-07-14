@@ -15,12 +15,4 @@
     return [self stringWithString:@"."];
 }
 
-+ (instancetype)comma {
-    return [self stringWithString:@","];
-}
-
-+ (instancetype)space {
-    return [self stringWithString:@" "];
-}
-
 @end

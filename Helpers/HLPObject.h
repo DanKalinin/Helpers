@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <objc/runtime.h>
 
 @class HLPObject;
 @class HLPDictionary;

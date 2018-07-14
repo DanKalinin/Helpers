@@ -12,7 +12,5 @@
 @interface NSString (HLP)
 
 + (instancetype)dot;
-+ (instancetype)comma;
-+ (instancetype)space;
 
 @end
