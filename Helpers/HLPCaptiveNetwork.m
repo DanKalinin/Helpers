@@ -41,6 +41,19 @@
     return self;
 }
 
+- (NSString *)description {
+    NSMutableArray *descriptions = NSMutableArray.array;
+    
+    NSString *description = [NSString stringWithFormat:@"SSID - %@", self.ssid];
+    [descriptions addObject:description];
+    
+    description = [NSString stringWithFormat:@"BSSID - %@", self.bssid];
+    [descriptions addObject:description];
+    
+    description = [descriptions componentsJoinedByString:@"\r\n"];
+    return description;
+}
+
 @end
 
 
