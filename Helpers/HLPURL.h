@@ -7,7 +7,6 @@
 
 #import <Foundation/Foundation.h>
 #import <arpa/inet.h>
-#import "HLPString.h"
 
 @class HLPURLComponents;
 
@@ -34,8 +33,6 @@
 
 
 @interface NSURL (HLP)
-
-@property (class, readonly) NSString *hostAny;
 
 @end
 

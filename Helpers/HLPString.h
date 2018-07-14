@@ -11,6 +11,4 @@
 
 @interface NSString (HLP)
 
-+ (instancetype)stringDot;
-
 @end

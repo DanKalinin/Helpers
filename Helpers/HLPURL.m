@@ -37,10 +37,6 @@
 
 @implementation NSURL (HLP)
 
-+ (NSString *)hostAny {
-    return @"0.0.0.0";
-}
-
 @end
 
 
@@ -68,7 +64,7 @@
 }
 
 - (struct sockaddr)address {
-    if ([self.host containsString:NSString.stringDot]) {
+    if ([self.host containsString:@"."]) {
         struct sockaddr_in address4 = {0};
         inet_aton(self.host.UTF8String, &address4.sin_addr);
         address4.sin_port = self.port.unsignedShortValue;

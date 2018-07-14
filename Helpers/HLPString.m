@@ -11,8 +11,4 @@
 
 @implementation NSString (HLP)
 
-+ (instancetype)stringDot {
-    return [self stringWithString:@"."];
-}
-
 @end
