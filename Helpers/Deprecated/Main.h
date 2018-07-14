@@ -1016,7 +1016,6 @@ typedef void (^ReachabilityHandler)(_Reachability *reachability);
 
 @interface NSURLComponents (Helpers) <NSCoding>
 
-@property struct sockaddr address;
 @property NSDictionary<NSString *, NSString *> *queryDictionary;
 
 @end
