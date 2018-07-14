@@ -55,7 +55,7 @@
 }
 
 - (struct sockaddr)address {
-    if ([self.host containsString:NSString.dot]) {
+    if ([self.host containsString:NSString.stringDot]) {
         struct sockaddr_in address4 = {0};
         inet_aton(self.host.UTF8String, &address4.sin_addr);
         address4.sin_port = self.port.unsignedShortValue;

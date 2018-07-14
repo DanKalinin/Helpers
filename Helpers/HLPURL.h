@@ -9,6 +9,8 @@
 #import <arpa/inet.h>
 #import "HLPString.h"
 
+@class HLPURLComponents;
+
 
 
 
