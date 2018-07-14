@@ -38,7 +38,7 @@
         [self.clock.delegates addObject:self.delegates];
         
         NSURLComponents *components = NSURLComponents.new;
-        components.host = NSURLComponents.hostAny;
+        components.host = NSURL.hostAny;
         self.reachability = [HLPReachability.alloc initWithLocalComponents:components remoteComponents:nil];
         [self.reachability.delegates addObject:self.delegates];
         [self.reachability start];

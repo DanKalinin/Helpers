@@ -33,9 +33,22 @@
 
 
 
-@interface NSURLComponents (HLP)
+@interface NSURL (HLP)
 
 @property (class, readonly) NSString *hostAny;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSURLComponents (HLP)
 
 @property struct sockaddr address;
 

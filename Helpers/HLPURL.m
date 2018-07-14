@@ -35,11 +35,24 @@
 
 
 
-@implementation NSURLComponents (HLP)
+@implementation NSURL (HLP)
 
 + (NSString *)hostAny {
     return @"0.0.0.0";
 }
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSURLComponents (HLP)
 
 - (void)setAddress:(struct sockaddr)address {
     if (address.sa_family == AF_INET) {
