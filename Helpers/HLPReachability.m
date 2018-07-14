@@ -108,7 +108,7 @@ static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRe
     description = [NSString stringWithFormat:@"IsWWAN - %i", (BOOL)(flags & kSCNetworkReachabilityFlagsIsWWAN)];
     [descriptions addObject:description];
     
-    description = [descriptions componentsJoinedByString:StringRN];
+    description = [descriptions componentsJoinedByString:@"\r\n"];
     return description;
 }
 
