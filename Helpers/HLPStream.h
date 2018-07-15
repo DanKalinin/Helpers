@@ -180,6 +180,8 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 @interface NSInputStream (HLP)
 
+- (NSInteger)read:(NSMutableData *)data length:(NSUInteger)length all:(BOOL)all;
+
 @end
 
 
@@ -192,6 +194,8 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 @interface NSOutputStream (HLP)
+
+- (NSInteger)write:(NSMutableData *)data all:(BOOL)all;
 
 @end
 

@@ -296,6 +296,20 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @implementation NSInputStream (HLP)
 
+- (NSInteger)read:(NSMutableData *)data length:(NSUInteger)length all:(BOOL)all {
+    uint8_t buffer[length];
+    NSInteger result = [self read:buffer maxLength:length];
+    if (result > 0) {
+        [data appendBytes:buffer length:result];
+        length -= result;
+        if (all && (length > 0)) {
+            [self read:data length:length all:all];
+        }
+    } else {
+        return result;
+    }
+}
+
 @end
 
 
@@ -309,7 +323,29 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @implementation NSOutputStream (HLP)
 
+- (NSInteger)write:(NSMutableData *)data all:(BOOL)all {
+    NSInteger result = [self write:data.bytes maxLength:data.length];
+    if (result > 0) {
+        NSRange range = NSMakeRange(0, result);
+        [data replaceBytesInRange:range withBytes:NULL length:0];
+        if (all && (data.length > 0)) {
+            [self write:data all:all];
+        }
+    } else {
+        return result;
+    }
+}
+
 @end
+
+
+
+
+
+
+
+
+
 
 //#import "HLPStream.h"
 //#import <netinet/in.h>
