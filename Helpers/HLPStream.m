@@ -137,7 +137,13 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
     
-    
+    NSInteger result = [self.message readFromInput:self.input];
+    if (result > 0) {
+    } else if (result == 0) {
+        
+    } else {
+        [self.errors addObject:self.input.streamError];
+    }
     
     [self updateState:HLPOperationStateDidEnd];
 }
@@ -174,7 +180,18 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 }
 
 - (void)main {
+    [self updateState:HLPOperationStateDidBegin];
     
+    NSInteger result = [self.message writeToOutput:self.output];
+    if (result > 0) {
+        
+    } else if (result == 0) {
+        
+    } else {
+        [self.errors addObject:self.output.streamError];
+    }
+    
+    [self updateState:HLPOperationStateDidEnd];
 }
 
 @end
@@ -276,12 +293,12 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @implementation HLPStreamMessage
 
 - (NSInteger)readFromInput:(NSInputStream *)input {
-    NSInteger result = [input read:self.data length:1024];
+    NSInteger result = [input read:self.data length:1024 all:NO];
     return result;
 }
 
 - (NSInteger)writeToOutput:(NSOutputStream *)output {
-    NSInteger result = [output write:self.data all:YES];
+    NSInteger result = [output write:self.data all:NO];
     return result;
 }
 
@@ -318,19 +335,11 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
             result = [self read:data until:separator];
         } else {
             NSRange range = NSMakeRange(data.length - separator.length, separator.length);
-            range = [data rangeOfData:data options:0 range:range];
-            if (range.location != NSNotFound) {
+            range = [data rangeOfData:separator options:0 range:range];
+            if (range.location == NSNotFound) {
                 result = [self read:data until:separator];
             }
         }
-    }
-    return result;
-}
-
-- (NSInteger)read:(NSMutableData *)data length:(NSUInteger)length {
-    NSInteger result = [self read:data length:length all:YES];
-    if (result > 0) {
-        result = [self read:data length:length];
     }
     return result;
 }

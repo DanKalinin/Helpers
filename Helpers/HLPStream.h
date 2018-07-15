@@ -182,7 +182,6 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 - (NSInteger)read:(NSMutableData *)data length:(NSUInteger)length all:(BOOL)all;
 - (NSInteger)read:(NSMutableData *)data until:(NSData *)separator;
-- (NSInteger)read:(NSMutableData *)data length:(NSUInteger)length;
 
 @end
 
