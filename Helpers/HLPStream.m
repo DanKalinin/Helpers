@@ -365,15 +365,22 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @implementation NSOutputStream (HLP)
 
 - (NSInteger)write:(NSMutableData *)data all:(BOOL)all {
-    NSInteger result = [self write:data.bytes maxLength:data.length];
-    if (result > 0) {
-        NSRange range = NSMakeRange(0, result);
-        [data replaceBytesInRange:range withBytes:NULL length:0];
-        if (all && (data.length > 0)) {
-            result = [self write:data all:all];
+    while (YES) {
+        NSInteger result = [self write:data.bytes maxLength:data.length];
+        if (result > 0) {
+            NSRange range = NSMakeRange(0, result);
+            [data replaceBytesInRange:range withBytes:NULL length:0];
+            if (all) {
+                if (data.length == 0) {
+                    return result;
+                }
+            } else {
+                return result;
+            }
+        } else {
+            return result;
         }
     }
-    return result;
 }
 
 @end
