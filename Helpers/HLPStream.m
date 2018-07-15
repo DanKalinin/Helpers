@@ -336,19 +336,20 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 }
 
 - (NSInteger)read:(NSMutableData *)data until:(NSData *)separator {
-    NSInteger result = [self read:data length:1 all:YES];
-    if (result > 0) {
-        if (data.length < separator.length) {
-            result = [self read:data until:separator];
-        } else {
-            NSRange range = NSMakeRange(data.length - separator.length, separator.length);
-            range = [data rangeOfData:separator options:0 range:range];
-            if (range.location == NSNotFound) {
-                result = [self read:data until:separator];
+    while (YES) {
+        NSInteger result = [self read:data length:1 all:YES];
+        if (result > 0) {
+            if (data.length >= separator.length) {
+                NSRange range = NSMakeRange(data.length - separator.length, separator.length);
+                range = [data rangeOfData:separator options:0 range:range];
+                if (range.location != NSNotFound) {
+                    return result;
+                }
             }
+        } else {
+            return result;
         }
     }
-    return result;
 }
 
 @end
