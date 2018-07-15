@@ -293,7 +293,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @implementation HLPStreamMessage
 
 - (NSInteger)readFromInput:(NSInputStream *)input {
-    NSInteger result = [input read:self.data until:[@">" dataUsingEncoding:NSUTF8StringEncoding]];
+    NSInteger result = [input read:self.data length:1024 all:NO];
     return result;
 }
 
