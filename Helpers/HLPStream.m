@@ -276,11 +276,13 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @implementation HLPStreamMessage
 
 - (NSInteger)readFromInput:(NSInputStream *)input {
-    return 0;
+    NSInteger result = [input read:self.data length:1024];
+    return result;
 }
 
 - (NSInteger)writeToOutput:(NSOutputStream *)output {
-    return 0;
+    NSInteger result = [output write:self.data all:YES];
+    return result;
 }
 
 @end
@@ -303,11 +305,34 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
         [data appendBytes:buffer length:result];
         length -= result;
         if (all && (length > 0)) {
-            [self read:data length:length all:all];
+            result = [self read:data length:length all:all];
         }
-    } else {
-        return result;
     }
+    return result;
+}
+
+- (NSInteger)read:(NSMutableData *)data until:(NSData *)separator {
+    NSInteger result = [self read:data length:1 all:YES];
+    if (result > 0) {
+        if (data.length < separator.length) {
+            result = [self read:data until:separator];
+        } else {
+            NSRange range = NSMakeRange(data.length - separator.length, separator.length);
+            range = [data rangeOfData:data options:0 range:range];
+            if (range.location != NSNotFound) {
+                result = [self read:data until:separator];
+            }
+        }
+    }
+    return result;
+}
+
+- (NSInteger)read:(NSMutableData *)data length:(NSUInteger)length {
+    NSInteger result = [self read:data length:length all:YES];
+    if (result > 0) {
+        result = [self read:data length:length];
+    }
+    return result;
 }
 
 @end
@@ -329,11 +354,10 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
         NSRange range = NSMakeRange(0, result);
         [data replaceBytesInRange:range withBytes:NULL length:0];
         if (all && (data.length > 0)) {
-            [self write:data all:all];
+            result = [self write:data all:all];
         }
-    } else {
-        return result;
     }
+    return result;
 }
 
 @end
