@@ -293,7 +293,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @implementation HLPStreamMessage
 
 - (NSInteger)readFromInput:(NSInputStream *)input {
-    NSInteger result = [input read:self.data length:1024 all:NO];
+    NSInteger result = [input read:self.data until:[@">" dataUsingEncoding:NSUTF8StringEncoding]];
     return result;
 }
 
@@ -316,16 +316,23 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @implementation NSInputStream (HLP)
 
 - (NSInteger)read:(NSMutableData *)data length:(NSUInteger)length all:(BOOL)all {
-    uint8_t buffer[length];
-    NSInteger result = [self read:buffer maxLength:length];
-    if (result > 0) {
+    while (YES) {
+        uint8_t buffer[length];
+        NSInteger result = [self read:buffer maxLength:length];
         [data appendBytes:buffer length:result];
-        length -= result;
-        if (all && (length > 0)) {
-            result = [self read:data length:length all:all];
+        if (result > 0) {
+            if (all) {
+                length -= result;
+                if (length == 0) {
+                    return result;
+                }
+            } else {
+                return result;
+            }
+        } else {
+            return result;
         }
     }
-    return result;
 }
 
 - (NSInteger)read:(NSMutableData *)data until:(NSData *)separator {
