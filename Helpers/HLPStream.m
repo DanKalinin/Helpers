@@ -220,12 +220,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     [self updateState:HLPOperationStateDidEnd];
 }
 
-- (void)cancel {
-    [super cancel];
-    
-    [self.timer cancel];
-}
-
 @end
 
 
