@@ -187,7 +187,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     
     self.timer = [HLPClock.shared timerWithInterval:self.timeout repeats:1];
     
-    while (!self.cancelled && (self.parent.output.streamStatus == NSStreamStatusOpen) && (self.data.length > 0) && (self.errors.count == 0) && self.timer.executing) {
+    while (!self.cancelled && (self.parent.output.streamStatus == NSStreamStatusOpen) && (self.data.length > 0) && (self.errors.count == 0) && !self.timer.finished) {
         if (self.parent.output.hasSpaceAvailable) {
             NSInteger result = [self.parent.output write:self.data.bytes maxLength:self.data.length];
             if (result > 0) {
@@ -207,14 +207,11 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
         }
     }
     
-    if (self.cancelled) {
+    if (self.timer.finished) {
+        NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimeout userInfo:nil];
+        [self.errors addObject:error];
     } else {
-        if (self.timer.finished) {
-            NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimeout userInfo:nil];
-            [self.errors addObject:error];
-        } else {
-            [self.timer cancel];
-        }
+        [self.timer cancel];
     }
     
     [self updateState:HLPOperationStateDidEnd];
