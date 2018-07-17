@@ -116,8 +116,10 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @interface HLPStreamReading ()
 
-@property NSInputStream *input;
-@property HLPStreamMessage *message;
+@property NSMutableData *data;
+@property NSUInteger minLength;
+@property NSUInteger maxLength;
+@property NSTimeInterval timeout;
 
 @end
 
@@ -125,25 +127,19 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @implementation HLPStreamReading
 
-- (instancetype)initWithInput:(NSInputStream *)input message:(HLPStreamMessage *)message {
+- (instancetype)initWithData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout {
     self = super.init;
     if (self) {
-        self.input = input;
-        self.message = message;
+        self.data = data;
+        self.minLength = minLength;
+        self.maxLength = maxLength;
+        self.timeout = timeout;
     }
     return self;
 }
 
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
-    
-    NSInteger result = [self.message readFromInput:self.input];
-    if (result > 0) {
-    } else if (result == 0) {
-        
-    } else {
-        [self.errors addObject:self.input.streamError];
-    }
     
     [self updateState:HLPOperationStateDidEnd];
 }
@@ -161,8 +157,8 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @interface HLPStreamWriting ()
 
-@property NSOutputStream *output;
-@property HLPStreamMessage *message;
+@property NSMutableData *data;
+@property NSTimeInterval timeout;
 
 @end
 
@@ -170,26 +166,17 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @implementation HLPStreamWriting
 
-- (instancetype)initWithOutput:(NSOutputStream *)output message:(HLPStreamMessage *)message {
+- (instancetype)initWithData:(NSMutableData *)data timeout:(NSTimeInterval)timeout {
     self = super.init;
     if (self) {
-        self.output = output;
-        self.message = message;
+        self.data = data;
+        self.timeout = timeout;
     }
     return self;
 }
 
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
-    
-    NSInteger result = [self.message writeToOutput:self.output];
-    if (result > 0) {
-        
-    } else if (result == 0) {
-        
-    } else {
-        [self.errors addObject:self.output.streamError];
-    }
     
     [self updateState:HLPOperationStateDidEnd];
 }
@@ -249,26 +236,26 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     return closing;
 }
 
-- (HLPStreamReading *)readMessage:(HLPStreamMessage *)message {
-    HLPStreamReading *reading = [HLPStreamReading.alloc initWithInput:self.input message:message];
+- (HLPStreamReading *)readData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout {
+    HLPStreamReading *reading = [HLPStreamReading.alloc initWithData:data minLength:minLength maxLength:maxLength timeout:timeout];
     [self addOperation:reading];
     return reading;
 }
 
-- (HLPStreamReading *)readMessage:(HLPStreamMessage *)message completion:(HLPVoidBlock)completion {
-    HLPStreamReading *reading = [self readMessage:message];
+- (HLPStreamReading *)readData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion {
+    HLPStreamReading *reading = [self readData:data minLength:minLength maxLength:maxLength timeout:timeout];
     reading.completionBlock = completion;
     return reading;
 }
 
-- (HLPStreamWriting *)writeMessage:(HLPStreamMessage *)message {
-    HLPStreamWriting *writing = [HLPStreamWriting.alloc initWithOutput:self.output message:message];
+- (HLPStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout {
+    HLPStreamWriting *writing = [HLPStreamWriting.alloc initWithData:data timeout:timeout];
     [self addOperation:writing];
     return writing;
 }
 
-- (HLPStreamWriting *)writeMessage:(HLPStreamMessage *)message completion:(HLPVoidBlock)completion {
-    HLPStreamWriting *writing = [self writeMessage:message];
+- (HLPStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion {
+    HLPStreamWriting *writing = [self writeData:data timeout:timeout];
     writing.completionBlock = completion;
     return writing;
 }

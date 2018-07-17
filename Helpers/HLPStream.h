@@ -84,10 +84,12 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 @interface HLPStreamReading : HLPOperation <HLPStreamReadingDelegate>
 
-@property (readonly) NSInputStream *input;
-@property (readonly) HLPStreamMessage *message;
+@property (readonly) NSMutableData *data;
+@property (readonly) NSUInteger minLength;
+@property (readonly) NSUInteger maxLength;
+@property (readonly) NSTimeInterval timeout;
 
-- (instancetype)initWithInput:(NSInputStream *)input message:(HLPStreamMessage *)message;
+- (instancetype)initWithData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout;
 
 @end
 
@@ -108,10 +110,10 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 @interface HLPStreamWriting : HLPOperation <HLPStreamWritingDelegate>
 
-@property (readonly) NSOutputStream *output;
-@property (readonly) HLPStreamMessage *message;
+@property (readonly) NSMutableData *data;
+@property (readonly) NSTimeInterval timeout;
 
-- (instancetype)initWithOutput:(NSOutputStream *)output message:(HLPStreamMessage *)message;
+- (instancetype)initWithData:(NSMutableData *)data timeout:(NSTimeInterval)timeout;
 
 @end
 
@@ -143,11 +145,11 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 - (HLPStreamClosing *)closeStream:(NSStream *)stream;
 - (HLPStreamClosing *)closeStream:(NSStream *)stream completion:(HLPVoidBlock)completion;
 
-- (HLPStreamReading *)readMessage:(HLPStreamMessage *)message;
-- (HLPStreamReading *)readMessage:(HLPStreamMessage *)message completion:(HLPVoidBlock)completion;
+- (HLPStreamReading *)readData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout;
+- (HLPStreamReading *)readData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
 
-- (HLPStreamWriting *)writeMessage:(HLPStreamMessage *)message;
-- (HLPStreamWriting *)writeMessage:(HLPStreamMessage *)message completion:(HLPVoidBlock)completion;
+- (HLPStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout;
+- (HLPStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
 
 @end
 
