@@ -159,12 +159,16 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @property NSMutableData *data;
 @property NSTimeInterval timeout;
+@property HLPTimer *timer;
 
 @end
 
 
 
 @implementation HLPStreamWriting
+
+@dynamic parent;
+@dynamic delegates;
 
 - (instancetype)initWithData:(NSMutableData *)data timeout:(NSTimeInterval)timeout {
     self = super.init;
@@ -176,9 +180,50 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 }
 
 - (void)main {
+    self.progress.totalUnitCount = self.data.length;
+    
     [self updateState:HLPOperationStateDidBegin];
+    [self updateProgress:0];
+    
+    self.timer = [HLPClock.shared timerWithInterval:self.timeout repeats:1];
+    
+    while (!self.cancelled && (self.parent.output.streamStatus == NSStreamStatusOpen) && (self.data.length > 0) && (self.errors.count == 0) && self.timer.executing) {
+        if (self.parent.output.hasSpaceAvailable) {
+            NSInteger result = [self.parent.output write:self.data.bytes maxLength:self.data.length];
+            if (result > 0) {
+                NSRange range = NSMakeRange(0, result);
+                [self.data replaceBytesInRange:range withBytes:NULL length:0];
+                
+                int64_t completedUnitCount = self.progress.completedUnitCount - result;
+                [self updateProgress:completedUnitCount];
+            } else if (result == 0) {
+                NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorEOF userInfo:nil];
+                [self.errors addObject:error];
+            } else {
+                [self.errors addObject:self.parent.output.streamError];
+            }
+        } else {
+            [NSThread sleepForTimeInterval:0.1];
+        }
+    }
+    
+    if (self.cancelled) {
+    } else {
+        if (self.timer.finished) {
+            NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimeout userInfo:nil];
+            [self.errors addObject:error];
+        } else {
+            [self.timer cancel];
+        }
+    }
     
     [self updateState:HLPOperationStateDidEnd];
+}
+
+- (void)cancel {
+    [super cancel];
+    
+    [self.timer cancel];
 }
 
 @end

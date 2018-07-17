@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "HLPOperation.h"
+#import "HLPTimer.h"
 
 @class HLPStreamOpening, HLPStreamClosing, HLPStreamReading, HLPStreamWriting, HLPStreams, HLPStreamMessage;
 
@@ -15,7 +16,9 @@ extern NSErrorDomain const HLPStreamErrorDomain;
 
 NS_ERROR_ENUM(HLPStreamErrorDomain) {
     HLPStreamErrorUnknown,
-    HLPStreamErrorOpening
+    HLPStreamErrorOpening,
+    HLPStreamErrorEOF,
+    HLPStreamErrorTimeout
 };
 
 
@@ -110,8 +113,11 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 @interface HLPStreamWriting : HLPOperation <HLPStreamWritingDelegate>
 
+@property (readonly) HLPStreams *parent;
+@property (readonly) HLPArray<HLPStreamWritingDelegate> *delegates;
 @property (readonly) NSMutableData *data;
 @property (readonly) NSTimeInterval timeout;
+@property (readonly) HLPTimer *timer;
 
 - (instancetype)initWithData:(NSMutableData *)data timeout:(NSTimeInterval)timeout;
 
