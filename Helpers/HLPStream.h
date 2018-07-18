@@ -87,10 +87,13 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 @interface HLPStreamReading : HLPOperation <HLPStreamReadingDelegate>
 
+@property (readonly) HLPStreams *parent;
+@property (readonly) HLPArray<HLPStreamReadingDelegate> *delegates;
 @property (readonly) NSMutableData *data;
 @property (readonly) NSUInteger minLength;
 @property (readonly) NSUInteger maxLength;
 @property (readonly) NSTimeInterval timeout;
+@property (readonly) HLPTimer *timer;
 
 - (instancetype)initWithData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout;
 

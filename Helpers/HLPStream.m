@@ -120,12 +120,16 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @property NSUInteger minLength;
 @property NSUInteger maxLength;
 @property NSTimeInterval timeout;
+@property HLPTimer *timer;
 
 @end
 
 
 
 @implementation HLPStreamReading
+
+@dynamic parent;
+@dynamic delegates;
 
 - (instancetype)initWithData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout {
     self = super.init;
@@ -139,7 +143,39 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 }
 
 - (void)main {
+    self.progress.totalUnitCount = self.maxLength;
+    
     [self updateState:HLPOperationStateDidBegin];
+    [self updateProgress:0];
+    
+    self.timer = [HLPClock.shared timerWithInterval:self.timeout repeats:1];
+    
+    while (!self.cancelled && (self.parent.input.streamStatus == NSStreamStatusOpen) && (self.data.length < self.minLength) && (self.errors.count == 0) && !self.timer.finished) {
+        if (self.parent.input.hasBytesAvailable) {
+            NSUInteger length = self.maxLength - self.data.length;
+            uint8_t buffer[length];
+            NSInteger result = [self.parent.input read:buffer maxLength:length];
+            if (result > 0) {
+                [self.data appendBytes:buffer length:result];
+                
+                [self updateProgress:self.data.length];
+            } else if (result == 0) {
+                NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorEOF userInfo:nil];
+                [self.errors addObject:error];
+            } else {
+                [self.errors addObject:self.parent.input.streamError];
+            }
+        } else {
+            [NSThread sleepForTimeInterval:0.1];
+        }
+    }
+    
+    if (self.timer.finished) {
+        NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimeout userInfo:nil];
+        [self.errors addObject:error];
+    } else {
+        [self.timer cancel];
+    }
     
     [self updateState:HLPOperationStateDidEnd];
 }
