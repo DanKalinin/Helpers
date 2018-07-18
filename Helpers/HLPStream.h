@@ -177,7 +177,7 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 - (instancetype)initWithStream:(NSStream *)stream;
 
-- (HLPStreamOpening *)open:(NSTimeInterval)timeout;
+- (HLPStreamOpening *)openWithTimeout:(NSTimeInterval)timeout;
 - (HLPStreamOpening *)openWithTimeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
 
 - (HLPStreamClosing *)close;

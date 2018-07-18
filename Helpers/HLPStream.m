@@ -308,30 +308,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     return closing;
 }
 
-- (HLPStreamReading *)readData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout {
-    HLPStreamReading *reading = [HLPStreamReading.alloc initWithData:data minLength:minLength maxLength:maxLength timeout:timeout];
-    [self addOperation:reading];
-    return reading;
-}
-
-- (HLPStreamReading *)readData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion {
-    HLPStreamReading *reading = [self readData:data minLength:minLength maxLength:maxLength timeout:timeout];
-    reading.completionBlock = completion;
-    return reading;
-}
-
-- (HLPStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout {
-    HLPStreamWriting *writing = [HLPStreamWriting.alloc initWithData:data timeout:timeout];
-    [self addOperation:writing];
-    return writing;
-}
-
-- (HLPStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion {
-    HLPStreamWriting *writing = [self writeData:data timeout:timeout];
-    writing.completionBlock = completion;
-    return writing;
-}
-
 @end
 
 
@@ -352,6 +328,8 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 
 @implementation HLPStream
+
+
 
 @end
 
@@ -374,6 +352,18 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @dynamic stream;
 
+- (HLPStreamReading *)readData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout {
+    HLPStreamReading *reading = [HLPStreamReading.alloc initWithData:data minLength:minLength maxLength:maxLength timeout:timeout];
+    [self addOperation:reading];
+    return reading;
+}
+
+- (HLPStreamReading *)readData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion {
+    HLPStreamReading *reading = [self readData:data minLength:minLength maxLength:maxLength timeout:timeout];
+    reading.completionBlock = completion;
+    return reading;
+}
+
 @end
 
 
@@ -394,6 +384,18 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @implementation HLPOutputStream
 
 @dynamic stream;
+
+- (HLPStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout {
+    HLPStreamWriting *writing = [HLPStreamWriting.alloc initWithData:data timeout:timeout];
+    [self addOperation:writing];
+    return writing;
+}
+
+- (HLPStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion {
+    HLPStreamWriting *writing = [self writeData:data timeout:timeout];
+    writing.completionBlock = completion;
+    return writing;
+}
 
 @end
 
