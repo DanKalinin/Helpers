@@ -10,7 +10,7 @@
 #import "HLPOperation.h"
 #import "HLPTimer.h"
 
-@class HLPStreamOpening, HLPStreamClosing, HLPStreamReading, HLPStreamWriting, HLPStream, HLPInputStream, HLPOutputStream;
+@class HLPStreamOpening, HLPStreamClosing, HLPStreamReading, HLPStreamWriting, HLPStream, HLPInputStream, HLPOutputStream, HLPStreams;
 
 extern NSErrorDomain const HLPStreamErrorDomain;
 
@@ -233,6 +233,32 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 - (instancetype)initWithInput:(HLPInputStream *)input output:(HLPOutputStream *)output;
 
 @end
+
+
+
+
+
+
+
+
+
+
+@protocol HLPStreamRPCDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPStreamRPC : HLPOperation <HLPStreamRPCDelegate>
+
+@property (readonly) HLPStreams *parent;
+@property (readonly) HLPArray<HLPStreamRPCDelegate> *delegates;
+@property (readonly) Class messageClass;
+
+- (instancetype)initWithMessageClass:(Class)messageClass;
+
+@end
+
 
 
 
