@@ -411,6 +411,21 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @implementation HLPStreams
 
++ (instancetype)streamsWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream {
+    HLPInputStream *input = [HLPInputStream.alloc initWithStream:inputStream];
+    HLPOutputStream *output = [HLPOutputStream.alloc initWithStream:outputStream];
+    HLPStreams *streams = [self.alloc initWithInput:input output:output];
+    return streams;
+}
+
++ (instancetype)streamsToHost:(NSString *)host port:(NSInteger)port {
+    NSInputStream *inputStream;
+    NSOutputStream *outputStream;
+    [NSStream getStreamsToHostWithName:host port:port inputStream:&inputStream outputStream:&outputStream];
+    HLPStreams *streams = [self streamsWithInputStream:inputStream outputStream:outputStream];
+    return streams;
+}
+
 - (instancetype)initWithInput:(HLPInputStream *)input output:(HLPOutputStream *)output {
     self = super.init;
     if (self) {
@@ -418,21 +433,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
         self.output = output;
     }
     return self;
-}
-
-+ (instancetype)streamsWithInput:(NSInputStream *)input output:(NSOutputStream *)output {
-    HLPInputStream *inputStream = [HLPInputStream.alloc initWithStream:input];
-    HLPOutputStream *outputStream = [HLPOutputStream.alloc initWithStream:output];
-    HLPStreams *streams = [self.alloc initWithInput:inputStream output:outputStream];
-    return streams;
-}
-
-+ (instancetype)streamsToHost:(NSString *)host port:(NSInteger)port {
-    NSInputStream *input;
-    NSOutputStream *output;
-    [NSStream getStreamsToHostWithName:host port:port inputStream:&input outputStream:&output];
-    HLPStreams *streams = [self streamsWithInput:input output:output];
-    return streams;
 }
 
 @end

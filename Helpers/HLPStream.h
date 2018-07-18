@@ -225,10 +225,10 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 @property (readonly) HLPInputStream *input;
 @property (readonly) HLPOutputStream *output;
 
-- (instancetype)initWithInput:(HLPInputStream *)input output:(HLPOutputStream *)output;
-
-+ (instancetype)streamsWithInput:(NSInputStream *)input output:(NSOutputStream *)output;
++ (instancetype)streamsWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 + (instancetype)streamsToHost:(NSString *)host port:(NSInteger)port;
+
+- (instancetype)initWithInput:(HLPInputStream *)input output:(HLPOutputStream *)output;
 
 @end
 
