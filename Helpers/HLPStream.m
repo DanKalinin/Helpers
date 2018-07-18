@@ -411,6 +411,8 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @implementation HLPStreams
 
+@dynamic delegates;
+
 + (instancetype)streamsWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream {
     HLPInputStream *input = [HLPInputStream.alloc initWithStream:inputStream];
     HLPOutputStream *output = [HLPOutputStream.alloc initWithStream:outputStream];
@@ -423,6 +425,11 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     NSOutputStream *outputStream;
     [NSStream getStreamsToHostWithName:host port:port inputStream:&inputStream outputStream:&outputStream];
     HLPStreams *streams = [self streamsWithInputStream:inputStream outputStream:outputStream];
+    return streams;
+}
+
++ (instancetype)streamsWithComponents:(NSURLComponents *)components {
+    HLPStreams *streams = [self streamsToHost:components.host port:components.port.integerValue];
     return streams;
 }
 

@@ -222,11 +222,13 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 @interface HLPStreams : HLPOperationQueue <HLPStreamsDelegate>
 
+@property (readonly) HLPArray<HLPStreamsDelegate> *delegates;
 @property (readonly) HLPInputStream *input;
 @property (readonly) HLPOutputStream *output;
 
 + (instancetype)streamsWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
 + (instancetype)streamsToHost:(NSString *)host port:(NSInteger)port;
++ (instancetype)streamsWithComponents:(NSURLComponents *)components;
 
 - (instancetype)initWithInput:(HLPInputStream *)input output:(HLPOutputStream *)output;
 
