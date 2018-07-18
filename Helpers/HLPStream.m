@@ -420,15 +420,19 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     return self;
 }
 
++ (instancetype)streamsWithInput:(NSInputStream *)input output:(NSOutputStream *)output {
+    HLPInputStream *inputStream = [HLPInputStream.alloc initWithStream:input];
+    HLPOutputStream *outputStream = [HLPOutputStream.alloc initWithStream:output];
+    HLPStreams *streams = [self.alloc initWithInput:inputStream output:outputStream];
+    return streams;
+}
+
 + (instancetype)streamsToHost:(NSString *)host port:(NSInteger)port {
-    NSInputStream *inputStream;
-    NSOutputStream *outputStream;
-    [NSStream getStreamsToHostWithName:host port:port inputStream:&inputStream outputStream:&outputStream];
-    
-    HLPInputStream *input = [HLPInputStream.alloc initWithStream:inputStream];
-    HLPOutputStream *output = [HLPOutputStream.alloc initWithStream:outputStream];
-    
-    
+    NSInputStream *input;
+    NSOutputStream *output;
+    [NSStream getStreamsToHostWithName:host port:port inputStream:&input outputStream:&output];
+    HLPStreams *streams = [self streamsWithInput:input output:output];
+    return streams;
 }
 
 @end
