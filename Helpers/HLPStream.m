@@ -70,7 +70,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     
     if (self.cancelled || (self.errors.count > 0)) {
         self.closing = [self.parent close];
-        [self.closing waitUntilFinished];
     }
     
     [self updateState:HLPOperationStateDidEnd];
@@ -453,28 +452,10 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 
 
-@interface HLPStreamRPC ()
-
-@property Class messageClass;
-
-@end
 
 
 
-@implementation HLPStreamRPC
 
-@dynamic parent;
-@dynamic delegates;
-
-- (instancetype)initWithMessageClass:(Class)messageClass {
-    self = super.init;
-    if (self) {
-        self.messageClass = messageClass;
-    }
-    return self;
-}
-
-@end
 
 
 

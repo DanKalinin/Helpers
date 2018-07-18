@@ -243,22 +243,6 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 
-@protocol HLPStreamRPCDelegate <HLPOperationDelegate>
-
-@end
-
-
-
-@interface HLPStreamRPC : HLPOperation <HLPStreamRPCDelegate>
-
-@property (readonly) HLPStreams *parent;
-@property (readonly) HLPArray<HLPStreamRPCDelegate> *delegates;
-@property (readonly) Class messageClass;
-
-- (instancetype)initWithMessageClass:(Class)messageClass;
-
-@end
-
 
 
 
