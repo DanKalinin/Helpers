@@ -11,7 +11,7 @@
 #import "HLPTimer.h"
 
 @class HLPStreamOpening, HLPStreamClosing, HLPStreamReading, HLPStreamWriting, HLPStream, HLPInputStream, HLPOutputStream;
-@class HLPStreamsOpening, HLPStreams;
+@class HLPStreamsOpening, HLPStreamsClosing, HLPStreams;
 
 extern NSErrorDomain const HLPStreamErrorDomain;
 
@@ -229,6 +229,29 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 @property (readonly) HLPStreamOpening *opening;
 
 - (instancetype)initWithTimeout:(NSTimeInterval)timeout;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol HLPStreamsClosingDelegate <HLPStreamClosingDelegate>
+
+@end
+
+
+
+@interface HLPStreamsClosing : HLPOperation <HLPStreamsClosingDelegate>
+
+@property (readonly) HLPStreams *parent;
+@property (readonly) HLPArray<HLPStreamsClosingDelegate> *delegates;
+@property (readonly) HLPStreamClosing *closing;
 
 @end
 

@@ -459,6 +459,47 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 
 
+@interface HLPStreamsClosing ()
+
+@property HLPStreamClosing *closing;
+
+@end
+
+
+
+@implementation HLPStreamsClosing
+
+@dynamic parent;
+@dynamic delegates;
+
+- (void)main {
+    self.progress.totalUnitCount = 2;
+    
+    [self updateState:HLPOperationStateDidBegin];
+    [self updateProgress:0];
+    
+    self.closing = [self.parent.input close];
+    [self.closing waitUntilFinished];
+    [self updateProgress:1];
+    
+    self.closing = [self.parent.output close];
+    [self.closing waitUntilFinished];
+    [self updateProgress:2];
+    
+    [self updateState:HLPOperationStateDidEnd];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface HLPStreams ()
 
 @property HLPInputStream *input;
