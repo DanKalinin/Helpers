@@ -10,7 +10,8 @@
 #import "HLPOperation.h"
 #import "HLPTimer.h"
 
-@class HLPStreamOpening, HLPStreamClosing, HLPStreamReading, HLPStreamWriting, HLPStream, HLPInputStream, HLPOutputStream, HLPStreams;
+@class HLPStreamOpening, HLPStreamClosing, HLPStreamReading, HLPStreamWriting, HLPStream, HLPInputStream, HLPOutputStream;
+@class HLPStreamsOpening, HLPStreams;
 
 extern NSErrorDomain const HLPStreamErrorDomain;
 
@@ -214,6 +215,32 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 
+@protocol HLPStreamsOpeningDelegate <HLPStreamOpeningDelegate>
+
+@end
+
+
+
+@interface HLPStreamsOpening : HLPOperation <HLPStreamsOpeningDelegate>
+
+@property (readonly) HLPStreams *parent;
+@property (readonly) HLPArray<HLPStreamsOpeningDelegate> *delegates;
+@property (readonly) NSTimeInterval timeout;
+@property (readonly) HLPStreamOpening *opening;
+
+- (instancetype)initWithTimeout:(NSTimeInterval)timeout;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol HLPStreamsDelegate <HLPInputStreamDelegate, HLPOutputStreamDelegate>
 
 @end
@@ -231,6 +258,9 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 + (instancetype)streamsWithComponents:(NSURLComponents *)components;
 
 - (instancetype)initWithInput:(HLPInputStream *)input output:(HLPOutputStream *)output;
+
+- (HLPStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout;
+- (HLPStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
 
 @end
 
