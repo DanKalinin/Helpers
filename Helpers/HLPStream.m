@@ -166,12 +166,12 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     }
     
     if (self.cancelled) {
-    } else if (self.parent.stream.streamStatus == NSStreamStatusOpen) {
-    } else if (self.parent.stream.streamStatus == NSStreamStatusError) {
-        [self.errors addObject:self.parent.stream.streamError];
     } else if (self.timer.finished) {
         NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimeout userInfo:nil];
         [self.errors addObject:error];
+    } else if (self.parent.stream.streamStatus == NSStreamStatusOpen) {
+    } else if (self.parent.stream.streamStatus == NSStreamStatusError) {
+        [self.errors addObject:self.parent.stream.streamError];
     } else {
         NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorNotOpen userInfo:nil];
         [self.errors addObject:error];
@@ -241,12 +241,12 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     }
     
     if (self.cancelled) {
-    } else if (self.parent.stream.streamStatus == NSStreamStatusOpen) {
-    } else if (self.parent.stream.streamStatus == NSStreamStatusError) {
-        [self.errors addObject:self.parent.stream.streamError];
     } else if (self.timer.finished) {
         NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimeout userInfo:nil];
         [self.errors addObject:error];
+    } else if (self.parent.stream.streamStatus == NSStreamStatusOpen) {
+    } else if (self.parent.stream.streamStatus == NSStreamStatusError) {
+        [self.errors addObject:self.parent.stream.streamError];
     } else {
         NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorNotOpen userInfo:nil];
         [self.errors addObject:error];
