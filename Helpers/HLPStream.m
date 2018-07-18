@@ -275,61 +275,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 
 
-//@interface HLPStreams ()
-//
-//@property NSInputStream *input;
-//@property NSOutputStream *output;
-//
-//@end
-//
-//
-//
-//@implementation HLPStreams
-//
-//- (instancetype)initWithInput:(NSInputStream *)input output:(NSOutputStream *)output {
-//    self = super.init;
-//    if (self) {
-//        self.input = input;
-//        self.output = output;
-//    }
-//    return self;
-//}
-//
-//- (HLPStreamOpening *)openStream:(NSStream *)stream {
-//    HLPStreamOpening *opening = [HLPStreamOpening.alloc initWithStream:stream];
-//    [self addOperation:opening];
-//    return opening;
-//}
-//
-//- (HLPStreamOpening *)openStream:(NSStream *)stream completion:(HLPVoidBlock)completion {
-//    HLPStreamOpening *opening = [self openStream:stream];
-//    opening.completionBlock = completion;
-//    return opening;
-//}
-//
-//- (HLPStreamClosing *)closeStream:(NSStream *)stream {
-//    HLPStreamClosing *closing = [HLPStreamClosing.alloc initWithStream:stream];
-//    [self addOperation:closing];
-//    return closing;
-//}
-//
-//- (HLPStreamClosing *)closeStream:(NSStream *)stream completion:(HLPVoidBlock)completion {
-//    HLPStreamClosing *closing = [self closeStream:stream];
-//    closing.completionBlock = completion;
-//    return closing;
-//}
-//
-//@end
-
-
-
-
-
-
-
-
-
-
 @interface HLPStream ()
 
 @property NSStream *stream;
@@ -445,6 +390,71 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface HLPStreams ()
+
+@property HLPInputStream *input;
+@property HLPOutputStream *output;
+
+@end
+
+
+
+@implementation HLPStreams
+
+- (instancetype)initWithInput:(HLPInputStream *)input output:(HLPOutputStream *)output {
+    self = super.init;
+    if (self) {
+        self.input = input;
+        self.output = output;
+    }
+    return self;
+}
+
++ (instancetype)streamsToHost:(NSString *)host port:(NSInteger)port {
+    NSInputStream *inputStream;
+    NSOutputStream *outputStream;
+    [NSStream getStreamsToHostWithName:host port:port inputStream:&inputStream outputStream:&outputStream];
+    
+    HLPInputStream *input = [HLPInputStream.alloc initWithStream:inputStream];
+    HLPOutputStream *output = [HLPOutputStream.alloc initWithStream:outputStream];
+    
+    
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

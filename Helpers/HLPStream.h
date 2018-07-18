@@ -134,42 +134,6 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 
-//@protocol HLPStreamsDelegate <HLPStreamOpeningDelegate, HLPStreamClosingDelegate, HLPStreamReadingDelegate, HLPStreamWritingDelegate>
-//
-//@end
-//
-//
-//
-//@interface HLPStreams : HLPOperationQueue <HLPStreamsDelegate>
-//
-//@property (readonly) NSInputStream *input;
-//@property (readonly) NSOutputStream *output;
-//
-//- (instancetype)initWithInput:(NSInputStream *)input output:(NSOutputStream *)output;
-//
-//- (HLPStreamOpening *)openStream:(NSStream *)stream;
-//- (HLPStreamOpening *)openStream:(NSStream *)stream completion:(HLPVoidBlock)completion;
-//
-//- (HLPStreamClosing *)closeStream:(NSStream *)stream;
-//- (HLPStreamClosing *)closeStream:(NSStream *)stream completion:(HLPVoidBlock)completion;
-//
-//- (HLPStreamReading *)readData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout;
-//- (HLPStreamReading *)readData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
-//
-//- (HLPStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout;
-//- (HLPStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
-//
-//@end
-
-
-
-
-
-
-
-
-
-
 @protocol HLPStreamDelegate <HLPStreamOpeningDelegate, HLPStreamClosingDelegate>
 
 @end
@@ -250,7 +214,22 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 
+@protocol HLPStreamsDelegate <HLPInputStreamDelegate, HLPOutputStreamDelegate>
 
+@end
+
+
+
+@interface HLPStreams : HLPOperationQueue <HLPStreamsDelegate>
+
+@property (readonly) HLPInputStream *input;
+@property (readonly) HLPOutputStream *output;
+
+- (instancetype)initWithInput:(HLPInputStream *)input output:(HLPOutputStream *)output;
+
++ (instancetype)streamsToHost:(NSString *)host port:(NSInteger)port;
+
+@end
 
 
 
