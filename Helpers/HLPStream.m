@@ -343,6 +343,69 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 
 
+@interface HLPStream ()
+
+@property NSStream *stream;
+
+@end
+
+
+
+@implementation HLPStream
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPInputStream ()
+
+@end
+
+
+
+@implementation HLPInputStream
+
+@dynamic stream;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPOutputStream ()
+
+@end
+
+
+
+@implementation HLPOutputStream
+
+@dynamic stream;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface HLPStreamMessage ()
 
 @end

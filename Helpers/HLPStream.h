@@ -171,6 +171,65 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 
+@interface HLPStream : HLPOperationQueue
+
+@property (readonly) NSStream *stream;
+
+- (instancetype)initWithStream:(NSStream *)stream;
+
+- (HLPStreamOpening *)open:(NSTimeInterval)timeout;
+- (HLPStreamOpening *)openWithTimeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
+
+- (HLPStreamClosing *)close;
+- (HLPStreamClosing *)closeWithCompletion:(HLPVoidBlock)completion;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPInputStream : HLPStream
+
+@property (readonly) NSInputStream *stream;
+
+- (HLPStreamReading *)readData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout;
+- (HLPStreamReading *)readData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPOutputStream : HLPStream
+
+@property (readonly) NSOutputStream *stream;
+
+- (HLPStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout;
+- (HLPStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface HLPStreamMessage : HLPObject
 
 @property NSMutableData *data;
