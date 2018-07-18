@@ -153,12 +153,6 @@
     [operation.delegates addObject:self.delegates];
 }
 
-#pragma mark - Accessors
-
-- (HLPOperation *)operation {
-    return self.operations.firstObject;
-}
-
 @end
 
 

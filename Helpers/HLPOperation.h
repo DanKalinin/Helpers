@@ -74,7 +74,6 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 
 @interface HLPOperationQueue : NSOperationQueue <HLPOperationDelegate>
 
-@property (readonly) __kindof HLPOperation *operation;
 @property (readonly) HLPArray<HLPOperationDelegate> *delegates;
 
 + (instancetype)shared;

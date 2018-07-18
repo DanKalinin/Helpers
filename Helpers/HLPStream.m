@@ -21,7 +21,8 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @interface HLPStreamOpening ()
 
-@property NSStream *stream;
+@property NSTimeInterval timeout;
+@property HLPTimer *timer;
 @property HLPStreamClosing *closing;
 
 @end
@@ -33,10 +34,10 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @dynamic parent;
 @dynamic delegates;
 
-- (instancetype)initWithStream:(NSStream *)stream {
+- (instancetype)initWithTimeout:(NSTimeInterval)timeout {
     self = super.init;
     if (self) {
-        self.stream = stream;
+        self.timeout = timeout;
     }
     return self;
 }
@@ -44,22 +45,31 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
     
-    [self.stream open];
-    while (!self.cancelled && (self.stream.streamStatus == NSStreamStatusOpening)) {
+    self.timer = [HLPClock.shared timerWithInterval:self.timeout repeats:1];
+    
+    [self.parent.stream open];
+    while (!self.cancelled && (self.parent.stream.streamStatus == NSStreamStatusOpening) && !self.timer.finished) {
         [NSThread sleepForTimeInterval:0.1];
     }
     
     if (self.cancelled) {
-    } else if (self.stream.streamStatus == NSStreamStatusOpen) {
-    } else if (self.stream.streamStatus == NSStreamStatusError) {
-        [self.errors addObject:self.stream.streamError];
+    } else if (self.parent.stream.streamStatus == NSStreamStatusOpen) {
+    } else if (self.parent.stream.streamStatus == NSStreamStatusError) {
+        [self.errors addObject:self.parent.stream.streamError];
     } else {
-        NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorOpening userInfo:nil];
+        NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorNotOpen userInfo:nil];
         [self.errors addObject:error];
     }
     
+    if (self.timer.finished) {
+        NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimeout userInfo:nil];
+        [self.errors addObject:error];
+    } else {
+        [self.timer cancel];
+    }
+    
     if (self.cancelled || (self.errors.count > 0)) {
-        self.closing = [self.parent closeStream:self.stream];
+        self.closing = [self.parent close];
         [self.closing waitUntilFinished];
     }
     
@@ -79,26 +89,19 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @interface HLPStreamClosing ()
 
-@property NSStream *stream;
-
 @end
 
 
 
 @implementation HLPStreamClosing
 
-- (instancetype)initWithStream:(NSStream *)stream {
-    self = super.init;
-    if (self) {
-        self.stream = stream;
-    }
-    return self;
-}
+@dynamic parent;
+@dynamic delegates;
 
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
     
-    [self.stream close];
+    [self.parent.stream close];
     
     [self updateState:HLPOperationStateDidEnd];
 }
@@ -150,24 +153,28 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     
     self.timer = [HLPClock.shared timerWithInterval:self.timeout repeats:1];
     
-    while (!self.cancelled && (self.parent.input.streamStatus == NSStreamStatusOpen) && (self.data.length < self.minLength) && (self.errors.count == 0) && !self.timer.finished) {
-        if (self.parent.input.hasBytesAvailable) {
+    while (!self.cancelled && (self.parent.stream.streamStatus == NSStreamStatusOpen) && (self.data.length < self.minLength) && (self.errors.count == 0) && !self.timer.finished) {
+        if (self.parent.stream.hasBytesAvailable) {
             NSUInteger length = self.maxLength - self.data.length;
             uint8_t buffer[length];
-            NSInteger result = [self.parent.input read:buffer maxLength:length];
+            NSInteger result = [self.parent.stream read:buffer maxLength:length];
             if (result > 0) {
                 [self.data appendBytes:buffer length:result];
                 
                 [self updateProgress:self.data.length];
             } else if (result == 0) {
-                NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorEOF userInfo:nil];
-                [self.errors addObject:error];
             } else {
-                [self.errors addObject:self.parent.input.streamError];
+                [self.errors addObject:self.parent.stream.streamError];
             }
         } else {
             [NSThread sleepForTimeInterval:0.1];
         }
+    }
+    
+    if (self.parent.stream.streamStatus == NSStreamStatusOpen) {
+    } else {
+        NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorNotOpen userInfo:nil];
+        [self.errors addObject:error];
     }
     
     if (self.timer.finished) {
@@ -223,9 +230,9 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     
     self.timer = [HLPClock.shared timerWithInterval:self.timeout repeats:1];
     
-    while (!self.cancelled && (self.parent.output.streamStatus == NSStreamStatusOpen) && (self.data.length > 0) && (self.errors.count == 0) && !self.timer.finished) {
-        if (self.parent.output.hasSpaceAvailable) {
-            NSInteger result = [self.parent.output write:self.data.bytes maxLength:self.data.length];
+    while (!self.cancelled && (self.parent.stream.streamStatus == NSStreamStatusOpen) && (self.data.length > 0) && (self.errors.count == 0) && !self.timer.finished) {
+        if (self.parent.stream.hasSpaceAvailable) {
+            NSInteger result = [self.parent.stream write:self.data.bytes maxLength:self.data.length];
             if (result > 0) {
                 NSRange range = NSMakeRange(0, result);
                 [self.data replaceBytesInRange:range withBytes:NULL length:0];
@@ -233,14 +240,18 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
                 int64_t completedUnitCount = self.progress.completedUnitCount - result;
                 [self updateProgress:completedUnitCount];
             } else if (result == 0) {
-                NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorEOF userInfo:nil];
-                [self.errors addObject:error];
             } else {
-                [self.errors addObject:self.parent.output.streamError];
+                [self.errors addObject:self.parent.stream.streamError];
             }
         } else {
             [NSThread sleepForTimeInterval:0.1];
         }
+    }
+    
+    if (self.parent.stream.streamStatus == NSStreamStatusOpen) {
+    } else {
+        NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorNotOpen userInfo:nil];
+        [self.errors addObject:error];
     }
     
     if (self.timer.finished) {
@@ -264,51 +275,51 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 
 
-@interface HLPStreams ()
-
-@property NSInputStream *input;
-@property NSOutputStream *output;
-
-@end
-
-
-
-@implementation HLPStreams
-
-- (instancetype)initWithInput:(NSInputStream *)input output:(NSOutputStream *)output {
-    self = super.init;
-    if (self) {
-        self.input = input;
-        self.output = output;
-    }
-    return self;
-}
-
-- (HLPStreamOpening *)openStream:(NSStream *)stream {
-    HLPStreamOpening *opening = [HLPStreamOpening.alloc initWithStream:stream];
-    [self addOperation:opening];
-    return opening;
-}
-
-- (HLPStreamOpening *)openStream:(NSStream *)stream completion:(HLPVoidBlock)completion {
-    HLPStreamOpening *opening = [self openStream:stream];
-    opening.completionBlock = completion;
-    return opening;
-}
-
-- (HLPStreamClosing *)closeStream:(NSStream *)stream {
-    HLPStreamClosing *closing = [HLPStreamClosing.alloc initWithStream:stream];
-    [self addOperation:closing];
-    return closing;
-}
-
-- (HLPStreamClosing *)closeStream:(NSStream *)stream completion:(HLPVoidBlock)completion {
-    HLPStreamClosing *closing = [self closeStream:stream];
-    closing.completionBlock = completion;
-    return closing;
-}
-
-@end
+//@interface HLPStreams ()
+//
+//@property NSInputStream *input;
+//@property NSOutputStream *output;
+//
+//@end
+//
+//
+//
+//@implementation HLPStreams
+//
+//- (instancetype)initWithInput:(NSInputStream *)input output:(NSOutputStream *)output {
+//    self = super.init;
+//    if (self) {
+//        self.input = input;
+//        self.output = output;
+//    }
+//    return self;
+//}
+//
+//- (HLPStreamOpening *)openStream:(NSStream *)stream {
+//    HLPStreamOpening *opening = [HLPStreamOpening.alloc initWithStream:stream];
+//    [self addOperation:opening];
+//    return opening;
+//}
+//
+//- (HLPStreamOpening *)openStream:(NSStream *)stream completion:(HLPVoidBlock)completion {
+//    HLPStreamOpening *opening = [self openStream:stream];
+//    opening.completionBlock = completion;
+//    return opening;
+//}
+//
+//- (HLPStreamClosing *)closeStream:(NSStream *)stream {
+//    HLPStreamClosing *closing = [HLPStreamClosing.alloc initWithStream:stream];
+//    [self addOperation:closing];
+//    return closing;
+//}
+//
+//- (HLPStreamClosing *)closeStream:(NSStream *)stream completion:(HLPVoidBlock)completion {
+//    HLPStreamClosing *closing = [self closeStream:stream];
+//    closing.completionBlock = completion;
+//    return closing;
+//}
+//
+//@end
 
 
 
@@ -329,7 +340,41 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @implementation HLPStream
 
+@dynamic delegates;
 
+- (instancetype)initWithStream:(NSStream *)stream {
+    self = super.init;
+    if (self) {
+        self.stream = stream;
+        
+        self.maxConcurrentOperationCount = 1;
+    }
+    return self;
+}
+
+- (HLPStreamOpening *)openWithTimeout:(NSTimeInterval)timeout {
+    HLPStreamOpening *opening = [HLPStreamOpening.alloc initWithTimeout:timeout];
+    [self addOperation:opening];
+    return opening;
+}
+
+- (HLPStreamOpening *)openWithTimeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion {
+    HLPStreamOpening *opening = [self openWithTimeout:timeout];
+    opening.completionBlock = completion;
+    return opening;
+}
+
+- (HLPStreamClosing *)close {
+    HLPStreamClosing *closing = HLPStreamClosing.new;
+    [self addOperation:closing];
+    return closing;
+}
+
+- (HLPStreamClosing *)closeWithCompletion:(HLPVoidBlock)completion {
+    HLPStreamClosing *closing = [self close];
+    closing.completionBlock = completion;
+    return closing;
+}
 
 @end
 
@@ -350,6 +395,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @implementation HLPInputStream
 
+@dynamic delegates;
 @dynamic stream;
 
 - (HLPStreamReading *)readData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout {
@@ -383,6 +429,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @implementation HLPOutputStream
 
+@dynamic delegates;
 @dynamic stream;
 
 - (HLPStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout {
