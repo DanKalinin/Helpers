@@ -264,6 +264,28 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 
+@protocol HLPStreamsMessagingDelegate <HLPStreamReadingDelegate, HLPStreamWritingDelegate>
+
+@end
+
+
+
+@interface HLPStreamsMessaging : HLPOperation <HLPStreamsMessagingDelegate>
+
+@property (readonly) HLPStreams *parent;
+@property (readonly) HLPArray<HLPStreamsMessagingDelegate> *delegates;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol HLPStreamsDelegate <HLPInputStreamDelegate, HLPOutputStreamDelegate>
 
 @end
@@ -284,6 +306,12 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 - (HLPStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout;
 - (HLPStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
+
+- (HLPStreamsClosing *)close;
+- (HLPStreamsClosing *)closeWithCompletion:(HLPVoidBlock)completion;
+
+- (void)startMessaging:(HLPStreamsMessaging *)messaging;
+- (void)startMessaging:(HLPStreamsMessaging *)messaging completion:(HLPVoidBlock)completion;
 
 @end
 
