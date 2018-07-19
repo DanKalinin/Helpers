@@ -497,28 +497,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 
 
-@interface HLPStreamsMessaging ()
-
-@end
-
-
-
-@implementation HLPStreamsMessaging
-
-@dynamic parent;
-@dynamic delegates;
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface HLPStreams ()
 
 @property HLPInputStream *input;
@@ -583,15 +561,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     HLPStreamsClosing *closing = [self close];
     closing.completionBlock = completion;
     return closing;
-}
-
-- (void)startMessaging:(HLPStreamsMessaging *)messaging {
-    [self addOperation:messaging];
-}
-
-- (void)startMessaging:(HLPStreamsMessaging *)messaging completion:(HLPVoidBlock)completion {
-    [self startMessaging:messaging];
-    messaging.completionBlock = completion;
 }
 
 @end
