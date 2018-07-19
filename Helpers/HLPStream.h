@@ -11,7 +11,7 @@
 #import "HLPTimer.h"
 
 @class HLPStreamOpening, HLPStreamClosing, HLPStreamReading, HLPStreamWriting, HLPStream, HLPInputStream, HLPOutputStream;
-@class HLPStreamsOpening, HLPStreamsClosing, HLPStreams;
+@class HLPStreamsOpening, HLPStreamsClosing, HLPStreamsMessaging, HLPStreams;
 
 extern NSErrorDomain const HLPStreamErrorDomain;
 
