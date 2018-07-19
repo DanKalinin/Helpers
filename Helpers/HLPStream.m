@@ -56,10 +56,9 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     } else if (self.timer.finished) {
         NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimeout userInfo:nil];
         [self.errors addObject:error];
-    } else if (self.parent.stream.streamStatus == NSStreamStatusOpen) {
     } else if (self.parent.stream.streamStatus == NSStreamStatusError) {
         [self.errors addObject:self.parent.stream.streamError];
-    } else {
+    } else if (self.parent.stream.streamStatus != NSStreamStatusOpen) {
         NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorNotOpen userInfo:nil];
         [self.errors addObject:error];
     }
@@ -169,10 +168,9 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     } else if (self.timer.finished) {
         NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimeout userInfo:nil];
         [self.errors addObject:error];
-    } else if (self.parent.stream.streamStatus == NSStreamStatusOpen) {
     } else if (self.parent.stream.streamStatus == NSStreamStatusError) {
         [self.errors addObject:self.parent.stream.streamError];
-    } else {
+    } else if (self.parent.stream.streamStatus != NSStreamStatusOpen) {
         NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorNotOpen userInfo:nil];
         [self.errors addObject:error];
     }
@@ -244,10 +242,9 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     } else if (self.timer.finished) {
         NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimeout userInfo:nil];
         [self.errors addObject:error];
-    } else if (self.parent.stream.streamStatus == NSStreamStatusOpen) {
     } else if (self.parent.stream.streamStatus == NSStreamStatusError) {
         [self.errors addObject:self.parent.stream.streamError];
-    } else {
+    } else if (self.parent.stream.streamStatus != NSStreamStatusOpen) {
         NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorNotOpen userInfo:nil];
         [self.errors addObject:error];
     }
@@ -423,15 +420,15 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     
     self.opening = [self.parent.input openWithTimeout:self.timeout];
     [self.opening waitUntilFinished];
-    if (self.opening.errors.count > 0) {
-    } else if (self.opening.cancelled) {
+    if (self.opening.cancelled) {
+    } else if (self.opening.errors.count > 0) {
     } else {
         [self updateProgress:1];
         
         self.opening = [self.parent.output openWithTimeout:self.timeout];
         [self.opening waitUntilFinished];
-        if (self.opening.errors.count > 0) {
-        } else if (self.opening.cancelled) {
+        if (self.opening.cancelled) {
+        } else if (self.opening.errors.count > 0) {
         } else {
             [self updateProgress:2];
         }
