@@ -58,25 +58,23 @@
 
 @interface HLPRPC : HLPOperation
 
+@property (readonly) HLPStreams *streams;
+@property (readonly) HLPRPCMessageReading *reading;
 
+- (instancetype)initWithStreams:(HLPStreams *)streams;
 
-@end
+- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message;
+- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
 
-
-
-
-
-
-
-
-
-
-@interface HLPRPCStreams : HLPStreams
-
-- (HLPRPC *)startRPC;
-- (HLPRPC *)startRPCWithCompletion:(HLPVoidBlock)completion;
+- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
+- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
 
 @end
+
+
+
+
+
 
 
 

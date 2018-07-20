@@ -9,15 +9,42 @@
 
 
 
-@interface HLPRPCStreams ()
+
+
+
+
+
+
+
+@interface HLPRPC ()
+
+@property HLPStreams *streams;
+@property HLPRPCMessageReading *reading;
 
 @end
 
 
 
-@implementation HLPRPCStreams
+@implementation HLPRPC
+
+- (instancetype)initWithStreams:(HLPStreams *)streams {
+    self = super.init;
+    if (self) {
+        self.streams = streams;
+        [self.streams.delegates addObject:self.delegates];
+    }
+    return self;
+}
+
+- (void)main {
+    
+}
 
 @end
+
+
+
+
 
 
 

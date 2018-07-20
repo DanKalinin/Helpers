@@ -529,11 +529,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     return streams;
 }
 
-+ (instancetype)streamsWithStreams:(HLPStreams *)streams {
-    streams = [HLPStreams.alloc initWithInput:streams.input output:streams.output];
-    return streams;
-}
-
 - (instancetype)initWithInput:(HLPInputStream *)input output:(HLPOutputStream *)output {
     self = super.init;
     if (self) {
