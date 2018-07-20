@@ -34,7 +34,13 @@
 
 
 
-@interface HLPRPCMessageReading : HLPOperation
+@protocol HLPRPCMessageReadingDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPRPCMessageReading : HLPOperation <HLPRPCMessageReadingDelegate>
 
 @property HLPStreamReading *reading;
 
@@ -53,7 +59,13 @@
 
 
 
-@interface HLPRPCMessageWriting : HLPOperation
+@protocol HLPRPCMessageWritingDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPRPCMessageWriting : HLPOperation <HLPRPCMessageWritingDelegate>
 
 @property HLPStreamWriting *writing;
 
@@ -74,7 +86,13 @@
 
 
 
-@interface HLPRPC : HLPOperation
+@protocol HLPRPCDelegate <HLPStreamsDelegate, HLPRPCMessageReadingDelegate, HLPRPCMessageWritingDelegate>
+
+@end
+
+
+
+@interface HLPRPC : HLPOperation <HLPRPCDelegate>
 
 @property (readonly) HLPStreams *streams;
 @property (readonly) HLPRPCMessageReading *reading;
