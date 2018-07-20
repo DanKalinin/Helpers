@@ -51,10 +51,10 @@
 
 @interface HLPRPCMessageWriting : HLPOperation
 
-@property (readonly) HLPRPCMessage *request;
+@property (readonly) HLPRPCMessage *message;
 @property (readonly) HLPRPCMessage *response;
 
-- (instancetype)initWithRequest:(HLPRPCMessage *)request;
+- (instancetype)initWithMessage:(HLPRPCMessage *)message;
 - (void)endWithResponse:(HLPRPCMessage *)response;
 
 @end
@@ -78,8 +78,8 @@
 - (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message;
 - (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
 
-- (HLPRPCMessageWriting *)writeRequest:(HLPRPCMessage *)request;
-- (HLPRPCMessageWriting *)writeRequest:(HLPRPCMessage *)request completion:(HLPVoidBlock)completion;
+- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
+- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
 
 @end
 
