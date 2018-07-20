@@ -67,6 +67,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     
     if (self.cancelled || (self.errors.count > 0)) {
         self.closing = [self.parent close];
+        [self.closing waitUntilFinished];
     }
     
     [self updateState:HLPOperationStateDidEnd];
@@ -281,8 +282,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     self = super.init;
     if (self) {
         self.stream = stream;
-        
-        self.maxConcurrentOperationCount = 1;
     }
     return self;
 }
