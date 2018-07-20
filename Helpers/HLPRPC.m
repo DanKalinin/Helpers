@@ -16,6 +16,63 @@
 
 
 
+@interface HLPRPCMessage ()
+
+@end
+
+
+
+@implementation HLPRPCMessage
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPRPCMessageReading ()
+
+@end
+
+
+
+@implementation HLPRPCMessageReading
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPRPCMessageWriting ()
+
+@end
+
+
+
+@implementation HLPRPCMessageWriting
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface HLPRPC ()
 
 @property HLPStreams *streams;
@@ -36,8 +93,29 @@
     return self;
 }
 
+- (void)start {
+    [NSThread detachNewThreadWithBlock:^{
+        [self main];
+    }];
+}
+
 - (void)main {
+    [self updateState:HLPOperationStateDidBegin];
     
+    while (!self.cancelled && (self.errors.count == 0)) {
+        HLPRPCMessage *message = HLPRPCMessage.new;
+        self.reading = [self readMessage:message];
+        [self.reading waitUntilFinished];
+        [self.errors addObjectsFromArray:self.reading.errors];
+    }
+    
+    [self updateState:HLPOperationStateDidEnd];
+}
+
+- (void)cancel {
+    [super cancel];
+    
+    [self.reading cancel];
 }
 
 @end
