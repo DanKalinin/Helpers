@@ -37,11 +37,21 @@
 
 @interface HLPRPCMessageReading ()
 
+@property HLPRPCMessage *message;
+
 @end
 
 
 
 @implementation HLPRPCMessageReading
+
+- (instancetype)initWithMessage:(HLPRPCMessage *)message {
+    self = super.init;
+    if (self) {
+        self.message = message;
+    }
+    return self;
+}
 
 @end
 

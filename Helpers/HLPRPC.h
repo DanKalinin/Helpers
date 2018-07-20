@@ -19,6 +19,8 @@
 
 @interface HLPRPCMessage : HLPObject
 
+@property NSMutableData *data;
+
 @end
 
 
@@ -32,6 +34,10 @@
 
 @interface HLPRPCMessageReading : HLPOperation
 
+@property (readonly) HLPRPCMessage *message;
+
+- (instancetype)initWithMessage:(HLPRPCMessage *)message;
+
 @end
 
 
@@ -44,6 +50,12 @@
 
 
 @interface HLPRPCMessageWriting : HLPOperation
+
+@property (readonly) HLPRPCMessage *request;
+@property (readonly) HLPRPCMessage *response;
+
+- (instancetype)initWithRequest:(HLPRPCMessage *)request;
+- (void)endWithResponse:(HLPRPCMessage *)response;
 
 @end
 
@@ -66,8 +78,8 @@
 - (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message;
 - (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
 
-- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
-- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+- (HLPRPCMessageWriting *)writeRequest:(HLPRPCMessage *)request;
+- (HLPRPCMessageWriting *)writeRequest:(HLPRPCMessage *)request completion:(HLPVoidBlock)completion;
 
 @end
 
