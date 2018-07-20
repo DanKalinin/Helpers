@@ -66,11 +66,26 @@
 
 @interface HLPRPCMessageWriting ()
 
+@property HLPRPCMessage *message;
+@property HLPRPCMessage *response;
+
 @end
 
 
 
 @implementation HLPRPCMessageWriting
+
+- (instancetype)initWithMessage:(HLPRPCMessage *)message {
+    self = super.init;
+    if (self) {
+        self.message = message;
+    }
+    return self;
+}
+
+- (void)endWithResponse:(HLPRPCMessage *)response {
+    self.response = response;
+}
 
 @end
 

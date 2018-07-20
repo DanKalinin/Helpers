@@ -8,6 +8,8 @@
 #import <Foundation/Foundation.h>
 #import "HLPStream.h"
 
+@class HLPRPCMessage, HLPRPCMessageReading, HLPRPCMessageWriting, HLPRPC;
+
 
 
 
@@ -34,6 +36,8 @@
 
 @interface HLPRPCMessageReading : HLPOperation
 
+@property HLPStreamReading *reading;
+
 @property (readonly) HLPRPCMessage *message;
 
 - (instancetype)initWithMessage:(HLPRPCMessage *)message;
@@ -50,6 +54,8 @@
 
 
 @interface HLPRPCMessageWriting : HLPOperation
+
+@property HLPStreamWriting *writing;
 
 @property (readonly) HLPRPCMessage *message;
 @property (readonly) HLPRPCMessage *response;
