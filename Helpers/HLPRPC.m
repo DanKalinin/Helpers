@@ -143,6 +143,30 @@
     [self.reading cancel];
 }
 
+- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message {
+    HLPRPCMessageReading *reading = [HLPRPCMessageReading.alloc initWithMessage:message];
+    [self addOperation:reading];
+    return reading;
+}
+
+- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion {
+    HLPRPCMessageReading *reading = [self readMessage:message];
+    reading.completionBlock = completion;
+    return reading;
+}
+
+- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message {
+    HLPRPCMessageWriting *writing = [HLPRPCMessageWriting.alloc initWithMessage:message];
+    [self addOperation:writing];
+    return writing;
+}
+
+- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion {
+    HLPRPCMessageWriting *writing = [self writeMessage:message];
+    writing.completionBlock = completion;
+    return writing;
+}
+
 @end
 
 
