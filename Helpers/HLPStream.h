@@ -299,6 +299,62 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 
+@interface HLPStreamsRPC : HLPOperation
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPStreamsRPCWriting : HLPOperation
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPStreamsRPCMessage : HLPObject
+
+@property HLPStreamReading *reading;
+@property HLPStreamWriting *writing;
+
+- (void)readFromStream:(HLPInputStream *)input errors:(NSMutableArray<NSError *> *)errors;
+- (void)writeToStream:(HLPOutputStream *)output errors:(NSMutableArray<NSError *> *)errors;
+
+@end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
