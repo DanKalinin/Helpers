@@ -49,6 +49,7 @@
 @property (readonly) HLPRPCMessage *message;
 
 - (instancetype)initWithMessage:(HLPRPCMessage *)message;
+- (void)read;
 
 @end
 
@@ -75,9 +76,11 @@
 @property (readonly) HLPArray<HLPRPCMessageWritingDelegate> *delegates;
 @property (readonly) HLPRPCMessage *message;
 @property (readonly) HLPRPCMessage *response;
+@property (readonly) HLPTimer *timer;
 
 - (instancetype)initWithMessage:(HLPRPCMessage *)message;
 - (void)endWithResponse:(HLPRPCMessage *)response;
+- (void)write;
 
 @end
 
@@ -97,6 +100,8 @@
 
 
 @interface HLPRPC : HLPOperation <HLPRPCDelegate>
+
+@property NSTimeInterval timeout;
 
 @property (readonly) HLPStreams *streams;
 @property (readonly) HLPRPCMessageReading *reading;

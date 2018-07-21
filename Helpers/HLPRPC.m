@@ -71,6 +71,7 @@
 
 @property HLPRPCMessage *message;
 @property HLPRPCMessage *response;
+@property HLPTimer *timer;
 
 @end
 
@@ -91,6 +92,14 @@
 
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
+    
+    [self write];
+    if (self.cancelled) {
+    } else if (self.errors.count > 0) {
+    } else {
+        self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
+        [self.timer waitUntilFinished];
+    }
     
     [self updateState:HLPOperationStateDidEnd];
 }
@@ -128,6 +137,8 @@
     if (self) {
         self.streams = streams;
         [self.streams.delegates addObject:self.delegates];
+        
+        self.timeout = 30.0;
     }
     return self;
 }
