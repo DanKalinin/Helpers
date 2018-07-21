@@ -10,6 +10,13 @@
 
 @class HLPRPCMessage, HLPRPCMessageReading, HLPRPCMessageWriting, HLPRPC;
 
+extern NSErrorDomain const HLPRPCErrorDomain;
+
+NS_ERROR_ENUM(HLPRPCErrorDomain) {
+    HLPRPCErrorUnknown,
+    HLPRPCErrorTimeout
+};
+
 
 
 
@@ -21,7 +28,9 @@
 
 @interface HLPRPCMessage : HLPObject
 
-@property NSMutableData *data;
+@property BOOL needsResponse;
+@property NSString *identifier;
+@property NSString *responseIdentifier;
 
 @end
 
@@ -105,6 +114,7 @@
 
 @property (readonly) HLPStreams *streams;
 @property (readonly) HLPRPCMessageReading *reading;
+@property (readonly) HLPDictionary<NSString *, HLPRPCMessageWriting *> *writings;
 
 - (instancetype)initWithStreams:(HLPStreams *)streams;
 

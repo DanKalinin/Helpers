@@ -7,6 +7,8 @@
 
 #import "HLPRPC.h"
 
+NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
+
 
 
 
@@ -96,17 +98,36 @@
     [self write];
     if (self.cancelled) {
     } else if (self.errors.count > 0) {
-    } else {
+    } else if (self.message.needsResponse) {
+        self.parent.writings[self.message.identifier] = self;
+        
         self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
         [self.timer waitUntilFinished];
+        if (self.timer.cancelled) {
+        } else {
+            NSError *error = [NSError errorWithDomain:HLPRPCErrorDomain code:HLPRPCErrorTimeout userInfo:nil];
+            [self.errors addObject:error];
+        }
     }
     
     [self updateState:HLPOperationStateDidEnd];
 }
 
+- (void)cancel {
+    [super cancel];
+    
+    [self.writing cancel];
+    [self.timer cancel];
+}
+
+- (void)write {
+}
+
 #pragma mark - Helpers
 
 - (void)endWithResponse:(HLPRPCMessage *)response {
+    [self.timer cancel];
+    
     self.response = response;
 }
 
@@ -125,6 +146,7 @@
 
 @property HLPStreams *streams;
 @property HLPRPCMessageReading *reading;
+@property HLPDictionary<NSString *, HLPRPCMessageWriting *> *writings;
 
 @end
 
@@ -137,6 +159,8 @@
     if (self) {
         self.streams = streams;
         [self.streams.delegates addObject:self.delegates];
+        
+        self.writings = HLPDictionary.strongToWeakDictionary;
         
         self.timeout = 30.0;
     }
