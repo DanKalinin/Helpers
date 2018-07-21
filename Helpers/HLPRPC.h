@@ -44,6 +44,8 @@
 
 @property HLPStreamReading *reading;
 
+@property (readonly) HLPRPC *parent;
+@property (readonly) HLPArray<HLPRPCMessageReadingDelegate> *delegates;
 @property (readonly) HLPRPCMessage *message;
 
 - (instancetype)initWithMessage:(HLPRPCMessage *)message;
@@ -69,6 +71,8 @@
 
 @property HLPStreamWriting *writing;
 
+@property (readonly) HLPRPC *parent;
+@property (readonly) HLPArray<HLPRPCMessageWritingDelegate> *delegates;
 @property (readonly) HLPRPCMessage *message;
 @property (readonly) HLPRPCMessage *response;
 

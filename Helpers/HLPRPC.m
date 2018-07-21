@@ -45,6 +45,9 @@
 
 @implementation HLPRPCMessageReading
 
+@dynamic parent;
+@dynamic delegates;
+
 - (instancetype)initWithMessage:(HLPRPCMessage *)message {
     self = super.init;
     if (self) {
@@ -75,6 +78,9 @@
 
 @implementation HLPRPCMessageWriting
 
+@dynamic parent;
+@dynamic delegates;
+
 - (instancetype)initWithMessage:(HLPRPCMessage *)message {
     self = super.init;
     if (self) {
@@ -82,6 +88,14 @@
     }
     return self;
 }
+
+- (void)main {
+    [self updateState:HLPOperationStateDidBegin];
+    
+    [self updateState:HLPOperationStateDidEnd];
+}
+
+#pragma mark - Helpers
 
 - (void)endWithResponse:(HLPRPCMessage *)response {
     self.response = response;
