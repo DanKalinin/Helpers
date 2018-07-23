@@ -58,6 +58,11 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     return self;
 }
 
+- (void)main {
+    NSLog(@"1");
+    [NSThread sleepForTimeInterval:1.0];
+}
+
 @end
 
 
@@ -118,6 +123,8 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
         self.streams = streams;
         [self.streams.delegates addObject:self.delegates];
         
+        self.messageReadingClass = HLPRPCMessageReading.class;
+        self.messageWritingClass = HLPRPCMessageWriting.class;
         self.timeout = 30.0;
     }
     return self;
@@ -142,7 +149,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 - (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message {
-    HLPRPCMessageReading *reading = [HLPRPCMessageReading.alloc initWithMessage:message];
+    HLPRPCMessageReading *reading = [self.messageReadingClass.alloc initWithMessage:message];
     [self addOperation:reading];
     return reading;
 }
@@ -154,7 +161,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 - (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message {
-    HLPRPCMessageWriting *writing = [HLPRPCMessageWriting.alloc initWithMessage:message];
+    HLPRPCMessageWriting *writing = [self.messageWritingClass.alloc initWithMessage:message];
     [self addOperation:writing];
     return writing;
 }

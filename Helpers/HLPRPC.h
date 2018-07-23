@@ -53,8 +53,6 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @interface HLPRPCMessageReading : HLPOperation <HLPRPCMessageReadingDelegate>
 
-@property HLPStreamReading *reading;
-
 @property (readonly) HLPRPC *parent;
 @property (readonly) HLPArray<HLPRPCMessageReadingDelegate> *delegates;
 @property (readonly) HLPRPCMessage *message;
@@ -79,8 +77,6 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 
 @interface HLPRPCMessageWriting : HLPOperation <HLPRPCMessageWritingDelegate>
-
-@property HLPStreamWriting *writing;
 
 @property (readonly) HLPRPC *parent;
 @property (readonly) HLPArray<HLPRPCMessageWritingDelegate> *delegates;
@@ -107,6 +103,8 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @interface HLPRPC : HLPOperation <HLPRPCDelegate>
 
+@property Class messageReadingClass;
+@property Class messageWritingClass;
 @property NSTimeInterval timeout;
 
 @property (readonly) HLPStreams *streams;
@@ -114,11 +112,11 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 - (instancetype)initWithStreams:(HLPStreams *)streams;
 
-- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message;
-- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+- (__kindof HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message;
+- (__kindof HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
 
-- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
-- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+- (__kindof HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
+- (__kindof HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
 
 @end
 
