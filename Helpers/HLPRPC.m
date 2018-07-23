@@ -101,7 +101,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@interface HLPRPCPayloadWriting ()
+@interface HLPRPCRequestSending ()
 
 @property id request;
 @property id response;
@@ -110,13 +110,14 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@implementation HLPRPCPayloadWriting
+@implementation HLPRPCRequestSending
 
 - (instancetype)initWithRequest:(id)request {
     self = super.init;
     if (self) {
         self.request = request;
     }
+    return self;
 }
 
 - (void)main {
@@ -167,7 +168,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
         
         self.messageReadingClass = HLPRPCMessageReading.class;
         self.messageWritingClass = HLPRPCMessageWriting.class;
-        self.payloadWritingClass = HLPRPCPayloadWriting.class;
+        self.requestSendingClass = HLPRPCRequestSending.class;
         self.timeout = 30.0;
     }
     return self;
@@ -213,16 +214,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     HLPRPCMessageWriting *writing = [self writeMessage:message];
     writing.completionBlock = completion;
     return writing;
-}
-
-- (HLPRPCRequestWriting *)writeRequest:(id)request {
-    HLPRPCPayloadWriting *writing = [self.payloadWritingClass.alloc initWithRequest:payload];
-    [self addOperation:writing];
-    return writing;
-}
-
-- (HLPRPCPayloadWriting *)writePayload:(id)payload completion:(HLPVoidBlock)completion {
-    
 }
 
 @end
