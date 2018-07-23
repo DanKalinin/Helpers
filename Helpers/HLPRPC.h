@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "HLPStream.h"
 
-@class HLPRPCMessage, HLPRPCMessageReading, HLPRPCMessageWriting, HLPRPC;
+@class HLPRPCMessage, HLPRPCMessageReading, HLPRPCMessageWriting, HLPRPCRequestWriting, HLPRPC;
 
 extern NSErrorDomain const HLPRPCErrorDomain;
 
@@ -95,6 +95,31 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 
 
+@protocol HLPRPCRequestWritingDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPRPCRequestWriting : HLPOperation <HLPRPCRequestWritingDelegate>
+
+@property (readonly) id request;
+@property (readonly) id response;
+
+- (instancetype)initWithRequest:(id)request;
+- (void)endWithResponse:(id)response error:(NSError *)error;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol HLPRPCDelegate <HLPStreamsDelegate, HLPRPCMessageReadingDelegate, HLPRPCMessageWritingDelegate>
 
 @end
@@ -105,6 +130,7 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @property Class messageReadingClass;
 @property Class messageWritingClass;
+@property Class requestWritingClass;
 @property NSTimeInterval timeout;
 
 @property (readonly) HLPStreams *streams;
@@ -117,6 +143,9 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 - (__kindof HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
 - (__kindof HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+
+- (__kindof HLPRPCRequestWriting *)writeRequest:(id)request;
+- (__kindof HLPRPCRequestWriting *)writeRequest:(id)request completion:(HLPVoidBlock)completion;
 
 @end
 
