@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "HLPStream.h"
 
-@class HLPRPCMessage, HLPRPCMessageReading, HLPRPCMessageWriting, HLPRPCIncomingCall, HLPRPCOutgoingCall, HLPRPC;
+@class HLPRPCMessage, HLPRPCMessageReading, HLPRPCMessageWriting, HLPRPC;
 
 extern NSErrorDomain const HLPRPCErrorDomain;
 
@@ -31,9 +31,6 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property NSString *identifier;
 @property NSString *responseIdentifier;
 @property BOOL needsResponse;
-@property NSError *error;
-@property id procedure;
-@property id response;
 
 @end
 
@@ -100,59 +97,7 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 
 
-@protocol HLPRPCIncomingCallDelegate <HLPOperationDelegate>
-
-@end
-
-
-
-@interface HLPRPCIncomingCall : HLPOperation <HLPRPCIncomingCallDelegate>
-
-@property (readonly) id procedure;
-
-- (instancetype)initWithProcedure:(id)procedure;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@protocol HLPRPCOutgoingCallDelegate <HLPOperationDelegate>
-
-@end
-
-
-
-@interface HLPRPCOutgoingCall : HLPOperation <HLPRPCOutgoingCallDelegate>
-
-@property (readonly) HLPRPC *parent;
-@property (readonly) HLPArray<HLPRPCOutgoingCallDelegate> *delegates;
-@property (readonly) id procedure;
-@property (readonly) id response;
-@property (readonly) HLPRPCMessageWriting *writing;
-@property (readonly) HLPTimer *timer;
-
-- (instancetype)initWithProcedure:(id)procedure;
-- (void)endWithResponse:(id)response error:(NSError *)error;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@protocol HLPRPCDelegate <HLPStreamsDelegate, HLPRPCMessageReadingDelegate, HLPRPCMessageWritingDelegate, HLPRPCIncomingCallDelegate, HLPRPCOutgoingCallDelegate>
+@protocol HLPRPCDelegate <HLPStreamsDelegate, HLPRPCMessageReadingDelegate, HLPRPCMessageWritingDelegate>
 
 @end
 
@@ -164,7 +109,6 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @property (readonly) HLPStreams *streams;
 @property (readonly) HLPRPCMessageReading *reading;
-@property (readonly) HLPDictionary<NSString *, HLPRPCOutgoingCall *> *outgoingCalls;
 
 - (instancetype)initWithStreams:(HLPStreams *)streams;
 
@@ -173,12 +117,6 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 - (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
 - (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
-
-- (HLPRPCIncomingCall *)incomingCall:(id)procedure;
-- (HLPRPCIncomingCall *)incomingCall:(id)procedure completion:(HLPVoidBlock)completion;
-
-- (HLPRPCOutgoingCall *)outgoingCall:(id)procedure;
-- (HLPRPCOutgoingCall *)outgoingCall:(id)procedure completion:(HLPVoidBlock)completion;
 
 @end
 

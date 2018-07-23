@@ -101,127 +101,10 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@interface HLPRPCIncomingCall ()
-
-@property id procedure;
-
-@end
-
-
-
-@implementation HLPRPCIncomingCall
-
-- (instancetype)initWithProcedure:(id)procedure {
-    self = super.init;
-    if (self) {
-        self.procedure = procedure;
-    }
-    return self;
-}
-
-- (void)main {
-    [self updateState:HLPOperationStateDidBegin];
-    
-    
-    [self updateState:HLPOperationStateDidBegin];
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface HLPRPCOutgoingCall ()
-
-@property id procedure;
-@property id response;
-@property HLPRPCMessageWriting *writing;
-@property HLPTimer *timer;
-
-@end
-
-
-
-@implementation HLPRPCOutgoingCall
-
-@dynamic parent;
-@dynamic delegates;
-
-- (instancetype)initWithProcedure:(id)procedure {
-    self = super.init;
-    if (self) {
-        self.procedure = procedure;
-    }
-    return self;
-}
-
-- (void)main {
-    [self updateState:HLPOperationStateDidBegin];
-    
-    HLPRPCMessage *message = HLPRPCMessage.new;
-    // Set serial
-    self.writing = [self.parent writeMessage:message];
-    [self.writing waitUntilFinished];
-    if (self.writing.cancelled) {
-    } else if (self.writing.errors.count > 0) {
-        [self.errors addObjectsFromArray:self.writing.errors];
-    } else {
-        if (message.needsResponse) {
-            self.parent.outgoingCalls[message.identifier] = self;
-            self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
-            [self.timer waitUntilFinished];
-            if (self.timer.cancelled) {
-            } else {
-                NSError *error = [NSError errorWithDomain:HLPRPCErrorDomain code:HLPRPCErrorTimeout userInfo:nil];
-                [self.errors addObject:error];
-            }
-        }
-    }
-    
-    [self updateState:HLPOperationStateDidBegin];
-}
-
-- (void)cancel {
-    [super cancel];
-    
-    [self.writing cancel];
-    [self.timer cancel];
-}
-
-#pragma mark - Helpers
-
-- (void)endWithResponse:(id)response error:(NSError *)error {
-    [self.timer cancel];
-    
-    if (error) {
-        [self.errors addObject:error];
-    } else {
-        self.response = response;
-    }
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface HLPRPC ()
 
 @property HLPStreams *streams;
 @property HLPRPCMessageReading *reading;
-@property HLPDictionary *outgoingCalls;
 
 @end
 
@@ -234,8 +117,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     if (self) {
         self.streams = streams;
         [self.streams.delegates addObject:self.delegates];
-        
-        self.outgoingCalls = HLPDictionary.strongToWeakDictionary;
         
         self.timeout = 30.0;
     }
@@ -282,30 +163,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     HLPRPCMessageWriting *writing = [self writeMessage:message];
     writing.completionBlock = completion;
     return writing;
-}
-
-- (HLPRPCIncomingCall *)incomingCall:(id)procedure {
-    HLPRPCIncomingCall *call = [HLPRPCIncomingCall.alloc initWithProcedure:procedure];
-    [self addOperation:call];
-    return call;
-}
-
-- (HLPRPCIncomingCall *)incomingCall:(id)procedure completion:(HLPVoidBlock)completion {
-    HLPRPCIncomingCall *call = [self incomingCall:procedure];
-    call.completionBlock = completion;
-    return call;
-}
-
-- (HLPRPCOutgoingCall *)outgoingCall:(id)procedure {
-    HLPRPCOutgoingCall *call = [HLPRPCOutgoingCall.alloc initWithProcedure:procedure];
-    [self addOperation:call];
-    return call;
-}
-
-- (HLPRPCOutgoingCall *)outgoingCall:(id)procedure completion:(HLPVoidBlock)completion {
-    HLPRPCOutgoingCall *call = [self outgoingCall:procedure];
-    call.completionBlock = completion;
-    return call;
 }
 
 @end
