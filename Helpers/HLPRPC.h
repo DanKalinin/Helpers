@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "HLPStream.h"
 
-@class HLPRPCMessage, HLPRPCMessageReading, HLPRPCMessageWriting, HLPRPCRequestSending, HLPRPC;
+@class HLPRPCMessage, HLPRPCMessageReading, HLPRPCMessageWriting, HLPRPCRequestReceiving, HLPRPCRequestSending, HLPRPC;
 
 extern NSErrorDomain const HLPRPCErrorDomain;
 
@@ -99,6 +99,36 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 
 
+@protocol HLPRPCRequestReceivingDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPRPCRequestReceiving : HLPOperation <HLPRPCRequestReceivingDelegate>
+
+@property (readonly) HLPRPC *parent;
+@property (readonly) HLPArray<HLPRPCRequestReceivingDelegate> *delegates;
+@property (readonly) HLPRPCMessage *message;
+@property (readonly) id request;
+@property (readonly) id response;
+@property (readonly) HLPTimer *timer;
+@property (readonly) HLPRPCMessageWriting *writing;
+
+- (instancetype)initWithMessage:(HLPRPCMessage *)message;
+- (void)endWithResponse:(id)response error:(NSError *)error;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol HLPRPCRequestSendingDelegate <HLPOperationDelegate>
 
 @end
@@ -128,7 +158,7 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 
 
-@protocol HLPRPCDelegate <HLPStreamsDelegate, HLPRPCMessageReadingDelegate, HLPRPCMessageWritingDelegate>
+@protocol HLPRPCDelegate <HLPStreamsDelegate, HLPRPCMessageReadingDelegate, HLPRPCMessageWritingDelegate, HLPRPCRequestReceivingDelegate, HLPRPCRequestSendingDelegate>
 
 @end
 
@@ -138,6 +168,7 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @property Class messageReadingClass;
 @property Class messageWritingClass;
+@property Class requestReceivingClass;
 @property Class requestSendingClass;
 @property NSTimeInterval timeout;
 
@@ -152,6 +183,9 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 - (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
 - (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+
+- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message;
+- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
 
 - (HLPRPCRequestSending *)sendRequest:(id)request;
 - (HLPRPCRequestSending *)sendRequest:(id)request completion:(HLPVoidBlock)completion;

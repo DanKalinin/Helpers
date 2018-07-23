@@ -101,6 +101,87 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
+@interface HLPRPCRequestReceiving ()
+
+@property HLPRPCMessage *message;
+@property id request;
+@property id response;
+@property HLPTimer *timer;
+@property HLPRPCMessageWriting *writing;
+
+@end
+
+
+
+@implementation HLPRPCRequestReceiving
+
+@dynamic parent;
+@dynamic delegates;
+
+- (instancetype)initWithMessage:(HLPRPCMessage *)message {
+    self = super.init;
+    if (self) {
+        self.message = message;
+    }
+    return self;
+}
+
+- (void)main {
+    self.request = self.message.payload;
+    
+    [self updateState:HLPOperationStateDidBegin];
+    
+    if (self.message.needsResponse) {
+        self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
+        [self.timer waitUntilFinished];
+        if (self.cancelled) {
+        } else if (self.timer.cancelled) {
+            HLPRPCMessage *message = HLPRPCMessage.new;
+            message.responseIdentifier = self.message.identifier;
+            message.error = self.errors.firstObject;
+            message.payload = self.response;
+            self.writing = [self.parent writeMessage:message];
+            [self.writing waitUntilFinished];
+            [self.errors addObjectsFromArray:self.writing.errors];
+        } else {
+            NSError *error = [NSError errorWithDomain:HLPRPCErrorDomain code:HLPRPCErrorTimeout userInfo:nil];
+            [self.errors addObject:error];
+        }
+    }
+    
+    [self updateState:HLPOperationStateDidEnd];
+}
+
+- (void)cancel {
+    [super cancel];
+    
+    [self.timer cancel];
+    [self.writing cancel];
+}
+
+#pragma mark - Helpers
+
+- (void)endWithResponse:(id)response error:(NSError *)error {
+    [self.timer cancel];
+    
+    if (error) {
+        [self.errors addObject:error];
+    } else {
+        self.response = response;
+    }
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface HLPRPCRequestSending ()
 
 @property id request;
@@ -133,16 +214,16 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     message.payload = self.request;
     self.writing = [self.parent writeMessage:message];
     [self.writing waitUntilFinished];
+    [self.errors addObjectsFromArray:self.writing.errors];
     if (self.writing.cancelled) {
     } else if (self.writing.errors.count > 0) {
-        [self.errors addObjectsFromArray:self.writing.errors];
     } else {
         if (message.needsResponse) {
             self.parent.sentRequest[message.identifier] = self;
             self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
             [self.timer waitUntilFinished];
-            if (self.timer.cancelled) {
-            } else {
+            if (self.cancelled) {
+            } else if (!self.timer.cancelled) {
                 NSError *error = [NSError errorWithDomain:HLPRPCErrorDomain code:HLPRPCErrorTimeout userInfo:nil];
                 [self.errors addObject:error];
             }
@@ -204,6 +285,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
         
         self.messageReadingClass = HLPRPCMessageReading.class;
         self.messageWritingClass = HLPRPCMessageWriting.class;
+        self.requestReceivingClass = HLPRPCRequestReceiving.class;
         self.requestSendingClass = HLPRPCRequestSending.class;
         self.timeout = 30.0;
     }
@@ -223,12 +305,15 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
         HLPRPCMessage *message = HLPRPCMessage.new;
         self.reading = [self readMessage:message];
         [self.reading waitUntilFinished];
+        [self.errors addObjectsFromArray:self.reading.errors];
         if (self.reading.cancelled) {
         } else if (self.reading.errors.count > 0) {
         } else {
             if (message.responseIdentifier.length > 0) {
                 HLPRPCRequestSending *sending = self.sentRequest[message.responseIdentifier];
                 [sending endWithResponse:message.payload error:message.error];
+            } else {
+                [self receiveRequest:message];
             }
         }
     }
@@ -258,6 +343,18 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     HLPRPCMessageWriting *writing = [self writeMessage:message];
     writing.completionBlock = completion;
     return writing;
+}
+
+- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message {
+    HLPRPCRequestReceiving *receiving = [self.requestReceivingClass.alloc initWithMessage:message];
+    [self addOperation:receiving];
+    return receiving;
+}
+
+- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion {
+    HLPRPCRequestReceiving *receiving = [self receiveRequest:message];
+    receiving.completionBlock = completion;
+    return receiving;
 }
 
 - (HLPRPCRequestSending *)sendRequest:(id)request {
