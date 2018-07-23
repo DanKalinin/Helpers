@@ -255,14 +255,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
         HLPRPCMessage *message = HLPRPCMessage.new;
         self.reading = [self readMessage:message];
         [self.reading waitUntilFinished];
-        if (self.reading.cancelled) {
-        } else if (self.reading.errors.count > 0) {
-            [self.errors addObjectsFromArray:self.reading.errors];
-        } else {
-            if (message.needsResponse) {
-                
-            }
-        }
     }
     
     [self updateState:HLPOperationStateDidEnd];
@@ -307,6 +299,12 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 - (HLPRPCOutgoingCall *)outgoingCall:(id)procedure {
     HLPRPCOutgoingCall *call = [HLPRPCOutgoingCall.alloc initWithProcedure:procedure];
     [self addOperation:call];
+    return call;
+}
+
+- (HLPRPCOutgoingCall *)outgoingCall:(id)procedure completion:(HLPVoidBlock)completion {
+    HLPRPCOutgoingCall *call = [self outgoingCall:procedure];
+    call.completionBlock = completion;
     return call;
 }
 
