@@ -107,8 +107,12 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @interface HLPRPCRequestSending : HLPOperation <HLPRPCRequestSendingDelegate>
 
+@property (readonly) HLPRPC *parent;
+@property (readonly) HLPArray<HLPRPCRequestSendingDelegate> *delegates;
 @property (readonly) id request;
 @property (readonly) id response;
+@property (readonly) HLPRPCMessageWriting *writing;
+@property (readonly) HLPTimer *timer;
 
 - (instancetype)initWithRequest:(id)request;
 - (void)endWithResponse:(id)response error:(NSError *)error;
@@ -139,17 +143,18 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @property (readonly) HLPStreams *streams;
 @property (readonly) HLPRPCMessageReading *reading;
+@property (readonly) HLPDictionary<NSString *, HLPRPCRequestSending *> *sentRequest;
 
 - (instancetype)initWithStreams:(HLPStreams *)streams;
 
-- (__kindof HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message;
-- (__kindof HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message;
+- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
 
-- (__kindof HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
-- (__kindof HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
+- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
 
-- (__kindof HLPRPCRequestSending *)sendRequest:(id)request;
-- (__kindof HLPRPCRequestSending *)sendRequest:(id)request completion:(HLPVoidBlock)completion;
+- (HLPRPCRequestSending *)sendRequest:(id)request;
+- (HLPRPCRequestSending *)sendRequest:(id)request completion:(HLPVoidBlock)completion;
 
 @end
 
