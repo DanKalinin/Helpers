@@ -220,6 +220,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPC ()
 
 @property HLPStreams *streams;
+@property HLPRPCMessageReading *reading;
 @property HLPDictionary *outgoingCalls;
 
 @end
@@ -252,9 +253,16 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     
     while (!self.cancelled && (self.errors.count == 0)) {
         HLPRPCMessage *message = HLPRPCMessage.new;
-        self.operation = [self readMessage:message];
-        [self.operation waitUntilFinished];
-        [self.errors addObjectsFromArray:self.operation.errors];
+        self.reading = [self readMessage:message];
+        [self.reading waitUntilFinished];
+        if (self.reading.cancelled) {
+        } else if (self.reading.errors.count > 0) {
+            [self.errors addObjectsFromArray:self.reading.errors];
+        } else {
+            if (message.needsResponse) {
+                
+            }
+        }
     }
     
     [self updateState:HLPOperationStateDidEnd];

@@ -163,6 +163,7 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property NSTimeInterval timeout;
 
 @property (readonly) HLPStreams *streams;
+@property (readonly) HLPRPCMessageReading *reading;
 @property (readonly) HLPDictionary<NSString *, HLPRPCOutgoingCall *> *outgoingCalls;
 
 - (instancetype)initWithStreams:(HLPStreams *)streams;
