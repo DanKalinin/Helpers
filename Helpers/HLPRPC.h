@@ -31,6 +31,8 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property NSString *identifier;
 @property NSString *responseIdentifier;
 @property BOOL needsResponse;
+@property NSError *error;
+@property id payload;
 
 @end
 
