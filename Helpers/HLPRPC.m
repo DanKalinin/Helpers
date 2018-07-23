@@ -190,7 +190,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPC ()
 
 @property HLPStreams *streams;
-@property HLPRPCMessageReading *reading;
 
 @end
 
@@ -218,18 +217,12 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     
     while (!self.cancelled && (self.errors.count == 0)) {
         HLPRPCMessage *message = HLPRPCMessage.new;
-        self.reading = [self readMessage:message];
-        [self.reading waitUntilFinished];
-        [self.errors addObjectsFromArray:self.reading.errors];
+        self.operation = [self readMessage:message];
+        [self.operation waitUntilFinished];
+        [self.errors addObjectsFromArray:self.operation.errors];
     }
     
     [self updateState:HLPOperationStateDidEnd];
-}
-
-- (void)cancel {
-    [super cancel];
-    
-    [self.reading cancel];
 }
 
 - (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message {

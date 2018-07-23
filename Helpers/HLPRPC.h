@@ -157,7 +157,6 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @interface HLPRPC : HLPOperation <HLPRPCDelegate>
 
 @property (readonly) HLPStreams *streams;
-@property (readonly) HLPRPCMessageReading *reading;
 
 - (instancetype)initWithStreams:(HLPStreams *)streams;
 
