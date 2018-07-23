@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "HLPStream.h"
 
-@class HLPRPCMessage, HLPRPCMessageReading, HLPRPCMessageWriting, HLPRPC;
+@class HLPRPCMessage, HLPRPCMessageReading, HLPRPCMessageWriting, HLPRPCIncomingCall, HLPRPCOutgoingCall, HLPRPC;
 
 extern NSErrorDomain const HLPRPCErrorDomain;
 
@@ -28,9 +28,10 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @interface HLPRPCMessage : HLPObject
 
-@property BOOL needsResponse;
 @property NSString *identifier;
 @property NSString *responseIdentifier;
+@property BOOL needsResponse;
+@property id method;
 
 @end
 
@@ -85,6 +86,48 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property (readonly) HLPRPCMessage *message;
 
 - (instancetype)initWithMessage:(HLPRPCMessage *)message;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol HLPRPCIncomingCallDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPRPCIncomingCall : HLPOperation <HLPRPCIncomingCallDelegate>
+
+- (instancetype)initWithMethod:(id)method;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol HLPRPCOutgoingCallDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPRPCOutgoingCall : HLPOperation <HLPRPCOutgoingCallDelegate>
+
+- (instancetype)initWithMethod:(id)method;
 
 @end
 
