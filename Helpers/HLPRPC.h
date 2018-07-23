@@ -31,7 +31,7 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property NSString *identifier;
 @property NSString *responseIdentifier;
 @property BOOL needsResponse;
-@property id method;
+@property id procedure;
 
 @end
 
@@ -106,7 +106,9 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @interface HLPRPCIncomingCall : HLPOperation <HLPRPCIncomingCallDelegate>
 
-- (instancetype)initWithMethod:(id)method;
+@property (readonly) id procedure;
+
+- (instancetype)initWithProcedure:(id)procedure;
 
 @end
 
@@ -127,7 +129,9 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @interface HLPRPCOutgoingCall : HLPOperation <HLPRPCOutgoingCallDelegate>
 
-- (instancetype)initWithMethod:(id)method;
+@property (readonly) id procedure;
+
+- (instancetype)initWithProcedure:(id)procedure;
 
 @end
 
