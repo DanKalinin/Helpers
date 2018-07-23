@@ -104,7 +104,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPCIncomingCall ()
 
 @property id procedure;
-@property BOOL needsResponse;
 
 @end
 
@@ -112,11 +111,10 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 @implementation HLPRPCIncomingCall
 
-- (instancetype)initWithProcedure:(id)procedure needsResponse:(BOOL)needsResponse {
+- (instancetype)initWithProcedure:(id)procedure {
     self = super.init;
     if (self) {
         self.procedure = procedure;
-        self.needsResponse = needsResponse;
     }
     return self;
 }
@@ -142,7 +140,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPCOutgoingCall ()
 
 @property id procedure;
-@property BOOL needsResponse;
 
 @end
 
@@ -150,11 +147,10 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 @implementation HLPRPCOutgoingCall
 
-- (instancetype)initWithProcedure:(id)procedure needsResponse:(BOOL)needsResponse {
+- (instancetype)initWithProcedure:(id)procedure {
     self = super.init;
     if (self) {
         self.procedure = procedure;
-        self.needsResponse = needsResponse;
     }
     return self;
 }
@@ -260,7 +256,9 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 - (HLPRPCOutgoingCall *)outgoingCall:(id)procedure {
-    
+    HLPRPCOutgoingCall *call = [HLPRPCOutgoingCall.alloc initWithProcedure:procedure];
+    [self addOperation:call];
+    return call;
 }
 
 @end

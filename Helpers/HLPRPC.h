@@ -108,9 +108,8 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @interface HLPRPCIncomingCall : HLPOperation <HLPRPCIncomingCallDelegate>
 
 @property (readonly) id procedure;
-@property (readonly) BOOL needsResponse;
 
-- (instancetype)initWithProcedure:(id)procedure needsResponse:(BOOL)needsResponse;
+- (instancetype)initWithProcedure:(id)procedure;
 
 @end
 
@@ -132,9 +131,8 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @interface HLPRPCOutgoingCall : HLPOperation <HLPRPCOutgoingCallDelegate>
 
 @property (readonly) id procedure;
-@property (readonly) BOOL needsResponse;
 
-- (instancetype)initWithProcedure:(id)procedure needsResponse:(BOOL)needsResponse;
+- (instancetype)initWithProcedure:(id)procedure;
 
 @end
 
@@ -147,7 +145,7 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 
 
-@protocol HLPRPCDelegate <HLPStreamsDelegate, HLPRPCMessageReadingDelegate, HLPRPCMessageWritingDelegate>
+@protocol HLPRPCDelegate <HLPStreamsDelegate, HLPRPCMessageReadingDelegate, HLPRPCMessageWritingDelegate, HLPRPCIncomingCallDelegate, HLPRPCOutgoingCallDelegate>
 
 @end
 
@@ -165,6 +163,12 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 - (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
 - (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+
+- (HLPRPCIncomingCall *)incomingCall:(id)procedure;
+- (HLPRPCIncomingCall *)incomingCall:(id)procedure completion:(HLPVoidBlock)completion;
+
+- (HLPRPCOutgoingCall *)outgoingCall:(id)procedure;
+- (HLPRPCOutgoingCall *)outgoingCall:(id)procedure completion:(HLPVoidBlock)completion;
 
 @end
 
