@@ -33,6 +33,7 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property BOOL needsResponse;
 @property NSError *error;
 @property id procedure;
+@property id response;
 
 @end
 
@@ -133,9 +134,12 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property (readonly) HLPRPC *parent;
 @property (readonly) HLPArray<HLPRPCOutgoingCallDelegate> *delegates;
 @property (readonly) id procedure;
+@property (readonly) id response;
 @property (readonly) HLPRPCMessageWriting *writing;
+@property (readonly) HLPTimer *timer;
 
 - (instancetype)initWithProcedure:(id)procedure;
+- (void)endWithResponse:(id)response error:(NSError *)error;
 
 @end
 
@@ -156,7 +160,10 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @interface HLPRPC : HLPOperation <HLPRPCDelegate>
 
+@property NSTimeInterval timeout;
+
 @property (readonly) HLPStreams *streams;
+@property (readonly) HLPDictionary<NSString *, HLPRPCOutgoingCall *> *outgoingCalls;
 
 - (instancetype)initWithStreams:(HLPStreams *)streams;
 

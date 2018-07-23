@@ -140,7 +140,9 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPCOutgoingCall ()
 
 @property id procedure;
+@property id response;
 @property HLPRPCMessageWriting *writing;
+@property HLPTimer *timer;
 
 @end
 
@@ -163,17 +165,45 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     [self updateState:HLPOperationStateDidBegin];
     
     HLPRPCMessage *message = HLPRPCMessage.new;
-    message.procedure = self.procedure;
+    // Set serial
     self.writing = [self.parent writeMessage:message];
     [self.writing waitUntilFinished];
     if (self.writing.cancelled) {
     } else if (self.writing.errors.count > 0) {
         [self.errors addObjectsFromArray:self.writing.errors];
     } else {
-        
+        if (message.needsResponse) {
+            self.parent.outgoingCalls[message.identifier] = self;
+            self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
+            [self.timer waitUntilFinished];
+            if (self.timer.cancelled) {
+            } else {
+                NSError *error = [NSError errorWithDomain:HLPRPCErrorDomain code:HLPRPCErrorTimeout userInfo:nil];
+                [self.errors addObject:error];
+            }
+        }
     }
     
     [self updateState:HLPOperationStateDidBegin];
+}
+
+- (void)cancel {
+    [super cancel];
+    
+    [self.writing cancel];
+    [self.timer cancel];
+}
+
+#pragma mark - Helpers
+
+- (void)endWithResponse:(id)response error:(NSError *)error {
+    [self.timer cancel];
+    
+    if (error) {
+        [self.errors addObject:error];
+    } else {
+        self.response = response;
+    }
 }
 
 @end
@@ -190,6 +220,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPC ()
 
 @property HLPStreams *streams;
+@property HLPDictionary *outgoingCalls;
 
 @end
 
@@ -202,6 +233,10 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     if (self) {
         self.streams = streams;
         [self.streams.delegates addObject:self.delegates];
+        
+        self.outgoingCalls = HLPDictionary.strongToWeakDictionary;
+        
+        self.timeout = 30.0;
     }
     return self;
 }
