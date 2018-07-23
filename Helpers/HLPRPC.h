@@ -130,7 +130,10 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @interface HLPRPCOutgoingCall : HLPOperation <HLPRPCOutgoingCallDelegate>
 
+@property (readonly) HLPRPC *parent;
+@property (readonly) HLPArray<HLPRPCOutgoingCallDelegate> *delegates;
 @property (readonly) id procedure;
+@property (readonly) HLPRPCMessageWriting *writing;
 
 - (instancetype)initWithProcedure:(id)procedure;
 

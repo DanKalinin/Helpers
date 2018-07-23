@@ -140,12 +140,16 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPCOutgoingCall ()
 
 @property id procedure;
+@property HLPRPCMessageWriting *writing;
 
 @end
 
 
 
 @implementation HLPRPCOutgoingCall
+
+@dynamic parent;
+@dynamic delegates;
 
 - (instancetype)initWithProcedure:(id)procedure {
     self = super.init;
@@ -158,6 +162,16 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
     
+    HLPRPCMessage *message = HLPRPCMessage.new;
+    message.procedure = self.procedure;
+    self.writing = [self.parent writeMessage:message];
+    [self.writing waitUntilFinished];
+    if (self.writing.cancelled) {
+    } else if (self.writing.errors.count > 0) {
+        [self.errors addObjectsFromArray:self.writing.errors];
+    } else {
+        
+    }
     
     [self updateState:HLPOperationStateDidBegin];
 }
