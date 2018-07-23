@@ -177,7 +177,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 @property HLPStreams *streams;
 @property HLPRPCMessageReading *reading;
-@property HLPDictionary<NSString *, HLPRPCMessageWriting *> *writings;
 
 @end
 
