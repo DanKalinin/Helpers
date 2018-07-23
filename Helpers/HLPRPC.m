@@ -90,10 +90,80 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     return self;
 }
 
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPRPCIncomingCall ()
+
+@property id procedure;
+@property BOOL needsResponse;
+
+@end
+
+
+
+@implementation HLPRPCIncomingCall
+
+- (instancetype)initWithProcedure:(id)procedure needsResponse:(BOOL)needsResponse {
+    self = super.init;
+    if (self) {
+        self.procedure = procedure;
+        self.needsResponse = needsResponse;
+    }
+    return self;
+}
+
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
     
-    [self updateState:HLPOperationStateDidEnd];
+    
+    [self updateState:HLPOperationStateDidBegin];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPRPCOutgoingCall ()
+
+@property id procedure;
+@property BOOL needsResponse;
+
+@end
+
+
+
+@implementation HLPRPCOutgoingCall
+
+- (instancetype)initWithProcedure:(id)procedure needsResponse:(BOOL)needsResponse {
+    self = super.init;
+    if (self) {
+        self.procedure = procedure;
+        self.needsResponse = needsResponse;
+    }
+    return self;
+}
+
+- (void)main {
+    [self updateState:HLPOperationStateDidBegin];
+    
+    
+    [self updateState:HLPOperationStateDidBegin];
 }
 
 @end
@@ -175,6 +245,22 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     HLPRPCMessageWriting *writing = [self writeMessage:message];
     writing.completionBlock = completion;
     return writing;
+}
+
+- (HLPRPCIncomingCall *)incomingCall:(id)procedure {
+    HLPRPCIncomingCall *call = [HLPRPCIncomingCall.alloc initWithProcedure:procedure];
+    [self addOperation:call];
+    return call;
+}
+
+- (HLPRPCIncomingCall *)incomingCall:(id)procedure completion:(HLPVoidBlock)completion {
+    HLPRPCIncomingCall *call = [self incomingCall:procedure];
+    call.completionBlock = completion;
+    return call;
+}
+
+- (HLPRPCOutgoingCall *)outgoingCall:(id)procedure {
+    
 }
 
 @end
