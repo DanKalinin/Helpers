@@ -28,12 +28,12 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @interface HLPRPCPayload : HLPObject
 
-@property NSInteger serial;
-@property NSInteger responseSerial;
+@property NSString *serial;
+@property NSString *responseSerial;
 @property BOOL needsResponse;
 @property id message;
 @property id response;
-@property NSString *error;
+@property NSError *error;
 
 @end
 
