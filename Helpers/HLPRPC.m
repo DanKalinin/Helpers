@@ -104,6 +104,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPCMessageSending ()
 
 @property id message;
+@property id response;
 @property HLPRPCPayloadWriting *writing;
 @property HLPTimer *timer;
 
@@ -130,7 +131,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     HLPRPCPayload *payload = HLPRPCPayload.new;
     payload.serial = @"1";
     payload.message = self.message;
-    
     self.writing = [self.parent writePayload:payload];
     [self.writing waitUntilFinished];
     if (self.writing.cancelled) {
@@ -139,17 +139,35 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     } else {
         if (payload.needsResponse) {
             self.parent.sendings[payload.serial] = self;
-            
             self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
             [self.timer waitUntilFinished];
-            if (self.timer.cancelled) {
-            } else {
-                
+            if (!self.timer.cancelled) {
+                NSError *error = [NSError errorWithDomain:HLPRPCErrorDomain code:HLPRPCErrorTimeout userInfo:nil];
+                [self.errors addObject:error];
             }
         }
     }
     
     [self updateState:HLPOperationStateDidEnd];
+}
+
+- (void)cancel {
+    [super cancel];
+    
+    [self.writing cancel];
+    [self.timer cancel];
+}
+
+#pragma mark - Helpers
+
+- (void)endWithResponse:(id)response error:(NSError *)error {
+    [self.timer cancel];
+    
+    if (error) {
+        [self.errors addObject:error];
+    } else {
+        self.response = response;
+    }
 }
 
 @end

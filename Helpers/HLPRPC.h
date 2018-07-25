@@ -107,10 +107,12 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property (readonly) HLPRPC *parent;
 @property (readonly) HLPArray<HLPRPCMessageSendingDelegate> *delegates;
 @property (readonly) id message;
+@property (readonly) id response;
 @property (readonly) HLPRPCPayloadWriting *writing;
 @property (readonly) HLPTimer *timer;
 
 - (instancetype)initWithMessage:(id)message;
+- (void)endWithResponse:(id)response error:(NSError *)error;
 
 @end
 
