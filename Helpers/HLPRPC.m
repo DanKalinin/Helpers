@@ -18,13 +18,13 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@interface HLPRPCMessage ()
+@interface HLPRPCPayload ()
 
 @end
 
 
 
-@implementation HLPRPCMessage
+@implementation HLPRPCPayload
 
 @end
 
@@ -37,23 +37,23 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@interface HLPRPCMessageReading ()
+@interface HLPRPCPayloadReading ()
 
-@property HLPRPCMessage *message;
+@property HLPRPCPayload *payload;
 
 @end
 
 
 
-@implementation HLPRPCMessageReading
+@implementation HLPRPCPayloadReading
 
 @dynamic parent;
 @dynamic delegates;
 
-- (instancetype)initWithMessage:(HLPRPCMessage *)message {
+- (instancetype)initWithPayload:(HLPRPCPayload *)payload {
     self = super.init;
     if (self) {
-        self.message = message;
+        self.payload = payload;
     }
     return self;
 }
@@ -69,23 +69,23 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@interface HLPRPCMessageWriting ()
+@interface HLPRPCPayloadWriting ()
 
-@property HLPRPCMessage *message;
+@property HLPRPCPayload *payload;
 
 @end
 
 
 
-@implementation HLPRPCMessageWriting
+@implementation HLPRPCPayloadWriting
 
 @dynamic parent;
 @dynamic delegates;
 
-- (instancetype)initWithMessage:(HLPRPCMessage *)message {
+- (instancetype)initWithPayload:(HLPRPCPayload *)payload {
     self = super.init;
     if (self) {
-        self.message = message;
+        self.payload = payload;
     }
     return self;
 }
@@ -101,24 +101,20 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@interface HLPRPCRequestReceiving ()
+@interface HLPRPCMessageSending ()
 
-@property HLPRPCMessage *message;
-@property id request;
-@property id response;
-@property HLPTimer *timer;
-@property HLPRPCMessageWriting *writing;
+@property id message;
 
 @end
 
 
 
-@implementation HLPRPCRequestReceiving
+@implementation HLPRPCMessageSending
 
 @dynamic parent;
 @dynamic delegates;
 
-- (instancetype)initWithMessage:(HLPRPCMessage *)message {
+- (instancetype)initWithMessage:(id)message {
     self = super.init;
     if (self) {
         self.message = message;
@@ -127,50 +123,11 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 - (void)main {
-    self.request = self.message.payload;
-    
     [self updateState:HLPOperationStateDidBegin];
-    
-    if (self.message.needsResponse) {
-        self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
-        [self.timer waitUntilFinished];
-        if (self.cancelled) {
-        } else if (self.timer.cancelled) {
-            HLPRPCMessage *message = HLPRPCMessage.new;
-            message.responseIdentifier = self.message.identifier;
-            message.error = self.errors.firstObject;
-            message.payload = self.response;
-            self.writing = [self.parent writeMessage:message];
-            [self.writing waitUntilFinished];
-            [self.errors addObjectsFromArray:self.writing.errors];
-        } else {
-            NSError *error = [NSError errorWithDomain:HLPRPCErrorDomain code:HLPRPCErrorTimeout userInfo:nil];
-            [self.errors addObject:error];
-        }
-    }
     
     [self updateState:HLPOperationStateDidEnd];
 }
 
-- (void)cancel {
-    [super cancel];
-    
-    [self.timer cancel];
-    [self.writing cancel];
-}
-
-#pragma mark - Helpers
-
-- (void)endWithResponse:(id)response error:(NSError *)error {
-    [self.timer cancel];
-    
-    if (error) {
-        [self.errors addObject:error];
-    } else {
-        self.response = response;
-    }
-}
-
 @end
 
 
@@ -182,26 +139,23 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@interface HLPRPCRequestSending ()
+@interface HLPRPCMessageReceiving ()
 
-@property id request;
-@property id response;
-@property HLPRPCMessageWriting *writing;
-@property HLPTimer *timer;
+@property HLPRPCPayload *payload;
 
 @end
 
 
 
-@implementation HLPRPCRequestSending
+@implementation HLPRPCMessageReceiving
 
 @dynamic parent;
 @dynamic delegates;
 
-- (instancetype)initWithRequest:(id)request {
+- (instancetype)initWithPayload:(HLPRPCPayload *)payload {
     self = super.init;
     if (self) {
-        self.request = request;
+        self.payload = payload;
     }
     return self;
 }
@@ -209,47 +163,49 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
     
-    HLPRPCMessage *message = HLPRPCMessage.new;
-    // Serial
-    message.payload = self.request;
-    self.writing = [self.parent writeMessage:message];
-    [self.writing waitUntilFinished];
-    [self.errors addObjectsFromArray:self.writing.errors];
-    if (self.writing.cancelled) {
-    } else if (self.writing.errors.count > 0) {
-    } else {
-        if (message.needsResponse) {
-            self.parent.sentRequest[message.identifier] = self;
-            self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
-            [self.timer waitUntilFinished];
-            if (self.cancelled) {
-            } else if (!self.timer.cancelled) {
-                NSError *error = [NSError errorWithDomain:HLPRPCErrorDomain code:HLPRPCErrorTimeout userInfo:nil];
-                [self.errors addObject:error];
-            }
-        }
-    }
-    
     [self updateState:HLPOperationStateDidEnd];
 }
 
-- (void)cancel {
-    [super cancel];
-    
-    [self.writing cancel];
-    [self.timer cancel];
+@end
+
+
+
+
+
+
+
+
+
+
+@interface HLPRPCMessageResponding ()
+
+@property HLPRPCPayload *payload;
+@property id message;
+@property NSError *error;
+
+@end
+
+
+
+@implementation HLPRPCMessageResponding
+
+@dynamic parent;
+@dynamic delegates;
+
+- (instancetype)initWithPayload:(HLPRPCPayload *)payload message:(id)message error:(NSError *)error {
+    self = super.init;
+    if (self) {
+        self.payload = payload;
+        self.message = message;
+        self.error = error;
+    }
+    return self;
 }
 
-#pragma mark - Helpers
-
-- (void)endWithResponse:(id)response error:(NSError *)error {
-    [self.timer cancel];
+- (void)main {
+    [self updateState:HLPOperationStateDidBegin];
     
-    if (error) {
-        [self.errors addObject:error];
-    } else {
-        self.response = response;
-    }
+    [self updateState:HLPOperationStateDidEnd];
 }
 
 @end
@@ -266,8 +222,8 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPC ()
 
 @property HLPStreams *streams;
-@property HLPRPCMessageReading *reading;
-@property HLPDictionary<NSString *, HLPRPCRequestSending *> *sentRequest;
+@property HLPRPCPayloadReading *reading;
+//@property HLPDictionary<NSString *, HLPRPCRequestSending *> *sentRequest;
 
 @end
 
@@ -280,14 +236,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     if (self) {
         self.streams = streams;
         [self.streams.delegates addObject:self.delegates];
-        
-        self.sentRequest = HLPDictionary.strongToWeakDictionary;
-        
-        self.messageReadingClass = HLPRPCMessageReading.class;
-        self.messageWritingClass = HLPRPCMessageWriting.class;
-        self.requestReceivingClass = HLPRPCRequestReceiving.class;
-        self.requestSendingClass = HLPRPCRequestSending.class;
-        self.timeout = 30.0;
     }
     return self;
 }
@@ -302,74 +250,435 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     [self updateState:HLPOperationStateDidBegin];
     
     while (!self.cancelled && (self.errors.count == 0)) {
-        HLPRPCMessage *message = HLPRPCMessage.new;
-        self.reading = [self readMessage:message];
+        HLPRPCPayload *payload = HLPRPCPayload.new;
+        self.reading = [self readPayload:payload];
         [self.reading waitUntilFinished];
         [self.errors addObjectsFromArray:self.reading.errors];
+        
         if (self.reading.cancelled) {
         } else if (self.reading.errors.count > 0) {
         } else {
-            if (message.responseIdentifier.length > 0) {
-                HLPRPCRequestSending *sending = self.sentRequest[message.responseIdentifier];
-                [sending endWithResponse:message.payload error:message.error];
-            } else {
-                [self receiveRequest:message];
-            }
+            [self receiveMessage:payload];
         }
     }
     
     [self updateState:HLPOperationStateDidEnd];
 }
 
-- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message {
-    HLPRPCMessageReading *reading = [self.messageReadingClass.alloc initWithMessage:message];
+- (HLPRPCPayloadReading *)readPayload:(HLPRPCPayload *)payload {
+    HLPRPCPayloadReading *reading = [HLPRPCPayloadReading.alloc initWithPayload:payload];
     [self addOperation:reading];
     return reading;
 }
 
-- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion {
-    HLPRPCMessageReading *reading = [self readMessage:message];
+- (HLPRPCPayloadReading *)readPayload:(HLPRPCPayload *)payload completion:(HLPVoidBlock)completion {
+    HLPRPCPayloadReading *reading = [self readPayload:payload];
     reading.completionBlock = completion;
     return reading;
 }
 
-- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message {
-    HLPRPCMessageWriting *writing = [self.messageWritingClass.alloc initWithMessage:message];
+- (HLPRPCPayloadWriting *)writePayload:(HLPRPCPayload *)payload {
+    HLPRPCPayloadWriting *writing = [HLPRPCPayloadWriting.alloc initWithPayload:payload];
     [self addOperation:writing];
     return writing;
 }
 
-- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion {
-    HLPRPCMessageWriting *writing = [self writeMessage:message];
+- (HLPRPCPayloadWriting *)writePayload:(HLPRPCPayload *)payload completion:(HLPVoidBlock)completion {
+    HLPRPCPayloadWriting *writing = [self writePayload:payload];
     writing.completionBlock = completion;
     return writing;
 }
 
-- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message {
-    HLPRPCRequestReceiving *receiving = [self.requestReceivingClass.alloc initWithMessage:message];
+- (HLPRPCMessageReceiving *)receiveMessage:(HLPRPCPayload *)payload {
+    HLPRPCMessageReceiving *receiving = [HLPRPCMessageReceiving.alloc initWithPayload:payload];
     [self addOperation:receiving];
     return receiving;
 }
 
-- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion {
-    HLPRPCRequestReceiving *receiving = [self receiveRequest:message];
+- (HLPRPCMessageReceiving *)receiveMessage:(HLPRPCPayload *)payload completion:(HLPVoidBlock)completion {
+    HLPRPCMessageReceiving *receiving = [self receiveMessage:payload];
     receiving.completionBlock = completion;
     return receiving;
 }
 
-- (HLPRPCRequestSending *)sendRequest:(id)request {
-    HLPRPCRequestSending *sending = [self.requestSendingClass.alloc initWithRequest:request];
-    [self addOperation:sending];
-    return sending;
-}
-
-- (HLPRPCRequestSending *)sendRequest:(id)request completion:(HLPVoidBlock)completion {
-    HLPRPCRequestSending *sending = [self sendRequest:request];
-    sending.completionBlock = completion;
-    return sending;
-}
-
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//@interface HLPRPCMessage ()
+//
+//@end
+//
+//
+//
+//@implementation HLPRPCMessage
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@interface HLPRPCMessageReading ()
+//
+//@property HLPRPCMessage *message;
+//
+//@end
+//
+//
+//
+//@implementation HLPRPCMessageReading
+//
+//@dynamic parent;
+//@dynamic delegates;
+//
+//- (instancetype)initWithMessage:(HLPRPCMessage *)message {
+//    self = super.init;
+//    if (self) {
+//        self.message = message;
+//    }
+//    return self;
+//}
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@interface HLPRPCMessageWriting ()
+//
+//@property HLPRPCMessage *message;
+//
+//@end
+//
+//
+//
+//@implementation HLPRPCMessageWriting
+//
+//@dynamic parent;
+//@dynamic delegates;
+//
+//- (instancetype)initWithMessage:(HLPRPCMessage *)message {
+//    self = super.init;
+//    if (self) {
+//        self.message = message;
+//    }
+//    return self;
+//}
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@interface HLPRPCRequestReceiving ()
+//
+//@property HLPRPCMessage *message;
+//@property id request;
+//@property id response;
+//@property HLPTimer *timer;
+//@property HLPRPCMessageWriting *writing;
+//
+//@end
+//
+//
+//
+//@implementation HLPRPCRequestReceiving
+//
+//@dynamic parent;
+//@dynamic delegates;
+//
+//- (instancetype)initWithMessage:(HLPRPCMessage *)message {
+//    self = super.init;
+//    if (self) {
+//        self.message = message;
+//    }
+//    return self;
+//}
+//
+//- (void)main {
+//    self.request = self.message.payload;
+//
+//    [self updateState:HLPOperationStateDidBegin];
+//
+//    if (self.message.needsResponse) {
+//        self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
+//        [self.timer waitUntilFinished];
+//        if (self.cancelled) {
+//        } else if (self.timer.cancelled) {
+//            HLPRPCMessage *message = HLPRPCMessage.new;
+//            message.responseIdentifier = self.message.identifier;
+//            message.error = self.errors.firstObject;
+//            message.payload = self.response;
+//            self.writing = [self.parent writeMessage:message];
+//            [self.writing waitUntilFinished];
+//            [self.errors addObjectsFromArray:self.writing.errors];
+//        } else {
+//            NSError *error = [NSError errorWithDomain:HLPRPCErrorDomain code:HLPRPCErrorTimeout userInfo:nil];
+//            [self.errors addObject:error];
+//        }
+//    }
+//
+//    [self updateState:HLPOperationStateDidEnd];
+//}
+//
+//- (void)cancel {
+//    [super cancel];
+//
+//    [self.timer cancel];
+//    [self.writing cancel];
+//}
+//
+//#pragma mark - Helpers
+//
+//- (void)endWithResponse:(id)response error:(NSError *)error {
+//    [self.timer cancel];
+//
+//    if (error) {
+//        [self.errors addObject:error];
+//    } else {
+//        self.response = response;
+//    }
+//}
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@interface HLPRPCRequestSending ()
+//
+//@property id request;
+//@property id response;
+//@property HLPRPCMessageWriting *writing;
+//@property HLPTimer *timer;
+//
+//@end
+//
+//
+//
+//@implementation HLPRPCRequestSending
+//
+//@dynamic parent;
+//@dynamic delegates;
+//
+//- (instancetype)initWithRequest:(id)request {
+//    self = super.init;
+//    if (self) {
+//        self.request = request;
+//    }
+//    return self;
+//}
+//
+//- (void)main {
+//    [self updateState:HLPOperationStateDidBegin];
+//
+//    HLPRPCMessage *message = HLPRPCMessage.new;
+//    // Serial
+//    message.payload = self.request;
+//    self.writing = [self.parent writeMessage:message];
+//    [self.writing waitUntilFinished];
+//    [self.errors addObjectsFromArray:self.writing.errors];
+//    if (self.writing.cancelled) {
+//    } else if (self.writing.errors.count > 0) {
+//    } else {
+//        if (message.needsResponse) {
+//            self.parent.sentRequest[message.identifier] = self;
+//            self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
+//            [self.timer waitUntilFinished];
+//            if (self.cancelled) {
+//            } else if (!self.timer.cancelled) {
+//                NSError *error = [NSError errorWithDomain:HLPRPCErrorDomain code:HLPRPCErrorTimeout userInfo:nil];
+//                [self.errors addObject:error];
+//            }
+//        }
+//    }
+//
+//    [self updateState:HLPOperationStateDidEnd];
+//}
+//
+//- (void)cancel {
+//    [super cancel];
+//
+//    [self.writing cancel];
+//    [self.timer cancel];
+//}
+//
+//#pragma mark - Helpers
+//
+//- (void)endWithResponse:(id)response error:(NSError *)error {
+//    [self.timer cancel];
+//
+//    if (error) {
+//        [self.errors addObject:error];
+//    } else {
+//        self.response = response;
+//    }
+//}
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@interface HLPRPC ()
+//
+//@property HLPStreams *streams;
+//@property HLPRPCMessageReading *reading;
+//@property HLPDictionary<NSString *, HLPRPCRequestSending *> *sentRequest;
+//
+//@end
+//
+//
+//
+//@implementation HLPRPC
+//
+//- (instancetype)initWithStreams:(HLPStreams *)streams {
+//    self = super.init;
+//    if (self) {
+//        self.streams = streams;
+//        [self.streams.delegates addObject:self.delegates];
+//
+//        self.sentRequest = HLPDictionary.strongToWeakDictionary;
+//
+//        self.messageReadingClass = HLPRPCMessageReading.class;
+//        self.messageWritingClass = HLPRPCMessageWriting.class;
+//        self.requestReceivingClass = HLPRPCRequestReceiving.class;
+//        self.requestSendingClass = HLPRPCRequestSending.class;
+//        self.timeout = 30.0;
+//    }
+//    return self;
+//}
+//
+//- (void)start {
+//    [NSThread detachNewThreadWithBlock:^{
+//        [self main];
+//    }];
+//}
+//
+//- (void)main {
+//    [self updateState:HLPOperationStateDidBegin];
+//
+//    while (!self.cancelled && (self.errors.count == 0)) {
+//        HLPRPCMessage *message = HLPRPCMessage.new;
+//        self.reading = [self readMessage:message];
+//        [self.reading waitUntilFinished];
+//        [self.errors addObjectsFromArray:self.reading.errors];
+//        if (self.reading.cancelled) {
+//        } else if (self.reading.errors.count > 0) {
+//        } else {
+//            if (message.responseIdentifier.length > 0) {
+//                HLPRPCRequestSending *sending = self.sentRequest[message.responseIdentifier];
+//                [sending endWithResponse:message.payload error:message.error];
+//            } else {
+//                [self receiveRequest:message];
+//            }
+//        }
+//    }
+//
+//    [self updateState:HLPOperationStateDidEnd];
+//}
+//
+//- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message {
+//    HLPRPCMessageReading *reading = [self.messageReadingClass.alloc initWithMessage:message];
+//    [self addOperation:reading];
+//    return reading;
+//}
+//
+//- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion {
+//    HLPRPCMessageReading *reading = [self readMessage:message];
+//    reading.completionBlock = completion;
+//    return reading;
+//}
+//
+//- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message {
+//    HLPRPCMessageWriting *writing = [self.messageWritingClass.alloc initWithMessage:message];
+//    [self addOperation:writing];
+//    return writing;
+//}
+//
+//- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion {
+//    HLPRPCMessageWriting *writing = [self writeMessage:message];
+//    writing.completionBlock = completion;
+//    return writing;
+//}
+//
+//- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message {
+//    HLPRPCRequestReceiving *receiving = [self.requestReceivingClass.alloc initWithMessage:message];
+//    [self addOperation:receiving];
+//    return receiving;
+//}
+//
+//- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion {
+//    HLPRPCRequestReceiving *receiving = [self receiveRequest:message];
+//    receiving.completionBlock = completion;
+//    return receiving;
+//}
+//
+//- (HLPRPCRequestSending *)sendRequest:(id)request {
+//    HLPRPCRequestSending *sending = [self.requestSendingClass.alloc initWithRequest:request];
+//    [self addOperation:sending];
+//    return sending;
+//}
+//
+//- (HLPRPCRequestSending *)sendRequest:(id)request completion:(HLPVoidBlock)completion {
+//    HLPRPCRequestSending *sending = [self sendRequest:request];
+//    sending.completionBlock = completion;
+//    return sending;
+//}
+//
+//@end
 
 
 

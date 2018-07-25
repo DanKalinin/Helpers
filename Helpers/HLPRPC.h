@@ -8,7 +8,8 @@
 #import <Foundation/Foundation.h>
 #import "HLPStream.h"
 
-@class HLPRPCMessage, HLPRPCMessageReading, HLPRPCMessageWriting, HLPRPCRequestReceiving, HLPRPCRequestSending, HLPRPC;
+//@class HLPRPCMessage, HLPRPCMessageReading, HLPRPCMessageWriting, HLPRPCRequestReceiving, HLPRPCRequestSending, HLPRPC;
+@class HLPRPCPayload, HLPRPCPayloadReading, HLPRPCPayloadWriting, HLPRPCMessageSending, HLPRPCMessageReceiving, HLPRPCMessageResponding, HLPRPC;
 
 extern NSErrorDomain const HLPRPCErrorDomain;
 
@@ -26,13 +27,14 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 
 
-@interface HLPRPCMessage : HLPObject
+@interface HLPRPCPayload : HLPObject
 
-@property NSString *identifier;
-@property NSString *responseIdentifier;
+@property NSInteger serial;
+@property NSInteger responseSerial;
 @property BOOL needsResponse;
-@property NSError *error;
-@property id payload;
+@property id message;
+@property id response;
+@property NSString *error;
 
 @end
 
@@ -45,78 +47,69 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 
 
-@protocol HLPRPCMessageReadingDelegate <HLPOperationDelegate>
+@protocol HLPRPCPayloadReadingDelegate <HLPOperationDelegate>
 
 @end
 
 
 
-@interface HLPRPCMessageReading : HLPOperation <HLPRPCMessageReadingDelegate>
-
-@property HLPStreamReading *reading;
+@interface HLPRPCPayloadReading : HLPOperation <HLPRPCPayloadReadingDelegate>
 
 @property (readonly) HLPRPC *parent;
-@property (readonly) HLPArray<HLPRPCMessageReadingDelegate> *delegates;
-@property (readonly) HLPRPCMessage *message;
+@property (readonly) HLPArray<HLPRPCPayloadReadingDelegate> *delegates;
+@property (readonly) HLPRPCPayload *payload;
 
-- (instancetype)initWithMessage:(HLPRPCMessage *)message;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@protocol HLPRPCMessageWritingDelegate <HLPOperationDelegate>
+- (instancetype)initWithPayload:(HLPRPCPayload *)payload;
 
 @end
 
 
 
-@interface HLPRPCMessageWriting : HLPOperation <HLPRPCMessageWritingDelegate>
 
-@property HLPStreamWriting *writing;
+
+
+
+
+
+
+@protocol HLPRPCPayloadWritingDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPRPCPayloadWriting : HLPOperation <HLPRPCPayloadWritingDelegate>
 
 @property (readonly) HLPRPC *parent;
-@property (readonly) HLPArray<HLPRPCMessageWritingDelegate> *delegates;
-@property (readonly) HLPRPCMessage *message;
+@property (readonly) HLPArray<HLPRPCPayloadWritingDelegate> *delegates;
+@property (readonly) HLPRPCPayload *payload;
 
-- (instancetype)initWithMessage:(HLPRPCMessage *)message;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@protocol HLPRPCRequestReceivingDelegate <HLPOperationDelegate>
+- (instancetype)initWithPayload:(HLPRPCPayload *)payload;
 
 @end
 
 
 
-@interface HLPRPCRequestReceiving : HLPOperation <HLPRPCRequestReceivingDelegate>
+
+
+
+
+
+
+
+@protocol HLPRPCMessageSendingDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPRPCMessageSending : HLPOperation <HLPRPCMessageSendingDelegate>
 
 @property (readonly) HLPRPC *parent;
-@property (readonly) HLPArray<HLPRPCRequestReceivingDelegate> *delegates;
-@property (readonly) HLPRPCMessage *message;
-@property (readonly) id request;
-@property (readonly) id response;
-@property (readonly) HLPTimer *timer;
-@property (readonly) HLPRPCMessageWriting *writing;
+@property (readonly) HLPArray<HLPRPCMessageSendingDelegate> *delegates;
+@property (readonly) id message;
 
-- (instancetype)initWithMessage:(HLPRPCMessage *)message;
-- (void)endWithResponse:(id)response error:(NSError *)error;
+- (instancetype)initWithMessage:(id)message;
 
 @end
 
@@ -129,23 +122,19 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 
 
-@protocol HLPRPCRequestSendingDelegate <HLPOperationDelegate>
+@protocol HLPRPCMessageReceivingDelegate <HLPOperationDelegate>
 
 @end
 
 
 
-@interface HLPRPCRequestSending : HLPOperation <HLPRPCRequestSendingDelegate>
+@interface HLPRPCMessageReceiving : HLPOperation <HLPRPCMessageReceivingDelegate>
 
 @property (readonly) HLPRPC *parent;
-@property (readonly) HLPArray<HLPRPCRequestSendingDelegate> *delegates;
-@property (readonly) id request;
-@property (readonly) id response;
-@property (readonly) HLPRPCMessageWriting *writing;
-@property (readonly) HLPTimer *timer;
+@property (readonly) HLPArray<HLPRPCMessageReceivingDelegate> *delegates;
+@property (readonly) HLPRPCPayload *payload;
 
-- (instancetype)initWithRequest:(id)request;
-- (void)endWithResponse:(id)response error:(NSError *)error;
+- (instancetype)initWithPayload:(HLPRPCPayload *)payload;
 
 @end
 
@@ -158,7 +147,34 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 
 
-@protocol HLPRPCDelegate <HLPStreamsDelegate, HLPRPCMessageReadingDelegate, HLPRPCMessageWritingDelegate, HLPRPCRequestReceivingDelegate, HLPRPCRequestSendingDelegate>
+@protocol HLPRPCMessageRespondingDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPRPCMessageResponding : HLPOperation <HLPRPCMessageRespondingDelegate>
+
+@property (readonly) HLPRPC *parent;
+@property (readonly) HLPArray<HLPRPCMessageRespondingDelegate> *delegates;
+@property (readonly) HLPRPCPayload *payload;
+@property (readonly) id message;
+@property (readonly) NSError *error;
+
+- (instancetype)initWithPayload:(HLPRPCPayload *)payload message:(id)message error:(NSError *)error;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol HLPRPCDelegate <HLPStreamsDelegate, HLPRPCPayloadReadingDelegate, HLPRPCPayloadWritingDelegate, HLPRPCMessageSendingDelegate, HLPRPCMessageReceivingDelegate, HLPRPCMessageRespondingDelegate>
 
 @end
 
@@ -166,31 +182,236 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @interface HLPRPC : HLPOperation <HLPRPCDelegate>
 
-@property Class messageReadingClass;
-@property Class messageWritingClass;
-@property Class requestReceivingClass;
-@property Class requestSendingClass;
 @property NSTimeInterval timeout;
 
 @property (readonly) HLPStreams *streams;
-@property (readonly) HLPRPCMessageReading *reading;
-@property (readonly) HLPDictionary<NSString *, HLPRPCRequestSending *> *sentRequest;
+@property (readonly) HLPRPCPayloadReading *reading;
+//@property (readonly) HLPDictionary<NSString *, HLPRPCRequestSending *> *sentRequest;
 
 - (instancetype)initWithStreams:(HLPStreams *)streams;
 
-- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message;
-- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+- (HLPRPCPayloadReading *)readPayload:(HLPRPCPayload *)payload;
+- (HLPRPCPayloadReading *)readPayload:(HLPRPCPayload *)payload completion:(HLPVoidBlock)completion;
 
-- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
-- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+- (HLPRPCPayloadWriting *)writePayload:(HLPRPCPayload *)payload;
+- (HLPRPCPayloadWriting *)writePayload:(HLPRPCPayload *)payload completion:(HLPVoidBlock)completion;
 
-- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message;
-- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+- (HLPRPCMessageReceiving *)receiveMessage:(HLPRPCPayload *)payload;
+- (HLPRPCMessageReceiving *)receiveMessage:(HLPRPCPayload *)payload completion:(HLPVoidBlock)completion;
 
-- (HLPRPCRequestSending *)sendRequest:(id)request;
-- (HLPRPCRequestSending *)sendRequest:(id)request completion:(HLPVoidBlock)completion;
+
+//- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message;
+//- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+//
+//- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
+//- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+//
+//- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message;
+//- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+//
+//- (HLPRPCRequestSending *)sendRequest:(id)request;
+//- (HLPRPCRequestSending *)sendRequest:(id)request completion:(HLPVoidBlock)completion;
 
 @end
+
+
+
+
+
+
+
+
+
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@interface HLPRPCMessage : HLPObject
+//
+//@property NSString *identifier;
+//@property NSString *responseIdentifier;
+//@property BOOL needsResponse;
+//@property NSError *error;
+//@property id payload;
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol HLPRPCMessageReadingDelegate <HLPOperationDelegate>
+//
+//@end
+//
+//
+//
+//@interface HLPRPCMessageReading : HLPOperation <HLPRPCMessageReadingDelegate>
+//
+//@property HLPStreamReading *reading;
+//
+//@property (readonly) HLPRPC *parent;
+//@property (readonly) HLPArray<HLPRPCMessageReadingDelegate> *delegates;
+//@property (readonly) HLPRPCMessage *message;
+//
+//- (instancetype)initWithMessage:(HLPRPCMessage *)message;
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol HLPRPCMessageWritingDelegate <HLPOperationDelegate>
+//
+//@end
+//
+//
+//
+//@interface HLPRPCMessageWriting : HLPOperation <HLPRPCMessageWritingDelegate>
+//
+//@property HLPStreamWriting *writing;
+//
+//@property (readonly) HLPRPC *parent;
+//@property (readonly) HLPArray<HLPRPCMessageWritingDelegate> *delegates;
+//@property (readonly) HLPRPCMessage *message;
+//
+//- (instancetype)initWithMessage:(HLPRPCMessage *)message;
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol HLPRPCRequestReceivingDelegate <HLPOperationDelegate>
+//
+//@end
+//
+//
+//
+//@interface HLPRPCRequestReceiving : HLPOperation <HLPRPCRequestReceivingDelegate>
+//
+//@property (readonly) HLPRPC *parent;
+//@property (readonly) HLPArray<HLPRPCRequestReceivingDelegate> *delegates;
+//@property (readonly) HLPRPCMessage *message;
+//@property (readonly) id request;
+//@property (readonly) id response;
+//@property (readonly) HLPTimer *timer;
+//@property (readonly) HLPRPCMessageWriting *writing;
+//
+//- (instancetype)initWithMessage:(HLPRPCMessage *)message;
+//- (void)endWithResponse:(id)response error:(NSError *)error;
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol HLPRPCRequestSendingDelegate <HLPOperationDelegate>
+//
+//@end
+//
+//
+//
+//@interface HLPRPCRequestSending : HLPOperation <HLPRPCRequestSendingDelegate>
+//
+//@property (readonly) HLPRPC *parent;
+//@property (readonly) HLPArray<HLPRPCRequestSendingDelegate> *delegates;
+//@property (readonly) id request;
+//@property (readonly) id response;
+//@property (readonly) HLPRPCMessageWriting *writing;
+//@property (readonly) HLPTimer *timer;
+//
+//- (instancetype)initWithRequest:(id)request;
+//- (void)endWithResponse:(id)response error:(NSError *)error;
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol HLPRPCDelegate <HLPStreamsDelegate, HLPRPCMessageReadingDelegate, HLPRPCMessageWritingDelegate, HLPRPCRequestReceivingDelegate, HLPRPCRequestSendingDelegate>
+//
+//@end
+//
+//
+//
+//@interface HLPRPC : HLPOperation <HLPRPCDelegate>
+//
+//@property Class messageReadingClass;
+//@property Class messageWritingClass;
+//@property Class requestReceivingClass;
+//@property Class requestSendingClass;
+//@property NSTimeInterval timeout;
+//
+//@property (readonly) HLPStreams *streams;
+//@property (readonly) HLPRPCMessageReading *reading;
+//@property (readonly) HLPDictionary<NSString *, HLPRPCRequestSending *> *sentRequest;
+//
+//- (instancetype)initWithStreams:(HLPStreams *)streams;
+//
+//- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message;
+//- (HLPRPCMessageReading *)readMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+//
+//- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message;
+//- (HLPRPCMessageWriting *)writeMessage:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+//
+//- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message;
+//- (HLPRPCRequestReceiving *)receiveRequest:(HLPRPCMessage *)message completion:(HLPVoidBlock)completion;
+//
+//- (HLPRPCRequestSending *)sendRequest:(id)request;
+//- (HLPRPCRequestSending *)sendRequest:(id)request completion:(HLPVoidBlock)completion;
+//
+//@end
 
 
 
