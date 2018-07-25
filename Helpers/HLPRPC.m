@@ -104,6 +104,8 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPCMessageSending ()
 
 @property id message;
+@property HLPRPCPayloadWriting *writing;
+@property HLPTimer *timer;
 
 @end
 
@@ -124,6 +126,28 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
+    
+    HLPRPCPayload *payload = HLPRPCPayload.new;
+    payload.serial = @"1";
+    payload.message = self.message;
+    
+    self.writing = [self.parent writePayload:payload];
+    [self.writing waitUntilFinished];
+    if (self.writing.cancelled) {
+    } else if (self.writing.errors.count > 0) {
+        [self.errors addObjectsFromArray:self.writing.errors];
+    } else {
+        if (payload.needsResponse) {
+            self.parent.sendings[payload.serial] = self;
+            
+            self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
+            [self.timer waitUntilFinished];
+            if (self.timer.cancelled) {
+            } else {
+                
+            }
+        }
+    }
     
     [self updateState:HLPOperationStateDidEnd];
 }
@@ -233,7 +257,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 @property HLPStreams *streams;
 @property HLPRPCPayloadReading *reading;
-@property HLPDictionary<NSNumber *, HLPRPCPayloadWriting *> *writings;
+@property HLPDictionary<NSString *, HLPRPCMessageSending *> *sendings;
 
 @end
 
@@ -246,6 +270,10 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     if (self) {
         self.streams = streams;
         [self.streams.delegates addObject:self.delegates];
+        
+        self.sendings = HLPDictionary.strongToWeakDictionary;
+        
+        self.timeout = 30.0;
     }
     return self;
 }

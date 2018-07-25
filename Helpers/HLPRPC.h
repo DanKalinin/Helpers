@@ -107,6 +107,8 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property (readonly) HLPRPC *parent;
 @property (readonly) HLPArray<HLPRPCMessageSendingDelegate> *delegates;
 @property (readonly) id message;
+@property (readonly) HLPRPCPayloadWriting *writing;
+@property (readonly) HLPTimer *timer;
 
 - (instancetype)initWithMessage:(id)message;
 
@@ -188,7 +190,7 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @property (readonly) HLPStreams *streams;
 @property (readonly) HLPRPCPayloadReading *reading;
-@property (readonly) HLPDictionary<NSNumber *, HLPRPCPayloadWriting *> *writings;
+@property (readonly) HLPDictionary<NSString *, HLPRPCMessageSending *> *sendings;
 
 - (instancetype)initWithStreams:(HLPStreams *)streams;
 
