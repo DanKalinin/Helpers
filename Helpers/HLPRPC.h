@@ -136,6 +136,7 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property (readonly) HLPRPC *parent;
 @property (readonly) HLPArray<HLPRPCMessageReceivingDelegate> *delegates;
 @property (readonly) HLPRPCPayload *payload;
+@property (readonly) id message;
 
 - (instancetype)initWithPayload:(HLPRPCPayload *)payload;
 

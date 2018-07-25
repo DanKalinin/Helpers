@@ -184,6 +184,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPCMessageReceiving ()
 
 @property HLPRPCPayload *payload;
+@property id message;
 
 @end
 
@@ -204,6 +205,13 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
+    
+    if (self.payload.needsResponse) {
+        HLPRPCMessageSending *sending = self.parent.sendings[self.payload.responseSerial];
+        [sending endWithResponse:self.payload.response error:self.payload.error];
+    } else {
+        self.message = self.payload.message;
+    }
     
     [self updateState:HLPOperationStateDidEnd];
 }
