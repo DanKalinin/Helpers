@@ -194,6 +194,12 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @interface HLPRPC : HLPOperation <HLPRPCDelegate>
 
+@property Class payloadReadingClass;
+@property Class payloadWritingClass;
+@property Class messageSendingClass;
+@property Class messageReceivingClass;
+@property Class responseSendingClass;
+
 @property NSTimeInterval timeout;
 
 @property (readonly) HLPStreams *streams;
