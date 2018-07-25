@@ -166,6 +166,16 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     [self updateState:HLPOperationStateDidEnd];
 }
 
+- (HLPRPCResponseSending *)sendResponse:(id)response error:(NSError *)error {
+    HLPRPCResponseSending *sending = [self.parent payload:self.payload sendResponse:response error:error];
+    return sending;
+}
+
+- (HLPRPCResponseSending *)sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion {
+    HLPRPCResponseSending *sending = [self.parent payload:self.payload sendResponse:response error:error completion:completion];
+    return sending;
+}
+
 @end
 
 
@@ -177,26 +187,26 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@interface HLPRPCMessageResponding ()
+@interface HLPRPCResponseSending ()
 
 @property HLPRPCPayload *payload;
-@property id message;
+@property id response;
 @property NSError *error;
 
 @end
 
 
 
-@implementation HLPRPCMessageResponding
+@implementation HLPRPCResponseSending
 
 @dynamic parent;
 @dynamic delegates;
 
-- (instancetype)initWithPayload:(HLPRPCPayload *)payload message:(id)message error:(NSError *)error {
+- (instancetype)initWithPayload:(HLPRPCPayload *)payload response:(id)response error:(NSError *)error {
     self = super.init;
     if (self) {
         self.payload = payload;
-        self.message = message;
+        self.response = response;
         self.error = error;
     }
     return self;
@@ -223,7 +233,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 @property HLPStreams *streams;
 @property HLPRPCPayloadReading *reading;
-//@property HLPDictionary<NSString *, HLPRPCRequestSending *> *sentRequest;
+@property HLPDictionary<NSNumber *, HLPRPCPayloadWriting *> *writings;
 
 @end
 
@@ -299,6 +309,30 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     HLPRPCMessageReceiving *receiving = [self receiveMessage:payload];
     receiving.completionBlock = completion;
     return receiving;
+}
+
+- (HLPRPCMessageSending *)sendMessage:(id)message {
+    HLPRPCMessageSending *sending = [HLPRPCMessageSending.alloc initWithMessage:message];
+    [self addOperation:sending];
+    return sending;
+}
+
+- (HLPRPCMessageSending *)sendMessage:(id)message completion:(HLPVoidBlock)completion {
+    HLPRPCMessageSending *sending = [self sendMessage:message];
+    sending.completionBlock = completion;
+    return sending;
+}
+
+- (HLPRPCResponseSending *)payload:(HLPRPCPayload *)payload sendResponse:(id)response error:(NSError *)error {
+    HLPRPCResponseSending *sending = [HLPRPCResponseSending.alloc initWithPayload:payload response:response error:error];
+    [self addOperation:sending];
+    return sending;
+}
+
+- (HLPRPCResponseSending *)payload:(HLPRPCPayload *)payload sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion {
+    HLPRPCResponseSending *sending = [self payload:payload sendResponse:response error:error];
+    sending.completionBlock = completion;
+    return sending;
 }
 
 @end
