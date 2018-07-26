@@ -54,8 +54,6 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @interface HLPRPCPayloadReading : HLPOperation <HLPRPCPayloadReadingDelegate>
 
-@property HLPStreamReading *reading;
-
 @property (readonly) HLPRPC *parent;
 @property (readonly) HLPArray<HLPRPCPayloadReadingDelegate> *delegates;
 @property (readonly) HLPRPCPayload *payload;
@@ -80,8 +78,6 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 
 @interface HLPRPCPayloadWriting : HLPOperation <HLPRPCPayloadWritingDelegate>
-
-@property HLPStreamWriting *writing;
 
 @property (readonly) HLPRPC *parent;
 @property (readonly) HLPArray<HLPRPCPayloadWritingDelegate> *delegates;
@@ -139,6 +135,7 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property (readonly) HLPArray<HLPRPCMessageReceivingDelegate> *delegates;
 @property (readonly) HLPRPCPayload *payload;
 @property (readonly) id message;
+@property (readonly) id response;
 
 - (instancetype)initWithPayload:(HLPRPCPayload *)payload;
 
@@ -196,7 +193,6 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property NSTimeInterval timeout;
 
 @property (readonly) HLPStreams *streams;
-@property (readonly) HLPRPCPayloadReading *reading;
 @property (readonly) HLPDictionary<NSString *, HLPRPCMessageSending *> *sendings;
 
 - (instancetype)initWithStreams:(HLPStreams *)streams;

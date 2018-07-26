@@ -58,12 +58,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     return self;
 }
 
-- (void)cancel {
-    [super cancel];
-    
-    [self.reading cancel];
-}
-
 @end
 
 
@@ -94,12 +88,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
         self.payload = payload;
     }
     return self;
-}
-
-- (void)cancel {
-    [super cancel];
-    
-    [self.writing cancel];
 }
 
 @end
@@ -200,6 +188,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 @property HLPRPCPayload *payload;
 @property id message;
+@property id response;
 
 @end
 
@@ -222,6 +211,12 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     [self updateState:HLPOperationStateDidBegin];
     
     if (self.payload.responseSerial.length > 0) {
+        if (self.payload.error) {
+            [self.errors addObject:self.payload.error];
+        } else {
+            self.response = self.payload.response;
+        }
+        
         HLPRPCMessageSending *sending = self.parent.sendings[self.payload.responseSerial];
         [sending endWithResponse:self.payload.response error:self.payload.error];
     } else {
@@ -306,7 +301,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPC ()
 
 @property HLPStreams *streams;
-@property HLPRPCPayloadReading *reading;
 @property HLPDictionary<NSString *, HLPRPCMessageSending *> *sendings;
 
 @end
@@ -342,23 +336,19 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     
     while (!self.cancelled && (self.errors.count == 0)) {
         HLPRPCPayload *payload = HLPRPCPayload.new;
-        self.reading = [self readPayload:payload];
-        [self.reading waitUntilFinished];
-        if (self.reading.cancelled) {
-        } else if (self.reading.errors.count > 0) {
-            [self.errors addObjectsFromArray:self.reading.errors];
+        
+        self.operation = [self readPayload:payload];
+        [self.operation waitUntilFinished];
+        if (self.operation.cancelled) {
+        } else if (self.operation.errors.count > 0) {
         } else {
             [self receiveMessage:payload];
         }
+        
+        [self.errors addObjectsFromArray:self.operation.errors];
     }
     
     [self updateState:HLPOperationStateDidEnd];
-}
-
-- (void)cancel {
-    [super cancel];
-    
-    [self.reading cancel];
 }
 
 - (HLPRPCPayloadReading *)readPayload:(HLPRPCPayload *)payload {
