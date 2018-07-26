@@ -169,7 +169,6 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property (readonly) HLPRPCPayload *payload;
 @property (readonly) id response;
 @property (readonly) NSError *error;
-@property (readonly) HLPRPCPayloadWriting *writing;
 
 - (instancetype)initWithPayload:(HLPRPCPayload *)payload response:(id)response error:(NSError *)error;
 

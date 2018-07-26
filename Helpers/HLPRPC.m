@@ -142,7 +142,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     [self updateProgress:0];
     
     HLPRPCPayload *payload = HLPRPCPayload.new;
-    payload.serial = @"1";
+    payload.serial = @"1"; // TODO: Sequence
     payload.message = self.message;
     
     self.operation = [self.parent writePayload:payload];
@@ -257,7 +257,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @property HLPRPCPayload *payload;
 @property id response;
 @property NSError *error;
-@property HLPRPCPayloadWriting *writing;
 
 @end
 
@@ -285,17 +284,12 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     payload.responseSerial = self.payload.serial;
     payload.response = self.response;
     payload.error = self.error;
-    self.writing = [self.parent writePayload:payload];
-    [self.writing waitUntilFinished];
-    [self.errors addObjectsFromArray:self.writing.errors];
+    
+    self.operation = [self.parent writePayload:payload];
+    [self.operation waitUntilFinished];
+    [self.errors addObjectsFromArray:self.operation.errors];
     
     [self updateState:HLPOperationStateDidEnd];
-}
-
-- (void)cancel {
-    [super cancel];
-    
-    [self.writing cancel];
 }
 
 @end
