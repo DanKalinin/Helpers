@@ -117,8 +117,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 @property id message;
 @property id response;
-@property HLPRPCPayloadWriting *writing;
-@property HLPTimer *timer;
 
 @end
 
@@ -138,42 +136,47 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 - (void)main {
+    self.progress.totalUnitCount = 2;
+    
     [self updateState:HLPOperationStateDidBegin];
+    [self updateProgress:0];
     
     HLPRPCPayload *payload = HLPRPCPayload.new;
     payload.serial = @"1";
     payload.message = self.message;
-    self.writing = [self.parent writePayload:payload];
-    [self.writing waitUntilFinished];
-    if (self.writing.cancelled) {
-    } else if (self.writing.errors.count > 0) {
-        [self.errors addObjectsFromArray:self.writing.errors];
+    
+    self.operation = [self.parent writePayload:payload];
+    [self.operation waitUntilFinished];
+    if (self.operation.cancelled) {
+    } else if (self.operation.errors.count > 0) {
     } else {
         if (payload.needsResponse) {
+            [self updateProgress:1];
+            
             self.parent.sendings[payload.serial] = self;
-            self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
-            [self.timer waitUntilFinished];
-            if (!self.timer.cancelled) {
+            
+            self.operation = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
+            [self.operation waitUntilFinished];
+            if (self.operation.cancelled) {
+                [self updateProgress:2];
+            } else {
                 NSError *error = [NSError errorWithDomain:HLPRPCErrorDomain code:HLPRPCErrorTimeout userInfo:nil];
                 [self.errors addObject:error];
             }
+        } else {
+            [self updateProgress:2];
         }
     }
     
-    [self updateState:HLPOperationStateDidEnd];
-}
-
-- (void)cancel {
-    [super cancel];
+    [self.errors addObjectsFromArray:self.operation.errors];
     
-    [self.writing cancel];
-    [self.timer cancel];
+    [self updateState:HLPOperationStateDidEnd];
 }
 
 #pragma mark - Helpers
 
 - (void)endWithResponse:(id)response error:(NSError *)error {
-    [self.timer cancel];
+    [self.operation cancel];
     
     if (error) {
         [self.errors addObject:error];
