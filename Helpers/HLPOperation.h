@@ -44,8 +44,6 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 
 @interface HLPOperation : NSOperation <HLPOperationDelegate, NSProgressReporting>
 
-@property HLPOperation *operation;
-
 @property (copy) HLPVoidBlock stateBlock;
 @property (copy) HLPVoidBlock progressBlock;
 
