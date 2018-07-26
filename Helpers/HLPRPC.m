@@ -326,6 +326,12 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
         
         self.sendings = HLPDictionary.strongToWeakDictionary;
         
+        self.payloadReadingClass = HLPRPCPayloadReading.class;
+        self.payloadWritingClass = HLPRPCPayloadWriting.class;
+        self.messageSendingClass = HLPRPCMessageSending.class;
+        self.messageReceivingClass = HLPRPCMessageReceiving.class;
+        self.responseSendingClass = HLPRPCResponseSending.class;
+        
         self.timeout = 30.0;
     }
     return self;
@@ -362,7 +368,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 - (HLPRPCPayloadReading *)readPayload:(HLPRPCPayload *)payload {
-    HLPRPCPayloadReading *reading = [HLPRPCPayloadReading.alloc initWithPayload:payload];
+    HLPRPCPayloadReading *reading = [self.payloadReadingClass.alloc initWithPayload:payload];
     [self addOperation:reading];
     return reading;
 }
@@ -374,7 +380,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 - (HLPRPCPayloadWriting *)writePayload:(HLPRPCPayload *)payload {
-    HLPRPCPayloadWriting *writing = [HLPRPCPayloadWriting.alloc initWithPayload:payload];
+    HLPRPCPayloadWriting *writing = [self.payloadWritingClass.alloc initWithPayload:payload];
     [self addOperation:writing];
     return writing;
 }
@@ -386,7 +392,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 - (HLPRPCMessageReceiving *)receiveMessage:(HLPRPCPayload *)payload {
-    HLPRPCMessageReceiving *receiving = [HLPRPCMessageReceiving.alloc initWithPayload:payload];
+    HLPRPCMessageReceiving *receiving = [self.messageReceivingClass.alloc initWithPayload:payload];
     [self addOperation:receiving];
     return receiving;
 }
@@ -398,7 +404,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 - (HLPRPCMessageSending *)sendMessage:(id)message {
-    HLPRPCMessageSending *sending = [HLPRPCMessageSending.alloc initWithMessage:message];
+    HLPRPCMessageSending *sending = [self.messageSendingClass.alloc initWithMessage:message];
     [self addOperation:sending];
     return sending;
 }
@@ -410,7 +416,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 - (HLPRPCResponseSending *)payload:(HLPRPCPayload *)payload sendResponse:(id)response error:(NSError *)error {
-    HLPRPCResponseSending *sending = [HLPRPCResponseSending.alloc initWithPayload:payload response:response error:error];
+    HLPRPCResponseSending *sending = [self.responseSendingClass.alloc initWithPayload:payload response:response error:error];
     [self addOperation:sending];
     return sending;
 }
