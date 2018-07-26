@@ -324,15 +324,12 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
         self.streams = streams;
         [self.streams.delegates addObject:self.delegates];
         
-        self.sendings = HLPDictionary.strongToWeakDictionary;
-        
         self.payloadReadingClass = HLPRPCPayloadReading.class;
         self.payloadWritingClass = HLPRPCPayloadWriting.class;
-        self.messageSendingClass = HLPRPCMessageSending.class;
-        self.messageReceivingClass = HLPRPCMessageReceiving.class;
-        self.responseSendingClass = HLPRPCResponseSending.class;
         
         self.timeout = 30.0;
+        
+        self.sendings = HLPDictionary.strongToWeakDictionary;
     }
     return self;
 }
@@ -392,7 +389,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 - (HLPRPCMessageReceiving *)receiveMessage:(HLPRPCPayload *)payload {
-    HLPRPCMessageReceiving *receiving = [self.messageReceivingClass.alloc initWithPayload:payload];
+    HLPRPCMessageReceiving *receiving = [HLPRPCMessageReceiving.alloc initWithPayload:payload];
     [self addOperation:receiving];
     return receiving;
 }
@@ -404,7 +401,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 - (HLPRPCMessageSending *)sendMessage:(id)message {
-    HLPRPCMessageSending *sending = [self.messageSendingClass.alloc initWithMessage:message];
+    HLPRPCMessageSending *sending = [HLPRPCMessageSending.alloc initWithMessage:message];
     [self addOperation:sending];
     return sending;
 }
@@ -416,7 +413,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 - (HLPRPCResponseSending *)payload:(HLPRPCPayload *)payload sendResponse:(id)response error:(NSError *)error {
-    HLPRPCResponseSending *sending = [self.responseSendingClass.alloc initWithPayload:payload response:response error:error];
+    HLPRPCResponseSending *sending = [HLPRPCResponseSending.alloc initWithPayload:payload response:response error:error];
     [self addOperation:sending];
     return sending;
 }
