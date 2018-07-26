@@ -64,6 +64,7 @@
     
     [super cancel];
     
+    [self.operation cancel];
     [self.operationQueue cancelAllOperations];
     
     [self updateState:HLPOperationStateDidCancel];
