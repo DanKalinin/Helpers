@@ -23,7 +23,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @property NSTimeInterval timeout;
 @property HLPTimer *timer;
-@property HLPStreamClosing *closing;
 
 @end
 
@@ -66,8 +65,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     [self.timer cancel];
     
     if (self.cancelled || (self.errors.count > 0)) {
-        self.closing = [self.parent close];
-        [self.closing waitUntilFinished];
+        [self.parent.stream close];
     }
     
     [self updateState:HLPOperationStateDidEnd];
@@ -282,6 +280,8 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     self = super.init;
     if (self) {
         self.stream = stream;
+        
+        self.maxConcurrentOperationCount = 1;
     }
     return self;
 }
@@ -392,7 +392,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @interface HLPStreamsOpening ()
 
 @property NSTimeInterval timeout;
-@property HLPStreamOpening *opening;
 
 @end
 
@@ -417,31 +416,25 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     [self updateState:HLPOperationStateDidBegin];
     [self updateProgress:0];
     
-    self.opening = [self.parent.input openWithTimeout:self.timeout];
-    [self.opening waitUntilFinished];
-    if (self.opening.cancelled) {
-    } else if (self.opening.errors.count > 0) {
+    self.operation = [self.parent.input openWithTimeout:self.timeout];
+    [self.operation waitUntilFinished];
+    if (self.operation.cancelled) {
+    } else if (self.operation.errors.count > 0) {
     } else {
         [self updateProgress:1];
         
-        self.opening = [self.parent.output openWithTimeout:self.timeout];
-        [self.opening waitUntilFinished];
-        if (self.opening.cancelled) {
-        } else if (self.opening.errors.count > 0) {
+        self.operation = [self.parent.output openWithTimeout:self.timeout];
+        [self.operation waitUntilFinished];
+        if (self.operation.cancelled) {
+        } else if (self.operation.errors.count > 0) {
         } else {
             [self updateProgress:2];
         }
     }
     
-    [self.errors addObjectsFromArray:self.opening.errors];
+    [self.errors addObjectsFromArray:self.operation.errors];
     
     [self updateState:HLPOperationStateDidEnd];
-}
-
-- (void)cancel {
-    [super cancel];
-    
-    [self.opening cancel];
 }
 
 @end
@@ -456,8 +449,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 
 @interface HLPStreamsClosing ()
-
-@property HLPStreamClosing *closing;
 
 @end
 
@@ -474,12 +465,12 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     [self updateState:HLPOperationStateDidBegin];
     [self updateProgress:0];
     
-    self.closing = [self.parent.input close];
-    [self.closing waitUntilFinished];
+    self.operation = [self.parent.input close];
+    [self.operation waitUntilFinished];
     [self updateProgress:1];
     
-    self.closing = [self.parent.output close];
-    [self.closing waitUntilFinished];
+    self.operation = [self.parent.output close];
+    [self.operation waitUntilFinished];
     [self updateProgress:2];
     
     [self updateState:HLPOperationStateDidEnd];
