@@ -42,7 +42,6 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 @property (readonly) HLPArray<HLPStreamOpeningDelegate> *delegates;
 @property (readonly) NSTimeInterval timeout;
 @property (readonly) HLPTimer *timer;
-@property (readonly) HLPStreamClosing *closing;
 
 - (instancetype)initWithTimeout:(NSTimeInterval)timeout;
 
