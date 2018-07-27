@@ -58,6 +58,14 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     return self;
 }
 
+- (void)main {
+    [self updateState:HLPOperationStateDidBegin];
+    
+    [NSThread sleepForTimeInterval:1.0];
+    
+    [self updateState:HLPOperationStateDidEnd];
+}
+
 @end
 
 
@@ -88,6 +96,14 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
         self.payload = payload;
     }
     return self;
+}
+
+- (void)main {
+    [self updateState:HLPOperationStateDidBegin];
+    
+    [NSThread sleepForTimeInterval:1.0];
+    
+    [self updateState:HLPOperationStateDidEnd];
 }
 
 @end
