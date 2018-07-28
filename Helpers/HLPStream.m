@@ -392,6 +392,8 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @interface HLPStreamsOpening ()
 
 @property NSTimeInterval timeout;
+@property HLPStreamOpening *inputOpening;
+@property HLPStreamOpening *outputOpening;
 
 @end
 
@@ -416,17 +418,17 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     [self updateState:HLPOperationStateDidBegin];
     [self updateProgress:0];
     
-    self.operation = [self.parent.input openWithTimeout:self.timeout];
-    [self.operation waitUntilFinished];
-    if (self.operation.cancelled) {
-    } else if (self.operation.errors.count > 0) {
+    self.operation = self.inputOpening = [self.parent.input openWithTimeout:self.timeout];
+    [self.inputOpening waitUntilFinished];
+    if (self.inputOpening.cancelled) {
+    } else if (self.inputOpening.errors.count > 0) {
     } else {
         [self updateProgress:1];
         
-        self.operation = [self.parent.output openWithTimeout:self.timeout];
-        [self.operation waitUntilFinished];
-        if (self.operation.cancelled) {
-        } else if (self.operation.errors.count > 0) {
+        self.operation = self.outputOpening = [self.parent.output openWithTimeout:self.timeout];
+        [self.outputOpening waitUntilFinished];
+        if (self.outputOpening.cancelled) {
+        } else if (self.outputOpening.errors.count > 0) {
         } else {
             [self updateProgress:2];
         }
@@ -450,6 +452,9 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @interface HLPStreamsClosing ()
 
+@property HLPStreamClosing *inputClosing;
+@property HLPStreamClosing *outputClosing;
+
 @end
 
 
@@ -465,12 +470,12 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     [self updateState:HLPOperationStateDidBegin];
     [self updateProgress:0];
     
-    self.operation = [self.parent.input close];
-    [self.operation waitUntilFinished];
+    self.inputClosing = [self.parent.input close];
+    [self.inputClosing waitUntilFinished];
     [self updateProgress:1];
     
-    self.operation = [self.parent.output close];
-    [self.operation waitUntilFinished];
+    self.outputClosing = [self.parent.output close];
+    [self.outputClosing waitUntilFinished];
     [self updateProgress:2];
     
     [self updateState:HLPOperationStateDidEnd];
