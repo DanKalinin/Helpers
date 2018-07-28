@@ -422,6 +422,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     [self.inputOpening waitUntilFinished];
     if (self.inputOpening.cancelled) {
     } else if (self.inputOpening.errors.count > 0) {
+        [self.errors addObjectsFromArray:self.inputOpening.errors];
     } else {
         [self updateProgress:1];
         
@@ -429,12 +430,11 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
         [self.outputOpening waitUntilFinished];
         if (self.outputOpening.cancelled) {
         } else if (self.outputOpening.errors.count > 0) {
+            [self.errors addObjectsFromArray:self.outputOpening.errors];
         } else {
             [self updateProgress:2];
         }
     }
-    
-    [self.errors addObjectsFromArray:self.operation.errors];
     
     [self updateState:HLPOperationStateDidEnd];
 }
