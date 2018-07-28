@@ -67,6 +67,7 @@
 
 @property NSTimeInterval interval;
 @property NSUInteger repeats;
+@property HLPTick *tick;
 
 @end
 
@@ -95,8 +96,8 @@
         
         [self updateProgress:completedUnitCount];
         
-        self.operation = [self tickWithInterval:self.interval];
-        [self.operation waitUntilFinished];
+        self.tick = [self tickWithInterval:self.interval];
+        [self.tick waitUntilFinished];
     }
     
     if (self.cancelled) {
