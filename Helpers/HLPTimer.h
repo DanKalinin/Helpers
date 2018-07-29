@@ -19,7 +19,13 @@
 
 
 
-@interface HLPTick : HLPOperation
+@protocol HLPTickDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface HLPTick : HLPOperation <HLPTickDelegate>
 
 @property (readonly) NSTimeInterval interval;
 
@@ -52,15 +58,13 @@
 
 @interface HLPTimer : HLPOperation <HLPTimerDelegate>
 
+@property (readonly) HLPClock *parent;
 @property (readonly) HLPArray<HLPTimerDelegate> *delegates;
 @property (readonly) NSTimeInterval interval;
 @property (readonly) NSUInteger repeats;
 @property (readonly) HLPTick *tick;
 
 - (instancetype)initWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats;
-
-- (HLPTick *)tickWithInterval:(NSTimeInterval)interval;
-- (HLPTick *)tickWithInterval:(NSTimeInterval)interval completion:(HLPVoidBlock)completion;
 
 @end
 
@@ -80,6 +84,9 @@
 
 
 @interface HLPClock : HLPOperationQueue <HLPClockDelegate>
+
+- (HLPTick *)tickWithInterval:(NSTimeInterval)interval;
+- (HLPTick *)tickWithInterval:(NSTimeInterval)interval completion:(HLPVoidBlock)completion;
 
 - (HLPTimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats;
 - (HLPTimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats completion:(HLPVoidBlock)completion;

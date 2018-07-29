@@ -75,6 +75,7 @@
 
 @implementation HLPTimer
 
+@dynamic parent;
 @dynamic delegates;
 
 - (instancetype)initWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats {
@@ -96,7 +97,7 @@
         
         [self updateProgress:completedUnitCount];
         
-        self.tick = [self tickWithInterval:self.interval];
+        self.operation = self.tick = [self.parent tickWithInterval:self.interval];
         [self.tick waitUntilFinished];
     }
     
@@ -106,18 +107,6 @@
     }
     
     [self updateState:HLPOperationStateDidEnd];
-}
-
-- (HLPTick *)tickWithInterval:(NSTimeInterval)interval {
-    HLPTick *tick = [HLPTick.alloc initWithInterval:interval];
-    [self addOperation:tick];
-    return tick;
-}
-
-- (HLPTick *)tickWithInterval:(NSTimeInterval)interval completion:(HLPVoidBlock)completion {
-    HLPTick *tick = [self tickWithInterval:interval];
-    tick.completionBlock = completion;
-    return tick;
 }
 
 #pragma mark - Helpers
@@ -167,6 +156,18 @@
         shared = self.new;
     });
     return shared;
+}
+
+- (HLPTick *)tickWithInterval:(NSTimeInterval)interval {
+    HLPTick *tick = [HLPTick.alloc initWithInterval:interval];
+    [self addOperation:tick];
+    return tick;
+}
+
+- (HLPTick *)tickWithInterval:(NSTimeInterval)interval completion:(HLPVoidBlock)completion {
+    HLPTick *tick = [self tickWithInterval:interval];
+    tick.completionBlock = completion;
+    return tick;
 }
 
 - (HLPTimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats {
