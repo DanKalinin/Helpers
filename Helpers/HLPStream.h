@@ -41,7 +41,7 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 @property (readonly) HLPStream *parent;
 @property (readonly) HLPArray<HLPStreamOpeningDelegate> *delegates;
 @property (readonly) NSTimeInterval timeout;
-@property (readonly) HLPTimer *timer;
+@property (readonly) HLPTick *tick;
 
 - (instancetype)initWithTimeout:(NSTimeInterval)timeout;
 
@@ -92,7 +92,7 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 @property (readonly) NSUInteger minLength;
 @property (readonly) NSUInteger maxLength;
 @property (readonly) NSTimeInterval timeout;
-@property (readonly) HLPTimer *timer;
+@property (readonly) HLPTick *tick;
 
 - (instancetype)initWithData:(NSMutableData *)data minLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout;
 
@@ -119,7 +119,7 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 @property (readonly) HLPArray<HLPStreamWritingDelegate> *delegates;
 @property (readonly) NSMutableData *data;
 @property (readonly) NSTimeInterval timeout;
-@property (readonly) HLPTimer *timer;
+@property (readonly) HLPTick *tick;
 
 - (instancetype)initWithData:(NSMutableData *)data timeout:(NSTimeInterval)timeout;
 

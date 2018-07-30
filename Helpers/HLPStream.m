@@ -22,7 +22,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @interface HLPStreamOpening ()
 
 @property NSTimeInterval timeout;
-@property HLPTimer *timer;
+@property HLPTick *tick;
 
 @end
 
@@ -44,15 +44,15 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
     
-    self.timer = [HLPClock.shared timerWithInterval:self.timeout repeats:1];
+    self.tick = [HLPClock.shared tickWithInterval:self.timeout];
     
     [self.parent.stream open];
-    while (!self.cancelled && (self.parent.stream.streamStatus == NSStreamStatusOpening) && !self.timer.finished) {
+    while (!self.cancelled && (self.parent.stream.streamStatus == NSStreamStatusOpening) && !self.tick.finished) {
         [NSThread sleepForTimeInterval:0.1];
     }
     
     if (self.cancelled) {
-    } else if (self.timer.finished) {
+    } else if (self.tick.finished) {
         NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimeout userInfo:nil];
         [self.errors addObject:error];
     } else if (self.parent.stream.streamStatus == NSStreamStatusError) {
@@ -62,7 +62,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
         [self.errors addObject:error];
     }
     
-    [self.timer cancel];
+    [self.tick cancel];
     
     if (self.cancelled || (self.errors.count > 0)) {
         [self.parent.stream close];
@@ -118,7 +118,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 @property NSUInteger minLength;
 @property NSUInteger maxLength;
 @property NSTimeInterval timeout;
-@property HLPTimer *timer;
+@property HLPTick *tick;
 
 @end
 
@@ -146,9 +146,9 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     [self updateState:HLPOperationStateDidBegin];
     [self updateProgress:0];
     
-    self.timer = [HLPClock.shared timerWithInterval:self.timeout repeats:1];
+    self.tick = [HLPClock.shared tickWithInterval:self.timeout];
     
-    while (!self.cancelled && (self.parent.stream.streamStatus == NSStreamStatusOpen) && (self.data.length < self.minLength) && (self.errors.count == 0) && !self.timer.finished) {
+    while (!self.cancelled && (self.parent.stream.streamStatus == NSStreamStatusOpen) && (self.data.length < self.minLength) && (self.errors.count == 0) && !self.tick.finished) {
         if (self.parent.stream.hasBytesAvailable) {
             NSUInteger length = self.maxLength - self.data.length;
             uint8_t buffer[length];
@@ -164,7 +164,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     }
     
     if (self.cancelled) {
-    } else if (self.timer.finished) {
+    } else if (self.tick.finished) {
         NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimeout userInfo:nil];
         [self.errors addObject:error];
     } else if (self.parent.stream.streamStatus == NSStreamStatusError) {
@@ -174,7 +174,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
         [self.errors addObject:error];
     }
     
-    [self.timer cancel];
+    [self.tick cancel];
     
     [self updateState:HLPOperationStateDidEnd];
 }
@@ -194,7 +194,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 @property NSMutableData *data;
 @property NSTimeInterval timeout;
-@property HLPTimer *timer;
+@property HLPTick *tick;
 
 @end
 
@@ -220,9 +220,9 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     [self updateState:HLPOperationStateDidBegin];
     [self updateProgress:0];
     
-    self.timer = [HLPClock.shared timerWithInterval:self.timeout repeats:1];
+    self.tick = [HLPClock.shared tickWithInterval:self.timeout];
     
-    while (!self.cancelled && (self.parent.stream.streamStatus == NSStreamStatusOpen) && (self.data.length > 0) && (self.errors.count == 0) && !self.timer.finished) {
+    while (!self.cancelled && (self.parent.stream.streamStatus == NSStreamStatusOpen) && (self.data.length > 0) && (self.errors.count == 0) && !self.tick.finished) {
         if (self.parent.stream.hasSpaceAvailable) {
             NSInteger result = [self.parent.stream write:self.data.bytes maxLength:self.data.length];
             if (result > 0) {
@@ -238,7 +238,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     }
     
     if (self.cancelled) {
-    } else if (self.timer.finished) {
+    } else if (self.tick.finished) {
         NSError *error = [NSError errorWithDomain:HLPStreamErrorDomain code:HLPStreamErrorTimeout userInfo:nil];
         [self.errors addObject:error];
     } else if (self.parent.stream.streamStatus == NSStreamStatusError) {
@@ -248,7 +248,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
         [self.errors addObject:error];
     }
     
-    [self.timer cancel];
+    [self.tick cancel];
     
     [self updateState:HLPOperationStateDidEnd];
 }
