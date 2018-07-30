@@ -65,38 +65,8 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     [self.tick cancel];
     
     if (self.cancelled || (self.errors.count > 0)) {
-        [self.parent.stream close];
+        [self.parent cancel];
     }
-    
-    [self updateState:HLPOperationStateDidEnd];
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface HLPStreamClosing ()
-
-@end
-
-
-
-@implementation HLPStreamClosing
-
-@dynamic parent;
-@dynamic delegates;
-
-- (void)main {
-    [self updateState:HLPOperationStateDidBegin];
-    
-    [self.parent.stream close];
     
     [self updateState:HLPOperationStateDidEnd];
 }
@@ -281,9 +251,13 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     if (self) {
         self.stream = stream;
         
-        self.maxConcurrentOperationCount = 1;
+        self.operationQueue.maxConcurrentOperationCount = 1;
     }
     return self;
+}
+
+- (void)cancel {
+    [self.stream close];
 }
 
 - (HLPStreamOpening *)openWithTimeout:(NSTimeInterval)timeout {
@@ -296,18 +270,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     HLPStreamOpening *opening = [self openWithTimeout:timeout];
     opening.completionBlock = completion;
     return opening;
-}
-
-- (HLPStreamClosing *)close {
-    HLPStreamClosing *closing = HLPStreamClosing.new;
-    [self addOperation:closing];
-    return closing;
-}
-
-- (HLPStreamClosing *)closeWithCompletion:(HLPVoidBlock)completion {
-    HLPStreamClosing *closing = [self close];
-    closing.completionBlock = completion;
-    return closing;
 }
 
 @end
@@ -434,49 +396,11 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
         } else {
             [self updateProgress:2];
         }
+        
+        if (self.cancelled || (self.errors.count > 0)) {
+            [self.parent.input cancel];
+        }
     }
-    
-    [self updateState:HLPOperationStateDidEnd];
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface HLPStreamsClosing ()
-
-@property HLPStreamClosing *inputClosing;
-@property HLPStreamClosing *outputClosing;
-
-@end
-
-
-
-@implementation HLPStreamsClosing
-
-@dynamic parent;
-@dynamic delegates;
-
-- (void)main {
-    self.progress.totalUnitCount = 2;
-    
-    [self updateState:HLPOperationStateDidBegin];
-    [self updateProgress:0];
-    
-    self.inputClosing = [self.parent.input close];
-    [self.inputClosing waitUntilFinished];
-    [self updateProgress:1];
-    
-    self.outputClosing = [self.parent.output close];
-    [self.outputClosing waitUntilFinished];
-    [self updateProgress:2];
     
     [self updateState:HLPOperationStateDidEnd];
 }
@@ -534,6 +458,11 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     return self;
 }
 
+- (void)cancel {
+    [self.input cancel];
+    [self.output cancel];
+}
+
 - (HLPStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout {
     HLPStreamsOpening *opening = [HLPStreamsOpening.alloc initWithTimeout:timeout];
     [self addOperation:opening];
@@ -544,18 +473,6 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
     HLPStreamsOpening *opening = [self openWithTimeout:timeout];
     opening.completionBlock = completion;
     return opening;
-}
-
-- (HLPStreamsClosing *)close {
-    HLPStreamsClosing *closing = HLPStreamsClosing.new;
-    [self addOperation:closing];
-    return closing;
-}
-
-- (HLPStreamsClosing *)closeWithCompletion:(HLPVoidBlock)completion {
-    HLPStreamsClosing *closing = [self close];
-    closing.completionBlock = completion;
-    return closing;
 }
 
 @end

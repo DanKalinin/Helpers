@@ -10,8 +10,8 @@
 #import "HLPOperation.h"
 #import "HLPTimer.h"
 
-@class HLPStreamOpening, HLPStreamClosing, HLPStreamReading, HLPStreamWriting, HLPStream, HLPInputStream, HLPOutputStream;
-@class HLPStreamsOpening, HLPStreamsClosing, HLPStreams;
+@class HLPStreamOpening, HLPStreamReading, HLPStreamWriting, HLPStream, HLPInputStream, HLPOutputStream;
+@class HLPStreamsOpening, HLPStreams;
 
 extern NSErrorDomain const HLPStreamErrorDomain;
 
@@ -44,28 +44,6 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 @property (readonly) HLPTick *tick;
 
 - (instancetype)initWithTimeout:(NSTimeInterval)timeout;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@protocol HLPStreamClosingDelegate <HLPOperationDelegate>
-
-@end
-
-
-
-@interface HLPStreamClosing : HLPOperation <HLPStreamClosingDelegate>
-
-@property (readonly) HLPStream *parent;
-@property (readonly) HLPArray<HLPStreamClosingDelegate> *delegates;
 
 @end
 
@@ -134,13 +112,13 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 
-@protocol HLPStreamDelegate <HLPStreamOpeningDelegate, HLPStreamClosingDelegate>
+@protocol HLPStreamDelegate <HLPStreamOpeningDelegate>
 
 @end
 
 
 
-@interface HLPStream : HLPOperationQueue <HLPStreamDelegate>
+@interface HLPStream : HLPOperation <HLPStreamDelegate>
 
 @property (readonly) HLPArray<HLPStreamDelegate> *delegates;
 @property (readonly) NSStream *stream;
@@ -149,9 +127,6 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 - (HLPStreamOpening *)openWithTimeout:(NSTimeInterval)timeout;
 - (HLPStreamOpening *)openWithTimeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
-
-- (HLPStreamClosing *)close;
-- (HLPStreamClosing *)closeWithCompletion:(HLPVoidBlock)completion;
 
 @end
 
@@ -241,37 +216,13 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 
 
-@protocol HLPStreamsClosingDelegate <HLPStreamClosingDelegate>
-
-@end
-
-
-
-@interface HLPStreamsClosing : HLPOperation <HLPStreamsClosingDelegate>
-
-@property (readonly) HLPStreams *parent;
-@property (readonly) HLPArray<HLPStreamsClosingDelegate> *delegates;
-@property (readonly) HLPStreamClosing *inputClosing;
-@property (readonly) HLPStreamClosing *outputClosing;
-
-@end
-
-
-
-
-
-
-
-
-
-
 @protocol HLPStreamsDelegate <HLPInputStreamDelegate, HLPOutputStreamDelegate>
 
 @end
 
 
 
-@interface HLPStreams : HLPOperationQueue <HLPStreamsDelegate>
+@interface HLPStreams : HLPOperation <HLPStreamsDelegate>
 
 @property (readonly) HLPArray<HLPStreamsDelegate> *delegates;
 @property (readonly) HLPInputStream *input;
@@ -285,8 +236,5 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 
 - (HLPStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout;
 - (HLPStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
-
-- (HLPStreamsClosing *)close;
-- (HLPStreamsClosing *)closeWithCompletion:(HLPVoidBlock)completion;
 
 @end
