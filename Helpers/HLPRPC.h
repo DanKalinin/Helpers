@@ -17,6 +17,12 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
     HLPRPCErrorTimeout
 };
 
+typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
+    HLPRPCPayloadTypeSignal,
+    HLPRPCPayloadTypeCall,
+    HLPRPCPayloadTypeReturn
+};
+
 
 
 
@@ -28,9 +34,9 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 
 @interface HLPRPCPayload : HLPObject
 
-@property NSString *serial;
-@property NSString *responseSerial;
-@property BOOL needsResponse;
+@property HLPRPCPayloadType type;
+@property NSInteger serial;
+@property NSInteger responseSerial;
 @property id message;
 @property id response;
 @property NSError *error;
@@ -196,7 +202,7 @@ NS_ERROR_ENUM(HLPRPCErrorDomain) {
 @property NSTimeInterval timeout;
 
 @property (readonly) HLPStreams *streams;
-@property (readonly) HLPDictionary<NSString *, HLPRPCMessageSending *> *sendings;
+@property (readonly) HLPDictionary<NSNumber *, HLPRPCMessageSending *> *sendings;
 @property (readonly) HLPRPCPayloadReading *reading;
 
 - (instancetype)initWithStreams:(HLPStreams *)streams;

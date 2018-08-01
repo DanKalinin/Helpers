@@ -148,20 +148,20 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     [self updateProgress:0];
     
     HLPRPCPayload *payload = HLPRPCPayload.new;
-    payload.serial = @"1"; // TODO: Sequence
+    payload.serial = 1; // TODO: Sequence
     payload.message = self.message;
-    
+
     self.operation = self.writing = [self.parent writePayload:payload];
     [self.writing waitUntilFinished];
     if (self.writing.cancelled) {
     } else if (self.writing.errors.count > 0) {
         [self.errors addObjectsFromArray:self.writing.errors];
     } else {
-        if (payload.needsResponse) {
+        if (payload.type == HLPRPCPayloadTypeCall) {
             [self updateProgress:1];
-            
-            self.parent.sendings[payload.serial] = self;
-            
+
+            self.parent.sendings[@(payload.serial)] = self;
+
             self.operation = self.timer = [HLPClock.shared timerWithInterval:self.parent.timeout repeats:1];
             [self.timer waitUntilFinished];
             if (self.cancelled) {
@@ -228,14 +228,14 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
     
-    if (self.payload.responseSerial.length > 0) {
+    if (self.payload.type == HLPRPCPayloadTypeReturn) {
         if (self.payload.error) {
             [self.errors addObject:self.payload.error];
         } else {
             self.response = self.payload.response;
         }
         
-        HLPRPCMessageSending *sending = self.parent.sendings[self.payload.responseSerial];
+        HLPRPCMessageSending *sending = self.parent.sendings[@(self.payload.responseSerial)];
         [sending endWithResponse:self.payload.response error:self.payload.error];
     } else {
         self.message = self.payload.message;
@@ -304,7 +304,6 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     if (self.writing.cancelled) {
     } else if (self.writing.errors.count > 0) {
         [self.errors addObjectsFromArray:self.writing.errors];
-    } else {
     }
     
     [self updateState:HLPOperationStateDidEnd];
@@ -324,7 +323,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPC ()
 
 @property HLPStreams *streams;
-@property HLPDictionary<NSString *, HLPRPCMessageSending *> *sendings;
+@property HLPDictionary<NSNumber *, HLPRPCMessageSending *> *sendings;
 @property HLPRPCPayloadReading *reading;
 
 @end
