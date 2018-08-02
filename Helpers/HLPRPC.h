@@ -113,11 +113,12 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 @property (readonly) HLPRPC *parent;
 @property (readonly) HLPArray<HLPRPCMessageSendingDelegate> *delegates;
 @property (readonly) id message;
+@property (readonly) BOOL needsResponse;
 @property (readonly) id response;
 @property (readonly) HLPRPCPayloadWriting *writing;
 @property (readonly) HLPTimer *timer;
 
-- (instancetype)initWithMessage:(id)message;
+- (instancetype)initWithMessage:(id)message needsResponse:(BOOL)needsResponse;
 - (void)endWithResponse:(id)response error:(NSError *)error;
 
 @end
@@ -216,8 +217,8 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 - (HLPRPCMessageReceiving *)receiveMessage:(HLPRPCPayload *)payload;
 - (HLPRPCMessageReceiving *)receiveMessage:(HLPRPCPayload *)payload completion:(HLPVoidBlock)completion;
 
-- (HLPRPCMessageSending *)sendMessage:(id)message;
-- (HLPRPCMessageSending *)sendMessage:(id)message completion:(HLPVoidBlock)completion;
+- (HLPRPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse;
+- (HLPRPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse completion:(HLPVoidBlock)completion;
 
 - (HLPRPCResponseSending *)payload:(HLPRPCPayload *)payload sendResponse:(id)response error:(NSError *)error;
 - (HLPRPCResponseSending *)payload:(HLPRPCPayload *)payload sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion;

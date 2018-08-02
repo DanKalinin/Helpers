@@ -120,6 +120,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface HLPRPCMessageSending ()
 
 @property id message;
+@property BOOL needsResponse;
 @property id response;
 @property HLPRPCPayloadWriting *writing;
 @property HLPTimer *timer;
@@ -133,10 +134,11 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @dynamic parent;
 @dynamic delegates;
 
-- (instancetype)initWithMessage:(id)message {
+- (instancetype)initWithMessage:(id)message needsResponse:(BOOL)needsResponse {
     self = super.init;
     if (self) {
         self.message = message;
+        self.needsResponse = needsResponse;
     }
     return self;
 }
@@ -148,6 +150,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     [self updateProgress:0];
     
     HLPRPCPayload *payload = HLPRPCPayload.new;
+    payload.type = self.needsResponse ? HLPRPCPayloadTypeCall : HLPRPCPayloadTypeSignal;
     payload.serial = 1; // TODO: Sequence
     payload.message = self.message;
 
@@ -295,6 +298,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     [self updateState:HLPOperationStateDidBegin];
     
     HLPRPCPayload *payload = HLPRPCPayload.new;
+    payload.type = HLPRPCPayloadTypeReturn;
     payload.responseSerial = self.payload.serial;
     payload.response = self.response;
     payload.error = self.error;
@@ -409,14 +413,14 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     return receiving;
 }
 
-- (HLPRPCMessageSending *)sendMessage:(id)message {
-    HLPRPCMessageSending *sending = [HLPRPCMessageSending.alloc initWithMessage:message];
+- (HLPRPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse {
+    HLPRPCMessageSending *sending = [HLPRPCMessageSending.alloc initWithMessage:message needsResponse:needsResponse];
     [self addOperation:sending];
     return sending;
 }
 
-- (HLPRPCMessageSending *)sendMessage:(id)message completion:(HLPVoidBlock)completion {
-    HLPRPCMessageSending *sending = [self sendMessage:message];
+- (HLPRPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse completion:(HLPVoidBlock)completion {
+    HLPRPCMessageSending *sending = [self sendMessage:message needsResponse:needsResponse];
     sending.completionBlock = completion;
     return sending;
 }
