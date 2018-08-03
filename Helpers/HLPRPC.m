@@ -347,6 +347,8 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
         
         self.timeout = 30.0;
         
+        self.sequence = [HLPSequence.alloc initWithStart:INT64_MIN stop:INT64_MAX step:1];
+        
         self.sendings = HLPDictionary.strongToWeakDictionary;
     }
     return self;

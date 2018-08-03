@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "HLPStream.h"
+#import "HLPSequence.h"
 
 @class HLPRPCPayload, HLPRPCPayloadReading, HLPRPCPayloadWriting, HLPRPCMessageSending, HLPRPCMessageReceiving, HLPRPCResponseSending, HLPRPC;
 
@@ -201,6 +202,7 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 @property Class payloadReadingClass;
 @property Class payloadWritingClass;
 @property NSTimeInterval timeout;
+@property HLPSequence *sequence;
 
 @property (readonly) HLPStreams *streams;
 @property (readonly) HLPDictionary<NSNumber *, HLPRPCMessageSending *> *sendings;
