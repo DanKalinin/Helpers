@@ -13,7 +13,7 @@
 
 @property int64_t start;
 @property int64_t stop;
-@property uint32_t step;
+@property uint64_t step;
 @property int64_t value;
 
 @end
@@ -22,7 +22,7 @@
 
 @implementation HLPSequence
 
-- (instancetype)initWithStart:(int64_t)start stop:(int64_t)stop step:(uint32_t)step {
+- (instancetype)initWithStart:(int64_t)start stop:(int64_t)stop step:(uint64_t)step {
     self = super.init;
     if (self) {
         self.start = start;

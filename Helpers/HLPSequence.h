@@ -14,10 +14,10 @@
 
 @property (readonly) int64_t start;
 @property (readonly) int64_t stop;
-@property (readonly) uint32_t step;
+@property (readonly) uint64_t step;
 @property (readonly) int64_t value;
 
-- (instancetype)initWithStart:(int64_t)start stop:(int64_t)stop step:(uint32_t)step;
+- (instancetype)initWithStart:(int64_t)start stop:(int64_t)stop step:(uint64_t)step;
 - (void)next;
 
 @end
