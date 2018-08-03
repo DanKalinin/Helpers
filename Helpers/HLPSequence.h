@@ -6,18 +6,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "HLPEnumerator.h"
+#import "HLPObject.h"
 
 
 
-@interface HLPSequence : HLPEnumerator
+@interface HLPSequence : HLPObject
 
 @property (readonly) int64_t start;
 @property (readonly) int64_t stop;
-@property (readonly) int64_t step;
+@property (readonly) uint32_t step;
 @property (readonly) int64_t value;
-@property (readonly) int64_t next;
 
-- (instancetype)initWithStart:(int64_t)start stop:(int64_t)stop step:(int64_t)step;
+- (instancetype)initWithStart:(int64_t)start stop:(int64_t)stop step:(uint32_t)step;
+- (void)next;
 
 @end

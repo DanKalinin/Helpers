@@ -151,7 +151,8 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     
     HLPRPCPayload *payload = HLPRPCPayload.new;
     payload.type = self.needsResponse ? HLPRPCPayloadTypeCall : HLPRPCPayloadTypeSignal;
-    payload.serial = self.parent.sequence.next;
+    payload.serial = self.parent.sequence.value;
+    [self.parent.sequence next];
     payload.message = self.message;
 
     self.operation = self.writing = [self.parent writePayload:payload];
