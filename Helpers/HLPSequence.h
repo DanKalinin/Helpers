@@ -14,9 +14,10 @@
 
 @property (readonly) int64_t minValue;
 @property (readonly) int64_t maxValue;
-@property (readonly) int64_t start;
-@property (readonly) int64_t incr;
-@property (readonly) int64_t curVal;
-@property (readonly) int64_t nextVal;
+@property (readonly) int64_t step;
+@property (readonly) int64_t value;
+@property (readonly) int64_t nextValue;
+
+- (instancetype)initWithMinValue:(int64_t)minValue maxValue:(int64_t)maxValue step:(int64_t)step;
 
 @end
