@@ -36,8 +36,8 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 @interface HLPRPCPayload : HLPObject
 
 @property HLPRPCPayloadType type;
-@property NSInteger serial;
-@property NSInteger responseSerial;
+@property int64_t serial;
+@property int64_t responseSerial;
 @property id message;
 @property id response;
 @property NSError *error;
