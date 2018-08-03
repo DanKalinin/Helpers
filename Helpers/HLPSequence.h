@@ -12,12 +12,12 @@
 
 @interface HLPSequence : HLPEnumerator
 
-@property (readonly) int64_t minValue;
-@property (readonly) int64_t maxValue;
+@property (readonly) int64_t start;
+@property (readonly) int64_t stop;
 @property (readonly) int64_t step;
 @property (readonly) int64_t value;
-@property (readonly) int64_t nextValue;
+@property (readonly) int64_t next;
 
-- (instancetype)initWithMinValue:(int64_t)minValue maxValue:(int64_t)maxValue step:(int64_t)step;
+- (instancetype)initWithStart:(int64_t)start stop:(int64_t)stop step:(int64_t)step;
 
 @end

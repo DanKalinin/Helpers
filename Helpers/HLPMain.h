@@ -7,6 +7,4 @@
 
 #import <Foundation/Foundation.h>
 
-#define HLPRestrictedValue(value, minValue, maxValue) (value < minValue ? minValue : (value > maxValue ? maxValue : value))
-
 typedef void (^HLPVoidBlock)(void);

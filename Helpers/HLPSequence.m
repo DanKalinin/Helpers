@@ -11,8 +11,8 @@
 
 @interface HLPSequence ()
 
-@property int64_t minValue;
-@property int64_t maxValue;
+@property int64_t start;
+@property int64_t stop;
 @property int64_t step;
 @property int64_t value;
 
@@ -22,20 +22,48 @@
 
 @implementation HLPSequence
 
-- (instancetype)initWithMinValue:(int64_t)minValue maxValue:(int64_t)maxValue step:(int64_t)step {
+- (instancetype)initWithStart:(int64_t)start stop:(int64_t)stop step:(int64_t)step {
     self = super.init;
     if (self) {
-        self.minValue = minValue;
-        self.maxValue = maxValue;
+        self.start = start;
+        self.stop = stop;
         self.step = step;
         
-        self.value = self.minValue;
+        self.value = self.start;
     }
     return self;
 }
 
-- (int64_t)nextValue {
-    return self.value;
+- (int64_t)next {
+    int64_t value = self.value;
+    self.value += self.step;
+    if (self.step > 0) {
+        if (self.value > self.stop) {
+            self.value = self.start;
+        }
+    } else {
+        if (self.value < self.stop) {
+            self.value = self.start;
+        }
+    }
+    return value;
+}
+
+#pragma mark - Enumerator
+
+- (id)nextObject {
+    int64_t value = self.value;
+    self.value += self.step;
+    if (self.step > 0) {
+        if (self.value > self.stop) {
+            return nil;
+        }
+    } else {
+        if (self.value < self.stop) {
+            return nil;
+        }
+    }
+    return @(value);
 }
 
 @end
