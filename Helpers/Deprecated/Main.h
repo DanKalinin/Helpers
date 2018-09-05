@@ -664,6 +664,7 @@ typedef void (^ReachabilityHandler)(_Reachability *reachability);
 
 - (void)embedViewController:(UIViewController *)vc toView:(UIView *)view; // Add child view controller to receiver restricting the size with specified view bounds
 - (void)removeEmbeddedViewController:(UIViewController *)vc; // Remove child view controller from the receiver
+- (__kindof UIViewController *)childViewControllerInView:(UIView *)view;
 
 - (void)performSegueWithIdentifier:(NSString *)identifier preparation:(StoryboardSegueBlock)preparation; // - prepareForSegue:sender: inline implementation
 - (void)performSegueWithIdentifier:(NSString *)identifier animated:(BOOL)animated preparation:(StoryboardSegueBlock)preparation;

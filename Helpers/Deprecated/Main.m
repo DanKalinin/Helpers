@@ -1971,6 +1971,15 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [vc removeFromParentViewController];
 }
 
+- (UIViewController *)childViewControllerInView:(UIView *)view {
+    for (UIViewController *childViewController in self.childViewControllers) {
+        if ([childViewController.view.superview isEqual:view]) {
+            return childViewController;
+        }
+    }
+    return nil;
+}
+
 - (void)performSegueWithIdentifier:(NSString *)identifier preparation:(StoryboardSegueBlock)preparation {
     NSString *key = NSStringFromSelector(_cmd);
     self.kvs[key] = preparation;
