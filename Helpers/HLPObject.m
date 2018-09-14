@@ -25,6 +25,15 @@
 
 @implementation HLPObject
 
++ (instancetype)shared {
+    static HLPObject *shared = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shared = self.new;
+    });
+    return shared;
+}
+
 @end
 
 

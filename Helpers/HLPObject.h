@@ -28,6 +28,8 @@
 
 @interface HLPObject : NSObject <HLPObject>
 
++ (instancetype)shared;
+
 @end
 
 
