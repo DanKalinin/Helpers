@@ -23,6 +23,7 @@
 @property NSMutableArray<NSError *> *errors;
 @property NSProgress *progress;
 @property NSOperationQueue *operationQueue;
+@property NSNotificationCenter *notificationCenter;
 @property dispatch_group_t group;
 
 @end
@@ -53,6 +54,8 @@
         self.progress = NSProgress.new;
         
         self.operationQueue = NSOperationQueue.new;
+        
+        self.notificationCenter = NSNotificationCenter.defaultCenter;
         
         self.group = dispatch_group_create();
     }

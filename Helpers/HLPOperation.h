@@ -55,6 +55,7 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 @property (readonly) NSMutableArray<NSError *> *errors;
 @property (readonly) NSProgress *progress;
 @property (readonly) NSOperationQueue *operationQueue;
+@property (readonly) NSNotificationCenter *notificationCenter;
 @property (readonly) dispatch_group_t group;
 
 + (instancetype)shared;
