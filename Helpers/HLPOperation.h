@@ -60,6 +60,7 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 
 + (instancetype)shared;
 
+- (void)stop;
 - (void)updateState:(HLPOperationState)state;
 - (void)updateProgress:(uint64_t)completedUnitCount;
 - (void)addOperation:(HLPOperation *)operation;

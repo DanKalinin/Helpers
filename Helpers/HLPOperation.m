@@ -73,6 +73,12 @@
     [self updateState:HLPOperationStateDidCancel];
 }
 
+- (void)stop {
+    [self.notificationCenter removeObserver:self];
+    
+    [self updateState:HLPOperationStateDidEnd];
+}
+
 #pragma mark - Accessors
 
 - (id)parent {
