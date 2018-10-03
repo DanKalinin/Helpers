@@ -7,10 +7,18 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+@class HLPException;
+
+
 
 @interface HLPException : NSException
 
-@end
+@property (readonly) NSError *error;
 
-NS_ASSUME_NONNULL_END
+- (instancetype)initWithError:(NSError *)error;
++ (instancetype)exceptionWithStatus:(OSStatus)status;
+
++ (void)raiseWithError:(NSError *)error;
++ (void)raiseWithStatus:(OSStatus)status;
+
+@end
