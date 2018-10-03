@@ -30,7 +30,6 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 #import <Helpers/HLPCaptiveNetwork.h>
 #import <Helpers/HLPManager.h>
 #import <Helpers/HLPSequence.h>
-#import <Helpers/HLPException.h>
 
 // Deprecated
 
