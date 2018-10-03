@@ -27,6 +27,11 @@
     return self;
 }
 
++ (instancetype)exceptionWithError:(NSError *)error {
+    HLPException *exception = [self.alloc initWithError:error];
+    return exception;
+}
+
 + (instancetype)exceptionWithStatus:(OSStatus)status {
     NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
     HLPException *exception = [self.alloc initWithError:error];
@@ -35,7 +40,7 @@
 
 + (void)raiseWithError:(NSError *)error {
     if (error) {
-        HLPException *exception = [self.alloc initWithError:error];
+        HLPException *exception = [self exceptionWithError:error];
         [exception raise];
     } else {
     }

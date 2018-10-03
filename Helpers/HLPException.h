@@ -16,6 +16,8 @@
 @property (readonly) NSError *error;
 
 - (instancetype)initWithError:(NSError *)error;
+
++ (instancetype)exceptionWithError:(NSError *)error;
 + (instancetype)exceptionWithStatus:(OSStatus)status;
 
 + (void)raiseWithError:(NSError *)error;
