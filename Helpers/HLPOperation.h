@@ -14,6 +14,7 @@
 @class HLPOperation, HLPOperationQueue;
 
 typedef NS_ENUM(NSUInteger, HLPOperationState) {
+    HLPOperationStateDidInit = 0,
     HLPOperationStateDidBegin = 1,
     HLPOperationStateDidCancel = 2,
     HLPOperationStateDidEnd = 3
