@@ -8,8 +8,8 @@
 
 #import "HLPCompression.h"
 
-const HLPOperationState HLPCompressionStateDidInit = 3;
-const HLPOperationState HLPCompressionStateDidProcess = 4;
+const HLPOperationState HLPCompressionStateDidInit = 4;
+const HLPOperationState HLPCompressionStateDidProcess = 5;
 
 NSErrorDomain const HLPCompressionErrorDomain = @"HLPCompression";
 
