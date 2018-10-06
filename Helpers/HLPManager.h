@@ -20,7 +20,7 @@
 
 
 
-@interface HLPManager : HLPOperationQueue <HLPManagerDelegate>
+@interface HLPManager : HLPOperation <HLPManagerDelegate>
 
 @property (readonly) HLPArray<HLPManagerDelegate> *delegates;
 @property (readonly) HLPClock *clock;

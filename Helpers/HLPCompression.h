@@ -73,7 +73,7 @@ NS_ERROR_ENUM(HLPCompressionErrorDomain) {
 
 
 
-@interface HLPCompressor : HLPOperationQueue <HLPCompressorDelegate>
+@interface HLPCompressor : HLPOperation <HLPCompressorDelegate>
 
 @property (readonly) HLPArray<HLPCompressorDelegate> *delegates;
 @property (readonly) compression_stream_operation op;
