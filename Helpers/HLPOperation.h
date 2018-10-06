@@ -46,7 +46,6 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 
 @property HLPOperation *operation;
 @property HLPOperationState state;
-@property NSError *error;
 
 @property (copy) HLPVoidBlock stateBlock;
 @property (copy) HLPVoidBlock progressBlock;
