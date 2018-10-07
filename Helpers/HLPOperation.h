@@ -17,9 +17,7 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
     HLPOperationStateDidInit = 0,
     HLPOperationStateDidBegin = 1,
     HLPOperationStateDidCancel = 2,
-    HLPOperationStateDidEnd = 3,
-    HLPOperationStateDidStart = 4,
-    HLPOperationStateDidStop = 5
+    HLPOperationStateDidEnd = 3
 };
 
 
