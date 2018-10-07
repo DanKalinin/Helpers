@@ -72,7 +72,7 @@ NS_ERROR_ENUM(HLPURLHTTPErrorDomain) {
 
 
 
-@interface HLPURLClient : HLPOperation <HLPURLClientDelegate>
+@interface HLPURLClient : HLPOperationQueue <HLPURLClientDelegate>
 
 @property NSURLSessionConfiguration *defaultConfiguration;
 @property NSURLSessionConfiguration *ephemeralConfiguration;
@@ -105,7 +105,7 @@ NS_ERROR_ENUM(HLPURLHTTPErrorDomain) {
 
 
 
-@interface HLPURLClientManager : HLPOperation <HLPURLClientManagerDelegate>
+@interface HLPURLClientManager : HLPOperationQueue <HLPURLClientManagerDelegate>
 
 @property HLPURLClient *localClient;
 @property HLPURLClient *remoteClient;

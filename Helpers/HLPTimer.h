@@ -83,7 +83,7 @@
 
 
 
-@interface HLPClock : HLPOperation <HLPClockDelegate>
+@interface HLPClock : HLPOperationQueue <HLPClockDelegate>
 
 - (HLPTick *)tickWithInterval:(NSTimeInterval)interval;
 - (HLPTick *)tickWithInterval:(NSTimeInterval)interval completion:(HLPVoidBlock)completion;
