@@ -207,10 +207,39 @@
 
 @implementation NSEOperation
 
-@dynamic cancelled;
-@dynamic executing;
-@dynamic finished;
-@dynamic asynchronous;
-@dynamic ready;
+- (instancetype)init {
+    self = super.init;
+    if (self) {
+        self.isReady = YES;
+    }
+    return self;
+}
+
+- (void)start {
+    if (self.cancelled) {
+        self.isFinished = YES;
+    } else {
+        self.isExecuting = YES;
+        [self main];
+    }
+}
+
+- (void)main {
+//    self.isCancelled = YES;
+    NSLog(@"executing - %i", self.isExecuting);
+    
+    self.isExecuting = NO;
+    self.isFinished = YES;
+    
+    NSLog(@"ops - %@", NSOperationQueue.currentQueue.operations);
+}
+
+- (void)cancel {
+    self.isCancelled = YES;
+}
+
+- (void)dealloc {
+    
+}
 
 @end

@@ -126,12 +126,18 @@ typedef NS_OPTIONS(NSUInteger, NSEOperationState) {
 
 
 
+@protocol NSEOperationDelegate <HLPObject>
+
+@end
+
+
+
 @interface NSEOperation : NSOperation
 
-@property (getter=isCancelled) BOOL cancelled;
-@property (getter=isExecuting) BOOL executing;
-@property (getter=isFinished) BOOL finished;
-@property (getter=isAsynchronous) BOOL asynchronous;
-@property (getter=isReady) BOOL ready;
+@property BOOL isCancelled;
+@property BOOL isExecuting;
+@property BOOL isFinished;
+@property BOOL isAsynchronous;
+@property BOOL isReady;
 
 @end
