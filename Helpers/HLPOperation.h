@@ -99,3 +99,39 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 - (void)addOperationWithBlockAndWait:(HLPVoidBlock)block;
 
 @end
+
+
+
+
+
+
+
+
+
+
+typedef NS_OPTIONS(NSUInteger, NSEOperationState) {
+    NSEOperationStatePending = 0,
+    NSEOperationStateReady = 1 << 0,
+    NSEOperationStateExecuting = 1 << 1,
+    NSEOperationStateFinished = 1 << 2,
+    NSEOperationStateCancelled = 1 << 3
+};
+
+
+
+
+
+
+
+
+
+
+@interface NSEOperation : NSOperation
+
+@property (getter=isCancelled) BOOL cancelled;
+@property (getter=isExecuting) BOOL executing;
+@property (getter=isFinished) BOOL finished;
+@property (getter=isAsynchronous) BOOL asynchronous;
+@property (getter=isReady) BOOL ready;
+
+@end

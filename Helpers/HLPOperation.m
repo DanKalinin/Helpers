@@ -189,3 +189,28 @@
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface NSEOperation ()
+
+@end
+
+
+
+@implementation NSEOperation
+
+@dynamic cancelled;
+@dynamic executing;
+@dynamic finished;
+@dynamic asynchronous;
+@dynamic ready;
+
+@end
