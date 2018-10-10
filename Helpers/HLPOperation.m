@@ -210,7 +210,7 @@
 - (instancetype)init {
     self = super.init;
     if (self) {
-//        self.isReady = YES;
+        self.isReady = YES;
     }
     return self;
 }
