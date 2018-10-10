@@ -134,10 +134,10 @@ typedef NS_OPTIONS(NSUInteger, NSEOperationState) {
 
 @interface NSEOperation : NSOperation
 
-@property BOOL isCancelled;
-@property BOOL isExecuting;
-@property BOOL isFinished;
-@property BOOL isAsynchronous;
-@property BOOL isReady;
+@property (nonatomic) BOOL isCancelled;
+@property (nonatomic) BOOL isExecuting;
+@property (nonatomic) BOOL isFinished;
+@property (nonatomic) BOOL isAsynchronous;
+@property (nonatomic) BOOL isReady;
 
 @end

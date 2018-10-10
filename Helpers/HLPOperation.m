@@ -225,13 +225,10 @@
 }
 
 - (void)main {
-//    self.isCancelled = YES;
     NSLog(@"executing - %i", self.isExecuting);
     
     self.isExecuting = NO;
     self.isFinished = YES;
-    
-    NSLog(@"ops - %@", NSOperationQueue.currentQueue.operations);
 }
 
 - (void)cancel {
@@ -240,6 +237,38 @@
 
 - (void)dealloc {
     
+}
+
+#pragma mark - Accessors
+
+- (void)setIsCancelled:(BOOL)isCancelled {
+    [self willChangeValueForKey:NSStringFromSelector(@selector(isCancelled))];
+    _isCancelled = isCancelled;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(isCancelled))];
+}
+
+- (void)setIsExecuting:(BOOL)isExecuting {
+    [self willChangeValueForKey:NSStringFromSelector(@selector(isExecuting))];
+    _isExecuting = isExecuting;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(isExecuting))];
+}
+
+- (void)setIsFinished:(BOOL)isFinished {
+    [self willChangeValueForKey:NSStringFromSelector(@selector(isFinished))];
+    _isFinished = isFinished;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(isFinished))];
+}
+
+- (void)setIsAsynchronous:(BOOL)isAsynchronous {
+    [self willChangeValueForKey:NSStringFromSelector(@selector(isAsynchronous))];
+    _isAsynchronous = isAsynchronous;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(isAsynchronous))];
+}
+
+- (void)setIsReady:(BOOL)isReady {
+    [self willChangeValueForKey:NSStringFromSelector(@selector(isReady))];
+    _isReady = isReady;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(isReady))];
 }
 
 @end
