@@ -114,8 +114,8 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 typedef NS_ENUM(NSUInteger, NSEOperationState) {
     NSEOperationStateDidInit = 0,
     NSEOperationStateDidStart = 1,
-    NSEOperationStateDidCancel = 2,
-    NSEOperationStateDidFinish = 3
+    NSEOperationStateDidCancel = 99,
+    NSEOperationStateDidFinish = 100
 };
 
 
@@ -127,6 +127,8 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 - (void)NSEOperationDidStart:(NSEOperation *)operation;
 - (void)NSEOperationDidCancel:(NSEOperation *)operation;
 - (void)NSEOperationDidFinish:(NSEOperation *)operation;
+
+- (void)NSEOperationDidUpdateProgress:(NSEOperation *)operation;
 
 @end
 
@@ -152,5 +154,8 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 @property (readonly) NSNotificationCenter *center;
 
 - (void)finish;
+- (void)updateState:(NSEOperationState)state;
+- (void)updateProgress:(uint64_t)completedUnitCount;
+- (void)addOperation:(NSEOperation *)operation;
 
 @end

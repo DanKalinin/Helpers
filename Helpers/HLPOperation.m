@@ -201,7 +201,6 @@
 
 @interface NSEOperation ()
 
-@property NSEOperation *parent;
 @property HLPArray<NSEOperationDelegate> *delegates;
 @property NSMutableArray<NSNumber *> *states;
 @property NSMutableArray<NSError *> *errors;
@@ -228,7 +227,7 @@
 }
 
 - (void)start {
-    if (self.cancelled) {
+    if (self.isCancelled) {
         self.isFinished = YES;
     } else {
         self.isExecuting = YES;
@@ -281,6 +280,43 @@
     [self willChangeValueForKey:NSStringFromSelector(@selector(isReady))];
     _isReady = isReady;
     [self didChangeValueForKey:NSStringFromSelector(@selector(isReady))];
+}
+
+- (NSEOperation *)parent {
+    return self.delegates[1][0];
+}
+
+#pragma mark - Helpers
+
+- (void)updateState:(NSEOperationState)state {
+    [self.states addObject:@(state)];
+    
+    [self.delegates NSEOperationDidUpdateState:self];
+    [self invokeHandler:self.stateBlock queue:self.delegates.operationQueue];
+    if (state == NSEOperationStateDidStart) {
+        [self.delegates NSEOperationDidStart:self];
+    } else if (state == NSEOperationStateDidCancel) {
+        [self.delegates NSEOperationDidCancel:self];
+    } else if (state == NSEOperationStateDidFinish) {
+        [self.delegates NSEOperationDidFinish:self];
+        [self invokeHandler:self.completionBlock queue:self.delegates.operationQueue];
+        
+        self.stateBlock = nil;
+        self.progressBlock = nil;
+        self.completionBlock = nil;
+    }
+}
+
+- (void)updateProgress:(uint64_t)completedUnitCount {
+    self.progress.completedUnitCount = completedUnitCount;
+    
+    [self.delegates NSEOperationDidUpdateProgress:self];
+    [self invokeHandler:self.progressBlock queue:self.delegates.operationQueue];
+}
+
+- (void)addOperation:(NSEOperation *)operation {
+    [operation.delegates addObject:self.delegates];
+    [self.queue addOperation:operation];
 }
 
 @end
