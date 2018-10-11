@@ -141,4 +141,6 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 
 - (void)finish;
 
+- (void)updateState:(NSEOperationState)state;
+
 @end
