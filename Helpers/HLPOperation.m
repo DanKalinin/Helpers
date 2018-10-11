@@ -275,4 +275,10 @@
     [self didChangeValueForKey:NSStringFromSelector(@selector(isReady))];
 }
 
+#pragma mark - Helpers
+
+- (void)updateState:(NSEOperationState)state {
+    
+}
+
 @end
