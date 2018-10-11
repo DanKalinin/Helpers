@@ -112,7 +112,7 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 @class NSEOperation;
 
 typedef NS_ENUM(NSUInteger, NSEOperationState) {
-    NSEOperationStateInitial = 0,
+    NSEOperationStateDidInit = 0,
     NSEOperationStateDidStart = 1,
     NSEOperationStateDidCancel = 2,
     NSEOperationStateDidFinish = 3
@@ -147,11 +147,6 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 @property (nonatomic) BOOL isAsynchronous;
 @property (nonatomic) BOOL isReady;
 
-@property (readonly) HLPArray<NSEOperationDelegate> *delegates;
-@property (readonly) NSMutableArray<NSNumber *> *states;
-
 - (void)finish;
-
-- (void)updateState:(NSEOperationState)state;
 
 @end
