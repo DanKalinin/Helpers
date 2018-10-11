@@ -201,6 +201,14 @@
 
 @interface NSEOperation ()
 
+@property NSEOperation *parent;
+@property HLPArray<NSEOperationDelegate> *delegates;
+@property NSMutableArray<NSNumber *> *states;
+@property NSMutableArray<NSError *> *errors;
+@property NSProgress *progress;
+@property NSOperationQueue *queue;
+@property NSNotificationCenter *center;
+
 @end
 
 

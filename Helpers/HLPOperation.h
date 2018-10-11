@@ -120,13 +120,6 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 
 
 
-
-
-
-
-
-
-
 @protocol NSEOperationDelegate <HLPObject>
 
 @optional
@@ -146,6 +139,17 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 @property (nonatomic) BOOL isFinished;
 @property (nonatomic) BOOL isAsynchronous;
 @property (nonatomic) BOOL isReady;
+
+@property (copy) HLPVoidBlock stateBlock;
+@property (copy) HLPVoidBlock progressBlock;
+
+@property (readonly) NSEOperation *parent;
+@property (readonly) HLPArray<NSEOperationDelegate> *delegates;
+@property (readonly) NSMutableArray<NSNumber *> *states;
+@property (readonly) NSMutableArray<NSError *> *errors;
+@property (readonly) NSProgress *progress;
+@property (readonly) NSOperationQueue *queue;
+@property (readonly) NSNotificationCenter *center;
 
 - (void)finish;
 
