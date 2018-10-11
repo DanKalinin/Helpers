@@ -201,6 +201,9 @@
 
 @interface NSEOperation ()
 
+@property HLPArray<NSEOperationDelegate> *delegates;
+@property NSMutableArray<NSNumber *> *states;
+
 @end
 
 
@@ -211,6 +214,12 @@
     self = super.init;
     if (self) {
         self.isReady = YES;
+        
+        self.delegates = HLPArray.weakArray;
+        self.delegates.operationQueue = NSOperationQueue.mainQueue;
+        [self.delegates addObject:self];
+        
+        self.states = NSMutableArray.array;
     }
     return self;
 }
@@ -222,8 +231,10 @@
 - (void)start {
     if (self.cancelled) {
         self.isFinished = YES;
+        [self updateState:NSEOperationStateDidFinish];
     } else {
         self.isExecuting = YES;
+        [self updateState:NSEOperationStateDidStart];
         [self main];
     }
 }
@@ -236,11 +247,13 @@
 
 - (void)cancel {
     self.isCancelled = YES;
+    [self updateState:NSEOperationStateDidCancel];
 }
 
 - (void)finish {
     self.isExecuting = NO;
     self.isFinished = YES;
+    [self updateState:NSEOperationStateDidFinish];
 }
 
 #pragma mark - Accessors
@@ -278,7 +291,16 @@
 #pragma mark - Helpers
 
 - (void)updateState:(NSEOperationState)state {
+    [self.states addObject:@(state)];
     
+    [self.delegates NSEOperationDidUpdateState:self];
+    if (state == NSEOperationStateDidStart) {
+        [self.delegates NSEOperationDidStart:self];
+    } else if (state == NSEOperationStateDidCancel) {
+        [self.delegates NSEOperationDidCancel:self];
+    } else if (state == NSEOperationStateDidFinish) {
+        [self.delegates NSEOperationDidFinish:self];
+    }
 }
 
 @end
