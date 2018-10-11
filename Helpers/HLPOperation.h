@@ -134,7 +134,7 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 
 
 
-@interface NSEOperation : NSOperation <NSEOperationDelegate>
+@interface NSEOperation : NSOperation <NSEOperationDelegate, NSProgressReporting>
 
 @property (nonatomic) BOOL isCancelled;
 @property (nonatomic) BOOL isExecuting;
