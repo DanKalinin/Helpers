@@ -218,6 +218,16 @@
     self = super.init;
     if (self) {
         self.isReady = YES;
+        
+        self.delegates = (id)HLPArray.weakArray;
+        self.delegates.operationQueue = NSOperationQueue.mainQueue;
+        [self.delegates addObject:self];
+        
+        self.states = NSMutableArray.array;
+        self.errors = NSMutableArray.array;
+        self.progress = NSProgress.new;
+        self.queue = NSOperationQueue.new;
+        self.center = NSNotificationCenter.defaultCenter;
     }
     return self;
 }
@@ -238,8 +248,6 @@
 }
 
 - (void)main {
-    NSLog(@"executing - %i", self.isExecuting);
-    
     [self finish];
 }
 
