@@ -229,8 +229,10 @@
 - (void)start {
     if (self.isCancelled) {
         self.isFinished = YES;
+        [self updateState:NSEOperationStateDidFinish];
     } else {
         self.isExecuting = YES;
+        [self updateState:NSEOperationStateDidStart];
         [self main];
     }
 }
@@ -243,11 +245,13 @@
 
 - (void)cancel {
     self.isCancelled = YES;
+    [self updateState:NSEOperationStateDidCancel];
 }
 
 - (void)finish {
     self.isExecuting = NO;
     self.isFinished = YES;
+    [self updateState:NSEOperationStateDidFinish];
 }
 
 #pragma mark - Accessors
@@ -304,6 +308,8 @@
         self.stateBlock = nil;
         self.progressBlock = nil;
         self.completionBlock = nil;
+        
+        [self.center removeObserver:self];
     }
 }
 
