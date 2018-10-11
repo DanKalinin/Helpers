@@ -215,7 +215,7 @@
     if (self) {
         self.isReady = YES;
         
-        self.delegates = HLPArray.weakArray;
+        self.delegates = (id)HLPArray.weakArray;
         self.delegates.operationQueue = NSOperationQueue.mainQueue;
         [self.delegates addObject:self];
         
