@@ -214,6 +214,15 @@
 
 @implementation NSEOperation
 
++ (instancetype)shared {
+    static NSEOperation *shared = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shared = self.new;
+    });
+    return shared;
+}
+
 - (instancetype)init {
     self = super.init;
     if (self) {

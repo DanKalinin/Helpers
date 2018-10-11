@@ -153,6 +153,8 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 @property (readonly) NSOperationQueue *queue;
 @property (readonly) NSNotificationCenter *center;
 
++ (instancetype)shared;
+
 - (void)finish;
 - (void)updateState:(NSEOperationState)state;
 - (void)updateProgress:(uint64_t)completedUnitCount;
