@@ -215,6 +215,10 @@
     return self;
 }
 
+- (void)dealloc {
+    
+}
+
 - (void)start {
     if (self.cancelled) {
         self.isFinished = YES;
