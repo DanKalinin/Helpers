@@ -227,16 +227,16 @@
 - (void)main {
     NSLog(@"executing - %i", self.isExecuting);
     
-    self.isExecuting = NO;
-    self.isFinished = YES;
+    [self finish];
 }
 
 - (void)cancel {
     self.isCancelled = YES;
 }
 
-- (void)dealloc {
-    
+- (void)finish {
+    self.isExecuting = NO;
+    self.isFinished = YES;
 }
 
 #pragma mark - Accessors

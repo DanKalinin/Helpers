@@ -109,12 +109,11 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 
 
 
-typedef NS_OPTIONS(NSUInteger, NSEOperationState) {
-    NSEOperationStatePending = 0,
-    NSEOperationStateReady = 1 << 0,
-    NSEOperationStateExecuting = 1 << 1,
-    NSEOperationStateFinished = 1 << 2,
-    NSEOperationStateCancelled = 1 << 3
+typedef NS_ENUM(NSUInteger, NSEOperationState) {
+    NSEOperationStateInitial = 0,
+    NSEOperationStateDidStart = 1,
+    NSEOperationStateDidCancel = 2,
+    NSEOperationStateDidFinish = 3
 };
 
 
@@ -139,5 +138,7 @@ typedef NS_OPTIONS(NSUInteger, NSEOperationState) {
 @property (nonatomic) BOOL isFinished;
 @property (nonatomic) BOOL isAsynchronous;
 @property (nonatomic) BOOL isReady;
+
+- (void)finish;
 
 @end
