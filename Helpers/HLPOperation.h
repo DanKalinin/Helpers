@@ -109,6 +109,16 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 
 
 
+
+
+
+
+
+
+
+
+
+
 @class NSEOperation;
 
 typedef NS_ENUM(NSUInteger, NSEOperationState) {

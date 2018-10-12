@@ -183,3 +183,48 @@
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@interface NSETimer ()
+
+@property NSTimeInterval interval;
+@property NSUInteger repeats;
+
+@end
+
+
+
+@implementation NSETimer
+
+- (instancetype)initWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats {
+    self = super.init;
+    if (self) {
+        self.interval = interval;
+        self.repeats = repeats;
+    }
+    return self;
+}
+
+- (void)main {
+    [self finish];
+}
+
+@end

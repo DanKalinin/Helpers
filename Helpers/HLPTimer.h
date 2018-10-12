@@ -92,3 +92,71 @@
 - (HLPTimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats completion:(HLPVoidBlock)completion;
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@class NSETimer;
+@class NSEClock;
+
+
+
+
+
+
+
+
+
+
+@protocol NSETimerDelegate <NSEOperationDelegate>
+
+@end
+
+
+
+@interface NSETimer : NSEOperation <NSETimerDelegate>
+
+@property (readonly) NSTimeInterval interval;
+@property (readonly) NSUInteger repeats;
+
+- (instancetype)initWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol NSEClockDelegate <NSETimerDelegate>
+
+@end
+
+
+
+@interface NSEClock : NSEOperation <NSEClockDelegate>
+
+- (NSETimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats;
+- (NSETimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats completion:(HLPVoidBlock)completion;
+
+@end
