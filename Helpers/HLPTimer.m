@@ -207,6 +207,7 @@
 
 @property NSTimeInterval interval;
 @property NSUInteger repeats;
+@property dispatch_semaphore_t semaphore;
 
 @end
 
@@ -224,7 +225,57 @@
 }
 
 - (void)main {
+    self.semaphore = dispatch_semaphore_create(0);
+    dispatch_semaphore_wait(self.semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.interval * NSEC_PER_SEC)));
     [self finish];
+}
+
+- (void)cancel {
+    [super cancel];
+    
+    if (self.isExecuting) {
+        dispatch_semaphore_signal(self.semaphore);
+    }
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSEClock ()
+
+@end
+
+
+
+@implementation NSEClock
+
++ (instancetype)shared {
+    static NSEClock *shared = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shared = self.new;
+    });
+    return shared;
+}
+
+- (NSETimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats {
+    NSETimer *timer = [NSETimer.alloc initWithInterval:interval repeats:repeats];
+    [self addOperation:timer];
+    return timer;
+}
+
+- (NSETimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats completion:(HLPVoidBlock)completion {
+    NSETimer *timer = [self timerWithInterval:interval repeats:repeats];
+    timer.completionBlock = completion;
+    return timer;
 }
 
 @end
