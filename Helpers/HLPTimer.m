@@ -235,7 +235,6 @@
     }
     
     [self updateProgress:self.repeats];
-    
     [self finish];
 }
 
