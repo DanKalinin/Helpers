@@ -330,7 +330,7 @@
     }
 }
 
-- (void)updateProgress:(uint64_t)completedUnitCount {
+- (void)updateProgress:(int64_t)completedUnitCount {
     self.progress.completedUnitCount = completedUnitCount;
     
     [self.delegates NSEOperationDidUpdateProgress:self];

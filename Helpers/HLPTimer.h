@@ -134,7 +134,6 @@
 
 @property (readonly) NSTimeInterval interval;
 @property (readonly) NSUInteger repeats;
-@property (readonly) dispatch_semaphore_t semaphore;
 
 - (instancetype)initWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats;
 

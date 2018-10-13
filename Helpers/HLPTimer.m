@@ -207,7 +207,6 @@
 
 @property NSTimeInterval interval;
 @property NSUInteger repeats;
-@property dispatch_semaphore_t semaphore;
 
 @end
 
@@ -225,17 +224,25 @@
 }
 
 - (void)main {
-    self.semaphore = dispatch_semaphore_create(0);
-    dispatch_semaphore_wait(self.semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.interval * NSEC_PER_SEC)));
+    self.progress.totalUnitCount = self.repeats;
+    
+    for (int64_t completedUnitCount = 0; completedUnitCount < self.repeats; completedUnitCount++) {
+        [self updateProgress:completedUnitCount];
+        [NSThread sleepForTimeInterval:self.interval];
+        if (self.isCancelled) {
+            return;
+        }
+    }
+    
+    [self updateProgress:self.repeats];
+    
     [self finish];
 }
 
 - (void)cancel {
     [super cancel];
     
-    if (self.isExecuting) {
-        dispatch_semaphore_signal(self.semaphore);
-    }
+    [self finish];
 }
 
 @end
