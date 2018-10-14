@@ -114,7 +114,6 @@
 
 @class NSETimer;
 @class NSEClock;
-@class NSETimeoutOperation;
 
 
 
@@ -127,12 +126,21 @@
 
 @protocol NSETimerDelegate <NSEOperationDelegate>
 
+@optional
+- (void)NSETimerDidUpdateState:(NSETimer *)timer;
+- (void)NSETimerDidStart:(NSETimer *)timer;
+- (void)NSETimerDidCancel:(NSETimer *)timer;
+- (void)NSETimerDidFinish:(NSETimer *)timer;
+
+- (void)NSETimerDidUpdateProgress:(NSETimer *)timer;
+
 @end
 
 
 
 @interface NSETimer : NSEOperation <NSETimerDelegate>
 
+@property (readonly) HLPArray<NSETimerDelegate> *delegates;
 @property (readonly) NSTimeInterval interval;
 @property (readonly) NSUInteger repeats;
 
@@ -159,23 +167,5 @@
 
 - (NSETimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats;
 - (NSETimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats completion:(HLPVoidBlock)completion;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@interface NSETimeoutOperation : NSEOperation
-
-@property (readonly) NSTimeInterval timeout;
-@property (readonly) NSETimer *timer;
-
-- (instancetype)initWithTimeout:(NSTimeInterval)timeout;
 
 @end

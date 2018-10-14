@@ -199,6 +199,10 @@
 
 
 
+NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
+
+
+
 @interface NSEOperation ()
 
 @property HLPArray<NSEOperationDelegate> *delegates;
