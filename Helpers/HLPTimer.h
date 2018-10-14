@@ -114,6 +114,7 @@
 
 @class NSETimer;
 @class NSEClock;
+@class NSETimeoutOperation;
 
 
 
@@ -158,5 +159,23 @@
 
 - (NSETimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats;
 - (NSETimer *)timerWithInterval:(NSTimeInterval)interval repeats:(NSUInteger)repeats completion:(HLPVoidBlock)completion;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSETimeoutOperation : NSEOperation
+
+@property (readonly) NSTimeInterval timeout;
+@property (readonly) NSETimer *timer;
+
+- (instancetype)initWithTimeout:(NSTimeInterval)timeout;
 
 @end
