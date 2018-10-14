@@ -29,20 +29,15 @@
 }
 
 - (void)main {
-    self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
-    [self.timer.delegates addObject:self];
-}
-
-#pragma mark - Timer
-
--(void)NSETimerDidFinish:(NSETimer *)timer {
-    if (self.isFinished) {
-    } else {
-        NSError *error = [NSError errorWithDomain:NSEOperationErrorDomain code:NSEOperationErrorTimeout userInfo:nil];
-        [self.errors addObject:error];
-        
-        [self finish];
-    }
+    self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1 completion:^{
+        if (self.isFinished) {
+        } else {
+            NSError *error = [NSError errorWithDomain:NSEOperationErrorDomain code:NSEOperationErrorTimeout userInfo:nil];
+            [self.errors addObject:error];
+            
+            [self finish];
+        }
+    }];
 }
 
 @end

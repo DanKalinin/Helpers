@@ -31,6 +31,8 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 #import <Helpers/HLPManager.h>
 #import <Helpers/HLPSequence.h>
 
+#import <Helpers/NSETimeoutOperation.h>
+
 // Deprecated
 
 #import <Helpers/Main.h>

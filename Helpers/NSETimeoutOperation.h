@@ -18,7 +18,7 @@
 
 
 
-@interface NSETimeoutOperation : NSEOperation <NSETimeoutOperationDelegate, NSETimerDelegate>
+@interface NSETimeoutOperation : NSEOperation <NSETimeoutOperationDelegate>
 
 @property (readonly) NSTimeInterval timeout;
 @property (readonly) NSETimer *timer;
