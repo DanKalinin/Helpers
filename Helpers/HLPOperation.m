@@ -206,9 +206,9 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
 @interface NSEOperation ()
 
 @property HLPArray<NSEOperationDelegate> *delegates;
-@property NSMutableArray<NSNumber *> *states;
-@property NSMutableArray<NSError *> *errors;
-@property NSMutableArray<NSEOperation *> *operations;
+@property HLPArray<NSNumber *> *states;
+@property HLPArray<NSError *> *errors;
+@property HLPArray<NSEOperation *> *operations;
 @property NSProgress *progress;
 @property NSOperationQueue *queue;
 @property NSNotificationCenter *center;
@@ -237,9 +237,9 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
         self.delegates.operationQueue = NSOperationQueue.mainQueue;
         [self.delegates addObject:self];
         
-        self.states = NSMutableArray.array;
-        self.errors = NSMutableArray.array;
-        self.operations = NSMutableArray.array;
+        self.states = HLPArray.strongArray;
+        self.errors = HLPArray.strongArray;
+        self.operations = HLPArray.strongArray;
         self.progress = NSProgress.new;
         self.queue = NSOperationQueue.new;
         self.center = NSNotificationCenter.defaultCenter;
