@@ -223,7 +223,7 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
     static NSEOperation *shared = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shared = [(NSEOperation *)self.alloc init];
+        shared = self.new;
     });
     return shared;
 }
