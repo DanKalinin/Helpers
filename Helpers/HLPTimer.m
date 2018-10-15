@@ -247,21 +247,6 @@
     [self finish];
 }
 
-#pragma mark - Helpers
-
-- (void)updateState:(NSEOperationState)state {
-    [super updateState:state];
-    
-    [self.delegates NSETimerDidUpdateState:self];
-    if (state == NSEOperationStateDidStart) {
-        [self.delegates NSETimerDidStart:self];
-    } else if (state == NSEOperationStateDidCancel) {
-        [self.delegates NSETimerDidCancel:self];
-    } else if (state == NSEOperationStateDidFinish) {
-        [self.delegates NSETimerDidFinish:self];
-    }
-}
-
 @end
 
 

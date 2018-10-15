@@ -126,14 +126,6 @@
 
 @protocol NSETimerDelegate <NSEOperationDelegate>
 
-@optional
-- (void)NSETimerDidUpdateState:(NSETimer *)timer;
-- (void)NSETimerDidStart:(NSETimer *)timer;
-- (void)NSETimerDidCancel:(NSETimer *)timer;
-- (void)NSETimerDidFinish:(NSETimer *)timer;
-
-- (void)NSETimerDidUpdateProgress:(NSETimer *)timer;
-
 @end
 
 
