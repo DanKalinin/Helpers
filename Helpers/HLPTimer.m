@@ -285,7 +285,7 @@
     static NSEClock *shared = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shared = self.new;
+        shared = [(NSEClock *)self.alloc init];
     });
     return shared;
 }
