@@ -153,6 +153,9 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 
 @interface NSEOperation : NSOperation <NSEOperationDelegate, NSProgressReporting>
 
+@property NSEOperation *operation;
+@property NSArray<NSEOperation *> *operations;
+
 @property (nonatomic) BOOL isCancelled;
 @property (nonatomic) BOOL isExecuting;
 @property (nonatomic) BOOL isFinished;
@@ -166,7 +169,6 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 @property (readonly) HLPArray<NSEOperationDelegate> *delegates;
 @property (readonly) NSMutableArray<NSNumber *> *states;
 @property (readonly) NSMutableArray<NSError *> *errors;
-@property (readonly) NSMutableArray<NSEOperation *> *operations;
 @property (readonly) NSProgress *progress;
 @property (readonly) NSOperationQueue *queue;
 @property (readonly) NSNotificationCenter *center;

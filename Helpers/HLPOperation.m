@@ -208,7 +208,6 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
 @property HLPArray<NSEOperationDelegate> *delegates;
 @property NSMutableArray<NSNumber *> *states;
 @property NSMutableArray<NSError *> *errors;
-@property NSMutableArray<NSEOperation *> *operations;
 @property NSProgress *progress;
 @property NSOperationQueue *queue;
 @property NSNotificationCenter *center;
@@ -239,7 +238,6 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
         
         self.states = NSMutableArray.array;
         self.errors = NSMutableArray.array;
-        self.operations = NSMutableArray.array;
         self.progress = NSProgress.new;
         self.queue = NSOperationQueue.new;
         self.center = NSNotificationCenter.defaultCenter;
@@ -269,6 +267,7 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
 - (void)cancel {
     self.isCancelled = YES;
     
+    [self.operation cancel];
     for (NSEOperation *operation in self.operations) {
         [operation cancel];
     }
