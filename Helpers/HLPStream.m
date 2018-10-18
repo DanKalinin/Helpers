@@ -476,3 +476,122 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
+
+
+
+
+
+
+
+
+
+
+@interface NSEStreamOpening ()
+
+@property NSTimeInterval timeout;
+@property NSETimer *timer;
+
+@end
+
+
+
+@implementation NSEStreamOpening
+
+- (instancetype)initWithTimeout:(NSTimeInterval)timeout {
+    self = super.init;
+    if (self) {
+        self.timeout = timeout;
+    }
+    return self;
+}
+
+- (void)main {
+    self.parent.opening = self;
+    [self.parent.stream open];
+    
+    self.operation = self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
+    [self.timer waitUntilFinished];
+    if (self.timer.isCancelled) {
+    } else {
+        NSError *error = [NSError errorWithDomain:NSEStreamErrorDomain code:NSEStreamErrorTimeout userInfo:nil];
+        [self.errors addObject:error];
+    }
+    
+    if (self.isCancelled || (self.errors.count > 0)) {
+        [self.parent close];
+    }
+    
+    [self finish];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSEStream ()
+
+@property NSStream *stream;
+
+@end
+
+
+
+@implementation NSEStream
+
+@dynamic delegates;
+
+- (instancetype)initWithStream:(NSStream *)stream {
+    self = super.init;
+    if (self) {
+        self.stream = stream;
+        self.stream.delegate = self.delegates;
+    }
+    return self;
+}
+
+- (void)close {
+    [self.stream close];
+}
+
+#pragma mark - Stream
+
+- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
+    if (eventCode == NSStreamEventOpenCompleted) {
+        [self.opening.timer cancel];
+    } else if (eventCode == NSStreamEventErrorOccurred) {
+        [self.opening.errors addObject:aStream.streamError];
+        [self.opening.timer cancel];
+    } else if (eventCode == NSStreamEventEndEncountered) {
+        
+    }
+}
+
+@end

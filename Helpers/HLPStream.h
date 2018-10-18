@@ -238,3 +238,75 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 - (HLPStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
 
 @end
+
+
+
+
+
+
+
+
+
+
+@class NSEStreamOpening;
+@class NSEStream;
+
+extern NSErrorDomain const NSEStreamErrorDomain;
+
+NS_ERROR_ENUM(NSEStreamErrorDomain) {
+    NSEStreamErrorUnknown,
+    NSEStreamErrorTimeout
+};
+
+
+
+
+
+
+
+
+
+
+@protocol NSEStreamOpeningDelegate <NSEOperationDelegate>
+
+@end
+
+
+
+@interface NSEStreamOpening : NSEOperation <NSEStreamOpeningDelegate>
+
+@property (readonly) NSEStream *parent;
+@property (readonly) NSTimeInterval timeout;
+@property (readonly) NSETimer *timer;
+
+- (instancetype)initWithTimeout:(NSTimeInterval)timeout;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol NSEStreamDelegate <NSEStreamOpeningDelegate, NSStreamDelegate>
+
+@end
+
+
+
+@interface NSEStream : NSEOperation <NSEStreamDelegate>
+
+@property (weak) NSEStreamOpening *opening;
+
+@property (readonly) HLPArray<NSEStreamDelegate> *delegates;
+@property (readonly) NSStream *stream;
+
+- (instancetype)initWithStream:(NSStream *)stream;
+
+- (void)close;
+
+@end
