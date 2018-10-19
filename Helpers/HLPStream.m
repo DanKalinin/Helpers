@@ -581,6 +581,18 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
     [self.stream close];
 }
 
+- (NSEStreamOpening *)openWithTimeout:(NSTimeInterval)timeout {
+    NSEStreamOpening *opening = [NSEStreamOpening.alloc initWithTimeout:timeout];
+    [self addOperation:opening];
+    return opening;
+}
+
+- (NSEStreamOpening *)openWithTimeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion {
+    NSEStreamOpening *opening = [self openWithTimeout:timeout];
+    opening.completionBlock = completion;
+    return opening;
+}
+
 #pragma mark - Stream
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
@@ -593,5 +605,43 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
         
     }
 }
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSEStreamReading ()
+
+@end
+
+
+
+@implementation NSEStreamReading
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSEInputStream ()
+
+@end
+
+
+
+@implementation NSEInputStream
 
 @end
