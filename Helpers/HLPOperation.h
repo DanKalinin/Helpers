@@ -153,6 +153,7 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 
 @interface NSEOperation : NSOperation <NSEOperationDelegate, NSProgressReporting>
 
+@property NSError *error;
 @property NSEOperation *operation;
 @property NSArray<NSEOperation *> *operations;
 
