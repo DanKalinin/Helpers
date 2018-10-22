@@ -661,6 +661,10 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
         self.error = [NSError errorWithDomain:NSEStreamErrorDomain code:NSEStreamErrorTimeout userInfo:nil];
     }
     
+    if (self.error) {
+        [self.parent close];
+    }
+    
     [self finish];
 }
 
