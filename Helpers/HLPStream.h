@@ -251,13 +251,15 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 @class NSEStreamOpening;
 @class NSEStream;
 
+@class NSEStreamReading;
 @class NSEInputStream;
 
 extern NSErrorDomain const NSEStreamErrorDomain;
 
 NS_ERROR_ENUM(NSEStreamErrorDomain) {
     NSEStreamErrorUnknown,
-    NSEStreamErrorTimeout
+    NSEStreamErrorTimeout,
+    NSEStreamErrorAtEnd
 };
 
 
@@ -333,9 +335,12 @@ NS_ERROR_ENUM(NSEStreamErrorDomain) {
 
 @interface NSEStreamReading : NSEOperation <NSEStreamReadingDelegate>
 
+@property (readonly) NSEInputStream *parent;
 @property (readonly) NSUInteger minLength;
 @property (readonly) NSUInteger maxLength;
 @property (readonly) NSTimeInterval timeout;
+@property (readonly) NSETimer *timer;
+@property (readonly) NSMutableData *data;
 
 - (instancetype)initWithMinLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout;
 
@@ -357,5 +362,12 @@ NS_ERROR_ENUM(NSEStreamErrorDomain) {
 
 
 @interface NSEInputStream : NSEStream <NSEInputStreamDelegate>
+
+@property (weak) NSEStreamReading *reading;
+
+@property (readonly) NSInputStream *stream;
+
+- (NSEStreamReading *)readDataOfMinLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout;
+- (NSEStreamReading *)readDataOfMinLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
 
 @end

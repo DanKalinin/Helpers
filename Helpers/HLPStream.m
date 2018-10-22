@@ -518,6 +518,8 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 
 @implementation NSEStreamOpening
 
+@dynamic parent;
+
 - (instancetype)initWithTimeout:(NSTimeInterval)timeout {
     self = super.init;
     if (self) {
@@ -534,11 +536,10 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
     [self.timer waitUntilFinished];
     if (self.timer.isCancelled) {
     } else {
-        NSError *error = [NSError errorWithDomain:NSEStreamErrorDomain code:NSEStreamErrorTimeout userInfo:nil];
-        [self.errors addObject:error];
+        self.error = [NSError errorWithDomain:NSEStreamErrorDomain code:NSEStreamErrorTimeout userInfo:nil];
     }
     
-    if (self.isCancelled || (self.errors.count > 0)) {
+    if (self.isCancelled || self.error) {
         [self.parent close];
     }
     
@@ -599,7 +600,7 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
     if (eventCode == NSStreamEventOpenCompleted) {
         [self.opening.timer cancel];
     } else if (eventCode == NSStreamEventErrorOccurred) {
-        [self.opening.errors addObject:aStream.streamError];
+        self.opening.error = aStream.streamError;
         [self.opening.timer cancel];
     } else if (eventCode == NSStreamEventEndEncountered) {
         
@@ -619,11 +620,49 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 
 @interface NSEStreamReading ()
 
+@property NSUInteger minLength;
+@property NSUInteger maxLength;
+@property NSTimeInterval timeout;
+@property NSETimer *timer;
+@property NSMutableData *data;
+
 @end
 
 
 
 @implementation NSEStreamReading
+
+@dynamic parent;
+
+- (instancetype)initWithMinLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout {
+    self = super.init;
+    if (self) {
+        self.minLength = minLength;
+        self.maxLength = maxLength;
+        self.timeout = timeout;
+        
+        self.data = NSMutableData.data;
+    }
+    return self;
+}
+
+- (void)main {
+    self.progress.totalUnitCount = self.maxLength;
+    
+    self.parent.reading = self;
+    if (self.parent.stream.hasBytesAvailable) {
+        [self.parent stream:self.parent.stream handleEvent:NSStreamEventHasBytesAvailable];
+    }
+    
+    self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
+    [self.timer waitUntilFinished];
+    if (self.timer.isCancelled) {
+    } else {
+        self.error = [NSError errorWithDomain:NSEStreamErrorDomain code:NSEStreamErrorTimeout userInfo:nil];
+    }
+    
+    [self finish];
+}
 
 @end
 
@@ -643,5 +682,46 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 
 
 @implementation NSEInputStream
+
+@dynamic stream;
+
+- (NSEStreamReading *)readDataOfMinLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout {
+    NSEStreamReading *reading = [NSEStreamReading.alloc initWithMinLength:minLength maxLength:maxLength timeout:timeout];
+    [self addOperation:reading];
+    return reading;
+}
+
+- (NSEStreamReading *)readDataOfMinLength:(NSUInteger)minLength maxLength:(NSUInteger)maxLength timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion {
+    NSEStreamReading *reading = [self readDataOfMinLength:minLength maxLength:maxLength timeout:timeout];
+    reading.completionBlock = completion;
+    return reading;
+}
+
+#pragma mark - Stream
+
+- (void)stream:(NSInputStream *)aStream handleEvent:(NSStreamEvent)eventCode {
+    [super stream:aStream handleEvent:eventCode];
+    
+    if (eventCode == NSStreamEventHasBytesAvailable) {
+        NSUInteger length = self.reading.maxLength - self.reading.data.length;
+        if (length > 0) {
+            uint8_t buffer[length];
+            NSInteger result = [aStream read:buffer maxLength:length];
+            if (result > 0) {
+                [self.reading.data appendBytes:buffer length:result];
+                [self.reading updateProgress:self.reading.data.length];
+                if (self.reading.data.length >= self.reading.minLength) {
+                    [self.reading.timer cancel];
+                }
+            }
+        }
+    } else if (eventCode == NSStreamEventErrorOccurred) {
+        self.reading.error = aStream.streamError;
+        [self.reading.timer cancel];
+    } else if (eventCode == NSStreamEventEndEncountered) {
+        self.reading.error = [NSError errorWithDomain:NSEStreamErrorDomain code:NSEStreamErrorAtEnd userInfo:nil];
+        [self.reading.timer cancel];
+    }
+}
 
 @end
