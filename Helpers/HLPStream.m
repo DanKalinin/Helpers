@@ -729,3 +729,43 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface NSEStreamWriting ()
+
+@end
+
+
+
+@implementation NSEStreamWriting
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSEOutputStream ()
+
+@end
+
+
+
+@implementation NSEOutputStream
+
+@dynamic stream;
+
+@end

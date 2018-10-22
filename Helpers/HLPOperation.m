@@ -256,7 +256,13 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
     } else {
         self.isExecuting = YES;
         [self updateState:NSEOperationStateDidStart];
-        [self main];
+        if (self.isAsynchronous) {
+            [NSThread detachNewThreadWithBlock:^{
+                [self main];
+            }];
+        } else {
+            [self main];
+        }
     }
 }
 

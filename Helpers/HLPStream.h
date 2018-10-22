@@ -392,6 +392,11 @@ NS_ERROR_ENUM(NSEStreamErrorDomain) {
 
 @interface NSEStreamWriting : NSEOperation <NSEStreamWritingDelegate>
 
+@property (readonly) NSMutableData *data;
+@property (readonly) NSTimeInterval timeout;
+
+- (instancetype)initWithData:(NSMutableData *)data timeout:(NSTimeInterval)timeout;
+
 @end
 
 
@@ -409,6 +414,10 @@ NS_ERROR_ENUM(NSEStreamErrorDomain) {
 
 
 
-@interface NSEOutputStream : NSEOperation <NSEOutputStreamDelegate>
+@interface NSEOutputStream : NSEStream <NSEOutputStreamDelegate>
+
+@property (weak) NSEStreamWriting *writing;
+
+@property (readonly) NSOutputStream *stream;
 
 @end
