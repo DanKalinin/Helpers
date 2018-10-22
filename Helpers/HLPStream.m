@@ -654,7 +654,7 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
         [self.parent stream:self.parent.stream handleEvent:NSStreamEventHasBytesAvailable];
     }
     
-    self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
+    self.operation = self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
     [self.timer waitUntilFinished];
     if (self.timer.isCancelled) {
     } else {
@@ -741,11 +741,48 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 
 @interface NSEStreamWriting ()
 
+@property NSMutableData *data;
+@property NSTimeInterval timeout;
+@property NSETimer *timer;
+
 @end
 
 
 
 @implementation NSEStreamWriting
+
+@dynamic parent;
+
+- (instancetype)initWithData:(NSMutableData *)data timeout:(NSTimeInterval)timeout {
+    self = super.init;
+    if (self) {
+        self.data = data;
+        self.timeout = timeout;
+    }
+    return self;
+}
+
+- (void)main {
+    self.progress.totalUnitCount = self.data.length;
+    
+    self.parent.writing = self;
+    if (self.parent.stream.hasSpaceAvailable) {
+        [self.parent stream:self.parent.stream handleEvent:NSStreamEventHasSpaceAvailable];
+    }
+    
+    self.operation = self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
+    [self.timer waitUntilFinished];
+    if (self.timer.isCancelled) {
+    } else {
+        self.error = [NSError errorWithDomain:NSEStreamErrorDomain code:NSEStreamErrorTimeout userInfo:nil];
+    }
+    
+    if (self.error) {
+        [self.parent close];
+    }
+    
+    [self finish];
+}
 
 @end
 
@@ -767,5 +804,44 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 @implementation NSEOutputStream
 
 @dynamic stream;
+
+- (NSEStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout {
+    NSEStreamWriting *writing = [NSEStreamWriting.alloc initWithData:data timeout:timeout];
+    [self addOperation:writing];
+    return writing;
+}
+
+- (NSEStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion {
+    NSEStreamWriting *writing = [self writeData:data timeout:timeout];
+    writing.completionBlock = completion;
+    return writing;
+}
+
+#pragma mark - Stream
+
+- (void)stream:(NSOutputStream *)aStream handleEvent:(NSStreamEvent)eventCode {
+    [super stream:aStream handleEvent:eventCode];
+    
+    if (eventCode == NSStreamEventHasSpaceAvailable) {
+        if (self.writing.data.length > 0) {
+            NSInteger result = [aStream write:self.writing.data.bytes maxLength:self.writing.data.length];
+            if (result > 0) {
+                NSRange range = NSMakeRange(0, result);
+                [self.writing.data replaceBytesInRange:range withBytes:NULL length:0];
+                int64_t completedUnitCount = self.progress.completedUnitCount + result;
+                [self.writing updateProgress:completedUnitCount];
+                if (self.writing.data.length == 0) {
+                    [self.writing.timer cancel];
+                }
+            }
+        }
+    } else if (eventCode == NSStreamEventErrorOccurred) {
+        self.writing.error = aStream.streamError;
+        [self.writing.timer cancel];
+    } else if (eventCode == NSStreamEventEndEncountered) {
+        self.writing.error = [NSError errorWithDomain:NSEStreamErrorDomain code:NSEStreamErrorAtEnd userInfo:nil];
+        [self.writing.timer cancel];
+    }
+}
 
 @end
