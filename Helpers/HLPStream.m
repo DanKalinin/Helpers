@@ -657,12 +657,12 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
     self.operation = self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
     [self.timer waitUntilFinished];
     if (self.timer.isCancelled) {
+        if (self.isCancelled) {
+        } else if (self.error) {
+            [self.parent close];
+        }
     } else {
         self.error = [NSError errorWithDomain:NSEStreamErrorDomain code:NSEStreamErrorTimeout userInfo:nil];
-    }
-    
-    if (self.error) {
-        [self.parent close];
     }
     
     [self finish];
@@ -773,12 +773,12 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
     self.operation = self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
     [self.timer waitUntilFinished];
     if (self.timer.isCancelled) {
+        if (self.isCancelled) {
+        } else if (self.error) {
+            [self.parent close];
+        }
     } else {
         self.error = [NSError errorWithDomain:NSEStreamErrorDomain code:NSEStreamErrorTimeout userInfo:nil];
-    }
-    
-    if (self.error) {
-        [self.parent close];
     }
     
     [self finish];
