@@ -211,6 +211,7 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
 @property NSProgress *progress;
 @property NSOperationQueue *queue;
 @property NSNotificationCenter *center;
+@property NSRunLoop *loop;
 
 @end
 
@@ -241,6 +242,7 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
         self.progress = NSProgress.new;
         self.queue = NSOperationQueue.new;
         self.center = NSNotificationCenter.defaultCenter;
+        self.loop = NSRunLoop.mainRunLoop;
     }
     return self;
 }

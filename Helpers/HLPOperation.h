@@ -173,6 +173,7 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 @property (readonly) NSProgress *progress;
 @property (readonly) NSOperationQueue *queue;
 @property (readonly) NSNotificationCenter *center;
+@property (readonly) NSRunLoop *loop;
 
 + (instancetype)shared;
 

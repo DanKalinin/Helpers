@@ -317,6 +317,7 @@ NS_ERROR_ENUM(NSEStreamErrorDomain) {
 
 - (instancetype)initWithStream:(NSStream *)stream;
 
+- (void)open;
 - (void)close;
 
 - (NSEStreamOpening *)openWithTimeout:(NSTimeInterval)timeout;

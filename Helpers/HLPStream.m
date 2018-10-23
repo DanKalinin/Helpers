@@ -530,7 +530,7 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 
 - (void)main {
     self.parent.opening = self;
-    [self.parent.stream open];
+    [self.parent open];
     
     self.operation = self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
     [self.timer waitUntilFinished];
@@ -578,6 +578,11 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
     return self;
 }
 
+- (void)open {
+    [self.stream scheduleInRunLoop:self.loop forMode:NSDefaultRunLoopMode];
+    [self.stream open];
+}
+
 - (void)close {
     [self.stream close];
 }
@@ -597,6 +602,7 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 #pragma mark - Stream
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
+    NSLog(@"state - %i - %@", (int)eventCode, self.opening);
     if (eventCode == NSStreamEventOpenCompleted) {
         [self.opening.timer cancel];
     } else if (eventCode == NSStreamEventErrorOccurred) {
@@ -903,6 +909,8 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
             [self.parent.input close];
         }
     }
+    
+    [self finish];
 }
 
 @end
