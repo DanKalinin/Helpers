@@ -483,6 +483,9 @@ NS_ERROR_ENUM(NSEStreamErrorDomain) {
 
 - (instancetype)initWithInput:(NSEInputStream *)input output:(NSEOutputStream *)output;
 
+- (void)open;
+- (void)close;
+
 - (NSEStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout;
 - (NSEStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
 

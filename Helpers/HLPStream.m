@@ -967,6 +967,16 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
     return self;
 }
 
+- (void)open {
+    [self.input open];
+    [self.output open];
+}
+
+- (void)close {
+    [self.input close];
+    [self.output close];
+}
+
 - (NSEStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout {
     NSEStreamsOpening *opening = [NSEStreamsOpening.alloc initWithTimeout:timeout];
     [self addOperation:opening];
