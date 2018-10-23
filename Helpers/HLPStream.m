@@ -529,10 +529,11 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 }
 
 - (void)main {
+    self.operation = self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
+    
     self.parent.opening = self;
     [self.parent open];
     
-    self.operation = self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
     [self.timer waitUntilFinished];
     if (self.timer.isCancelled) {
     } else {
@@ -655,12 +656,13 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 - (void)main {
     self.progress.totalUnitCount = self.maxLength;
     
+    self.operation = self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
+    
     self.parent.reading = self;
     if (self.parent.stream.hasBytesAvailable) {
         [self.parent stream:self.parent.stream handleEvent:NSStreamEventHasBytesAvailable];
     }
     
-    self.operation = self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
     [self.timer waitUntilFinished];
     if (self.timer.isCancelled) {
         if (self.isCancelled) {
@@ -771,12 +773,13 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 - (void)main {
     self.progress.totalUnitCount = self.data.length;
     
+    self.operation = self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
+    
     self.parent.writing = self;
     if (self.parent.stream.hasSpaceAvailable) {
         [self.parent stream:self.parent.stream handleEvent:NSStreamEventHasSpaceAvailable];
     }
     
-    self.operation = self.timer = [NSEClock.shared timerWithInterval:self.timeout repeats:1];
     [self.timer waitUntilFinished];
     if (self.timer.isCancelled) {
         if (self.isCancelled) {
