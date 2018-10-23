@@ -447,6 +447,13 @@ NS_ERROR_ENUM(NSEStreamErrorDomain) {
 
 @interface NSEStreamsOpening : NSEOperation <NSEStreamsOpeningDelegate>
 
+@property (readonly) NSEStreams *parent;
+@property (readonly) NSTimeInterval timeout;
+@property (readonly) NSEStreamOpening *inputOpening;
+@property (readonly) NSEStreamOpening *outputOpening;
+
+- (instancetype)initWithTimeout:(NSTimeInterval)timeout;
+
 @end
 
 
@@ -469,6 +476,13 @@ NS_ERROR_ENUM(NSEStreamErrorDomain) {
 @property (readonly) NSEInputStream *input;
 @property (readonly) NSEOutputStream *output;
 
++ (instancetype)streamsWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
++ (instancetype)streamsToHost:(NSString *)host port:(NSInteger)port;
++ (instancetype)streamsWithComponents:(NSURLComponents *)components;
+
 - (instancetype)initWithInput:(NSEInputStream *)input output:(NSEOutputStream *)output;
+
+- (NSEStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout;
+- (NSEStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
 
 @end

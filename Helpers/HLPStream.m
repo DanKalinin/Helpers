@@ -857,11 +857,53 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 
 @interface NSEStreamsOpening ()
 
+@property NSTimeInterval timeout;
+@property NSEStreamOpening *inputOpening;
+@property NSEStreamOpening *outputOpening;
+
 @end
 
 
 
 @implementation NSEStreamsOpening
+
+@dynamic parent;
+
+- (instancetype)initWithTimeout:(NSTimeInterval)timeout {
+    self = super.init;
+    if (self) {
+        self.timeout = timeout;
+    }
+    return self;
+}
+
+- (void)main {
+    self.progress.totalUnitCount = 2;
+    
+    [self updateProgress:0];
+    
+    self.operation = self.inputOpening = [self.parent.input openWithTimeout:self.timeout];
+    [self.inputOpening waitUntilFinished];
+    if (self.inputOpening.isCancelled) {
+    } else if (self.inputOpening.error) {
+        self.error = self.inputOpening.error;
+    } else {
+        [self updateProgress:1];
+        
+        self.operation = self.outputOpening = [self.parent.output openWithTimeout:self.timeout];
+        [self.outputOpening waitUntilFinished];
+        if (self.outputOpening.isCancelled) {
+        } else if (self.outputOpening.error) {
+            self.error = self.outputOpening.error;
+        } else {
+            [self updateProgress:2];
+        }
+        
+        if (self.isCancelled || self.error) {
+            [self.parent.input close];
+        }
+    }
+}
 
 @end
 
@@ -885,6 +927,26 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 
 @implementation NSEStreams
 
++ (instancetype)streamsWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream {
+    NSEInputStream *input = [NSEInputStream.alloc initWithStream:inputStream];
+    NSEOutputStream *output = [NSEOutputStream.alloc initWithStream:outputStream];
+    NSEStreams *streams = [self.alloc initWithInput:input output:output];
+    return streams;
+}
+
++ (instancetype)streamsToHost:(NSString *)host port:(NSInteger)port {
+    NSInputStream *inputStream = nil;
+    NSOutputStream *outputStream = nil;
+    [NSStream getStreamsToHostWithName:host port:port inputStream:&inputStream outputStream:&outputStream];
+    NSEStreams *streams = [self streamsWithInputStream:inputStream outputStream:outputStream];
+    return streams;
+}
+
++ (instancetype)streamsWithComponents:(NSURLComponents *)components {
+    NSEStreams *streams = [self streamsToHost:components.host port:components.port.integerValue];
+    return streams;
+}
+
 - (instancetype)initWithInput:(NSEInputStream *)input output:(NSEOutputStream *)output {
     self = super.init;
     if (self) {
@@ -892,6 +954,18 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
         self.output = output;
     }
     return self;
+}
+
+- (NSEStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout {
+    NSEStreamsOpening *opening = [NSEStreamsOpening.alloc initWithTimeout:timeout];
+    [self addOperation:opening];
+    return opening;
+}
+
+- (NSEStreamsOpening *)openWithTimeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion {
+    NSEStreamsOpening *opening = [self openWithTimeout:timeout];
+    opening.completionBlock = completion;
+    return opening;
 }
 
 @end
