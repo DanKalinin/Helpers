@@ -257,6 +257,9 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 @class NSEStreamWriting;
 @class NSEOutputStream;
 
+@class NSEStreamsOpening;
+@class NSEStreams;
+
 extern NSErrorDomain const NSEStreamErrorDomain;
 
 NS_ERROR_ENUM(NSEStreamErrorDomain) {
@@ -424,5 +427,48 @@ NS_ERROR_ENUM(NSEStreamErrorDomain) {
 
 - (NSEStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout;
 - (NSEStreamWriting *)writeData:(NSMutableData *)data timeout:(NSTimeInterval)timeout completion:(HLPVoidBlock)completion;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol NSEStreamsOpeningDelegate <NSEOperationDelegate>
+
+@end
+
+
+
+@interface NSEStreamsOpening : NSEOperation <NSEStreamsOpeningDelegate>
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol NSEStreamsDelegate <NSEStreamsOpeningDelegate>
+
+@end
+
+
+
+@interface NSEStreams : NSEOperation <NSEStreamsDelegate>
+
+@property (readonly) NSEInputStream *input;
+@property (readonly) NSEOutputStream *output;
+
+- (instancetype)initWithInput:(NSEInputStream *)input output:(NSEOutputStream *)output;
 
 @end

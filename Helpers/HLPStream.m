@@ -845,3 +845,53 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface NSEStreamsOpening ()
+
+@end
+
+
+
+@implementation NSEStreamsOpening
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSEStreams ()
+
+@property NSEInputStream *input;
+@property NSEOutputStream *output;
+
+@end
+
+
+
+@implementation NSEStreams
+
+- (instancetype)initWithInput:(NSEInputStream *)input output:(NSEOutputStream *)output {
+    self = super.init;
+    if (self) {
+        self.input = input;
+        self.output = output;
+    }
+    return self;
+}
+
+@end
