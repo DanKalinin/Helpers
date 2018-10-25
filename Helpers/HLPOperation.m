@@ -199,10 +199,6 @@
 
 
 
-NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
-
-
-
 @interface NSEOperation ()
 
 @property HLPArray<NSEOperationDelegate> *delegates;
@@ -218,6 +214,8 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
 
 
 @implementation NSEOperation
+
+NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
 
 + (instancetype)shared {
     static NSEOperation *shared = nil;

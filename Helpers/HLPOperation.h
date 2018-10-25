@@ -121,20 +121,6 @@ typedef NS_ENUM(NSUInteger, HLPOperationState) {
 
 @class NSEOperation;
 
-extern NSErrorDomain const NSEOperationErrorDomain;
-
-NS_ERROR_ENUM(NSEOperationErrorDomain) {
-    NSEOperationErrorUnknown = 0,
-    NSEOperationErrorTimeout = 1
-};
-
-typedef NS_ENUM(NSUInteger, NSEOperationState) {
-    NSEOperationStateDidInit = 0,
-    NSEOperationStateDidStart = 1,
-    NSEOperationStateDidCancel = 99,
-    NSEOperationStateDidFinish = 100
-};
-
 
 
 @protocol NSEOperationDelegate <HLPObject>
@@ -152,6 +138,19 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 
 
 @interface NSEOperation : NSOperation <NSEOperationDelegate, NSProgressReporting>
+
+extern NSErrorDomain const NSEOperationErrorDomain;
+
+NS_ERROR_ENUM(NSEOperationErrorDomain) {
+    NSEOperationErrorUnknown = 0
+};
+
+typedef NS_ENUM(NSUInteger, NSEOperationState) {
+    NSEOperationStateDidInit = 0,
+    NSEOperationStateDidStart = 1,
+    NSEOperationStateDidCancel = 99,
+    NSEOperationStateDidFinish = 100
+};
 
 @property NSError *error;
 @property NSEOperation *operation;
