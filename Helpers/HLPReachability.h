@@ -48,3 +48,22 @@ typedef NS_ENUM(NSUInteger, HLPReachabilityStatus) {
 - (instancetype)initWithLocalComponents:(NSURLComponents *)localComponents remoteComponents:(NSURLComponents *)remoteComponents;
 
 @end
+
+
+
+
+
+
+
+
+
+
+@protocol NSEReachabilityDelegate <NSEOperationDelegate>
+
+@end
+
+
+
+@interface NSEReachability : NSEOperation <NSEReachabilityDelegate>
+
+@end
