@@ -153,6 +153,7 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 };
 
 @property NSError *error;
+@property NSError *threadError;
 @property NSEOperation *operation;
 @property NSArray<NSEOperation *> *operations;
 

@@ -289,6 +289,14 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
 
 #pragma mark - Accessors
 
+- (NSError *)threadError {
+    return NSThread.currentThread.threadDictionary[NSStringFromSelector(@selector(threadError))];
+}
+
+- (void)setThreadError:(NSError *)threadError {
+    NSThread.currentThread.threadDictionary[NSStringFromSelector(@selector(threadError))] = threadError;
+}
+
 - (void)setIsCancelled:(BOOL)isCancelled {
     [self willChangeValueForKey:NSStringFromSelector(@selector(isCancelled))];
     _isCancelled = isCancelled;
