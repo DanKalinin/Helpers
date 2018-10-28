@@ -260,14 +260,6 @@ NS_ERROR_ENUM(HLPStreamErrorDomain) {
 @class NSEStreamsOpening;
 @class NSEStreams;
 
-extern NSErrorDomain const NSEStreamErrorDomain;
-
-NS_ERROR_ENUM(NSEStreamErrorDomain) {
-    NSEStreamErrorUnknown,
-    NSEStreamErrorTimeout,
-    NSEStreamErrorAtEnd
-};
-
 
 
 
@@ -309,6 +301,14 @@ NS_ERROR_ENUM(NSEStreamErrorDomain) {
 
 
 @interface NSEStream : NSEOperation <NSEStreamDelegate>
+
+extern NSErrorDomain const NSEStreamErrorDomain;
+
+NS_ERROR_ENUM(NSEStreamErrorDomain) {
+    NSEStreamErrorUnknown,
+    NSEStreamErrorTimeout,
+    NSEStreamErrorAtEnd
+};
 
 @property (weak) NSEStreamOpening *opening;
 

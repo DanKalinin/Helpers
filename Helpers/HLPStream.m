@@ -496,7 +496,7 @@ NSErrorDomain const HLPStreamErrorDomain = @"HLPStream";
 
 
 
-NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
+
 
 
 
@@ -567,6 +567,8 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 
 
 @implementation NSEStream
+
+NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 
 @dynamic delegates;
 
