@@ -174,7 +174,7 @@
         HLPArray *array = object;
         [array.exceptions unionSet:self.exceptions];
         for (id object in array) {
-            [self didAddObject:object];
+            [array didAddObject:object];
         }
     }
 }
@@ -184,7 +184,7 @@
         HLPArray *array = object;
         [array.exceptions minusSet:self.exceptions];
         for (id object in array) {
-            [self willRemoveObject:object];
+            [array willRemoveObject:object];
         }
     }
 }
