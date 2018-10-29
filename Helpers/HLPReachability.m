@@ -206,4 +206,29 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
     CFRelease(self.reachability);
 }
 
+#pragma mark - Accessors
+
+- (SCNetworkReachabilityFlags)flags {
+    SCNetworkReachabilityFlags flags = 0;
+    Boolean success = SCNetworkReachabilityGetFlags(self.reachability, &flags);
+    if (success) {
+    } else {
+        self.threadError = (__bridge_transfer NSError *)SCCopyLastError();
+    }
+    return flags;
+}
+
+- (NSEReachabilityStatus)status {
+    SCNetworkReachabilityFlags flags = self.flags;
+    if ((flags & kSCNetworkReachabilityFlagsReachable) && !(flags & kSCNetworkReachabilityFlagsConnectionRequired) && !(flags & kSCNetworkReachabilityFlagsInterventionRequired)) {
+        if (flags & kSCNetworkReachabilityFlagsIsWWAN) {
+            return NSEReachabilityStatusWWAN;
+        } else {
+            return NSEReachabilityStatusWiFi;
+        }
+    } else {
+        return NSEReachabilityStatusNone;
+    }
+}
+
 @end
