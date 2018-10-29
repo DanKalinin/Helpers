@@ -84,5 +84,7 @@ typedef NS_ENUM(NSUInteger, NSEReachabilityStatus) {
 - (instancetype)initWithName:(NSString *)nodename;
 
 - (void)setCallback:(SCNetworkReachabilityCallBack)callback context:(SCNetworkReachabilityContext *)context;
+- (void)scheduleWithRunLoop:(NSRunLoop *)runLoop mode:(NSRunLoopMode)mode;
+- (void)unscheduleFromRunLoop:(NSRunLoop *)runLoop mode:(NSRunLoopMode)mode;
 
 @end

@@ -191,9 +191,11 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
     if (self) {
         self.reachability = reachability;
         
+        self.context = malloc(sizeof(SCNetworkReachabilityContext));
+        
         SCNetworkReachabilityContext context = {0};
         context.info = (__bridge void *)self;
-        memcpy(&_context, &context, sizeof(context));
+        *self.context = context;
     }
     return self;
 }
@@ -213,6 +215,22 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
 
 - (void)setCallback:(SCNetworkReachabilityCallBack)callback context:(SCNetworkReachabilityContext *)context {
     Boolean success = SCNetworkReachabilitySetCallback(self.reachability, callback, context);
+    if (success) {
+    } else {
+        self.threadError = (__bridge_transfer NSError *)SCCopyLastError();
+    }
+}
+
+- (void)scheduleWithRunLoop:(NSRunLoop *)runLoop mode:(NSRunLoopMode)mode {
+    Boolean success = SCNetworkReachabilityScheduleWithRunLoop(self.reachability, runLoop.getCFRunLoop, (__bridge CFStringRef)mode);
+    if (success) {
+    } else {
+        self.threadError = (__bridge_transfer NSError *)SCCopyLastError();
+    }
+}
+
+- (void)unscheduleFromRunLoop:(NSRunLoop *)runLoop mode:(NSRunLoopMode)mode {
+    Boolean success = SCNetworkReachabilityUnscheduleFromRunLoop(self.reachability, runLoop.getCFRunLoop, (__bridge CFStringRef)mode);
     if (success) {
     } else {
         self.threadError = (__bridge_transfer NSError *)SCCopyLastError();
