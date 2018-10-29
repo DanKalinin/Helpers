@@ -172,9 +172,9 @@ static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRe
 
 @interface NSEReachability ()
 
-@property SCNetworkReachabilityRef reachability;
+@property SCNetworkReachabilityRef target;
 @property NSString *nodename;
-@property SCNetworkReachabilityContext *context;
+@property SCNetworkReachabilityContext context;
 
 @end
 
@@ -186,23 +186,21 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
     
 }
 
-- (instancetype)initWithReachability:(SCNetworkReachabilityRef)reachability {
+- (instancetype)initWithTarget:(SCNetworkReachabilityRef)target {
     self = super.init;
     if (self) {
-        self.reachability = reachability;
-        
-        self.context = malloc(sizeof(SCNetworkReachabilityContext));
+        self.target = target;
         
         SCNetworkReachabilityContext context = {0};
         context.info = (__bridge void *)self;
-        *self.context = context;
+        self.context = context;
     }
     return self;
 }
 
 - (instancetype)initWithName:(NSString *)nodename {
-    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, nodename.UTF8String);
-    self = [self initWithReachability:reachability];
+    SCNetworkReachabilityRef target = SCNetworkReachabilityCreateWithName(NULL, nodename.UTF8String);
+    self = [self initWithTarget:target];
     if (self) {
         self.nodename = nodename;
     }
@@ -210,27 +208,27 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
 }
 
 - (void)dealloc {
-    CFRelease(self.reachability);
+    CFRelease(self.target);
 }
 
-- (void)setCallback:(SCNetworkReachabilityCallBack)callback context:(SCNetworkReachabilityContext *)context {
-    Boolean success = SCNetworkReachabilitySetCallback(self.reachability, callback, context);
+- (void)setCallback:(SCNetworkReachabilityCallBack)callout context:(SCNetworkReachabilityContext)context {
+    Boolean success = SCNetworkReachabilitySetCallback(self.target, callout, &context);
     if (success) {
     } else {
         self.threadError = (__bridge_transfer NSError *)SCCopyLastError();
     }
 }
 
-- (void)scheduleWithRunLoop:(NSRunLoop *)runLoop mode:(NSRunLoopMode)mode {
-    Boolean success = SCNetworkReachabilityScheduleWithRunLoop(self.reachability, runLoop.getCFRunLoop, (__bridge CFStringRef)mode);
+- (void)scheduleWithRunLoop:(NSRunLoop *)runLoop runLoopMode:(NSRunLoopMode)runLoopMode {
+    Boolean success = SCNetworkReachabilityScheduleWithRunLoop(self.target, runLoop.getCFRunLoop, (__bridge CFStringRef)runLoopMode);
     if (success) {
     } else {
         self.threadError = (__bridge_transfer NSError *)SCCopyLastError();
     }
 }
 
-- (void)unscheduleFromRunLoop:(NSRunLoop *)runLoop mode:(NSRunLoopMode)mode {
-    Boolean success = SCNetworkReachabilityUnscheduleFromRunLoop(self.reachability, runLoop.getCFRunLoop, (__bridge CFStringRef)mode);
+- (void)unscheduleFromRunLoop:(NSRunLoop *)runLoop runLoopMode:(NSRunLoopMode)runLoopMode {
+    Boolean success = SCNetworkReachabilityUnscheduleFromRunLoop(self.target, runLoop.getCFRunLoop, (__bridge CFStringRef)runLoopMode);
     if (success) {
     } else {
         self.threadError = (__bridge_transfer NSError *)SCCopyLastError();
@@ -241,7 +239,7 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
 
 - (SCNetworkReachabilityFlags)flags {
     SCNetworkReachabilityFlags flags = 0;
-    Boolean success = SCNetworkReachabilityGetFlags(self.reachability, &flags);
+    Boolean success = SCNetworkReachabilityGetFlags(self.target, &flags);
     if (success) {
     } else {
         self.threadError = (__bridge_transfer NSError *)SCCopyLastError();

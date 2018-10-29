@@ -74,17 +74,17 @@ typedef NS_ENUM(NSUInteger, NSEReachabilityStatus) {
     NSEReachabilityStatusWWAN
 };
 
-@property (readonly) SCNetworkReachabilityRef reachability;
+@property (readonly) SCNetworkReachabilityRef target;
 @property (readonly) NSString *nodename;
-@property (readonly) SCNetworkReachabilityContext *context;
+@property (readonly) SCNetworkReachabilityContext context;
 @property (readonly) SCNetworkReachabilityFlags flags;
 @property (readonly) NSEReachabilityStatus status;
 
-- (instancetype)initWithReachability:(SCNetworkReachabilityRef)reachability;
+- (instancetype)initWithTarget:(SCNetworkReachabilityRef)target;
 - (instancetype)initWithName:(NSString *)nodename;
 
-- (void)setCallback:(SCNetworkReachabilityCallBack)callback context:(SCNetworkReachabilityContext *)context;
-- (void)scheduleWithRunLoop:(NSRunLoop *)runLoop mode:(NSRunLoopMode)mode;
-- (void)unscheduleFromRunLoop:(NSRunLoop *)runLoop mode:(NSRunLoopMode)mode;
+- (void)setCallback:(SCNetworkReachabilityCallBack)callout context:(SCNetworkReachabilityContext)context;
+- (void)scheduleWithRunLoop:(NSRunLoop *)runLoop runLoopMode:(NSRunLoopMode)runLoopMode;
+- (void)unscheduleFromRunLoop:(NSRunLoop *)runLoop runLoopMode:(NSRunLoopMode)runLoopMode;
 
 @end
