@@ -187,14 +187,9 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
 
 - (instancetype)initWithReachability:(SCNetworkReachabilityRef)reachability {
     self = super.init;
-    self.reachability = reachability;
-    return self;
-}
-
-- (instancetype)initWithName:(NSString *)nodename {
-    self.nodename = nodename;
-    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, self.nodename.UTF8String);
-    self = [self initWithReachability:reachability];
+    if (self) {
+        self.reachability = reachability;
+    }
     return self;
 }
 
