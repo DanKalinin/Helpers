@@ -174,6 +174,7 @@ static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRe
 
 @property SCNetworkReachabilityRef reachability;
 @property NSString *nodename;
+@property SCNetworkReachabilityContext *context;
 
 @end
 
@@ -189,6 +190,10 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
     self = super.init;
     if (self) {
         self.reachability = reachability;
+        
+        SCNetworkReachabilityContext context = {0};
+        context.info = (__bridge void *)self;
+        memcpy(&_context, &context, sizeof(context));
     }
     return self;
 }
@@ -204,6 +209,14 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
 
 - (void)dealloc {
     CFRelease(self.reachability);
+}
+
+- (void)setCallback:(SCNetworkReachabilityCallBack)callback context:(SCNetworkReachabilityContext *)context {
+    Boolean success = SCNetworkReachabilitySetCallback(self.reachability, callback, context);
+    if (success) {
+    } else {
+        self.threadError = (__bridge_transfer NSError *)SCCopyLastError();
+    }
 }
 
 #pragma mark - Accessors

@@ -76,10 +76,13 @@ typedef NS_ENUM(NSUInteger, NSEReachabilityStatus) {
 
 @property (readonly) SCNetworkReachabilityRef reachability;
 @property (readonly) NSString *nodename;
+@property (readonly) SCNetworkReachabilityContext *context;
 @property (readonly) SCNetworkReachabilityFlags flags;
 @property (readonly) NSEReachabilityStatus status;
 
 - (instancetype)initWithReachability:(SCNetworkReachabilityRef)reachability;
 - (instancetype)initWithName:(NSString *)nodename;
+
+- (void)setCallback:(SCNetworkReachabilityCallBack)callback context:(SCNetworkReachabilityContext *)context;
 
 @end
