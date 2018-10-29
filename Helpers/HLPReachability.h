@@ -66,4 +66,12 @@ typedef NS_ENUM(NSUInteger, HLPReachabilityStatus) {
 
 @interface NSEReachability : NSEOperation <NSEReachabilityDelegate>
 
+extern void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
+
+@property (readonly) SCNetworkReachabilityRef reachability;
+@property (readonly) NSString *nodename;
+
+- (instancetype)initWithReachability:(SCNetworkReachabilityRef)reachability;
+- (instancetype)initWithName:(NSString *)nodename;
+
 @end

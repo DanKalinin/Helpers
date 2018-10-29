@@ -160,3 +160,46 @@ static void HLPReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRe
     HLPReachability *reachability = (__bridge HLPReachability *)info;
     [reachability.delegates HLPReachabilityDidUpdateFlags:reachability];
 }
+
+
+
+
+
+
+
+
+
+
+@interface NSEReachability ()
+
+@property SCNetworkReachabilityRef reachability;
+@property NSString *nodename;
+
+@end
+
+
+
+@implementation NSEReachability
+
+void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
+    
+}
+
+- (instancetype)initWithReachability:(SCNetworkReachabilityRef)reachability {
+    self = super.init;
+    self.reachability = reachability;
+    return self;
+}
+
+- (instancetype)initWithName:(NSString *)nodename {
+    self.nodename = nodename;
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, self.nodename.UTF8String);
+    self = [self initWithReachability:reachability];
+    return self;
+}
+
+- (void)dealloc {
+    CFRelease(self.reachability);
+}
+
+@end
