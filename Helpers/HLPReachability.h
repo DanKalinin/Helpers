@@ -89,4 +89,7 @@ typedef NS_ENUM(NSUInteger, NSEReachabilityStatus) {
 - (void)scheduleWithRunLoop:(NSRunLoop *)runLoop runLoopMode:(NSRunLoopMode)runLoopMode;
 - (void)unscheduleFromRunLoop:(NSRunLoop *)runLoop runLoopMode:(NSRunLoopMode)runLoopMode;
 
+- (void)startMonitoring;
+- (void)stopMonitoring;
+
 @end
