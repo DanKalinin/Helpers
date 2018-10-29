@@ -476,12 +476,16 @@ NS_ERROR_ENUM(NSEStreamErrorDomain) {
 
 @property (readonly) NSEInputStream *input;
 @property (readonly) NSEOutputStream *output;
-
-+ (instancetype)streamsWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
-+ (instancetype)streamsToHost:(NSString *)host port:(NSInteger)port;
-+ (instancetype)streamsWithComponents:(NSURLComponents *)components;
+@property (readonly) NSInputStream *inputStream;
+@property (readonly) NSOutputStream *outputStream;
+@property (readonly) NSString *host;
+@property (readonly) NSInteger port;
+@property (readonly) NSURLComponents *components;
 
 - (instancetype)initWithInput:(NSEInputStream *)input output:(NSEOutputStream *)output;
+- (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
+- (instancetype)initToHost:(NSString *)host port:(NSInteger)port;
+- (instancetype)initWithComponents:(NSURLComponents *)components;
 
 - (void)open;
 - (void)close;

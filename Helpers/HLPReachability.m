@@ -193,6 +193,15 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
     return self;
 }
 
+- (instancetype)initWithName:(NSString *)nodename {
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, nodename.UTF8String);
+    self = [self initWithReachability:reachability];
+    if (self) {
+        self.nodename = nodename;
+    }
+    return self;
+}
+
 - (void)dealloc {
     CFRelease(self.reachability);
 }

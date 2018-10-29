@@ -933,6 +933,11 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 
 @property NSEInputStream *input;
 @property NSEOutputStream *output;
+@property NSInputStream *inputStream;
+@property NSOutputStream *outputStream;
+@property NSString *host;
+@property NSInteger port;
+@property NSURLComponents *components;
 
 @end
 
@@ -940,31 +945,42 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 
 @implementation NSEStreams
 
-+ (instancetype)streamsWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream {
-    NSEInputStream *input = [NSEInputStream.alloc initWithStream:inputStream];
-    NSEOutputStream *output = [NSEOutputStream.alloc initWithStream:outputStream];
-    NSEStreams *streams = [self.alloc initWithInput:input output:output];
-    return streams;
-}
-
-+ (instancetype)streamsToHost:(NSString *)host port:(NSInteger)port {
-    NSInputStream *inputStream = nil;
-    NSOutputStream *outputStream = nil;
-    [NSStream getStreamsToHostWithName:host port:port inputStream:&inputStream outputStream:&outputStream];
-    NSEStreams *streams = [self streamsWithInputStream:inputStream outputStream:outputStream];
-    return streams;
-}
-
-+ (instancetype)streamsWithComponents:(NSURLComponents *)components {
-    NSEStreams *streams = [self streamsToHost:components.host port:components.port.integerValue];
-    return streams;
-}
-
 - (instancetype)initWithInput:(NSEInputStream *)input output:(NSEOutputStream *)output {
     self = super.init;
     if (self) {
         self.input = input;
         self.output = output;
+    }
+    return self;
+}
+
+- (instancetype)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream {
+    NSEInputStream *input = [NSEInputStream.alloc initWithStream:inputStream];
+    NSEOutputStream *output = [NSEOutputStream.alloc initWithStream:outputStream];
+    self = [self initWithInput:input output:output];
+    if (self) {
+        self.inputStream = inputStream;
+        self.outputStream = outputStream;
+    }
+    return self;
+}
+
+- (instancetype)initToHost:(NSString *)host port:(NSInteger)port {
+    NSInputStream *inputStream = nil;
+    NSOutputStream *outputStream = nil;
+    [NSStream getStreamsToHostWithName:host port:port inputStream:&inputStream outputStream:&outputStream];
+    self = [self initWithInputStream:inputStream outputStream:outputStream];
+    if (self) {
+        self.host = host;
+        self.port = port;
+    }
+    return self;
+}
+
+- (instancetype)initWithComponents:(NSURLComponents *)components {
+    self = [self initToHost:components.host port:components.port.integerValue];
+    if (self) {
+        self.components = components;
     }
     return self;
 }
