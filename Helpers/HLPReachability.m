@@ -214,6 +214,7 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
 - (void)setCallback:(SCNetworkReachabilityCallBack)callout context:(SCNetworkReachabilityContext)context {
     Boolean success = SCNetworkReachabilitySetCallback(self.target, callout, &context);
     if (success) {
+        self.threadError = nil;
     } else {
         self.threadError = (__bridge_transfer NSError *)SCCopyLastError();
     }
@@ -222,6 +223,7 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
 - (void)scheduleWithRunLoop:(NSRunLoop *)runLoop runLoopMode:(NSRunLoopMode)runLoopMode {
     Boolean success = SCNetworkReachabilityScheduleWithRunLoop(self.target, runLoop.getCFRunLoop, (__bridge CFStringRef)runLoopMode);
     if (success) {
+        self.threadError = nil;
     } else {
         self.threadError = (__bridge_transfer NSError *)SCCopyLastError();
     }
@@ -230,6 +232,7 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
 - (void)unscheduleFromRunLoop:(NSRunLoop *)runLoop runLoopMode:(NSRunLoopMode)runLoopMode {
     Boolean success = SCNetworkReachabilityUnscheduleFromRunLoop(self.target, runLoop.getCFRunLoop, (__bridge CFStringRef)runLoopMode);
     if (success) {
+        self.threadError = nil;
     } else {
         self.threadError = (__bridge_transfer NSError *)SCCopyLastError();
     }
@@ -237,10 +240,21 @@ void NSEReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabil
 
 #pragma mark - Accessors
 
+- (void)setDispatchQueue:(dispatch_queue_t)dispatchQueue {
+    Boolean success = SCNetworkReachabilitySetDispatchQueue(self.target, dispatchQueue);
+    if (success) {
+        _dispatchQueue = dispatchQueue;
+        self.threadError = nil;
+    } else {
+        self.threadError = (__bridge_transfer NSError *)SCCopyLastError();
+    }
+}
+
 - (SCNetworkReachabilityFlags)flags {
     SCNetworkReachabilityFlags flags = 0;
     Boolean success = SCNetworkReachabilityGetFlags(self.target, &flags);
     if (success) {
+        self.threadError = nil;
     } else {
         self.threadError = (__bridge_transfer NSError *)SCCopyLastError();
     }

@@ -74,6 +74,8 @@ typedef NS_ENUM(NSUInteger, NSEReachabilityStatus) {
     NSEReachabilityStatusWWAN
 };
 
+@property (nonatomic) dispatch_queue_t dispatchQueue;
+
 @property (readonly) SCNetworkReachabilityRef target;
 @property (readonly) NSString *nodename;
 @property (readonly) SCNetworkReachabilityContext context;
