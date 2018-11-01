@@ -274,6 +274,27 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 
 
+@protocol NSERPCPayloadReadingDelegate <NSEOperationDelegate>
+
+@end
+
+
+
+@interface NSERPCPayloadReading : NSEOperation <NSERPCPayloadReadingDelegate>
+
+@property (readonly) NSERPCPayload *payload;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol NSERPCDelegate <NSEOperationDelegate>
 
 @end

@@ -475,6 +475,35 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
+@interface NSERPCPayloadReading ()
+
+@property NSERPCPayload *payload;
+
+@end
+
+
+
+@implementation NSERPCPayloadReading
+
+- (instancetype)init {
+    self = super.init;
+    if (self) {
+        self.payload = NSERPCPayload.new;
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface NSERPC ()
 
 @property NSEStreams *streams;

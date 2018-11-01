@@ -985,10 +985,6 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
     return self;
 }
 
-- (void)dealloc {
-    
-}
-
 - (void)open {
     [self.input open];
     [self.output open];
