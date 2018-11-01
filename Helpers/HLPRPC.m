@@ -504,6 +504,35 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
+@interface NSERPCPayloadWriting ()
+
+@property NSERPCPayload *payload;
+
+@end
+
+
+
+@implementation NSERPCPayloadWriting
+
+- (instancetype)initWithPayload:(NSERPCPayload *)payload {
+    self = super.init;
+    if (self) {
+        self.payload = payload;
+    }
+    return payload;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface NSERPC ()
 
 @property NSEStreams *streams;

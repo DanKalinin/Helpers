@@ -295,6 +295,29 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 
 
+@protocol NSERPCPayloadWritingDelegate <NSEOperationDelegate>
+
+@end
+
+
+
+@interface NSERPCPayloadWriting : NSEOperation <NSERPCPayloadWritingDelegate>
+
+@property (readonly) NSERPCPayload *payload;
+
+- (instancetype)initWithPayload:(NSERPCPayload *)payload;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol NSERPCDelegate <NSEOperationDelegate>
 
 @end
