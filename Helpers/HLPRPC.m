@@ -559,4 +559,28 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
     return self;
 }
 
+- (NSERPCPayloadReading *)readPayload {
+    NSERPCPayloadReading *reading = NSERPCPayloadReading.new;
+    [self addOperation:reading];
+    return reading;
+}
+
+- (NSERPCPayloadReading *)readPayloadWithCompletion:(HLPVoidBlock)completion {
+    NSERPCPayloadReading *reading = self.readPayload;
+    reading.completionBlock = completion;
+    return reading;
+}
+
+- (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload {
+    NSERPCPayloadWriting *writing = [NSERPCPayloadWriting.alloc initWithPayload:payload];
+    [self addOperation:writing];
+    return writing;
+}
+
+- (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion {
+    NSERPCPayloadWriting *writing = [self writePayload:payload];
+    writing.completionBlock = completion;
+    return writing;
+}
+
 @end

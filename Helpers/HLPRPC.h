@@ -237,6 +237,8 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 
 
 @class NSERPCPayload;
+@class NSERPCPayloadReading;
+@class NSERPCPayloadWriting;
 @class NSERPC;
 
 
@@ -341,5 +343,11 @@ NS_ERROR_ENUM(NSERPCErrorDomain) {
 @property (readonly) NSEStreams *streams;
 
 - (instancetype)initWithStreams:(NSEStreams *)streams;
+
+- (NSERPCPayloadReading *)readPayload;
+- (NSERPCPayloadReading *)readPayloadWithCompletion:(HLPVoidBlock)completion;
+
+- (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload;
+- (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion;
 
 @end
