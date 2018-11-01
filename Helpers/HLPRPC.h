@@ -349,8 +349,11 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 @interface NSERPCMessageSending : NSEOperation <NSERPCMessageSendingDelegate>
 
+@property (readonly) NSERPC *parent;
 @property (readonly) id message;
 @property (readonly) BOOL needsResponse;
+@property (readonly) NSERPCPayloadWriting *writing;
+@property (readonly) NSETimer *timer;
 
 - (instancetype)initWithMessage:(id)message needsResponse:(BOOL)needsResponse;
 
@@ -386,6 +389,7 @@ NS_ERROR_ENUM(NSERPCErrorDomain) {
 @property NSTimeInterval timeout;
 
 @property (readonly) NSEStreams *streams;
+@property (readonly) HLPDictionary<NSNumber *, NSERPCMessageSending *> *sendings;
 
 - (instancetype)initWithStreams:(NSEStreams *)streams;
 

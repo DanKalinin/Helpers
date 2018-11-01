@@ -519,7 +519,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     if (self) {
         self.payload = payload;
     }
-    return payload;
+    return self;
 }
 
 @end
@@ -556,12 +556,16 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 @property id message;
 @property BOOL needsResponse;
+@property NSERPCPayloadWriting *writing;
+@property NSETimer *timer;
 
 @end
 
 
 
 @implementation NSERPCMessageSending
+
+@dynamic parent;
 
 - (instancetype)initWithMessage:(id)message needsResponse:(BOOL)needsResponse {
     self = super.init;
@@ -570,6 +574,36 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
         self.needsResponse = needsResponse;
     }
     return self;
+}
+
+- (void)main {
+    NSERPCPayload *payload = NSERPCPayload.new;
+    payload.type = self.needsResponse ? NSERPCPayloadTypeCall : NSERPCPayloadTypeSignal;
+    payload.serial = self.parent.sequence.value;
+    payload.message = self.message;
+    
+    [self.parent.sequence next];
+    
+    self.operation = self.writing = [self.parent writePayload:payload];
+    [self.writing waitUntilFinished];
+    if (self.writing.isCancelled) {
+    } else if (self.writing.error) {
+        self.error = self.writing.error;
+    } else {
+        if (payload.type == NSERPCPayloadTypeCall) {
+            self.operation = self.timer = [NSEClock.shared timerWithInterval:self.parent.timeout repeats:1];
+            
+            self.parent.sendings[@(payload.serial)] = self;
+            
+            [self.timer waitUntilFinished];
+            if (self.timer.isCancelled) {
+            } else {
+                self.error = [NSError errorWithDomain:NSERPCErrorDomain code:NSERPCErrorTimeout userInfo:nil];
+            }
+        }
+    }
+    
+    [self finish];
 }
 
 @end
@@ -586,6 +620,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface NSERPC ()
 
 @property NSEStreams *streams;
+@property HLPDictionary *sendings;
 
 @end
 
@@ -603,8 +638,12 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
         
         self.isAsynchronous = YES;
         
+        self.payloadReadingClass = NSERPCPayloadReading.class;
+        self.payloadWritingClass = NSERPCPayloadWriting.class;
         self.sequence = [HLPSequence.alloc initWithStart:INT64_MIN stop:INT64_MAX step:1];
         self.timeout = 30.0;
+        
+        self.sendings = HLPDictionary.strongToWeakDictionary;
     }
     return self;
 }
