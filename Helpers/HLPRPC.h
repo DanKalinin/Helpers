@@ -357,7 +357,7 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 
 
-@interface NSERPCMessageReceiving : NSEOperation <NSERPCMessageReceiving>
+@interface NSERPCMessageReceiving : NSEOperation <NSERPCMessageReceivingDelegate>
 
 @property (readonly) NSERPC *parent;
 @property (readonly) NSERPCPayload *payload;
