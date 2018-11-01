@@ -351,7 +351,7 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 
 
-@protocol NSERPCMessageReceiving <NSEOperationDelegate>
+@protocol NSERPCMessageReceivingDelegate <NSEOperationDelegate>
 
 @end
 
@@ -396,7 +396,7 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 
 
-@protocol NSERPCDelegate <NSEOperationDelegate>
+@protocol NSERPCDelegate <NSERPCPayloadReadingDelegate, NSERPCPayloadWritingDelegate, NSERPCMessageSendingDelegate, NSERPCMessageReceivingDelegate, NSERPCResponseSendingDelegate>
 
 @end
 

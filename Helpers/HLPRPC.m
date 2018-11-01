@@ -695,6 +695,9 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
         
         self.payloadReadingClass = NSERPCPayloadReading.class;
         self.payloadWritingClass = NSERPCPayloadWriting.class;
+        self.messageReceivingClass = NSERPCMessageReceiving.class;
+        self.messageSendingClass = NSERPCMessageSending.class;
+        self.responseSendingClass = NSERPCResponseSending.class;
         self.sequence = [HLPSequence.alloc initWithStart:INT64_MIN stop:INT64_MAX step:1];
         self.timeout = 30.0;
         
