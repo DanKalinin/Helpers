@@ -239,8 +239,8 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 @class NSERPCPayload;
 @class NSERPCPayloadReading;
 @class NSERPCPayloadWriting;
-@class NSERPCMessageReceiving;
 @class NSERPCMessageSending;
+@class NSERPCMessageReceiving;
 @class NSERPC;
 
 
@@ -322,25 +322,6 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 
 
-@protocol NSERPCMessageReceiving <NSEOperationDelegate>
-
-@end
-
-
-
-@interface NSERPCMessageReceiving : NSEOperation <NSERPCMessageReceiving>
-
-@end
-
-
-
-
-
-
-
-
-
-
 @protocol NSERPCMessageSendingDelegate <NSEOperationDelegate>
 
 @end
@@ -352,10 +333,35 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 @property (readonly) NSERPC *parent;
 @property (readonly) id message;
 @property (readonly) BOOL needsResponse;
+@property (readonly) id response;
 @property (readonly) NSERPCPayloadWriting *writing;
 @property (readonly) NSETimer *timer;
 
 - (instancetype)initWithMessage:(id)message needsResponse:(BOOL)needsResponse;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol NSERPCMessageReceiving <NSEOperationDelegate>
+
+@end
+
+
+
+@interface NSERPCMessageReceiving : NSEOperation <NSERPCMessageReceiving>
+
+@property (readonly) NSERPC *parent;
+@property (readonly) NSERPCPayload *payload;
+
+- (instancetype)initWithPayload:(NSERPCPayload *)payload;
 
 @end
 
