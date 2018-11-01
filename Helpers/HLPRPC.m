@@ -633,4 +633,28 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
     return writing;
 }
 
+- (NSERPCMessageReceiving *)receiveMessage {
+    NSERPCMessageReceiving *receiving = NSERPCMessageReceiving.new;
+    [self addOperation:receiving];
+    return receiving;
+}
+
+- (NSERPCMessageReceiving *)receiveMessageWithCompletion:(HLPVoidBlock)completion {
+    NSERPCMessageReceiving *receiving = self.receiveMessage;
+    receiving.completionBlock = completion;
+    return receiving;
+}
+
+- (NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse {
+    NSERPCMessageSending *sending = [NSERPCMessageSending.alloc initWithMessage:message needsResponse:needsResponse];
+    [self addOperation:sending];
+    return sending;
+}
+
+- (NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse completion:(HLPVoidBlock)completion {
+    NSERPCMessageSending *sending = [self sendMessage:message needsResponse:needsResponse];
+    sending.completionBlock = completion;
+    return sending;
+}
+
 @end

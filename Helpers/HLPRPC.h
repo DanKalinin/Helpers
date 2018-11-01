@@ -395,4 +395,10 @@ NS_ERROR_ENUM(NSERPCErrorDomain) {
 - (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload;
 - (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion;
 
+- (NSERPCMessageReceiving *)receiveMessage;
+- (NSERPCMessageReceiving *)receiveMessageWithCompletion:(HLPVoidBlock)completion;
+
+- (NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse;
+- (NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse completion:(HLPVoidBlock)completion;
+
 @end
