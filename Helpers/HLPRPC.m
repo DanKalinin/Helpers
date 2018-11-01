@@ -533,6 +533,56 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
+@interface NSERPCMessageReceiving ()
+
+@end
+
+
+
+@implementation NSERPCMessageReceiving
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSERPCMessageSending ()
+
+@property id message;
+@property BOOL needsResponse;
+
+@end
+
+
+
+@implementation NSERPCMessageSending
+
+- (instancetype)initWithMessage:(id)message needsResponse:(BOOL)needsResponse {
+    self = super.init;
+    if (self) {
+        self.message = message;
+        self.needsResponse = needsResponse;
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface NSERPC ()
 
 @property NSEStreams *streams;
