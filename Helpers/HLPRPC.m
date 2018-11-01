@@ -441,3 +441,64 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@interface NSERPCPayload ()
+
+@end
+
+
+
+@implementation NSERPCPayload
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSERPC ()
+
+@property NSEStreams *streams;
+
+@end
+
+
+
+@implementation NSERPC
+
+NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
+
+- (instancetype)initWithStreams:(NSEStreams *)streams {
+    self = super.init;
+    if (self) {
+        self.streams = streams;
+        [self.streams.delegates addObject:self.delegates];
+        
+        self.isAsynchronous = YES;
+        
+        self.sequence = [HLPSequence.alloc initWithStart:INT64_MIN stop:INT64_MAX step:1];
+        self.timeout = 30.0;
+    }
+    return self;
+}
+
+@end

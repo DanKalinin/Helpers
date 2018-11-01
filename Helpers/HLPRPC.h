@@ -226,3 +226,76 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 - (HLPRPCResponseSending *)payload:(HLPRPCPayload *)payload sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion;
 
 @end
+
+
+
+
+
+
+
+
+
+
+@class NSERPCPayload;
+@class NSERPC;
+
+
+
+
+
+
+
+
+
+
+@interface NSERPCPayload : HLPObject
+
+typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
+    NSERPCPayloadTypeSignal,
+    NSERPCPayloadTypeCall,
+    NSERPCPayloadTypeReturn
+};
+
+@property NSERPCPayloadType type;
+@property int64_t serial;
+@property int64_t responseSerial;
+@property id message;
+@property id response;
+@property NSError *error;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol NSERPCDelegate <NSEOperationDelegate>
+
+@end
+
+
+
+@interface NSERPC : NSEOperation <NSERPCDelegate>
+
+extern NSErrorDomain const NSERPCErrorDomain;
+
+NS_ERROR_ENUM(NSERPCErrorDomain) {
+    NSERPCErrorUnknown,
+    NSERPCErrorTimeout
+};
+
+@property Class payloadReadingClass;
+@property Class payloadWritingClass;
+@property HLPSequence *sequence;
+@property NSTimeInterval timeout;
+
+@property (readonly) NSEStreams *streams;
+
+- (instancetype)initWithStreams:(NSEStreams *)streams;
+
+@end
