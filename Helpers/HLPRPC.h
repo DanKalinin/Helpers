@@ -241,6 +241,7 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 @class NSERPCPayloadWriting;
 @class NSERPCMessageSending;
 @class NSERPCMessageReceiving;
+@class NSERPCResponseSending;
 @class NSERPC;
 
 
@@ -360,8 +361,29 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 @property (readonly) NSERPC *parent;
 @property (readonly) NSERPCPayload *payload;
+@property (readonly) id message;
+@property (readonly) id response;
 
 - (instancetype)initWithPayload:(NSERPCPayload *)payload;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol NSERPCResponseSendingDelegate <NSEOperationDelegate>
+
+@end
+
+
+
+@interface NSERPCResponseSending : NSEOperation <NSERPCResponseSendingDelegate>
 
 @end
 
@@ -391,6 +413,9 @@ NS_ERROR_ENUM(NSERPCErrorDomain) {
 
 @property Class payloadReadingClass;
 @property Class payloadWritingClass;
+@property Class messageReceivingClass;
+@property Class messageSendingClass;
+@property Class responseSendingClass;
 @property HLPSequence *sequence;
 @property NSTimeInterval timeout;
 

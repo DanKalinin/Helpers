@@ -602,6 +602,8 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface NSERPCMessageReceiving ()
 
 @property NSERPCPayload *payload;
+@property id message;
+@property id response;
 
 @end
 
@@ -621,33 +623,15 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 - (void)main {
     if (self.payload.type == NSERPCPayloadTypeReturn) {
-        
-    } else {
         NSERPCMessageSending *sending = self.parent.sendings[@(self.payload.responseSerial)];
-        sending.response = self.payload.response;
-        
+        self.response = sending.response = self.payload.response;
+        self.error = sending.error = self.payload.error;
+        [sending.timer cancel];
+    } else {
+        self.message = self.payload.message;
     }
 }
 
-//- (void)main {
-//    [self updateState:HLPOperationStateDidBegin];
-//
-//    if (self.payload.type == HLPRPCPayloadTypeReturn) {
-//        if (self.payload.error) {
-//            [self.errors addObject:self.payload.error];
-//        } else {
-//            self.response = self.payload.response;
-//        }
-//
-//        HLPRPCMessageSending *sending = self.parent.sendings[@(self.payload.responseSerial)];
-//        [sending endWithResponse:self.payload.response error:self.payload.error];
-//    } else {
-//        self.message = self.payload.message;
-//    }
-//
-//    [self updateState:HLPOperationStateDidEnd];
-//}
-//
 //- (HLPRPCResponseSending *)sendResponse:(id)response error:(NSError *)error {
 //    HLPRPCResponseSending *sending = [self.parent payload:self.payload sendResponse:response error:error];
 //    return sending;
@@ -657,6 +641,25 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 //    HLPRPCResponseSending *sending = [self.parent payload:self.payload sendResponse:response error:error completion:completion];
 //    return sending;
 //}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSERPCResponseSending ()
+
+@end
+
+
+
+@implementation NSERPCResponseSending
 
 @end
 
