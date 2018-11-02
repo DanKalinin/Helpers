@@ -712,7 +712,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @interface NSERPC ()
 
 @property NSEStreams *streams;
-@property HLPDictionary *sendings;
+@property HLPDictionary<NSNumber *, NSERPCMessageSending *> *sendings;
 @property NSERPCPayloadReading *reading;
 @property NSERPCMessageReceiving *receiving;
 
