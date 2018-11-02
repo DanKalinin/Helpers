@@ -756,9 +756,7 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
             self.receiving = [self receiveMessageWithPayload:self.reading.payload];
         }
         
-        if (self.isCancelled) {
-            break;
-        } else if (self.error) {
+        if (self.isCancelled || self.error) {
             break;
         }
     }
