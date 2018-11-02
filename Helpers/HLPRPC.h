@@ -366,8 +366,8 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 - (instancetype)initWithPayload:(NSERPCPayload *)payload;
 
-- (NSERPCResponseSending *)sendResponse:(id)response error:(NSError *)error;
-- (NSERPCResponseSending *)sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion;
+- (__kindof NSERPCResponseSending *)sendResponse:(id)response error:(NSError *)error;
+- (__kindof NSERPCResponseSending *)sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion;
 
 @end
 
@@ -431,23 +431,23 @@ NS_ERROR_ENUM(NSERPCErrorDomain) {
 @property NSTimeInterval timeout;
 
 @property (readonly) NSEStreams *streams;
-@property (readonly) HLPDictionary<NSNumber *, NSERPCMessageSending *> *sendings;
+@property (readonly) HLPDictionary<NSNumber *, __kindof NSERPCMessageSending *> *sendings;
 
 - (instancetype)initWithStreams:(NSEStreams *)streams;
 
-- (NSERPCPayloadReading *)readPayload;
-- (NSERPCPayloadReading *)readPayloadWithCompletion:(HLPVoidBlock)completion;
+- (__kindof NSERPCPayloadReading *)readPayload;
+- (__kindof NSERPCPayloadReading *)readPayloadWithCompletion:(HLPVoidBlock)completion;
 
-- (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload;
-- (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion;
+- (__kindof NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload;
+- (__kindof NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion;
 
-- (NSERPCMessageReceiving *)receiveMessageWithPayload:(NSERPCPayload *)payload;
-- (NSERPCMessageReceiving *)receiveMessageWithPayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion;
+- (__kindof NSERPCMessageReceiving *)receiveMessageWithPayload:(NSERPCPayload *)payload;
+- (__kindof NSERPCMessageReceiving *)receiveMessageWithPayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion;
 
-- (NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse;
-- (NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse completion:(HLPVoidBlock)completion;
+- (__kindof NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse;
+- (__kindof NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse completion:(HLPVoidBlock)completion;
 
-- (NSERPCResponseSending *)payload:(NSERPCPayload *)payload sendResponse:(id)response error:(NSError *)error;
-- (NSERPCResponseSending *)payload:(NSERPCPayload *)payload sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion;
+- (__kindof NSERPCResponseSending *)payload:(NSERPCPayload *)payload sendResponse:(id)response error:(NSError *)error;
+- (__kindof NSERPCResponseSending *)payload:(NSERPCPayload *)payload sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion;
 
 @end
