@@ -755,29 +755,16 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
         } else {
             self.receiving = [self receiveMessageWithPayload:self.reading.payload];
         }
+        
+        if (self.isCancelled) {
+            break;
+        } else if (self.error) {
+            break;
+        }
     }
     
     [self finish];
 }
-
-//- (void)main {
-//    [self updateState:HLPOperationStateDidBegin];
-//
-//    while (!self.cancelled && (self.errors.count == 0)) {
-//        HLPRPCPayload *payload = HLPRPCPayload.new;
-//
-//        self.reading = [self readPayload:payload];
-//        [self.reading waitUntilFinished];
-//        if (self.reading.cancelled) {
-//        } else if (self.reading.errors.count > 0) {
-//            [self.errors addObjectsFromArray:self.reading.errors];
-//        } else {
-//            [self receiveMessage:payload];
-//        }
-//    }
-//
-//    [self updateState:HLPOperationStateDidEnd];
-//}
 
 - (NSERPCPayloadReading *)readPayload {
     NSERPCPayloadReading *reading = self.payloadReadingClass.new;
