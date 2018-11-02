@@ -335,7 +335,7 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 @property (readonly) id message;
 @property (readonly) BOOL needsResponse;
 @property (readonly) id response;
-@property (readonly) NSERPCPayloadWriting *writing;
+@property (readonly) __kindof NSERPCPayloadWriting *writing;
 @property (readonly) NSETimer *timer;
 
 - (instancetype)initWithMessage:(id)message needsResponse:(BOOL)needsResponse;
@@ -393,7 +393,7 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 @property (readonly) NSERPCPayload *payload;
 @property (readonly) id response;
 @property (readonly) NSError *responseError;
-@property (readonly) NSERPCPayloadWriting *writing;
+@property (readonly) __kindof NSERPCPayloadWriting *writing;
 
 - (instancetype)initWithPayload:(NSERPCPayload *)payload response:(id)response error:(NSError *)error;
 
