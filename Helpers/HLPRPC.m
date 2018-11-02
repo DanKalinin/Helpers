@@ -787,4 +787,16 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
     return sending;
 }
 
+- (NSERPCResponseSending *)payload:(NSERPCPayload *)payload sendResponse:(id)response error:(NSError *)error {
+    NSERPCResponseSending *sending = [NSERPCResponseSending.alloc initWithPayload:payload response:response error:error];
+    [self addOperation:sending];
+    return sending;
+}
+
+- (NSERPCResponseSending *)payload:(NSERPCPayload *)payload sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion {
+    NSERPCResponseSending *sending = [self payload:payload sendResponse:response error:error];
+    sending.completionBlock = completion;
+    return sending;
+}
+
 @end
