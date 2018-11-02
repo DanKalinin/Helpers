@@ -634,15 +634,15 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     [self finish];
 }
 
-//- (HLPRPCResponseSending *)sendResponse:(id)response error:(NSError *)error {
-//    HLPRPCResponseSending *sending = [self.parent payload:self.payload sendResponse:response error:error];
-//    return sending;
-//}
-//
-//- (HLPRPCResponseSending *)sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion {
-//    HLPRPCResponseSending *sending = [self.parent payload:self.payload sendResponse:response error:error completion:completion];
-//    return sending;
-//}
+- (NSERPCResponseSending *)sendResponse:(id)response error:(NSError *)error {
+    NSERPCResponseSending *sending = [self.parent payload:self.payload sendResponse:response error:error];
+    return sending;
+}
+
+- (NSERPCResponseSending *)sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion {
+    NSERPCResponseSending *sending = [self.parent payload:self.payload sendResponse:response error:error completion:completion];
+    return sending;
+}
 
 @end
 
@@ -743,7 +743,7 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
 }
 
 - (NSERPCPayloadReading *)readPayload {
-    NSERPCPayloadReading *reading = NSERPCPayloadReading.new;
+    NSERPCPayloadReading *reading = self.payloadReadingClass.new;
     [self addOperation:reading];
     return reading;
 }
@@ -755,7 +755,7 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
 }
 
 - (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload {
-    NSERPCPayloadWriting *writing = [NSERPCPayloadWriting.alloc initWithPayload:payload];
+    NSERPCPayloadWriting *writing = [self.payloadWritingClass.alloc initWithPayload:payload];
     [self addOperation:writing];
     return writing;
 }
@@ -767,7 +767,7 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
 }
 
 - (NSERPCMessageReceiving *)receiveMessageWithPayload:(NSERPCPayload *)payload {
-    NSERPCMessageReceiving *receiving = [NSERPCMessageReceiving.alloc initWithPayload:payload];
+    NSERPCMessageReceiving *receiving = [self.messageReceivingClass.alloc initWithPayload:payload];
     [self addOperation:receiving];
     return receiving;
 }
@@ -779,7 +779,7 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
 }
 
 - (NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse {
-    NSERPCMessageSending *sending = [NSERPCMessageSending.alloc initWithMessage:message needsResponse:needsResponse];
+    NSERPCMessageSending *sending = [self.messageSendingClass.alloc initWithMessage:message needsResponse:needsResponse];
     [self addOperation:sending];
     return sending;
 }
@@ -791,7 +791,7 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
 }
 
 - (NSERPCResponseSending *)payload:(NSERPCPayload *)payload sendResponse:(id)response error:(NSError *)error {
-    NSERPCResponseSending *sending = [NSERPCResponseSending.alloc initWithPayload:payload response:response error:error];
+    NSERPCResponseSending *sending = [self.responseSendingClass.alloc initWithPayload:payload response:response error:error];
     [self addOperation:sending];
     return sending;
 }

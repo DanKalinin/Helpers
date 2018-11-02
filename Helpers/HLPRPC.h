@@ -366,6 +366,9 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 - (instancetype)initWithPayload:(NSERPCPayload *)payload;
 
+- (NSERPCResponseSending *)sendResponse:(id)response error:(NSError *)error;
+- (NSERPCResponseSending *)sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion;
+
 @end
 
 
