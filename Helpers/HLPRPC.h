@@ -379,15 +379,17 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 @protocol NSERPCResponseSendingDelegate <NSEOperationDelegate>
 
-@property (readonly) NSERPCPayload *payload;
-@property (readonly) id response;
-@property (readonly) NSError *responseError;
-
 @end
 
 
 
 @interface NSERPCResponseSending : NSEOperation <NSERPCResponseSendingDelegate>
+
+@property (readonly) NSERPC *parent;
+@property (readonly) NSERPCPayload *payload;
+@property (readonly) id response;
+@property (readonly) NSError *responseError;
+@property (readonly) NSERPCPayloadWriting *writing;
 
 - (instancetype)initWithPayload:(NSERPCPayload *)payload response:(id)response error:(NSError *)error;
 

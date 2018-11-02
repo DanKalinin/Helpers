@@ -630,6 +630,8 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     } else {
         self.message = self.payload.message;
     }
+    
+    [self finish];
 }
 
 //- (HLPRPCResponseSending *)sendResponse:(id)response error:(NSError *)error {
@@ -658,12 +660,15 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @property NSERPCPayload *payload;
 @property id response;
 @property NSError *responseError;
+@property NSERPCPayloadWriting *writing;
 
 @end
 
 
 
 @implementation NSERPCResponseSending
+
+@dynamic parent;
 
 - (instancetype)initWithPayload:(NSERPCPayload *)payload response:(id)response error:(NSError *)error {
     self = super.init;
@@ -675,24 +680,22 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     return self;
 }
 
-//- (void)main {
-//    [self updateState:HLPOperationStateDidBegin];
-//
-//    HLPRPCPayload *payload = HLPRPCPayload.new;
-//    payload.type = HLPRPCPayloadTypeReturn;
-//    payload.responseSerial = self.payload.serial;
-//    payload.response = self.response;
-//    payload.error = self.error;
-//
-//    self.operation = self.writing = [self.parent writePayload:payload];
-//    [self.writing waitUntilFinished];
-//    if (self.writing.cancelled) {
-//    } else if (self.writing.errors.count > 0) {
-//        [self.errors addObjectsFromArray:self.writing.errors];
-//    }
-//
-//    [self updateState:HLPOperationStateDidEnd];
-//}
+- (void)main {
+    NSERPCPayload *payload = NSERPCPayload.new;
+    payload.type = NSERPCPayloadTypeReturn;
+    payload.responseSerial = self.payload.serial;
+    payload.response = self.response;
+    payload.error = self.responseError;
+    
+    self.operation = self.writing = [self.parent writePayload:payload];
+    [self.writing waitUntilFinished];
+    if (self.writing.isCancelled) {
+    } else if (self.writing.error) {
+        self.error = self.writing.error;
+    }
+    
+    [self finish];
+}
 
 @end
 
