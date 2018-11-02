@@ -604,6 +604,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 @property NSERPCPayload *payload;
 @property id message;
 @property id response;
+@property NSError *responseError;
 
 @end
 
@@ -625,7 +626,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     if (self.payload.type == NSERPCPayloadTypeReturn) {
         NSERPCMessageSending *sending = self.parent.sendings[@(self.payload.responseSerial)];
         self.response = sending.response = self.payload.response;
-        self.error = sending.error = self.payload.error;
+        self.responseError = sending.error = self.payload.error;
         [sending.timer cancel];
     } else {
         self.message = self.payload.message;
@@ -712,6 +713,8 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 @property NSEStreams *streams;
 @property HLPDictionary *sendings;
+@property NSERPCPayloadReading *reading;
+@property NSERPCMessageReceiving *receiving;
 
 @end
 
@@ -741,6 +744,40 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
     }
     return self;
 }
+
+- (void)main {
+    while (YES) {
+        self.operation = self.reading = self.readPayload;
+        [self.reading waitUntilFinished];
+        if (self.reading.isCancelled) {
+        } else if (self.reading.error) {
+            self.error = self.reading.error;
+        } else {
+            self.receiving = [self receiveMessageWithPayload:self.reading.payload];
+        }
+    }
+    
+    [self finish];
+}
+
+//- (void)main {
+//    [self updateState:HLPOperationStateDidBegin];
+//
+//    while (!self.cancelled && (self.errors.count == 0)) {
+//        HLPRPCPayload *payload = HLPRPCPayload.new;
+//
+//        self.reading = [self readPayload:payload];
+//        [self.reading waitUntilFinished];
+//        if (self.reading.cancelled) {
+//        } else if (self.reading.errors.count > 0) {
+//            [self.errors addObjectsFromArray:self.reading.errors];
+//        } else {
+//            [self receiveMessage:payload];
+//        }
+//    }
+//
+//    [self updateState:HLPOperationStateDidEnd];
+//}
 
 - (NSERPCPayloadReading *)readPayload {
     NSERPCPayloadReading *reading = self.payloadReadingClass.new;

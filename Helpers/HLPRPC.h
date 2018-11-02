@@ -363,6 +363,7 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 @property (readonly) NSERPCPayload *payload;
 @property (readonly) id message;
 @property (readonly) id response;
+@property (readonly) NSError *responseError;
 
 - (instancetype)initWithPayload:(NSERPCPayload *)payload;
 
@@ -432,6 +433,8 @@ NS_ERROR_ENUM(NSERPCErrorDomain) {
 
 @property (readonly) NSEStreams *streams;
 @property (readonly) HLPDictionary<NSNumber *, __kindof NSERPCMessageSending *> *sendings;
+@property (readonly) NSERPCPayloadReading *reading;
+@property (readonly) NSERPCMessageReceiving *receiving;
 
 - (instancetype)initWithStreams:(NSEStreams *)streams;
 
