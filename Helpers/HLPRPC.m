@@ -655,11 +655,44 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 @interface NSERPCResponseSending ()
 
+@property NSERPCPayload *payload;
+@property id response;
+@property NSError *responseError;
+
 @end
 
 
 
 @implementation NSERPCResponseSending
+
+- (instancetype)initWithPayload:(NSERPCPayload *)payload response:(id)response error:(NSError *)error {
+    self = super.init;
+    if (self) {
+        self.payload = payload;
+        self.response = response;
+        self.responseError = error;
+    }
+    return self;
+}
+
+//- (void)main {
+//    [self updateState:HLPOperationStateDidBegin];
+//
+//    HLPRPCPayload *payload = HLPRPCPayload.new;
+//    payload.type = HLPRPCPayloadTypeReturn;
+//    payload.responseSerial = self.payload.serial;
+//    payload.response = self.response;
+//    payload.error = self.error;
+//
+//    self.operation = self.writing = [self.parent writePayload:payload];
+//    [self.writing waitUntilFinished];
+//    if (self.writing.cancelled) {
+//    } else if (self.writing.errors.count > 0) {
+//        [self.errors addObjectsFromArray:self.writing.errors];
+//    }
+//
+//    [self updateState:HLPOperationStateDidEnd];
+//}
 
 @end
 
@@ -730,14 +763,14 @@ NSErrorDomain const NSERPCErrorDomain = @"NSERPC";
     return writing;
 }
 
-- (NSERPCMessageReceiving *)receiveMessage {
-    NSERPCMessageReceiving *receiving = NSERPCMessageReceiving.new;
+- (NSERPCMessageReceiving *)receiveMessageWithPayload:(NSERPCPayload *)payload {
+    NSERPCMessageReceiving *receiving = [NSERPCMessageReceiving.alloc initWithPayload:payload];
     [self addOperation:receiving];
     return receiving;
 }
 
-- (NSERPCMessageReceiving *)receiveMessageWithCompletion:(HLPVoidBlock)completion {
-    NSERPCMessageReceiving *receiving = self.receiveMessage;
+- (NSERPCMessageReceiving *)receiveMessageWithPayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion {
+    NSERPCMessageReceiving *receiving = [self receiveMessageWithPayload:payload];
     receiving.completionBlock = completion;
     return receiving;
 }

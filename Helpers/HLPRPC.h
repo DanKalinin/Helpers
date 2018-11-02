@@ -379,11 +379,17 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 @protocol NSERPCResponseSendingDelegate <NSEOperationDelegate>
 
+@property (readonly) NSERPCPayload *payload;
+@property (readonly) id response;
+@property (readonly) NSError *responseError;
+
 @end
 
 
 
 @interface NSERPCResponseSending : NSEOperation <NSERPCResponseSendingDelegate>
+
+- (instancetype)initWithPayload:(NSERPCPayload *)payload response:(id)response error:(NSError *)error;
 
 @end
 
@@ -430,10 +436,13 @@ NS_ERROR_ENUM(NSERPCErrorDomain) {
 - (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload;
 - (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion;
 
-- (NSERPCMessageReceiving *)receiveMessage;
-- (NSERPCMessageReceiving *)receiveMessageWithCompletion:(HLPVoidBlock)completion;
+- (NSERPCMessageReceiving *)receiveMessageWithPayload:(NSERPCPayload *)payload;
+- (NSERPCMessageReceiving *)receiveMessageWithPayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion;
 
 - (NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse;
 - (NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse completion:(HLPVoidBlock)completion;
+
+- (NSERPCResponseSending *)payload:(NSERPCPayload *)payload sendResponse:(id)response error:(NSError *)error;
+- (NSERPCResponseSending *)payload:(NSERPCPayload *)payload sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion;
 
 @end
