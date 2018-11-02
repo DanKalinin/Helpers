@@ -433,8 +433,8 @@ NS_ERROR_ENUM(NSERPCErrorDomain) {
 
 @property (readonly) NSEStreams *streams;
 @property (readonly) HLPDictionary<NSNumber *, __kindof NSERPCMessageSending *> *sendings;
-@property (readonly) NSERPCPayloadReading *reading;
-@property (readonly) NSERPCMessageReceiving *receiving;
+@property (readonly) __kindof NSERPCPayloadReading *reading;
+@property (readonly) __kindof NSERPCMessageReceiving *receiving;
 
 - (instancetype)initWithStreams:(NSEStreams *)streams;
 
