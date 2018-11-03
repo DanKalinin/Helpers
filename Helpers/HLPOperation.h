@@ -154,9 +154,7 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 
 @property NSEOperationState state;
 @property NSError *error;
-@property NSError *threadError;
 @property NSEOperation *operation;
-@property NSArray<NSEOperation *> *operations;
 
 @property (nonatomic) BOOL isCancelled;
 @property (nonatomic) BOOL isExecuting;

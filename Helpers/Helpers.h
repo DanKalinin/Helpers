@@ -11,6 +11,8 @@
 FOUNDATION_EXPORT double HelpersVersionNumber;
 FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 
+#import <Helpers/NSEError.h>
+
 #import <Helpers/HLPMain.h>
 #import <Helpers/HLPObject.h>
 #import <Helpers/HLPString.h>

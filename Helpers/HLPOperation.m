@@ -272,9 +272,6 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
     self.isCancelled = YES;
     
     [self.operation cancel];
-    for (NSEOperation *operation in self.operations) {
-        [operation cancel];
-    }
     
     [self updateState:NSEOperationStateDidCancel];
 }
@@ -286,14 +283,6 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
 }
 
 #pragma mark - Accessors
-
-- (NSError *)threadError {
-    return NSThread.currentThread.threadDictionary[NSStringFromSelector(@selector(threadError))];
-}
-
-- (void)setThreadError:(NSError *)threadError {
-    NSThread.currentThread.threadDictionary[NSStringFromSelector(@selector(threadError))] = threadError;
-}
 
 - (void)setIsCancelled:(BOOL)isCancelled {
     [self willChangeValueForKey:NSStringFromSelector(@selector(isCancelled))];
