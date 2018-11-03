@@ -152,6 +152,7 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
     NSEOperationStateDidFinish = 100
 };
 
+@property NSEOperationState state;
 @property NSError *error;
 @property NSError *threadError;
 @property NSEOperation *operation;
@@ -168,7 +169,6 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 
 @property (readonly) NSEOperation *parent;
 @property (readonly) HLPArray<NSEOperationDelegate> *delegates;
-@property (readonly) NSMutableArray<NSNumber *> *states;
 @property (readonly) NSMutableArray<NSError *> *errors;
 @property (readonly) NSProgress *progress;
 @property (readonly) NSOperationQueue *queue;

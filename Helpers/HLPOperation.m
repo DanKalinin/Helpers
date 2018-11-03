@@ -202,7 +202,6 @@
 @interface NSEOperation ()
 
 @property HLPArray<NSEOperationDelegate> *delegates;
-@property NSMutableArray<NSNumber *> *states;
 @property NSMutableArray<NSError *> *errors;
 @property NSProgress *progress;
 @property NSOperationQueue *queue;
@@ -235,7 +234,6 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
         self.delegates.operationQueue = NSOperationQueue.mainQueue;
         [self.delegates addObject:self];
         
-        self.states = NSMutableArray.array;
         self.errors = NSMutableArray.array;
         self.progress = NSProgress.new;
         self.queue = NSOperationQueue.new;
@@ -334,15 +332,15 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
 #pragma mark - Helpers
 
 - (void)updateState:(NSEOperationState)state {
-    [self.states addObject:@(state)];
+    self.state = state;
     
     [self.delegates NSEOperationDidUpdateState:self];
     [self invokeHandler:self.stateBlock queue:self.delegates.operationQueue];
-    if (state == NSEOperationStateDidStart) {
+    if (self.state == NSEOperationStateDidStart) {
         [self.delegates NSEOperationDidStart:self];
-    } else if (state == NSEOperationStateDidCancel) {
+    } else if (self.state == NSEOperationStateDidCancel) {
         [self.delegates NSEOperationDidCancel:self];
-    } else if (state == NSEOperationStateDidFinish) {
+    } else if (self.state == NSEOperationStateDidFinish) {
         [self.delegates NSEOperationDidFinish:self];
         [self invokeHandler:self.completionBlock queue:self.delegates.operationQueue];
         
