@@ -485,13 +485,13 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 
 @interface NSERPCOperation : NSEOperation <NSERPCOperationDelegate>
 
-typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
-    NSERPCMessageTypeSignal,
-    NSERPCMessageTypeCall,
-    NSERPCMessageTypeReturn
+typedef NS_ENUM(NSUInteger, NSERPCOperationType) {
+    NSERPCOperationTypeSignal,
+    NSERPCOperationTypeCall,
+    NSERPCOperationTypeReturn
 };
 
-@property NSERPCMessageType type;
+@property NSERPCOperationType type;
 @property int64_t serial;
 @property int64_t responseSerial;
 @property NSError *responseError;
@@ -519,10 +519,10 @@ typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
 
 @interface NSERPCReading : NSERPCOperation <NSERPCReadingDelegate>
 
+- (void)read;
+
 - (NSERPCWriting *)writeResponse:(id)response responseError:(NSError *)responseError;
 - (NSERPCWriting *)writeResponse:(id)response responseError:(NSError *)responseError completion:(HLPVoidBlock)completion;
-
-- (void)read;
 
 @end
 
@@ -544,6 +544,7 @@ typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
 @interface NSERPCWriting : NSERPCOperation <NSERPCWritingDelegate>
 
 @property (readonly) BOOL needsResponse;
+@property (readonly) NSETimer *timer;
 
 - (instancetype)initWithMessage:(id)message needsResponse:(BOOL)needsResponse;
 - (instancetype)initWithResponse:(id)response responseError:(NSError *)responseError responseSerial:(int64_t)responseSerial;
@@ -561,7 +562,7 @@ typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
 
 
 
-@protocol NSERPCDelegate <NSEOperationDelegate>
+@protocol NSERPCDelegate <NSERPCReadingDelegate, NSERPCWritingDelegate>
 
 @end
 
@@ -569,10 +570,21 @@ typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
 
 @interface NSERPC : NSEOperation <NSERPCDelegate>
 
+extern NSErrorDomain const NSERPCErrorDomain;
+
+NS_ERROR_ENUM(NSERPCErrorDomain) {
+    NSERPCErrorUnknown,
+    NSERPCErrorTimeout
+};
+
 @property Class readingClass;
 @property Class writingClass;
+@property HLPSequence *sequence;
+@property NSTimeInterval timeout;
 
 @property (readonly) NSEStreams *streams;
+@property (readonly) HLPDictionary<NSNumber *, NSERPCWriting *> *writings;
+@property (readonly) NSERPCReading *reading;
 
 - (instancetype)initWithStreams:(NSEStreams *)streams;
 
