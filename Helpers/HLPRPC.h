@@ -498,6 +498,8 @@ typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
 @property id message;
 @property id response;
 
+@property (readonly) NSERPC *parent;
+
 @end
 
 
@@ -517,10 +519,10 @@ typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
 
 @interface NSERPCMessageReading : NSERPCMessage <NSERPCMessageReadingDelegate>
 
-- (void)read;
-
 - (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError;
 - (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError completion:(HLPVoidBlock)completion;
+
+- (void)read;
 
 @end
 

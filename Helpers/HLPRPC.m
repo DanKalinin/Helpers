@@ -838,6 +838,8 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 @implementation NSERPCMessage
 
+@dynamic parent;
+
 @end
 
 
@@ -856,6 +858,16 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 @implementation NSERPCMessageReading
+
+- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError {
+    NSERPCMessageWriting *writing = [self.parent writeResponse:response responseError:responseError responseSerial:self.serial];
+    return writing;
+}
+
+- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError completion:(HLPVoidBlock)completion {
+    NSERPCMessageWriting *writing = [self.parent writeResponse:response responseError:responseError responseSerial:self.serial completion:completion];
+    return writing;
+}
 
 - (void)read {
     
@@ -942,6 +954,42 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
         self.messageWritingClass = NSERPCMessageWriting.class;
     }
     return self;
+}
+
+- (NSERPCMessageReading *)readMessage {
+    NSERPCMessageReading *reading = NSERPCMessageReading.new;
+    [self addOperation:reading];
+    return reading;
+}
+
+- (NSERPCMessageReading *)readMessageWithCompletion:(HLPVoidBlock)completion {
+    NSERPCMessageReading *reading = self.readMessage;
+    reading.completionBlock = completion;
+    return reading;
+}
+
+- (NSERPCMessageWriting *)writeMessage:(id)message needsResponse:(BOOL)needsResponse {
+    NSERPCMessageWriting *writing = [NSERPCMessageWriting.alloc initWithMessage:message needsResponse:needsResponse];
+    [self addOperation:writing];
+    return writing;
+}
+
+- (NSERPCMessageWriting *)writeMessage:(id)message needsResponse:(BOOL)needsResponse completion:(HLPVoidBlock)completion {
+    NSERPCMessageWriting *writing = [self writeMessage:message needsResponse:needsResponse];
+    writing.completionBlock = completion;
+    return writing;
+}
+
+- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError responseSerial:(int64_t)responseSerial {
+    NSERPCMessageWriting *writing = [NSERPCMessageWriting.alloc initWithResponse:response responseError:responseError responseSerial:responseSerial];
+    [self addOperation:writing];
+    return writing;
+}
+
+- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError responseSerial:(int64_t)responseSerial completion:(HLPVoidBlock)completion {
+    NSERPCMessageWriting *writing = [self writeResponse:response responseError:responseError responseSerial:responseSerial];
+    writing.completionBlock = completion;
+    return writing;
 }
 
 @end
