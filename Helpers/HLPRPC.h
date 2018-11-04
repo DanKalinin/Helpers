@@ -463,9 +463,9 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 
 
 
-@class NSERPCMessage;
-@class NSERPCMessageReading;
-@class NSERPCMessageWriting;
+@class NSERPCOperation;
+@class NSERPCReading;
+@class NSERPCWriting;
 @class NSERPC;
 
 
@@ -477,13 +477,13 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 
 
 
-@protocol NSERPCMessageDelegate <NSEOperationDelegate>
+@protocol NSERPCOperationDelegate <NSEOperationDelegate>
 
 @end
 
 
 
-@interface NSERPCMessage : NSEOperation <NSERPCMessageDelegate>
+@interface NSERPCOperation : NSEOperation <NSERPCOperationDelegate>
 
 typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
     NSERPCMessageTypeSignal,
@@ -511,16 +511,16 @@ typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
 
 
 
-@protocol NSERPCMessageReadingDelegate <NSEOperationDelegate>
+@protocol NSERPCReadingDelegate <NSERPCOperationDelegate>
 
 @end
 
 
 
-@interface NSERPCMessageReading : NSERPCMessage <NSERPCMessageReadingDelegate>
+@interface NSERPCReading : NSERPCOperation <NSERPCReadingDelegate>
 
-- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError;
-- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError completion:(HLPVoidBlock)completion;
+- (NSERPCWriting *)writeResponse:(id)response responseError:(NSError *)responseError;
+- (NSERPCWriting *)writeResponse:(id)response responseError:(NSError *)responseError completion:(HLPVoidBlock)completion;
 
 - (void)read;
 
@@ -535,13 +535,13 @@ typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
 
 
 
-@protocol NSERPCMessageWritingDelegate <NSEOperationDelegate>
+@protocol NSERPCWritingDelegate <NSERPCOperationDelegate>
 
 @end
 
 
 
-@interface NSERPCMessageWriting : NSERPCMessage <NSERPCMessageWritingDelegate>
+@interface NSERPCWriting : NSERPCOperation <NSERPCWritingDelegate>
 
 @property (readonly) BOOL needsResponse;
 
@@ -569,20 +569,20 @@ typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
 
 @interface NSERPC : NSEOperation <NSERPCDelegate>
 
-@property Class messageReadingClass;
-@property Class messageWritingClass;
+@property Class readingClass;
+@property Class writingClass;
 
 @property (readonly) NSEStreams *streams;
 
 - (instancetype)initWithStreams:(NSEStreams *)streams;
 
-- (NSERPCMessageReading *)readMessage;
-- (NSERPCMessageReading *)readMessageWithCompletion:(HLPVoidBlock)completion;
+- (NSERPCReading *)read;
+- (NSERPCReading *)readWithCompletion:(HLPVoidBlock)completion;
 
-- (NSERPCMessageWriting *)writeMessage:(id)message needsResponse:(BOOL)needsResponse;
-- (NSERPCMessageWriting *)writeMessage:(id)message needsResponse:(BOOL)needsResponse completion:(HLPVoidBlock)completion;
+- (NSERPCWriting *)writeMessage:(id)message needsResponse:(BOOL)needsResponse;
+- (NSERPCWriting *)writeMessage:(id)message needsResponse:(BOOL)needsResponse completion:(HLPVoidBlock)completion;
 
-- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError responseSerial:(int64_t)responseSerial;
-- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError responseSerial:(int64_t)responseSerial completion:(HLPVoidBlock)completion;
+- (NSERPCWriting *)writeResponse:(id)response responseError:(NSError *)responseError responseSerial:(int64_t)responseSerial;
+- (NSERPCWriting *)writeResponse:(id)response responseError:(NSError *)responseError responseSerial:(int64_t)responseSerial completion:(HLPVoidBlock)completion;
 
 @end

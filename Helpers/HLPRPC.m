@@ -830,13 +830,13 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@interface NSERPCMessage ()
+@interface NSERPCOperation ()
 
 @end
 
 
 
-@implementation NSERPCMessage
+@implementation NSERPCOperation
 
 @dynamic parent;
 
@@ -851,21 +851,21 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@interface NSERPCMessageReading ()
+@interface NSERPCReading ()
 
 @end
 
 
 
-@implementation NSERPCMessageReading
+@implementation NSERPCReading
 
-- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError {
-    NSERPCMessageWriting *writing = [self.parent writeResponse:response responseError:responseError responseSerial:self.serial];
+- (NSERPCWriting *)writeResponse:(id)response responseError:(NSError *)responseError {
+    NSERPCWriting *writing = [self.parent writeResponse:response responseError:responseError responseSerial:self.serial];
     return writing;
 }
 
-- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError completion:(HLPVoidBlock)completion {
-    NSERPCMessageWriting *writing = [self.parent writeResponse:response responseError:responseError responseSerial:self.serial completion:completion];
+- (NSERPCWriting *)writeResponse:(id)response responseError:(NSError *)responseError completion:(HLPVoidBlock)completion {
+    NSERPCWriting *writing = [self.parent writeResponse:response responseError:responseError responseSerial:self.serial completion:completion];
     return writing;
 }
 
@@ -884,7 +884,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@interface NSERPCMessageWriting ()
+@interface NSERPCWriting ()
 
 @property BOOL needsResponse;
 
@@ -892,7 +892,7 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@implementation NSERPCMessageWriting
+@implementation NSERPCWriting
 
 - (instancetype)init {
     self = super.init;
@@ -950,20 +950,20 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
     if (self) {
         self.streams = streams;
         
-        self.messageReadingClass = NSERPCMessageReading.class;
-        self.messageWritingClass = NSERPCMessageWriting.class;
+        self.readingClass = NSERPCReading.class;
+        self.writingClass = NSERPCWriting.class;
     }
     return self;
 }
 
-- (NSERPCMessageReading *)readMessage {
-    NSERPCMessageReading *reading = NSERPCMessageReading.new;
+- (NSERPCReading *)read {
+    NSERPCReading *reading = NSERPCReading.new;
     [self addOperation:reading];
     return reading;
 }
 
-- (NSERPCMessageReading *)readMessageWithCompletion:(HLPVoidBlock)completion {
-    NSERPCMessageReading *reading = self.readMessage;
+- (NSERPCReading *)readWithCompletion:(HLPVoidBlock)completion {
+    NSERPCReading *reading = self.read;
     reading.completionBlock = completion;
     return reading;
 }
