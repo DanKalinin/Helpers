@@ -236,12 +236,236 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 
 
 
-@class NSERPCPayload;
-@class NSERPCPayloadReading;
-@class NSERPCPayloadWriting;
+//@class NSERPCPayload;
+//@class NSERPCPayloadReading;
+//@class NSERPCPayloadWriting;
+//@class NSERPCMessageSending;
+//@class NSERPCMessageReceiving;
+//@class NSERPCResponseSending;
+//@class NSERPC;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@interface NSERPCPayload : HLPObject
+//
+//typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
+//    NSERPCPayloadTypeSignal,
+//    NSERPCPayloadTypeCall,
+//    NSERPCPayloadTypeReturn
+//};
+//
+//@property NSERPCPayloadType type;
+//@property int64_t serial;
+//@property int64_t responseSerial;
+//@property id message;
+//@property id response;
+//@property NSError *error;
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol NSERPCPayloadReadingDelegate <NSEOperationDelegate>
+//
+//@end
+//
+//
+//
+//@interface NSERPCPayloadReading : NSEOperation <NSERPCPayloadReadingDelegate>
+//
+//@property (readonly) NSERPCPayload *payload;
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol NSERPCPayloadWritingDelegate <NSEOperationDelegate>
+//
+//@end
+//
+//
+//
+//@interface NSERPCPayloadWriting : NSEOperation <NSERPCPayloadWritingDelegate>
+//
+//@property (readonly) NSERPCPayload *payload;
+//
+//- (instancetype)initWithPayload:(NSERPCPayload *)payload;
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol NSERPCMessageSendingDelegate <NSEOperationDelegate>
+//
+//@end
+//
+//
+//
+//@interface NSERPCMessageSending : NSEOperation <NSERPCMessageSendingDelegate>
+//
+//@property (readonly) NSERPC *parent;
+//@property (readonly) id message;
+//@property (readonly) BOOL needsResponse;
+//@property (readonly) id response;
+//@property (readonly) NSERPCPayloadWriting *writing;
+//@property (readonly) NSETimer *timer;
+//
+//- (instancetype)initWithMessage:(id)message needsResponse:(BOOL)needsResponse;
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol NSERPCMessageReceivingDelegate <NSEOperationDelegate>
+//
+//@end
+//
+//
+//
+//@interface NSERPCMessageReceiving : NSEOperation <NSERPCMessageReceivingDelegate>
+//
+//@property (readonly) NSERPC *parent;
+//@property (readonly) NSERPCPayload *payload;
+//@property (readonly) id message;
+//@property (readonly) id response;
+//@property (readonly) NSError *responseError;
+//
+//- (instancetype)initWithPayload:(NSERPCPayload *)payload;
+//
+//- (NSERPCResponseSending *)sendResponse:(id)response error:(NSError *)error;
+//- (NSERPCResponseSending *)sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion;
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol NSERPCResponseSendingDelegate <NSEOperationDelegate>
+//
+//@end
+//
+//
+//
+//@interface NSERPCResponseSending : NSEOperation <NSERPCResponseSendingDelegate>
+//
+//@property (readonly) NSERPC *parent;
+//@property (readonly) NSERPCPayload *payload;
+//@property (readonly) id response;
+//@property (readonly) NSError *responseError;
+//@property (readonly) NSERPCPayloadWriting *writing;
+//
+//- (instancetype)initWithPayload:(NSERPCPayload *)payload response:(id)response error:(NSError *)error;
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol NSERPCDelegate <NSERPCPayloadReadingDelegate, NSERPCPayloadWritingDelegate, NSERPCMessageSendingDelegate, NSERPCMessageReceivingDelegate, NSERPCResponseSendingDelegate>
+//
+//@end
+//
+//
+//
+//@interface NSERPC : NSEOperation <NSERPCDelegate>
+//
+//extern NSErrorDomain const NSERPCErrorDomain;
+//
+//NS_ERROR_ENUM(NSERPCErrorDomain) {
+//    NSERPCErrorUnknown,
+//    NSERPCErrorTimeout
+//};
+//
+//@property Class payloadReadingClass;
+//@property Class payloadWritingClass;
+//@property Class messageReceivingClass;
+//@property Class messageSendingClass;
+//@property Class responseSendingClass;
+//@property HLPSequence *sequence;
+//@property NSTimeInterval timeout;
+//
+//@property (readonly) NSEStreams *streams;
+//@property (readonly) HLPDictionary<NSNumber *, NSERPCMessageSending *> *sendings;
+//@property (readonly) NSERPCPayloadReading *reading;
+//@property (readonly) NSERPCMessageReceiving *receiving;
+//
+//- (instancetype)initWithStreams:(NSEStreams *)streams;
+//
+//- (NSERPCPayloadReading *)readPayload;
+//- (NSERPCPayloadReading *)readPayloadWithCompletion:(HLPVoidBlock)completion;
+//
+//- (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload;
+//- (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion;
+//
+//- (NSERPCMessageReceiving *)receiveMessageWithPayload:(NSERPCPayload *)payload;
+//- (NSERPCMessageReceiving *)receiveMessageWithPayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion;
+//
+//- (NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse;
+//- (NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse completion:(HLPVoidBlock)completion;
+//
+//- (NSERPCResponseSending *)payload:(NSERPCPayload *)payload sendResponse:(id)response error:(NSError *)error;
+//- (NSERPCResponseSending *)payload:(NSERPCPayload *)payload sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion;
+//
+//@end
+
+
+
+
+
+
+
+
+
+@class NSERPCMessage;
 @class NSERPCMessageSending;
 @class NSERPCMessageReceiving;
-@class NSERPCResponseSending;
 @class NSERPC;
 
 
@@ -253,64 +477,26 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 
 
 
-@interface NSERPCPayload : HLPObject
+@protocol NSERPCMessageDelegate <NSEOperationDelegate>
 
-typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
-    NSERPCPayloadTypeSignal,
-    NSERPCPayloadTypeCall,
-    NSERPCPayloadTypeReturn
+@end
+
+
+
+@interface NSERPCMessage : NSEOperation <NSERPCMessageDelegate>
+
+typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
+    NSERPCMessageTypeSignal,
+    NSERPCMessageTypeCall,
+    NSERPCMessageTypeReturn
 };
 
-@property NSERPCPayloadType type;
+@property NSERPCMessageType type;
 @property int64_t serial;
 @property int64_t responseSerial;
+@property NSError *responseError;
 @property id message;
 @property id response;
-@property NSError *error;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@protocol NSERPCPayloadReadingDelegate <NSEOperationDelegate>
-
-@end
-
-
-
-@interface NSERPCPayloadReading : NSEOperation <NSERPCPayloadReadingDelegate>
-
-@property (readonly) NSERPCPayload *payload;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@protocol NSERPCPayloadWritingDelegate <NSEOperationDelegate>
-
-@end
-
-
-
-@interface NSERPCPayloadWriting : NSEOperation <NSERPCPayloadWritingDelegate>
-
-@property (readonly) NSERPCPayload *payload;
-
-- (instancetype)initWithPayload:(NSERPCPayload *)payload;
 
 @end
 
@@ -331,15 +517,6 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 @interface NSERPCMessageSending : NSEOperation <NSERPCMessageSendingDelegate>
 
-@property (readonly) NSERPC *parent;
-@property (readonly) id message;
-@property (readonly) BOOL needsResponse;
-@property (readonly) id response;
-@property (readonly) NSERPCPayloadWriting *writing;
-@property (readonly) NSETimer *timer;
-
-- (instancetype)initWithMessage:(id)message needsResponse:(BOOL)needsResponse;
-
 @end
 
 
@@ -359,17 +536,6 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 @interface NSERPCMessageReceiving : NSEOperation <NSERPCMessageReceivingDelegate>
 
-@property (readonly) NSERPC *parent;
-@property (readonly) NSERPCPayload *payload;
-@property (readonly) id message;
-@property (readonly) id response;
-@property (readonly) NSError *responseError;
-
-- (instancetype)initWithPayload:(NSERPCPayload *)payload;
-
-- (NSERPCResponseSending *)sendResponse:(id)response error:(NSError *)error;
-- (NSERPCResponseSending *)sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion;
-
 @end
 
 
@@ -381,76 +547,12 @@ typedef NS_ENUM(NSUInteger, NSERPCPayloadType) {
 
 
 
-@protocol NSERPCResponseSendingDelegate <NSEOperationDelegate>
-
-@end
-
-
-
-@interface NSERPCResponseSending : NSEOperation <NSERPCResponseSendingDelegate>
-
-@property (readonly) NSERPC *parent;
-@property (readonly) NSERPCPayload *payload;
-@property (readonly) id response;
-@property (readonly) NSError *responseError;
-@property (readonly) NSERPCPayloadWriting *writing;
-
-- (instancetype)initWithPayload:(NSERPCPayload *)payload response:(id)response error:(NSError *)error;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@protocol NSERPCDelegate <NSERPCPayloadReadingDelegate, NSERPCPayloadWritingDelegate, NSERPCMessageSendingDelegate, NSERPCMessageReceivingDelegate, NSERPCResponseSendingDelegate>
+@protocol NSERPCDelegate <NSEOperationDelegate>
 
 @end
 
 
 
 @interface NSERPC : NSEOperation <NSERPCDelegate>
-
-extern NSErrorDomain const NSERPCErrorDomain;
-
-NS_ERROR_ENUM(NSERPCErrorDomain) {
-    NSERPCErrorUnknown,
-    NSERPCErrorTimeout
-};
-
-@property Class payloadReadingClass;
-@property Class payloadWritingClass;
-@property Class messageReceivingClass;
-@property Class messageSendingClass;
-@property Class responseSendingClass;
-@property HLPSequence *sequence;
-@property NSTimeInterval timeout;
-
-@property (readonly) NSEStreams *streams;
-@property (readonly) HLPDictionary<NSNumber *, NSERPCMessageSending *> *sendings;
-@property (readonly) NSERPCPayloadReading *reading;
-@property (readonly) NSERPCMessageReceiving *receiving;
-
-- (instancetype)initWithStreams:(NSEStreams *)streams;
-
-- (NSERPCPayloadReading *)readPayload;
-- (NSERPCPayloadReading *)readPayloadWithCompletion:(HLPVoidBlock)completion;
-
-- (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload;
-- (NSERPCPayloadWriting *)writePayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion;
-
-- (NSERPCMessageReceiving *)receiveMessageWithPayload:(NSERPCPayload *)payload;
-- (NSERPCMessageReceiving *)receiveMessageWithPayload:(NSERPCPayload *)payload completion:(HLPVoidBlock)completion;
-
-- (NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse;
-- (NSERPCMessageSending *)sendMessage:(id)message needsResponse:(BOOL)needsResponse completion:(HLPVoidBlock)completion;
-
-- (NSERPCResponseSending *)payload:(NSERPCPayload *)payload sendResponse:(id)response error:(NSError *)error;
-- (NSERPCResponseSending *)payload:(NSERPCPayload *)payload sendResponse:(id)response error:(NSError *)error completion:(HLPVoidBlock)completion;
 
 @end
