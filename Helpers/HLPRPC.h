@@ -464,8 +464,8 @@ typedef NS_ENUM(NSUInteger, HLPRPCPayloadType) {
 
 
 @class NSERPCMessage;
-@class NSERPCMessageSending;
-@class NSERPCMessageReceiving;
+@class NSERPCMessageReading;
+@class NSERPCMessageWriting;
 @class NSERPC;
 
 
@@ -509,13 +509,18 @@ typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
 
 
 
-@protocol NSERPCMessageSendingDelegate <NSEOperationDelegate>
+@protocol NSERPCMessageReadingDelegate <NSEOperationDelegate>
 
 @end
 
 
 
-@interface NSERPCMessageSending : NSEOperation <NSERPCMessageSendingDelegate>
+@interface NSERPCMessageReading : NSERPCMessage <NSERPCMessageReadingDelegate>
+
+- (void)read;
+
+- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError;
+- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError completion:(HLPVoidBlock)completion;
 
 @end
 
@@ -528,13 +533,20 @@ typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
 
 
 
-@protocol NSERPCMessageReceivingDelegate <NSEOperationDelegate>
+@protocol NSERPCMessageWritingDelegate <NSEOperationDelegate>
 
 @end
 
 
 
-@interface NSERPCMessageReceiving : NSEOperation <NSERPCMessageReceivingDelegate>
+@interface NSERPCMessageWriting : NSERPCMessage <NSERPCMessageWritingDelegate>
+
+@property (readonly) BOOL needsResponse;
+
+- (instancetype)initWithMessage:(id)message needsResponse:(BOOL)needsResponse;
+- (instancetype)initWithResponse:(id)response responseError:(NSError *)responseError responseSerial:(int64_t)responseSerial;
+
+- (void)write;
 
 @end
 
@@ -554,5 +566,21 @@ typedef NS_ENUM(NSUInteger, NSERPCMessageType) {
 
 
 @interface NSERPC : NSEOperation <NSERPCDelegate>
+
+@property Class messageReadingClass;
+@property Class messageWritingClass;
+
+@property (readonly) NSEStreams *streams;
+
+- (instancetype)initWithStreams:(NSEStreams *)streams;
+
+- (NSERPCMessageReading *)readMessage;
+- (NSERPCMessageReading *)readMessageWithCompletion:(HLPVoidBlock)completion;
+
+- (NSERPCMessageWriting *)writeMessage:(id)message needsResponse:(BOOL)needsResponse;
+- (NSERPCMessageWriting *)writeMessage:(id)message needsResponse:(BOOL)needsResponse completion:(HLPVoidBlock)completion;
+
+- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError responseSerial:(int64_t)responseSerial;
+- (NSERPCMessageWriting *)writeResponse:(id)response responseError:(NSError *)responseError responseSerial:(int64_t)responseSerial completion:(HLPVoidBlock)completion;
 
 @end

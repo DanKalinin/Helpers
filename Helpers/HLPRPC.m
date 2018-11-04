@@ -849,13 +849,68 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 
-@interface NSERPCMessageSending ()
+@interface NSERPCMessageReading ()
 
 @end
 
 
 
-@implementation NSERPCMessageSending
+@implementation NSERPCMessageReading
+
+- (void)read {
+    
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSERPCMessageWriting ()
+
+@property BOOL needsResponse;
+
+@end
+
+
+
+@implementation NSERPCMessageWriting
+
+- (instancetype)init {
+    self = super.init;
+    if (self) {
+    }
+    return self;
+}
+
+- (instancetype)initWithMessage:(id)message needsResponse:(BOOL)needsResponse {
+    self = self.init;
+    if (self) {
+        self.message = message;
+        self.needsResponse = needsResponse;
+    }
+    return self;
+}
+
+- (instancetype)initWithResponse:(id)response responseError:(NSError *)responseError responseSerial:(int64_t)responseSerial {
+    self = self.init;
+    if (self) {
+        self.response = response;
+        self.responseError = responseError;
+        self.responseSerial = responseSerial;
+    }
+    return self;
+}
+
+- (void)write {
+    
+}
 
 @end
 
@@ -870,10 +925,23 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 @interface NSERPC ()
 
+@property NSEStreams *streams;
+
 @end
 
 
 
 @implementation NSERPC
+
+- (instancetype)initWithStreams:(NSEStreams *)streams {
+    self = super.init;
+    if (self) {
+        self.streams = streams;
+        
+        self.messageReadingClass = NSERPCMessageReading.class;
+        self.messageWritingClass = NSERPCMessageWriting.class;
+    }
+    return self;
+}
 
 @end
