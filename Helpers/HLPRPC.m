@@ -840,6 +840,16 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 @dynamic parent;
 
+#pragma mark - Accessors
+
+- (NSError *)aggregatedError {
+    if (self.error) {
+        return self.error;
+    } else {
+        return self.responseError;
+    }
+}
+
 @end
 
 
@@ -858,6 +868,8 @@ NSErrorDomain const HLPRPCErrorDomain = @"HLPRPC";
 
 
 @implementation NSERPCReading
+
+@dynamic delegates;
 
 - (void)main {
     [self read];

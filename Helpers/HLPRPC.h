@@ -499,6 +499,7 @@ typedef NS_ENUM(NSUInteger, NSERPCOperationType) {
 @property id response;
 
 @property (readonly) NSERPC *parent;
+@property (readonly) NSError *aggregatedError;
 
 @end
 
@@ -518,6 +519,8 @@ typedef NS_ENUM(NSUInteger, NSERPCOperationType) {
 
 
 @interface NSERPCReading : NSERPCOperation <NSERPCReadingDelegate>
+
+@property (readonly) HLPArray<NSERPCReadingDelegate> *delegates;
 
 - (void)read;
 
