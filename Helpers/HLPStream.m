@@ -605,8 +605,8 @@ NSErrorDomain const NSEStreamErrorDomain = @"NSEStream";
 #pragma mark - Stream
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
-    NSLog(@"state - %i - %@", (int)eventCode, self.opening);
     if (eventCode == NSStreamEventOpenCompleted) {
+        NSLog(@"opened - %i", [aStream isKindOfClass:NSInputStream.class]);
         [self.opening.timer cancel];
     } else if (eventCode == NSStreamEventErrorOccurred) {
         self.opening.error = aStream.streamError;
