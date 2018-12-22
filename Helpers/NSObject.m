@@ -13,6 +13,8 @@
 
 @property NSObject *object;
 
+@property (weak) NSObject *weakObject;
+
 @end
 
 
@@ -23,6 +25,14 @@
     self = super.init;
     if (self) {
         self.object = object;
+    }
+    return self;
+}
+
+- (instancetype)initWithWeakObject:(NSObject *)weakObject {
+    self = super.init;
+    if (self) {
+        self.weakObject = weakObject;
     }
     return self;
 }

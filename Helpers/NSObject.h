@@ -24,6 +24,9 @@
 
 @property (readonly) NSObject *object;
 
+@property (weak, readonly) NSObject *weakObject;
+
 - (instancetype)initWithObject:(NSObject *)object;
+- (instancetype)initWithWeakObject:(NSObject *)weakObject;
 
 @end
