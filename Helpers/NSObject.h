@@ -14,6 +14,13 @@
 
 
 
+
+
+
+
+
+
+
 @protocol NSObjectOperationDelegate <NSEOperationDelegate>
 
 @end
@@ -28,5 +35,18 @@
 
 - (instancetype)initWithObject:(NSObject *)object;
 - (instancetype)initWithWeakObject:(NSObject *)weakObject;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSObject (NSE)
 
 @end

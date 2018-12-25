@@ -9,6 +9,13 @@
 
 
 
+
+
+
+
+
+
+
 @interface NSObjectOperation ()
 
 @property NSObject *object;
@@ -36,5 +43,18 @@
     }
     return self;
 }
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSObject (NSE)
 
 @end
