@@ -18,9 +18,7 @@
 
 @interface NSObjectOperation ()
 
-@property NSObject *object;
-
-@property (weak) NSObject *weakObject;
+@property (weak) NSObject *object;
 
 @end
 
@@ -32,14 +30,6 @@
     self = super.init;
     if (self) {
         self.object = object;
-    }
-    return self;
-}
-
-- (instancetype)initWithWeakObject:(NSObject *)weakObject {
-    self = super.init;
-    if (self) {
-        self.weakObject = weakObject;
     }
     return self;
 }
@@ -56,5 +46,19 @@
 
 
 @implementation NSObject (NSE)
+
+- (Class)operationClass {
+    return NSObjectOperation.class;
+}
+
+- (NSObjectOperation *)operation {
+    NSObjectOperation *operation = self.strongDictionary[NSStringFromSelector(@selector(operation))];
+    if (operation) {
+    } else {
+        operation = [self.operationClass.alloc initWithObject:self];
+        self.strongDictionary[NSStringFromSelector(@selector(operation))] = operation;
+    }
+    return operation;
+}
 
 @end

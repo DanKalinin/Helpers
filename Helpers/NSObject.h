@@ -29,12 +29,9 @@
 
 @interface NSObjectOperation : NSEOperation <NSObjectOperationDelegate>
 
-@property (readonly) NSObject *object;
-
-@property (weak, readonly) NSObject *weakObject;
+@property (weak, readonly) NSObject *object;
 
 - (instancetype)initWithObject:(NSObject *)object;
-- (instancetype)initWithWeakObject:(NSObject *)weakObject;
 
 @end
 
@@ -48,5 +45,8 @@
 
 
 @interface NSObject (NSE)
+
+@property (readonly) Class operationClass;
+@property (readonly) NSObjectOperation *operation;
 
 @end
