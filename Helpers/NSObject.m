@@ -47,15 +47,15 @@
 
 @implementation NSObject (NSE)
 
-- (Class)operationClass {
+- (Class)nseOperationClass {
     return NSObjectOperation.class;
 }
 
-- (NSObjectOperation *)operation {
+- (NSObjectOperation *)nseOperation {
     NSObjectOperation *operation = self.strongDictionary[NSStringFromSelector(@selector(operation))];
     if (operation) {
     } else {
-        operation = [self.operationClass.alloc initWithObject:self];
+        operation = [self.nseOperationClass.alloc initWithObject:self];
         self.strongDictionary[NSStringFromSelector(@selector(operation))] = operation;
     }
     return operation;

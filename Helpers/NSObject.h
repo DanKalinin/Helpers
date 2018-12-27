@@ -46,7 +46,7 @@
 
 @interface NSObject (NSE)
 
-@property (readonly) Class operationClass;
-@property (readonly) NSObjectOperation *operation;
+@property (readonly) Class nseOperationClass;
+@property (readonly) NSObjectOperation *nseOperation;
 
 @end
