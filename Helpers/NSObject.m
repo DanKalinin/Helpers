@@ -52,11 +52,11 @@
 }
 
 - (NSObjectOperation *)nseOperation {
-    NSObjectOperation *operation = self.strongDictionary[NSStringFromSelector(@selector(operation))];
+    NSObjectOperation *operation = self.strongDictionary[NSStringFromSelector(@selector(nseOperation))];
     if (operation) {
     } else {
         operation = [self.nseOperationClass.alloc initWithObject:self];
-        self.strongDictionary[NSStringFromSelector(@selector(operation))] = operation;
+        self.strongDictionary[NSStringFromSelector(@selector(nseOperation))] = operation;
     }
     return operation;
 }
