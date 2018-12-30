@@ -13,6 +13,7 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 
 //#import <Helpers/NSObject.h>
 
+#import <Helpers/NSEObject.h>
 #import <Helpers/NSEArray.h>
 #import <Helpers/NSEError.h>
 
