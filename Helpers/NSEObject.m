@@ -34,6 +34,11 @@
     return operation;
 }
 
+- (instancetype)nseAutorelease {
+    __autoreleasing NSObject *object = self;
+    return object;
+}
+
 @end
 
 
