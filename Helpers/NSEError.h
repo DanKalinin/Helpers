@@ -11,6 +11,6 @@
 
 @interface NSError (NSE)
 
-@property (class) NSError *threadError;
+@property (class) NSError *nseThreadError;
 
 @end

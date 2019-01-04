@@ -11,12 +11,13 @@
 
 @implementation NSError (NSE)
 
-+ (NSError *)threadError {
-    return NSThread.currentThread.threadDictionary[NSStringFromSelector(@selector(threadError))];
++ (NSError *)nseThreadError {
+    NSError *error = NSThread.currentThread.threadDictionary[NSStringFromSelector(@selector(nseThreadError))];
+    return error;
 }
 
-+ (void)setThreadError:(NSError *)threadError {
-    NSThread.currentThread.threadDictionary[NSStringFromSelector(@selector(threadError))] = threadError;
++ (void)setNseThreadError:(NSError *)nseThreadError {
+    NSThread.currentThread.threadDictionary[NSStringFromSelector(@selector(nseThreadError))] = nseThreadError;
 }
 
 @end
