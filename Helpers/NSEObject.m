@@ -18,6 +18,15 @@
 
 @implementation NSObject (NSE)
 
++ (instancetype)nseShared {
+    static NSObject *shared = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shared = self.new;
+    });
+    return shared;
+}
+
 - (Class)nseOperationClass {
     return NSEObjectOperation.class;
 }

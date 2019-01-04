@@ -27,6 +27,8 @@
 @property (readonly) Class nseOperationClass;
 @property (readonly) NSEObjectOperation *nseOperation;
 
++ (instancetype)nseShared;
+
 - (instancetype)nseAutorelease;
 
 @end
