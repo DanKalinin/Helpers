@@ -68,3 +68,20 @@
 - (instancetype)initWithObject:(NSObject *)object;
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface NSECFObject : NSEOperation <NSEObjectDelegate>
+
+@property (readonly) CFTypeRef object;
+
+- (instancetype)initWithObject:(CFTypeRef)object;
+
+@end

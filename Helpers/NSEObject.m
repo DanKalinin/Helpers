@@ -97,3 +97,36 @@
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface NSECFObject ()
+
+@property CFTypeRef object;
+
+@end
+
+
+
+@implementation NSECFObject
+
+- (instancetype)initWithObject:(CFTypeRef)object {
+    self = super.init;
+    
+    self.object = object;
+    
+    return self;
+}
+
+- (void)dealloc {
+    CFRelease(self.object);
+}
+
+@end
