@@ -15,6 +15,7 @@ FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 
 #import <Helpers/NSEObject.h>
 #import <Helpers/NSEArray.h>
+#import <Helpers/NSEDictionary.h>
 #import <Helpers/NSEError.h>
 
 #import <Helpers/HLPMain.h>
