@@ -7,6 +7,82 @@
 
 #import "NSEStream.h"
 
+
+
+
+
+
+
+
+
+
+@implementation NSStream (NSE)
+
+@dynamic nseOperation;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSEStream ()
+
+@end
+
+
+
 @implementation NSEStream
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface NSEStreamOperation ()
+
+@end
+
+
+
+@implementation NSEStreamOperation
+
+@dynamic delegates;
+@dynamic object;
+
+- (instancetype)initWithObject:(NSStream *)object {
+    self = [super initWithObject:object];
+    
+    object.delegate = self;
+    
+    return self;
+}
+
+#pragma mark - NSStreamDelegate
+
+- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
+    if (eventCode == NSStreamEventOpenCompleted) {
+        [self.delegates nseStreamOpenCompleted:aStream];
+    } else if (eventCode == NSStreamEventHasBytesAvailable) {
+        [self.delegates nseStreamHasBytesAvailable:aStream];
+    } else if (eventCode == NSStreamEventHasSpaceAvailable) {
+        [self.delegates nseStreamHasSpaceAvailable:aStream];
+    } else if (eventCode == NSStreamEventErrorOccurred) {
+        [self.delegates nseStreamErrorOccurred:aStream];
+    } else if (eventCode == NSStreamEventEndEncountered) {
+        [self.delegates nseStreamEndEncountered:aStream];
+    }
+}
 
 @end
