@@ -20,6 +20,10 @@
 
 @dynamic nseOperation;
 
+- (Class)nseOperationClass {
+    return NSEStreamOperation.class;
+}
+
 @end
 
 
@@ -84,5 +88,18 @@
         [self.delegates nseStreamEndEncountered:aStream];
     }
 }
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSInputStream (NSE)
 
 @end
