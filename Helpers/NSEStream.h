@@ -50,6 +50,25 @@
 
 
 
+@protocol NSEStreamOpeningDelegate <NSEOperationDelegate>
+
+@end
+
+
+
+@interface NSEStreamOpening : NSEOperation <NSEStreamOpeningDelegate>
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol NSEStreamDelegate <NSEObjectDelegate>
 
 @optional

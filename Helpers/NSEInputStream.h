@@ -64,6 +64,8 @@
 
 @interface NSEInputStreamOperation : NSEStreamOperation <NSEInputStreamDelegate>
 
+@property (readonly) HLPArray<NSEInputStreamDelegate> *delegates;
+
 @property (weak, readonly) NSInputStream *object;
 
 @end

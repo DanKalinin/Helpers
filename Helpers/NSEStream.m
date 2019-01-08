@@ -54,6 +54,25 @@
 
 
 
+@interface NSEStreamOpening ()
+
+@end
+
+
+
+@implementation NSEStreamOpening
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface NSEStreamOperation ()
 
 @end
