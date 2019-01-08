@@ -75,6 +75,8 @@
 
 @interface NSEStreamOperation ()
 
+@property (weak) NSEStreamOpening *opening;
+
 @end
 
 
@@ -93,9 +95,9 @@
 }
 
 - (NSEStreamOpening *)openWithCompletion:(HLPVoidBlock)completion {
-    NSEStreamOpening *operation = NSEStreamOpening.new;
-    [self addOperation:operation completion:completion];
-    return operation;
+    self.opening = NSEStreamOpening.new.nseAutorelease;
+    [self addOperation:self.opening completion:completion];
+    return self.opening;
 }
 
 #pragma mark - NSStreamDelegate

@@ -87,6 +87,7 @@
 @property (readonly) HLPArray<NSEStreamDelegate> *delegates;
 
 @property (weak, readonly) NSStream *object;
+@property (weak, readonly) NSEStreamOpening *opening;
 
 - (NSEStreamOpening *)openWithCompletion:(HLPVoidBlock)completion;
 
