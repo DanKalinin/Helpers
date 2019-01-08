@@ -179,5 +179,6 @@ typedef NS_ENUM(NSUInteger, NSEOperationState) {
 - (void)updateState:(NSEOperationState)state;
 - (void)updateProgress:(int64_t)completedUnitCount;
 - (void)addOperation:(NSEOperation *)operation;
+- (void)addOperation:(NSEOperation *)operation completion:(HLPVoidBlock)completion;
 
 @end

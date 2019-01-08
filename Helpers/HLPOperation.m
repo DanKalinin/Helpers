@@ -353,4 +353,9 @@ NSErrorDomain const NSEOperationErrorDomain = @"NSEOperation";
     [self.queue addOperation:operation];
 }
 
+- (void)addOperation:(NSEOperation *)operation completion:(HLPVoidBlock)completion {
+    operation.completionBlock = completion;
+    [self addOperation:operation];
+}
+
 @end

@@ -92,6 +92,12 @@
     return self;
 }
 
+- (NSEStreamOpening *)openWithCompletion:(HLPVoidBlock)completion {
+    NSEStreamOpening *operation = NSEStreamOpening.new;
+    [self addOperation:operation completion:completion];
+    return operation;
+}
+
 #pragma mark - NSStreamDelegate
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {

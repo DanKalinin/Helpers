@@ -88,4 +88,6 @@
 
 @property (weak, readonly) NSStream *object;
 
+- (NSEStreamOpening *)openWithCompletion:(HLPVoidBlock)completion;
+
 @end
