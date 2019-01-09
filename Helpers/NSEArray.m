@@ -31,9 +31,9 @@
 
 - (instancetype)initWithBackingStore:(NSPointerArray *)backingStore {
     self = super.init;
-    if (self) {
-        self.backingStore = backingStore;
-    }
+    
+    self.backingStore = backingStore;
+    
     return self;
 }
 
