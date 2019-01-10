@@ -159,10 +159,6 @@
 
 #pragma mark - NSObject
 
-//- (id)forwardingTargetForSelector:(SEL)aSelector {
-//    
-//}
-
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     for (id target in self) {
         BOOL responds = [target respondsToSelector:anInvocation.selector];
