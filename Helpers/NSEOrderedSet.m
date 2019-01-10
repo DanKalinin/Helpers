@@ -31,6 +31,10 @@
     BOOL contains = [self containsObject:anObject];
     if (contains) {
     } else {
+        if (index > self.count) {
+            index = self.count;
+        }
+        
         [super insertObject:anObject atIndex:index];
     }
 }
