@@ -9,6 +9,31 @@
 #import "NSEObject.h"
 #import "NSEOperationQueue.h"
 
+@class NSEArray;
+
+
+
+
+
+
+
+
+
+
+@interface NSArray (NSE)
+
+@property (readonly) NSEArray *nseWeakArray;
+@property (readonly) NSEArray *nseStrongArray;
+
+@end
+
+
+
+
+
+
+
+
 
 
 @interface NSEArray : NSMutableArray

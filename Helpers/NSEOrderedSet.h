@@ -6,16 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "NSEArray.h"
 
 
 
-@interface NSEOrderedSet : NSMutableOrderedSet
-
-@property (readonly) NSPointerArray *backingStore;
+@interface NSEOrderedSet : NSEArray
 
 + (instancetype)weakOrderedSet;
 + (instancetype)strongOrderedSet;
-
-- (instancetype)initWithBackingStore:(NSPointerArray *)backingStore;
 
 @end

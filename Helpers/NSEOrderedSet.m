@@ -11,8 +11,6 @@
 
 @interface NSEOrderedSet ()
 
-@property NSPointerArray *backingStore;
-
 @end
 
 
@@ -20,161 +18,37 @@
 @implementation NSEOrderedSet
 
 + (instancetype)weakOrderedSet {
-    NSEOrderedSet *orderedSet = [self.alloc initWithBackingStore:NSPointerArray.weakObjectsPointerArray];
-    return orderedSet;
+    return self.weakArray;
 }
 
 + (instancetype)strongOrderedSet {
-    NSEOrderedSet *orderedSet = [self.alloc initWithBackingStore:NSPointerArray.strongObjectsPointerArray];
-    return orderedSet;
+    return self.strongArray;
 }
 
-- (instancetype)initWithBackingStore:(NSPointerArray *)backingStore {
-    self = super.init;
-    
-    self.backingStore = backingStore;
-    
-    return self;
+#pragma mark - NSMutableArray
+
+- (void)insertObject:(id)anObject atIndex:(NSUInteger)index {
+    BOOL contains = [self containsObject:anObject];
+    if (contains) {
+    } else {
+        [super insertObject:anObject atIndex:index];
+    }
 }
 
-#pragma mark - NSOrderedSet
-
-- (NSUInteger)count {
-    [self.backingStore compact];
-    
-    NSSet *set = [NSSet setWithArray:self.backingStore.allObjects];
-    
-    return set.count;
+- (void)addObject:(id)anObject {
+    BOOL contains = [self containsObject:anObject];
+    if (contains) {
+    } else {
+        [super addObject:anObject];
+    }
 }
 
-- (id)objectAtIndex:(NSUInteger)idx {
-    [self.backingStore compact];
-    
-    id object = (__bridge id)[self.backingStore pointerAtIndex:idx];
-    return object;
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject {
+    BOOL contains = [self containsObject:anObject];
+    if (contains) {
+    } else {
+        [super replaceObjectAtIndex:index withObject:anObject];
+    }
 }
-
-- (NSUInteger)indexOfObject:(id)object {
-    [self.backingStore compact];
-    
-    NSUInteger idx = [self.backingStore.allObjects indexOfObject:object];
-    return idx;
-}
-
-//@property (readonly) NSUInteger count;
-//- (ObjectType)objectAtIndex:(NSUInteger)idx;
-//- (NSUInteger)indexOfObject:(ObjectType)object;
-
-#pragma mark - NSMutableOrderedSet
-
-- (void)insertObject:(id)object atIndex:(NSUInteger)idx {
-    [self.backingStore compact];
-    
-    [self.backingStore insertPointer:(__bridge void *)object atIndex:idx];
-}
-
-- (void)removeObjectAtIndex:(NSUInteger)idx {
-    [self.backingStore compact];
-    
-    [self.backingStore removePointerAtIndex:idx];
-}
-
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)object {
-    [self.backingStore compact];
-    
-    [self.backingStore replacePointerAtIndex:idx withPointer:(__bridge void *)object];
-}
-
-//- (void)insertObject:(ObjectType)object atIndex:(NSUInteger)idx;
-//- (void)removeObjectAtIndex:(NSUInteger)idx;
-//- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(ObjectType)object;
-
-//#pragma mark - NSOrderedSet
-//
-//- (NSUInteger)count {
-//    [self.backingStore compact];
-//
-//    return self.backingStore.count;
-//}
-//
-////- (id)objectAtIndex:(NSUInteger)idx {
-////    [self.backingStore compact];
-////
-////    id object = (__bridge id)[self.backingStore pointerAtIndex:idx];
-////    return object;
-////}
-//
-//#pragma mark - NSMutableOrderedSet
-//
-//- (void)insertObject:(id)object atIndex:(NSUInteger)idx {
-//    [self.backingStore compact];
-//
-//    [self.backingStore insertPointer:(__bridge void *)object atIndex:idx];
-//}
-//
-//- (void)removeObjectAtIndex:(NSUInteger)idx {
-//    [self.backingStore compact];
-//
-//    [self.backingStore removePointerAtIndex:idx];
-//}
-//
-//- (void)addObject:(id)object {
-//    [self.backingStore compact];
-//
-//    [self.backingStore addPointer:(__bridge void *)object];
-//}
-//
-////- (void)removeLastObject {
-////    [self.backingStore compact];
-////
-////    NSUInteger index = self.backingStore.count - 1;
-////    [self.backingStore removePointerAtIndex:index];
-////}
-//
-//- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)object {
-//    [self.backingStore compact];
-//
-//    [self.backingStore replacePointerAtIndex:idx withPointer:(__bridge void *)object];
-//}
-//
-////
-//
-//- (BOOL)containsObject:(id)object {
-//    return YES;
-//}
-
-//#pragma mark - NSObject
-//
-//- (id)forwardingTargetForSelector:(SEL)aSelector {
-//    id target = [super forwardingTargetForSelector:aSelector];
-//
-//    if (target) {
-//    } else {
-//        for (target in self) {
-//            BOOL responds = [target respondsToSelector:aSelector];
-//            if (responds) {
-//                break;
-//            }
-//        }
-//    }
-//
-//    return target;
-//}
-//
-//- (BOOL)respondsToSelector:(SEL)aSelector {
-//    BOOL responds = [super respondsToSelector:aSelector];
-//
-//    if (responds) {
-//    } else {
-//        for (id target in self) {
-//            responds = [target respondsToSelector:aSelector];
-//            if (responds) {
-//                break;
-//            }
-//        }
-//    }
-//
-//    return responds;
-//}
 
 @end

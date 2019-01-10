@@ -9,6 +9,38 @@
 
 
 
+
+
+
+
+
+
+
+@implementation NSArray (NSE)
+
+- (NSEArray *)nseWeakArray {
+    NSEArray *array = NSEArray.weakArray;
+    [array addObjectsFromArray:self];
+    return array;
+}
+
+- (NSEArray *)nseStrongArray {
+    NSEArray *array = NSEArray.strongArray;
+    [array addObjectsFromArray:self];
+    return array;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface NSEArray ()
 
 @property NSPointerArray *backingStore;
@@ -34,6 +66,8 @@
     self = super.init;
     
     self.backingStore = backingStore;
+    
+    self.exceptions = NSMutableSet.set;
     
     return self;
 }
