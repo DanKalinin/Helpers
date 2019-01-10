@@ -159,15 +159,19 @@
 
 #pragma mark - NSObject
 
+//- (id)forwardingTargetForSelector:(SEL)aSelector {
+//    
+//}
+
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     for (id target in self) {
         BOOL responds = [target respondsToSelector:anInvocation.selector];
         if (responds) {
             BOOL exception = [self.exceptions containsObject:NSStringFromSelector(anInvocation.selector)];
             if (self.queue && !exception) {
-                [self.queue nseAddOperationWithBlockAndWait:^{
+                [self.queue nseAddOperationWithBlock:^{
                     [anInvocation invokeWithTarget:target];
-                }];
+                } waitUntilFinished:YES];
             } else {
                 [anInvocation invokeWithTarget:target];
             }

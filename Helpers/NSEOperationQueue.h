@@ -11,6 +11,6 @@
 
 @interface NSOperationQueue (NSE)
 
-- (void)nseAddOperationWithBlockAndWait:(NSEBlock)block;
+- (void)nseAddOperationWithBlock:(NSEBlock)block waitUntilFinished:(BOOL)wait;
 
 @end
