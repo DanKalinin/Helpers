@@ -7,6 +7,8 @@
 
 #import "NSEArray.h"
 
+@class NSEOrderedSet;
+
 
 
 @interface NSEOrderedSet : NSEArray

@@ -6,6 +6,7 @@
 //
 
 #import "NSEArray.h"
+#import "NSEOperationQueue.h"
 
 
 

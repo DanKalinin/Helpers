@@ -28,8 +28,10 @@
 @property (readonly) NSEObjectOperation *nseOperation;
 
 + (instancetype)nseShared;
++ (void)nseInvokeBlock:(NSEBlock)block;
 
 - (instancetype)nseAutorelease;
+- (void)nseInvokeBlock:(NSEBlock)block;
 
 @end
 

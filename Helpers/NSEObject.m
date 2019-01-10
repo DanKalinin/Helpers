@@ -27,6 +27,12 @@
     return shared;
 }
 
++ (void)nseInvokeBlock:(NSEBlock)block {
+    if (block) {
+        block();
+    }
+}
+
 - (Class)nseOperationClass {
     return NSEObjectOperation.class;
 }
@@ -46,6 +52,10 @@
 - (instancetype)nseAutorelease {
     __autoreleasing NSObject *object = self;
     return object;
+}
+
+- (void)nseInvokeBlock:(NSEBlock)block {
+    [self.class nseInvokeBlock:block];
 }
 
 @end

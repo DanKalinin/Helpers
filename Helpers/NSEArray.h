@@ -6,7 +6,6 @@
 //
 
 #import "NSEObject.h"
-#import "NSEOperationQueue.h"
 
 @class NSEArray;
 
