@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "NSEMain.h"
 #import "HLPOperation.h"
 
 @class NSEObject;

@@ -6,12 +6,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "NSEObject.h"
+#import "NSEOperationQueue.h"
 
 
 
 @interface NSEArray : NSMutableArray
 
+@property NSOperationQueue *queue;
+
 @property (readonly) NSPointerArray *backingStore;
+@property (readonly) NSMutableSet<NSString *> *exceptions;
 
 + (instancetype)weakArray;
 + (instancetype)strongArray;

@@ -12,6 +12,7 @@
 @interface NSEArray ()
 
 @property NSPointerArray *backingStore;
+@property NSMutableSet<NSString *> *exceptions;
 
 @end
 
@@ -87,20 +88,36 @@
 
 #pragma mark - NSObject
 
-- (id)forwardingTargetForSelector:(SEL)aSelector {
-    id target = [super forwardingTargetForSelector:aSelector];
+- (void)forwardInvocation:(NSInvocation *)anInvocation {
+    for (id target in self) {
+        BOOL responds = [target respondsToSelector:anInvocation.selector];
+        if (responds) {
+            BOOL exception = [self.exceptions containsObject:NSStringFromSelector(anInvocation.selector)];
+            if (self.queue && !exception) {
+                [self.queue nseAddOperationWithBlockAndWait:^{
+                    [anInvocation invokeWithTarget:target];
+                }];
+            } else {
+                [anInvocation invokeWithTarget:target];
+            }
+        }
+    }
+}
+
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
+    NSMethodSignature *signature = [super methodSignatureForSelector:aSelector];
     
-    if (target) {
+    if (signature) {
     } else {
-        for (target in self) {
-            BOOL responds = [target respondsToSelector:aSelector];
-            if (responds) {
+        for (id target in self) {
+            signature = [target methodSignatureForSelector:aSelector];
+            if (signature) {
                 break;
             }
         }
     }
     
-    return target;
+    return signature;
 }
 
 - (BOOL)respondsToSelector:(SEL)aSelector {

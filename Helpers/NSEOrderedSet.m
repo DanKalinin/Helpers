@@ -42,9 +42,61 @@
 - (NSUInteger)count {
     [self.backingStore compact];
     
-    return self.backingStore.count;
+    NSSet *set = [NSSet setWithArray:self.backingStore.allObjects];
+    
+    return set.count;
 }
 
+- (id)objectAtIndex:(NSUInteger)idx {
+    [self.backingStore compact];
+    
+    id object = (__bridge id)[self.backingStore pointerAtIndex:idx];
+    return object;
+}
+
+- (NSUInteger)indexOfObject:(id)object {
+    [self.backingStore compact];
+    
+    NSUInteger idx = [self.backingStore.allObjects indexOfObject:object];
+    return idx;
+}
+
+//@property (readonly) NSUInteger count;
+//- (ObjectType)objectAtIndex:(NSUInteger)idx;
+//- (NSUInteger)indexOfObject:(ObjectType)object;
+
+#pragma mark - NSMutableOrderedSet
+
+- (void)insertObject:(id)object atIndex:(NSUInteger)idx {
+    [self.backingStore compact];
+    
+    [self.backingStore insertPointer:(__bridge void *)object atIndex:idx];
+}
+
+- (void)removeObjectAtIndex:(NSUInteger)idx {
+    [self.backingStore compact];
+    
+    [self.backingStore removePointerAtIndex:idx];
+}
+
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)object {
+    [self.backingStore compact];
+    
+    [self.backingStore replacePointerAtIndex:idx withPointer:(__bridge void *)object];
+}
+
+//- (void)insertObject:(ObjectType)object atIndex:(NSUInteger)idx;
+//- (void)removeObjectAtIndex:(NSUInteger)idx;
+//- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(ObjectType)object;
+
+//#pragma mark - NSOrderedSet
+//
+//- (NSUInteger)count {
+//    [self.backingStore compact];
+//
+//    return self.backingStore.count;
+//}
+//
 ////- (id)objectAtIndex:(NSUInteger)idx {
 ////    [self.backingStore compact];
 ////
