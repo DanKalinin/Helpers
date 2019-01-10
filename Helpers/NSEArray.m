@@ -72,6 +72,28 @@
     return self;
 }
 
+- (void)didAddObject:(id)object {
+    BOOL kind = [object isKindOfClass:self.class];
+    if (kind) {
+        NSEArray *array = object;
+        [array.exceptions unionSet:self.exceptions];
+        for (object in array) {
+            [array didAddObject:object];
+        }
+    }
+}
+
+- (void)willRemoveObject:(id)object {
+    BOOL kind = [object isKindOfClass:self.class];
+    if (kind) {
+        NSEArray *array = object;
+        [array.exceptions minusSet:self.exceptions];
+        for (object in array) {
+            [array willRemoveObject:object];
+        }
+    }
+}
+
 #pragma mark - NSArray
 
 - (NSUInteger)count {
@@ -93,10 +115,15 @@
     [self.backingStore compact];
     
     [self.backingStore insertPointer:(__bridge void *)anObject atIndex:index];
+    
+    [self didAddObject:anObject];
 }
 
 - (void)removeObjectAtIndex:(NSUInteger)index {
     [self.backingStore compact];
+    
+    id object = self[index];
+    [self willRemoveObject:object];
     
     [self.backingStore removePointerAtIndex:index];
 }
@@ -105,10 +132,14 @@
     [self.backingStore compact];
     
     [self.backingStore addPointer:(__bridge void *)anObject];
+    
+    [self didAddObject:anObject];
 }
 
 - (void)removeLastObject {
     [self.backingStore compact];
+    
+    [self willRemoveObject:self.lastObject];
     
     NSUInteger index = self.backingStore.count - 1;
     [self.backingStore removePointerAtIndex:index];
@@ -117,7 +148,12 @@
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject {
     [self.backingStore compact];
     
+    id object = self[index];
+    [self willRemoveObject:object];
+    
     [self.backingStore replacePointerAtIndex:index withPointer:(__bridge void *)anObject];
+    
+    [self didAddObject:anObject];
 }
 
 #pragma mark - NSObject
