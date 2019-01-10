@@ -5,7 +5,6 @@
 //  Created by Dan Kalinin on 1/8/19.
 //
 
-#import <Foundation/Foundation.h>
 #import "NSEStream.h"
 
 @class NSEInputStream;
@@ -64,7 +63,7 @@
 
 @interface NSEInputStreamOperation : NSEStreamOperation <NSEInputStreamDelegate>
 
-@property (readonly) HLPArray<NSEInputStreamDelegate> *delegates;
+@property (readonly) NSEOrderedSet<NSEInputStreamDelegate> *delegates;
 
 @property (weak, readonly) NSInputStream *object;
 

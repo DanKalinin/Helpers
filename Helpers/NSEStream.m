@@ -6,6 +6,7 @@
 //
 
 #import "NSEStream.h"
+#import "NSEOrderedSet.h"
 
 
 
@@ -92,12 +93,6 @@
     object.delegate = self;
     
     return self;
-}
-
-- (NSEStreamOpening *)openWithCompletion:(HLPVoidBlock)completion {
-    self.opening = NSEStreamOpening.new.nseAutorelease;
-    [self addOperation:self.opening completion:completion];
-    return self.opening;
 }
 
 #pragma mark - NSStreamDelegate

@@ -5,7 +5,6 @@
 //  Created by Dan Kalinin on 1/8/19.
 //
 
-#import <Foundation/Foundation.h>
 #import "NSEObject.h"
 
 @class NSEStream;
@@ -84,11 +83,9 @@
 
 @interface NSEStreamOperation : NSEObjectOperation <NSEStreamDelegate, NSStreamDelegate>
 
-@property (readonly) HLPArray<NSEStreamDelegate> *delegates;
+@property (readonly) NSEOrderedSet<NSEStreamDelegate> *delegates;
 
 @property (weak, readonly) NSStream *object;
 @property (weak, readonly) NSEStreamOpening *opening;
-
-- (NSEStreamOpening *)openWithCompletion:(HLPVoidBlock)completion;
 
 @end

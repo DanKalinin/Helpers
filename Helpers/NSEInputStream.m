@@ -6,6 +6,7 @@
 //
 
 #import "NSEInputStream.h"
+#import "NSEOrderedSet.h"
 
 
 
