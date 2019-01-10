@@ -6,6 +6,8 @@
 //
 
 #import "NSEObject.h"
+#import "NSEDictionary.h"
+#import <objc/runtime.h>
 
 
 
@@ -38,15 +40,39 @@
 }
 
 - (NSEObjectOperation *)nseOperation {
-    NSEObjectOperation *operation = self.strongDictionary[NSStringFromSelector(@selector(nseOperation))];
+    NSEObjectOperation *operation = self.nseStrongDictionary[NSStringFromSelector(@selector(nseOperation))];
     
     if (operation) {
     } else {
         operation = [self.nseOperationClass.alloc initWithObject:self];
-        self.strongDictionary[NSStringFromSelector(@selector(nseOperation))] = operation;
+        self.nseStrongDictionary[NSStringFromSelector(@selector(nseOperation))] = operation;
     }
     
     return operation;
+}
+
+- (NSEDictionary *)nseWeakDictionary {
+    NSEDictionary *dictionary = objc_getAssociatedObject(self, @selector(nseWeakDictionary));
+    
+    if (dictionary) {
+    } else {
+        dictionary = NSEDictionary.strongToWeakDictionary;
+        objc_setAssociatedObject(self, @selector(nseWeakDictionary), dictionary, OBJC_ASSOCIATION_RETAIN);
+    }
+    
+    return dictionary;
+}
+
+- (NSEDictionary *)nseStrongDictionary {
+    NSEDictionary *dictionary = objc_getAssociatedObject(self, @selector(nseStrongDictionary));
+    
+    if (dictionary) {
+    } else {
+        dictionary = NSEDictionary.strongToStrongDictionary;
+        objc_setAssociatedObject(self, @selector(nseStrongDictionary), dictionary, OBJC_ASSOCIATION_RETAIN);
+    }
+    
+    return dictionary;
 }
 
 - (instancetype)nseAutorelease {
