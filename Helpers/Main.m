@@ -2025,7 +2025,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     return ac;
 }
 
-- (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType {
+- (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType NS_EXTENSION_UNAVAILABLE("") {
     BOOL denied = [self isDeniedImagePickerControllerSourceType:sourceType];
     if (denied) return;
     
@@ -2037,7 +2037,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     [self presentViewController:cameraController animated:YES completion:nil];
 }
 
-- (BOOL)isDeniedImagePickerControllerSourceType:(UIImagePickerControllerSourceType)sourceType {
+- (BOOL)isDeniedImagePickerControllerSourceType:(UIImagePickerControllerSourceType)sourceType NS_EXTENSION_UNAVAILABLE("") {
     BOOL denied = NO;
     
     BOOL cameraSourceType = (sourceType == UIImagePickerControllerSourceTypeCamera);
@@ -2732,7 +2732,7 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     }
 }
 
-- (UIImage *)image {
+- (UIImage *)image NS_EXTENSION_UNAVAILABLE("") {
     if (self.cachedImage) return self.cachedImage;
     
     CGFloat scale = UIApplication.sharedApplication.keyWindow.screen.scale;
@@ -3079,6 +3079,24 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
     }
     
     return value;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation NSUndoManager (Helpers)
+
+- (void)endGroupingAndUndo {
+    [self endUndoGrouping];
+    [self undoNestedGroup];
 }
 
 @end

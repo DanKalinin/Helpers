@@ -1050,3 +1050,18 @@ typedef void (^ReachabilityHandler)(_Reachability *reachability);
 @property (readonly) id returnValue;
 
 @end
+
+
+
+
+
+
+
+
+
+
+@interface NSUndoManager (Helpers)
+
+- (void)endGroupingAndUndo;
+
+@end
