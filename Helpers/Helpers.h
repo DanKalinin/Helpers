@@ -12,3 +12,4 @@ FOUNDATION_EXPORT double HelpersVersionNumber;
 FOUNDATION_EXPORT const unsigned char HelpersVersionString[];
 
 #import <Helpers/Main.h>
+#import <Helpers/HLPURL.h>
