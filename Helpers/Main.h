@@ -671,6 +671,7 @@ typedef void (^ReachabilityHandler)(_Reachability *reachability);
 
 - (UIAlertController *)alertControllerImagePicker; // Action sheet alert controller to pick image from Camera or Photo library. Additional actions can be added.
 - (void)presentImagePickerControllerForSourceType:(UIImagePickerControllerSourceType)sourceType; // Present image picker controller for Camera or Photo library. Shows Open Settings alert controller if access to source is denied.
+- (BOOL)isDeniedImagePickerControllerSourceType:(UIImagePickerControllerSourceType)sourceType;
 
 @end
 
