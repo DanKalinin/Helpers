@@ -1816,11 +1816,18 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 - (void)Helpers_UIViewController_swizzledViewWillAppear:(BOOL)animated {
     [self Helpers_UIViewController_swizzledViewWillAppear:animated];
     
-    if (self.invokeAppearanceMethods && (self.sourceViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) && (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)) {
-        self.appearanceViewController = self.sourceViewController;
-        [self.appearanceViewController viewWillDisappear:animated];
+    if (@available(iOS 13, *)) {
+        if (self.invokeAppearanceMethods) {
+            self.appearanceViewController = self.sourceViewController;
+            [self.appearanceViewController viewWillDisappear:animated];
+        }
     } else {
-        self.appearanceViewController = nil;
+        if (self.invokeAppearanceMethods && (self.sourceViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) && (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)) {
+            self.appearanceViewController = self.sourceViewController;
+            [self.appearanceViewController viewWillDisappear:animated];
+        } else {
+            self.appearanceViewController = nil;
+        }
     }
 }
 
@@ -1833,11 +1840,18 @@ static void Callback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags
 - (void)Helpers_UIViewController_swizzledViewWillDisappear:(BOOL)animated {
     [self Helpers_UIViewController_swizzledViewWillDisappear:animated];
     
-    if (self.invokeAppearanceMethods && (self.sourceViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) && (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)) {
-        self.appearanceViewController = self.sourceViewController;
-        [self.appearanceViewController viewWillAppear:animated];
+    if (@available(iOS 13, *)) {
+        if (self.invokeAppearanceMethods) {
+            self.appearanceViewController = self.sourceViewController;
+            [self.appearanceViewController viewWillAppear:animated];
+        }
     } else {
-        self.appearanceViewController = nil;
+        if (self.invokeAppearanceMethods && (self.sourceViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) && (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)) {
+            self.appearanceViewController = self.sourceViewController;
+            [self.appearanceViewController viewWillAppear:animated];
+        } else {
+            self.appearanceViewController = nil;
+        }
     }
 }
 
