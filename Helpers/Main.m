@@ -597,6 +597,8 @@ SecKeyRef SecKeyCreateWithString(NSString *string, NSDictionary<NSString *, id> 
 #pragma mark - Message forwarding
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
+    if ([NSStringFromSelector(anInvocation.selector) isEqualToString:@"_diffableDataSourceImpl"]) return;
+    
     self.lastReturnValue = nil;
     for (id object in self) {
         if ([object respondsToSelector:anInvocation.selector]) {
